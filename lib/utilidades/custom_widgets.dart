@@ -66,3 +66,84 @@ class CustomAppBar extends PreferredSize{
     );
   }
 }
+
+class OpcionesSeleccionMedia extends StatefulWidget {
+
+  OpcionesSeleccionMedia({
+    @required this.visible,
+    @required this.divisionLayout,
+    //Se requiere la función que hará que algo pase en la ventan anterior
+    @required this.actualizaEstado,
+  });
+
+  final bool visible;
+  final String divisionLayout;
+  //Función que devuelve algo a la ventana anterior
+  final VoidCallback actualizaEstado;
+
+  @override
+  _OpcionesSeleccionMediaState createState() => _OpcionesSeleccionMediaState();
+}
+
+class _OpcionesSeleccionMediaState extends State<OpcionesSeleccionMedia> {
+
+  @override
+  Widget build(BuildContext context) {
+    return Visibility(
+      visible: widget.visible,
+      child: Container(
+        margin: EdgeInsets.only(left: 115.0),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                RaisedButton(
+                  onPressed: () {
+                    //Va a la otra ventana esperando respuesta
+                    navegarYEsperarRespuesta('/seleccionar_imagen');
+                  },
+                  child: Text('Imagen'),
+                ),
+                RaisedButton(
+                  onPressed: () {
+                    //Va a la otra ventana esperando respuesta
+                    navegarYEsperarRespuesta('/seleccionar_video');
+                  },
+                  child: Text('Video'),
+                ),
+              ],
+            ),
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                RaisedButton(
+                  onPressed: () {},
+                  child: Text('Url'),
+                ),
+                RaisedButton(
+                  onPressed: () {},
+                  child: Text('Crear'),
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  navegarYEsperarRespuesta(String rutaVentana) async {
+    final result = await Navigator.pushNamed(context, rutaVentana, arguments: {
+      'division_layout': widget.divisionLayout,
+    });
+    if (result != null) {
+      //Si se selecciona la imagen, esto le dice a la ventana anterior que se
+      //Ejecutó. La ventana anterior, ejecuta un setstate
+      widget.actualizaEstado();
+    }
+  }
+
+}
+

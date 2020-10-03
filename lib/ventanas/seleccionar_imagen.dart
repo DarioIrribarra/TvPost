@@ -97,7 +97,7 @@ class _SeleccionarImagenState extends State<SeleccionarImagen> {
                                 );
                                 String nombre = DatosEstaticos.
                                 listadoNombresImagenes[index];
-                                DatosEstaticos.wiget1 = imagen;
+                                //DatosEstaticos.wiget1 = imagen;
                                 RedireccionarCrearLayout(imagen, nombre, false);
                                 return;
                               },

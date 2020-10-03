@@ -16,6 +16,7 @@ Future<void> main() async {
   // inicie la app
   WidgetsFlutterBinding.ensureInitialized();
   await shared_preferences_tvPost.CargarSharedPreferences();
+  //Inicia la app
   runApp(MaterialApp(
     //Rutas para navegar en las páginas
     routes: {

@@ -46,12 +46,16 @@ class _RaspberriesConectadasState extends State<RaspberriesConectadas> {
                       //Y se le pasa la ip
                       if (snapshot.data[2] == true){
                         return GestureDetector(
-                          onTap: () => Navigator.pushNamed(
+                          onTap: () {
+                            //Libera los widgets y datos creados
+                            LimpiarDatosEstaticos();
+                            return Navigator.pushNamed(
                               context,
                               '/detalle_equipo',
                               arguments: {
                                 "indexEquipoGrid" : index,
-                              }),
+                              });
+                            },
                           child: Card(
                             child: Column(
                               mainAxisAlignment: MainAxisAlignment.center,
@@ -170,6 +174,15 @@ class _RaspberriesConectadasState extends State<RaspberriesConectadas> {
     setState(() {
 
     });
+  }
+
+  void LimpiarDatosEstaticos() {
+    DatosEstaticos.wiget1 = null;
+    DatosEstaticos.wiget2 = null;
+    DatosEstaticos.wiget3 = null;
+    DatosEstaticos.nombreArchivoWidget1 = "";
+    DatosEstaticos.nombreArchivoWidget2 = "";
+    DatosEstaticos.nombreArchivoWidget3 = "";
   }
 
 }
