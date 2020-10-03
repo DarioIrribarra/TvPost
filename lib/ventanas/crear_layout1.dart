@@ -2,7 +2,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:tvpost_flutter/utilidades/custom_widgets.dart';
 import 'package:tvpost_flutter/utilidades/datos_estaticos.dart';
-import 'package:tvpost_flutter/ventanas/seleccionar_imagen.dart';
 
 class CrearLayout1 extends StatefulWidget {
   @override
@@ -10,6 +9,8 @@ class CrearLayout1 extends StatefulWidget {
 }
 
 class _CrearLayout1State extends State<CrearLayout1> {
+
+  //Acá va el cambio desde Android
 
   //dato que indica que parte del layout se quiere modificar y se envia a la
   // selección de contenido correspondiente
