@@ -1,0 +1,226 @@
+import 'dart:async';
+import 'dart:convert';
+import 'dart:io';
+import 'dart:typed_data';
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+import 'package:tvpost_flutter/utilidades/datos_estaticos.dart';
+import 'package:tvpost_flutter/utilidades/obtiene_datos_webservice.dart';
+import 'package:tvpost_flutter/utilidades/custom_widgets.dart';
+import 'package:async/async.dart';
+
+class DetalleEquipo extends StatefulWidget {
+  @override
+  _DetalleEquipoState createState() => _DetalleEquipoState();
+}
+
+
+class _DetalleEquipoState extends State<DetalleEquipo> {
+
+  Map datosDesdeVentanaAnterior = {};
+  int indexEquipoGrid = 0;
+  Image _screenshotProcesada = Image.asset('imagenes/logohorizontal.png');
+  TextEditingController _controladorAliasEquipo = TextEditingController();
+  TextEditingController _controladorTexto = TextEditingController();
+  //Guarda el estado del context para usarlo con el snackbar
+  final _scaffoldKey = GlobalKey<ScaffoldState>();
+  //Utilizar el memoizer hace que la función de Future (getScreenShot())
+  // solo ocurra una vez. De lo contrario se llama con cada acción del build
+  final AsyncMemoizer _memoizer = AsyncMemoizer();
+
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    _controladorTexto.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    //Se obtiene la info de la ventana anterior
+
+    datosDesdeVentanaAnterior = ModalRoute.of(context).settings.arguments;
+    indexEquipoGrid = datosDesdeVentanaAnterior['indexEquipoGrid'];
+    DatosEstaticos.ipSeleccionada = ObtieneDatos.listadoEquipos
+    [indexEquipoGrid]['f_ip'].toString();
+
+    return Scaffold(
+      key: _scaffoldKey,
+      //Appbar viene de archivo custom_widgets.dart
+      appBar: CustomAppBar(),
+      body: SingleChildScrollView(
+        child: Container(
+          margin: EdgeInsets.all(20.0),
+          child:
+          Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+            Column(
+              children: [
+                FutureBuilder(
+                  future: _getScreenShot(),
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.done) {
+                      if (snapshot.data == null) {
+                        return Image.asset('imagenes/logohorizontal.png');
+                      } else {
+                        //Retorna el widget con la imagen de screenshot
+                        //return Image.network('http://${DatosEstaticos.ipSeleccionada}/ImagenesPostTv/Screenshot/pantalla.png');
+                        return _getScreenShotProcesada();
+                      }
+                    } else {
+                      return CircularProgressIndicator();
+                    }
+                  },
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text('Alias: '),
+                    Text(ObtieneDatos.listadoEquipos[indexEquipoGrid]['f_alias']
+                        .toString()),
+                    IconButton(
+                      onPressed: () async {
+                        _widgetPopUpAlias(context);
+                      },
+                      icon: Icon(Icons.edit),
+                    )
+                  ],
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                    Text('Ip: '),
+                    Text(ObtieneDatos.listadoEquipos[indexEquipoGrid]['f_ip']
+                        .toString()),
+                  ],
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                    Text('Serial: '),
+                    Text(ObtieneDatos.listadoEquipos[indexEquipoGrid]
+                    ['f_serial']
+                        .toString()),
+                  ],
+                ),
+              ],
+            ),
+            Align(
+              alignment: Alignment.bottomCenter,
+              heightFactor: 4.0,
+              child: RaisedButton(
+                onPressed: () {
+                  Navigator.pushNamed(context, '/seleccionar_layout');
+                },
+                child: Text('Crear Layout'),
+              ),
+            )
+          ]),
+        ),
+      ),
+    );
+  }
+
+  Future _getScreenShot() {
+    //Utilizar el memoizer hace que la función de Future solo ocurra una vez
+    return _memoizer.runOnce(() async {
+
+      String host = ObtieneDatos.listadoEquipos[indexEquipoGrid]['f_ip'];
+      Uint8List _respuesta;
+      List<int> listadoRespuestas = [];
+      //int _largoEvent = 0;
+      //Hacer llamada al socket con comando de screenshot
+      Socket socket;
+      try {
+        socket = await Socket.connect(host, DatosEstaticos.puertoSocketRaspberry)
+            .timeout(Duration(seconds: 5));
+        socket.write('TVPOSTGETSCREEN');
+        socket.listen((event) {
+          listadoRespuestas.addAll(event);
+          socket.flush();
+          //_largoEvent = _largoEvent + event.length;
+          //print("Largo del event: ${_largoEvent.toString()}");
+          //print(listadoRespuestas.length);
+        }).onDone(() {
+          socket.close();
+          return;
+        });
+
+        //El retornar esto, hace que el FutureBuilder espere al "done"
+        //Si no se retorna el whencomplete, se salta al final
+        return socket.done.whenComplete(() {
+          _respuesta = Uint8List.fromList(listadoRespuestas);
+          _screenshotProcesada = Image.memory(_respuesta);
+          //print(listadoRespuestas.length);
+        });
+      } catch (e) {
+        print("Error: ${e.toString()}");
+      }
+    });
+  }
+
+  Widget _getScreenShotProcesada(){
+    return _screenshotProcesada;
+  }
+
+  void _widgetPopUpAlias(BuildContext context) async{
+    GlobalKey<FormState> _keyValidador = GlobalKey<FormState>();
+    Widget _widgetCompleto = 
+    SingleChildScrollView(
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Form(
+            key: _keyValidador,
+            child: Container(
+              child: new Column(
+                children: [
+                  TextFormField(
+                    controller: _controladorTexto,
+                    validator: (textoEscrito){
+                      if(textoEscrito.isEmpty){
+                        return "Error: Alias vacío";
+                      }
+                      if(textoEscrito.trim().length<= 0){
+                        return "Error: Alias vacío";
+                      }
+                      else {return null;}
+                    },
+                  ),
+                  RaisedButton(
+                    child: Text('Cambiar Alias'),
+                    onPressed: () async{
+                      if (_keyValidador.currentState.validate()){
+                        PopUps.popUpCargando(context, 'Actualizando alias...');
+                        ObtieneDatos datos = ObtieneDatos();
+                        String serial = await ObtieneDatos.listadoEquipos
+                        [indexEquipoGrid]['f_serial'];
+                        String resultado = await datos.updateAliasEquipo(serial,
+                            _controladorTexto.text.toString());
+                        //print(resultado);
+                        await datos.getDatosEquipos();
+                        //Cierra popup cargando
+                        Navigator.of(context, rootNavigator: true).pop();
+                        //Cierra popup de cambiar Alias
+                        Navigator.of(context, rootNavigator: true).pop();
+                        //Realiza el cambio en la ventana raiz
+                        setState(() {});
+                        await Future.delayed(Duration(milliseconds: 500));
+                        SnackBar snackbar = SnackBar(content: Text('Alias '
+                            'cambiado exitosamente'),);
+                        _scaffoldKey.currentState.showSnackBar(snackbar);
+                      }
+                    },
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+
+    PopUps.PopUpConWidget(context, _widgetCompleto);
+  }
+}
