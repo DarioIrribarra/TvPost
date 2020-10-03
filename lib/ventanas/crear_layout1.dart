@@ -9,7 +9,7 @@ class CrearLayout1 extends StatefulWidget {
 }
 
 class _CrearLayout1State extends State<CrearLayout1> {
-  //Acá va el cambio desde VSCode
+  //Acá va el cambio desde VSCode - 2
   //Acá va el cambio desde Android
 
   //dato que indica que parte del layout se quiere modificar y se envia a la
