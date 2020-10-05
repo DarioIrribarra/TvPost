@@ -87,6 +87,14 @@ class OpcionesSeleccionMedia extends StatefulWidget {
 
 class _OpcionesSeleccionMediaState extends State<OpcionesSeleccionMedia> {
 
+  TextEditingController controladorTextoUrl;
+
+  @override
+  void dispose() {
+    controladorTextoUrl.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Visibility(
@@ -119,7 +127,10 @@ class _OpcionesSeleccionMediaState extends State<OpcionesSeleccionMedia> {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 RaisedButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    //Aparece popup de ingresar link
+                    PopUps.PopUpConWidget(context, contenidoPopUpSeleccionUrl());
+                  },
                   child: Text('Url'),
                 ),
                 RaisedButton(
@@ -132,6 +143,45 @@ class _OpcionesSeleccionMediaState extends State<OpcionesSeleccionMedia> {
         ),
       ),
     );
+  }
+
+  Widget contenidoPopUpSeleccionUrl(){
+    GlobalKey<FormState> _keyValidador = GlobalKey<FormState>();
+    return Form(
+      key: _keyValidador,
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          TextFormField(
+            controller: controladorTextoUrl,
+            validator: (urlEscrita) {
+              if (urlEscrita.isEmpty){
+                return 'Ingrese un enlace web';
+              }
+              if(urlEscrita.trim().length<= 0){
+                return 'Ingrese un enlace web';
+              }
+              return null;
+            },
+          ),
+          RaisedButton(
+            child: Text(
+                'presioname'
+            ),
+            onPressed: (){
+              if (_keyValidador.currentState.validate()){
+
+              }
+            },
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget crearWebView(){
+    return Container();
   }
 
   navegarYEsperarRespuesta(String rutaVentana) async {
