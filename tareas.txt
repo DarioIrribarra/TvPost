@@ -1,0 +1,57 @@
+QUé hacer en appOpening:
+
+1.- Refactorizar
+2.- Ver manmipulación de tiempo (Acotarlos si se puede)
+3.- Realizar pruebas.
+
+Qué hacer en el server:
+0.- Responder con un conectado o no a ping
+0.1.- Estandarizar respuestas
+1.- Traer listado de imágenes desde raspberry y desplegarlas en android (Puede ser usar un listview y un while para traer cada imagen. Con respuesta de recepción de cada una.)
+2.- Envío de imagen o video desde celular a raspberry
+3.- Cerrar el socket después de cada recepción de instrucción para que el servidor pueda seguir recibiendo peticiones
+4.- Realizar pruebas
+
+**Envío de listado de imágenes**
+0.- Obtener listado de imágenes en carpeta
+1.- Desde el server debo enviar la cantidad de ítems en carpeta (Para el ciclo de carga)
+1.0.- Este valor se almacena en una variable estática al momento de elegir la opción de cargar imagen
+1.1.- Esta se pasa a la variable que maneja los ciclos en el adapter
+2.- El cliente debe enviar instrucción "TVPOTGETIMAGE" + (Numero de imagen)
+3.- El server va a buscar esa imagen y la envía
+4.- El cliente la recibe y manda instrucción para cerrar socket
+****************
+
+***Recepción de imagen***
+* EL cliente pide los nombres de las imágenes y las guarda en un arreglo. Cierra el socket
+* El cliente pide la imagen con ese nombre en el adapter obteniendo la posicióny el nombre. Cierra el socket.
+
+**Si esto no funciona, enviar todo el listado de nombres en un arreglo desde el servidor y decodificar en el cliente
+funcionó
+***********************
+Crear botón abrir galería:
+*Al presionar el botón, se despliega la galería para elegir imágenes.
+*Al seleccionar la imagen, se envía el nombre a la raspberry y se espera la respuessta para ver si existe.
+*Si no existe, se envía a la raspberry y se guarda en la carpeta ImagenesPostTV
+*Si existe se alerta con un Toast y se debe dar la opción de cambiar nombre
+*Se puede guardar el nombre en una variable local y cuando se envíe a la raspberry se guarda con ese nombre
+***********************
+
+*************************VIDEO*************************
+*Se deben ingresar variables para los 3 tipos de elementos (imagen (Drawable), video (String) y enlace de internet (String))
+*Al seleccionar un tipo de contenido, cambiar los otros al valor por defecto (null)
+*Si se selecciona video y enlace guardar el nombre del video y la dirección del enlace en esas variables. Asignar imagen estándar a la parte de layout elegida cuando el valor de estos elementos no sea null
+*En la raspberry, cuando se envíe un video nuevo, al terminar se puede ver una forma de crear un corto de unos segundos y ese subirlo al adapter de listado 
+de videos, así se puede reproduciir en un videoView
+*Se selecciona el video de la galería
+*Se pregunta si ya existe, si no existe se envía
+*Cuando se recibe se utiliza el nombre para crear el mini video
+*Al momento de subir el video, a la raspberry, luego de que se reciba y se guarde, se crea el mini video para mostrar en android
+*El mini video se guarda en la carpeta con el nombre "sampleNombreVideo.extension"
+*Al abrir el server cada día, hacer una búsqueda de comparación y ver si todos los videos tiene su "sample". Sino lo tienen, crearlo
+*Se crea una carpeta "Samples" para guardar los sample de videos dentro VideosTvPost
+*Al momento de cargar los videos, se debe crear un archivo local temporal y eliminar una vez que se haya enviado la selección al video. Este archivo se tiene que crear en android studio
+*Se agrega la implementation de nanohttpd para ver si se puede hacer un streaming falso
+*Se agrega Theme.Dialog en manifest a la activity del popup
+*************************VIDEO*************************
+Realizar integración
