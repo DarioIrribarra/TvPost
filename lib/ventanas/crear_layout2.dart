@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:tvpost_flutter/utilidades/custom_widgets.dart';
 import 'package:tvpost_flutter/utilidades/datos_estaticos.dart';
+import 'package:webview_flutter/webview_flutter.dart';
 
 class CrearLayout2 extends StatefulWidget {
   @override
@@ -30,7 +31,23 @@ class _CrearLayout2State extends State<CrearLayout2> {
 
     //Si ya se seleccionó un archivo de media se crea un nuevo layout
     if (DatosEstaticos.wiget1 != null) {
-      widget1 = DatosEstaticos.wiget1;
+      if (DatosEstaticos.wiget1.runtimeType.toString() == 'WebView'){
+        WebView widgetWebView = DatosEstaticos.wiget1;
+        String url = widgetWebView.initialUrl;
+        DatosEstaticos.webViewControllerWidget1?.loadUrl(url);
+        widget1 = DatosEstaticos.wiget1;
+        /*try{
+          DatosEstaticos.webViewControllerWidget1?.loadUrl(url);
+          widget1 = DatosEstaticos.wiget1;
+          //DatosEstaticos.webViewControllerWidget1 = null;
+        } catch (e) {
+          widget1 = DatosEstaticos.wiget1;
+          print("Error al loadurl: " + e.toString());
+        }*/
+
+      }else {
+        widget1 = DatosEstaticos.wiget1;
+      }
     } else {
       Widget _imageSeleccionLayout = Image.asset('imagenes/layout1a.png');
       widget1 = _imageSeleccionLayout;
@@ -38,7 +55,23 @@ class _CrearLayout2State extends State<CrearLayout2> {
 
     //Si ya se seleccionó un archivo de media se crea un nuevo layout
     if (DatosEstaticos.wiget2 != null) {
-      widget2 = DatosEstaticos.wiget2;
+      if (DatosEstaticos.wiget2.runtimeType.toString() == 'WebView'){
+        WebView widgetWebView = DatosEstaticos.wiget2;
+        String url = widgetWebView.initialUrl;
+        DatosEstaticos.webViewControllerWidget2?.loadUrl(url);
+        widget2 = DatosEstaticos.wiget2;
+        /*try{
+          DatosEstaticos.webViewControllerWidget1?.loadUrl(url);
+          widget1 = DatosEstaticos.wiget1;
+          //DatosEstaticos.webViewControllerWidget1 = null;
+        } catch (e) {
+          widget1 = DatosEstaticos.wiget1;
+          print("Error al loadurl: " + e.toString());
+        }*/
+
+      }else {
+        widget2 = DatosEstaticos.wiget2;
+      }
     } else {
       Widget _imageSeleccionLayout = Image.asset('imagenes/layout1a.png');
       widget2 = _imageSeleccionLayout;
@@ -70,7 +103,7 @@ class _CrearLayout2State extends State<CrearLayout2> {
                             divisionLayout = '2-1';
                           });
                         },
-                        child: widget1
+                        child: ignorarInteraccionesElemento(widget1),
                     ),
                   ),
                   Container(
@@ -88,7 +121,7 @@ class _CrearLayout2State extends State<CrearLayout2> {
                             divisionLayout = '2-2';
                           });
                         },
-                        child: widget2
+                        child: ignorarInteraccionesElemento(widget2),
                     ),
                   ),
                 ],
@@ -133,4 +166,13 @@ class _CrearLayout2State extends State<CrearLayout2> {
     }
   }
 
+  //Ignora los controles del webview para que no intervenga con el onTap de
+  // seleccionar medio
+  Widget ignorarInteraccionesElemento(Widget widget){
+    if (widget.runtimeType.toString() == 'WebView'){
+      return IgnorePointer(child: widget,);
+    }else{
+      return widget;
+    }
+  }
 }

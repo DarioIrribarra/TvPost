@@ -1,5 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:tvpost_flutter/utilidades/datos_estaticos.dart';
+import 'package:webview_flutter/webview_flutter.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class PopUps{
   //Se crea popup de cargando
@@ -70,12 +73,13 @@ class CustomAppBar extends PreferredSize{
 class OpcionesSeleccionMedia extends StatefulWidget {
 
   OpcionesSeleccionMedia({
+  //@required this.keywebview,
     @required this.visible,
     @required this.divisionLayout,
     //Se requiere la función que hará que algo pase en la ventan anterior
     @required this.actualizaEstado,
   });
-
+  //Key keywebview;
   final bool visible;
   final String divisionLayout;
   //Función que devuelve algo a la ventana anterior
@@ -86,6 +90,19 @@ class OpcionesSeleccionMedia extends StatefulWidget {
 }
 
 class _OpcionesSeleccionMediaState extends State<OpcionesSeleccionMedia> {
+
+  TextEditingController controladorTextoUrl = TextEditingController();
+  WebViewController webViewController;
+
+  @override
+  void dispose() {
+    controladorTextoUrl.dispose();
+    webViewController = null;
+    DatosEstaticos.webViewControllerWidget1 = null;
+    DatosEstaticos.webViewControllerWidget2 = null;
+    DatosEstaticos.webViewControllerWidget3 = null;
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -119,7 +136,10 @@ class _OpcionesSeleccionMediaState extends State<OpcionesSeleccionMedia> {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 RaisedButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    //Aparece popup de ingresar link
+                    PopUps.PopUpConWidget(context, contenidoPopUpSeleccionUrl());
+                  },
                   child: Text('Url'),
                 ),
                 RaisedButton(
@@ -132,6 +152,144 @@ class _OpcionesSeleccionMediaState extends State<OpcionesSeleccionMedia> {
         ),
       ),
     );
+  }
+
+  Widget contenidoPopUpSeleccionUrl(){
+    GlobalKey<FormState> _keyValidador = GlobalKey<FormState>();
+    return Form(
+      key: _keyValidador,
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          TextFormField(
+            controller: controladorTextoUrl,
+            decoration: InputDecoration(
+              suffixIcon: IconButton(
+                icon: Icon(Icons.search),
+                onPressed: (){_abrirBuscador();},
+              ),
+            ),
+            validator: (urlEscrita) {
+              if (urlEscrita.isEmpty){
+                return 'Ingrese un enlace web';
+              }
+              if(urlEscrita.trim().length<= 0){
+                return 'Ingrese un enlace web';
+              }
+              return null;
+            },
+          ),
+          RaisedButton(
+            child: Text(
+                'Ingresar enlace'
+            ),
+            onPressed: (){
+              if (_keyValidador.currentState.validate()){
+                //Crea webvbiew
+                crearWebView(controladorTextoUrl.text.toString().trim());
+                //this._webViewController.reload();
+                /*_keyValidador.currentState?.setState(() {
+
+                });*/
+                //Cierra popup cargando
+                Navigator.of(context, rootNavigator: true).pop();
+
+                widget.actualizaEstado();
+              }
+            },
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget crearWebView(String url){
+    if (!url.contains('https://') && !url.contains('http://')){
+      url = 'https://$url';
+    }
+    /*if (webViewController!=null){
+      if (widget.divisionLayout.contains('-1')){
+        DatosEstaticos.webViewControllerWidget1 = webViewController;
+        *//*DatosEstaticos.webViewControllerWidget2 = null;
+        DatosEstaticos.webViewControllerWidget3 = null;*//*
+      }
+      if (widget.divisionLayout.contains('-2')){
+        //DatosEstaticos.webViewControllerWidget1 = null;
+        DatosEstaticos.webViewControllerWidget2 = webViewController;
+        //DatosEstaticos.webViewControllerWidget3 = null;
+      }
+      if (widget.divisionLayout.contains('-3')){
+        //DatosEstaticos.webViewControllerWidget1 = null;
+        //DatosEstaticos.webViewControllerWidget2 = null;
+        DatosEstaticos.webViewControllerWidget3 = webViewController;
+      }
+
+    }*/
+    Widget _webview;
+    _webview = WebView(
+      initialUrl: url,
+      javascriptMode: JavascriptMode.unrestricted,
+      onWebViewCreated: (WebViewController controlador){
+        webViewController = controlador;
+        if (widget.divisionLayout.contains('-1')){
+          DatosEstaticos.webViewControllerWidget1 = webViewController;
+          //DatosEstaticos.webViewControllerWidget2 = null;
+          //DatosEstaticos.webViewControllerWidget3 = null;
+        }
+        if (widget.divisionLayout.contains('-2')){
+          //DatosEstaticos.webViewControllerWidget1 = null;
+          DatosEstaticos.webViewControllerWidget2 = webViewController;
+          //DatosEstaticos.webViewControllerWidget3 = null;
+        }
+        if (widget.divisionLayout.contains('-3')){
+          //DatosEstaticos.webViewControllerWidget1 = null;
+          //DatosEstaticos.webViewControllerWidget2 = null;
+          DatosEstaticos.webViewControllerWidget3 = webViewController;
+        }
+      },
+    );
+
+    switch (widget.divisionLayout){
+      case '1-1':
+        DatosEstaticos.wiget1 = _webview;
+        DatosEstaticos.nombreArchivoWidget1 = url;
+        break;
+      case '2-1':
+        DatosEstaticos.wiget1 = _webview;
+        DatosEstaticos.nombreArchivoWidget1 = url;
+        break;
+      case '2-2':
+        DatosEstaticos.wiget2 = _webview;
+        DatosEstaticos.nombreArchivoWidget2 = url;
+        break;
+      case '3-1':
+        DatosEstaticos.wiget1 = _webview;
+        DatosEstaticos.nombreArchivoWidget1 = url;
+        break;
+      case '3-2':
+        DatosEstaticos.wiget2 = _webview;
+        DatosEstaticos.nombreArchivoWidget2 = url;
+        break;
+      case '3-3':
+        DatosEstaticos.wiget3 = _webview;
+        DatosEstaticos.nombreArchivoWidget3 = url;
+        break;
+    }
+
+
+    return _webview;
+
+  }
+
+
+  _abrirBuscador() async{
+    const url = 'https://www.google.cl';
+    if (await canLaunch(url)) {
+      await launch(url);
+    } else {
+      throw 'No se puede abrir el enlace: $url';
+    }
   }
 
   navegarYEsperarRespuesta(String rutaVentana) async {
