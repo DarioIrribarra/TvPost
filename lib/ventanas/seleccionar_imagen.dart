@@ -88,7 +88,7 @@ class _SeleccionarImagenState extends State<SeleccionarImagen> {
                             //Por cada imagen, busca su imagen.
                             // El nombre lo toma del listado estático
                             return GestureDetector(
-                              onTap: (){
+                              onDoubleTap: (){
                                 Widget imagen = Image.network('http://'
                                     '${DatosEstaticos.ipSeleccionada}'
                                     '/ImagenesPostTv/'
@@ -277,6 +277,10 @@ class _SeleccionarImagenState extends State<SeleccionarImagen> {
       //Cierra popup imagen
       Navigator.of(context, rootNavigator: true).pop();
     }
+
+    DatosEstaticos.webViewControllerWidget1 = null;
+    DatosEstaticos.webViewControllerWidget2 = null;
+    DatosEstaticos.webViewControllerWidget3 = null;
 
     switch(divisionLayout){
       case '1-1': {

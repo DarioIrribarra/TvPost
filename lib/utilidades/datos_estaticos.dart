@@ -1,5 +1,4 @@
-import 'dart:ui';
-
+import 'package:webview_flutter/webview_flutter.dart';
 import 'package:flutter/cupertino.dart';
 
 class DatosEstaticos {
@@ -16,4 +15,7 @@ class DatosEstaticos {
   static String nombreArchivoWidget2;
   static Widget wiget3;
   static String nombreArchivoWidget3;
+  static WebViewController webViewControllerWidget1;
+  static WebViewController webViewControllerWidget2;
+  static WebViewController webViewControllerWidget3;
 }

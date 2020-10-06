@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:tvpost_flutter/utilidades/custom_widgets.dart';
 import 'package:tvpost_flutter/utilidades/datos_estaticos.dart';
+import 'package:webview_flutter/webview_flutter.dart';
 
 class CrearLayout1 extends StatefulWidget {
   @override
@@ -19,6 +20,8 @@ class _CrearLayout1State extends State<CrearLayout1> {
   //Widget dentro del mapa de datos de ventana anterior
   Widget widget1;
   bool _visible = false;
+  //Decoración que permite el poner un borde al seleccionar la porción de
+  // pantalla
   BoxDecoration _decorationPorcion1;
 
   @override
@@ -29,14 +32,32 @@ class _CrearLayout1State extends State<CrearLayout1> {
 
   @override
   Widget build(BuildContext context) {
+    //final webViewKey = GlobalKey<ScaffoldState>();
     //Si ya se seleccionó un archivo de media se crea un nuevo layout
     if (DatosEstaticos.wiget1 != null) {
-      widget1 = DatosEstaticos.wiget1;
+      if (DatosEstaticos.wiget1.runtimeType.toString() == 'WebView'){
+        WebView widgetWebView = DatosEstaticos.wiget1;
+        String url = widgetWebView.initialUrl;
+        DatosEstaticos.webViewControllerWidget1?.loadUrl(url);
+        widget1 = DatosEstaticos.wiget1;
+        /*try{
+          DatosEstaticos.webViewControllerWidget1?.loadUrl(url);
+          widget1 = DatosEstaticos.wiget1;
+          //DatosEstaticos.webViewControllerWidget1 = null;
+        } catch (e) {
+          widget1 = DatosEstaticos.wiget1;
+          print("Error al loadurl: " + e.toString());
+        }*/
+
+      }else {
+        widget1 = DatosEstaticos.wiget1;
+      }
     } else {
       Widget _imageSeleccionLayout = Image.asset('imagenes/layout1a.png');
       widget1 = _imageSeleccionLayout;
     }
     return Scaffold(
+      //key: webViewKey,
       //Appbar viene de archivo custom_widgets.dart
       appBar: CustomAppBar(),
       body: SingleChildScrollView(
@@ -61,12 +82,13 @@ class _CrearLayout1State extends State<CrearLayout1> {
                         divisionLayout = '1-1';
                       });
                     },
-                    child: widget1
+                    child: ignorarInteraccionesElemento(widget1),
                   ),
                 ),
               ),
               //Acá va el widget de los botones
               OpcionesSeleccionMedia(
+                //keywebview: webViewKey,
                 visible: _visible,
                 divisionLayout: divisionLayout,
                 //Función que al ser ejecutada desde la ventana siguiente
@@ -94,6 +116,15 @@ class _CrearLayout1State extends State<CrearLayout1> {
     }
   }
 
+  //Ignora los controles del webview para que no intervenga con el onTap de
+  // seleccionar medio
+  Widget ignorarInteraccionesElemento(Widget widget){
+    if (widget.runtimeType.toString() == 'WebView'){
+      return IgnorePointer(child: widget,);
+    }else{
+      return widget;
+    }
+  }
 /*navegarYEsperarRespuesta(String rutaVentana) async {
     final result = await Navigator.pushNamed(context, rutaVentana, arguments: {
       'division_layout': divisionLayout,
