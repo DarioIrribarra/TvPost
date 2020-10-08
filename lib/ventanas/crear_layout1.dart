@@ -27,6 +27,7 @@ class _CrearLayout1State extends State<CrearLayout1> {
   @override
   void initState() {
     PorcionSeleccionada(0);
+
     super.initState();
   }
 
@@ -96,7 +97,8 @@ class _CrearLayout1State extends State<CrearLayout1> {
                 actualizaEstado: () {
                   setState(() {});
                 },
-              )
+              ),
+              BotonEnviarAEquipo(visible: _visible),
             ],
           ),
       ),

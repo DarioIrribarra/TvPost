@@ -87,7 +87,7 @@ class _SeleccionarVideoState extends State<SeleccionarVideo> {
                           onDoubleTap: (){
                             Widget video = ReproductorVideos(url: 'http://${DatosEstaticos.ipSeleccionada}/VideosPostTv/${DatosEstaticos.listadoNombresVideos[index]}',);
                             String nombre = DatosEstaticos.listadoNombresVideos[index];
-                            RedireccionarCrearLayout(video, nombre, false);
+                            RedireccionarCrearLayout(video, "/var/www/html/VideosPostTv/$nombre", false);
                           },
                           child: ReproductorVideos(url: 'http://${DatosEstaticos.ipSeleccionada}/VideosPostTv/${DatosEstaticos.listadoNombresVideos[index]}',)
                         );
@@ -190,7 +190,7 @@ class _SeleccionarVideoState extends State<SeleccionarVideo> {
                       if(resultado){
                         //Si el envío es correcto, se redirecciona
                         //VideoElement video = Video
-                        RedireccionarCrearLayout(videoAEnviar, nombreNuevoVideo,true);
+                        RedireccionarCrearLayout(videoAEnviar, "/var/www/html/VideosPostTv/$nombreNuevoVideo",true);
 
                       }else{
                         //Cierra popup cargando
@@ -341,7 +341,7 @@ class _ReproductorVideosState extends State<ReproductorVideos> {
   }
 }
 
-class ChewieListItem extends StatefulWidget {
+/*class ChewieListItem extends StatefulWidget {
 
   VideoPlayerController videoPlayerControllerChewie;
   bool looping;
@@ -398,4 +398,4 @@ class _ChewieListItemState extends State<ChewieListItem> {
     }
 
   }
-}
+}*/

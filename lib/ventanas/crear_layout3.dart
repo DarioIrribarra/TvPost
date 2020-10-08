@@ -28,7 +28,6 @@ class _CrearLayout3State extends State<CrearLayout3> {
     super.initState();
   }
 
-
   @override
   Widget build(BuildContext context) {
 

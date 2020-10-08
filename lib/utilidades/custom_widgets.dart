@@ -1,12 +1,16 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:tvpost_flutter/utilidades/datos_estaticos.dart';
+import 'package:tvpost_flutter/utilidades/obtiene_datos_webservice.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:tvpost_flutter/utilidades/comunicacion_raspberry.dart';
 
 class PopUps{
+
   //Se crea popup de cargando
   static popUpCargando(BuildContext context, String texto){
+
     AlertDialog alert=AlertDialog(
       content: new Row(
         children: [
@@ -208,24 +212,6 @@ class _OpcionesSeleccionMediaState extends State<OpcionesSeleccionMedia> {
     if (!url.contains('https://') && !url.contains('http://')){
       url = 'https://$url';
     }
-    /*if (webViewController!=null){
-      if (widget.divisionLayout.contains('-1')){
-        DatosEstaticos.webViewControllerWidget1 = webViewController;
-        *//*DatosEstaticos.webViewControllerWidget2 = null;
-        DatosEstaticos.webViewControllerWidget3 = null;*//*
-      }
-      if (widget.divisionLayout.contains('-2')){
-        //DatosEstaticos.webViewControllerWidget1 = null;
-        DatosEstaticos.webViewControllerWidget2 = webViewController;
-        //DatosEstaticos.webViewControllerWidget3 = null;
-      }
-      if (widget.divisionLayout.contains('-3')){
-        //DatosEstaticos.webViewControllerWidget1 = null;
-        //DatosEstaticos.webViewControllerWidget2 = null;
-        DatosEstaticos.webViewControllerWidget3 = webViewController;
-      }
-
-    }*/
     Widget _webview;
     _webview = WebView(
       initialUrl: url,
@@ -304,4 +290,186 @@ class _OpcionesSeleccionMediaState extends State<OpcionesSeleccionMedia> {
   }
 
 }
+
+class BotonEnviarAEquipo extends StatelessWidget {
+  BotonEnviarAEquipo({
+    @required this.visible,
+  });
+  final bool visible;
+
+  @override
+  Widget build(BuildContext context) {
+    return Visibility(
+      visible: this.visible,
+      child: RaisedButton(
+        onPressed: () async{
+          if (DatosEstaticos.nombreArchivoWidget1 != ""
+              || DatosEstaticos.nombreArchivoWidget2 != ""
+              || DatosEstaticos.nombreArchivoWidget3 != ""){
+
+            //Envio instruccion a raspberry. Esto debería tener un await para la respuesta
+            PopUps.PopUpConWidget(context, EsperarRespuestaProyeccion());
+            //Future.delayed(Duration(seconds: 3));
+            //Cierra popup cargando
+            //Navigator.of(context, rootNavigator: true).pop();
+          } else {
+            PopUps.PopUpConWidget(context, Text('Error: Contenido no seleccionado'));
+          }
+        },
+        child: Text('Enviar a pantalla'),
+      ),
+    );
+  }
+
+  //Prepara datos para enviar a raspberry.
+  //Comprueba datos con base de datos para archivos de media
+  List<String> PreparaDatosMediaEnvioEquipo(bool nuevoLayout){
+    String _Instruccion;
+    //Comparar datos que están almacenados con nuevos
+    //Datos guardados en bd
+
+    List<String> respuesta = [];
+
+    //String tipoWidget1EnBDM = ObtieneDatos.listadoEquipos[0]['F_TipoArchivoPorcion1'];
+    //String tipoWidget2EnBDM = ObtieneDatos.listadoEquipos[0]['F_TipoArchivoPorcion2'];
+    //String tipoWidget3EnBDM = ObtieneDatos.listadoEquipos[0]['F_TipoArchivoPorcion3'];
+    String link1EnBDM = ObtieneDatos.listadoEquipos[0]['F_ArchivoPorcion1'];
+    String link2EnBDM = ObtieneDatos.listadoEquipos[0]['F_ArchivoPorcion2'];
+    String link3EnBDM = ObtieneDatos.listadoEquipos[0]['F_ArchivoPorcion3'];
+    String tipoLayoutAEnviar = "";
+    String link1AEnviar;
+    String link2AEnviar;
+    String link3AEnviar;
+
+    //Se envia solo el archivo que es distinto para hacer el cambio
+    if (DatosEstaticos.nombreArchivoWidget1==link1EnBDM){
+      link1AEnviar = "0";
+    }else {
+      link1AEnviar = DatosEstaticos.nombreArchivoWidget1??'0';
+    }
+    if (DatosEstaticos.nombreArchivoWidget2==link2EnBDM){
+      link2AEnviar = "0";
+    }else {
+      link2AEnviar = DatosEstaticos.nombreArchivoWidget2??'0';
+    }
+    if (DatosEstaticos.nombreArchivoWidget3==link3EnBDM){
+      link3AEnviar = "0";
+    }else {
+      link3AEnviar = DatosEstaticos.nombreArchivoWidget3??'0';
+    }
+
+    //Tipo de layout
+    if (DatosEstaticos.layoutSeleccionado == 1){
+      tipoLayoutAEnviar = "100";
+      _Instruccion = link1AEnviar;
+    }
+    if (DatosEstaticos.layoutSeleccionado == 2){
+      tipoLayoutAEnviar = "5050";
+      _Instruccion = "$link1AEnviar $link2AEnviar";
+    }
+    if (DatosEstaticos.layoutSeleccionado == 3){
+      tipoLayoutAEnviar = "802010";
+      _Instruccion = "$link1AEnviar $link2AEnviar $link3AEnviar";
+    }
+
+    //Si es nuevo se envia el nuevo layout
+    if (nuevoLayout){
+
+      _Instruccion = "TVPOSTNEWLAYOUT $tipoLayoutAEnviar $_Instruccion";
+    }else{
+      _Instruccion = "TVPOSTMODLAYOUT $_Instruccion";
+    }
+
+
+
+    respuesta.add(_Instruccion);
+    respuesta.add(link1AEnviar);
+    respuesta.add(link2AEnviar);
+    respuesta.add(link3AEnviar);
+
+    return respuesta;
+  }
+
+  actualizarDatosMediaEquipoBD(String layoutSeleccionado,
+      String archivoPorcion1, String archivoPorcion2,
+      String archivoPorcion3)async{
+    String serial = ObtieneDatos.listadoEquipos[0]['f_serial'];
+    String F_TipoArchivoPorcion1 = DatosEstaticos.wiget1.runtimeType.toString();
+    String F_TipoArchivoPorcion2 = DatosEstaticos.wiget2.runtimeType.toString();
+    String F_TipoArchivoPorcion3 = DatosEstaticos.wiget3.runtimeType.toString();
+    if (F_TipoArchivoPorcion1 == 'Null') {F_TipoArchivoPorcion1 = '';}
+    if (F_TipoArchivoPorcion2 == 'Null') {F_TipoArchivoPorcion2 = '';}
+    if (F_TipoArchivoPorcion3 == 'Null') {F_TipoArchivoPorcion3 = '';}
+
+
+
+    ObtieneDatos datos = ObtieneDatos();
+    await datos.updateDatosMediaEquipo(serial, layoutSeleccionado,
+        F_TipoArchivoPorcion1, F_TipoArchivoPorcion2,
+        F_TipoArchivoPorcion3, archivoPorcion1, archivoPorcion2,
+        archivoPorcion3
+    );
+    return true;
+
+  }
+
+  Widget EsperarRespuestaProyeccion(){
+    int layoutActualEnBD = int.parse(ObtieneDatos.listadoEquipos[0]['f_layoutActual']);
+    String InstruccionEnviar;
+    List<String> listaDatosEnvio = [];
+    //Si es distinto se llama al CrearLayout, sino, se llama al Modificar Layout
+    //Eso se maneja con el valor bool en PrepararDatosMEdiaEnvioEquipo
+    if (DatosEstaticos.layoutSeleccionado!=layoutActualEnBD){
+      listaDatosEnvio = PreparaDatosMediaEnvioEquipo(true);
+      InstruccionEnviar = listaDatosEnvio[0];
+    }
+    else {
+      listaDatosEnvio = PreparaDatosMediaEnvioEquipo(false);
+      InstruccionEnviar = listaDatosEnvio[0];
+    }
+
+    return FutureBuilder(
+      future: ComunicacionRaspberry.ConfigurarLayout(InstruccionEnviar),
+      builder: (context, snapshot){
+        if (snapshot.connectionState == ConnectionState.done){
+          if (snapshot.data != null){
+            //Actualiza datos de bd del equipo si los datos de respuesta
+            // no son nulos
+            actualizarDatosMediaEquipoBD("${DatosEstaticos.layoutSeleccionado}",
+                listaDatosEnvio[1], listaDatosEnvio[2], listaDatosEnvio[3]);
+            return Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(snapshot.data.toString()),
+                RaisedButton(
+                  child: Text('Aceptar'),
+                  onPressed: (){
+                    Navigator.of(context, rootNavigator: true).pop();
+                    Navigator.pushNamedAndRemoveUntil(context,
+                        '/detalle_equipo',
+                        ModalRoute.withName('/seleccionar_layout'),
+                        arguments: {"indexEquipoGrid" : DatosEstaticos.indexSeleccionado,});
+                  },
+                ),
+              ],
+            );
+          }
+          return Row(
+            children: [
+              CircularProgressIndicator(),
+              Container(margin: EdgeInsets.only(left: 20),child:Text('Preparando pantallas...')),
+            ],);
+        }
+        return Row(
+          children: [
+            CircularProgressIndicator(),
+            Container(margin: EdgeInsets.only(left: 20),child:Text('Preparando pantallas...')),
+          ],);
+      },
+    );
+
+  }
+
+}
+
 

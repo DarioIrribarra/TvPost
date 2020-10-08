@@ -58,10 +58,44 @@ class ObtieneDatos {
     }
 
     try{
-      Response responseUpdateEquipo = await post('http://drioxmaster.cl/'
+      await post('http://drioxmaster.cl/'
           'resttvpost/updateAlias.php',
           body: {'f_serial':'$serial', 'f_alias':'$alias'});
       //print(responseUpdateEquipo.body);
+      return "listo";
+    } catch (e) {
+      print("Error: ${e.toString()}");
+      return "Error al actualizar alias: error de conexión";
+    }
+  }
+
+  Future<String> updateDatosMediaEquipo(
+    String serial,
+    String f_layoutActual,
+    String F_TipoArchivoPorcion1,
+    String F_TipoArchivoPorcion2,
+    String F_TipoArchivoPorcion3,
+    String F_ArchivoPorcion1,
+    String F_ArchivoPorcion2,
+    String F_ArchivoPorcion3,
+  ) async{
+    if (serial==null){
+      return "Error al actualizar equipos: campos no pueden estar vacíos";
+    }
+
+    try{
+      await post('http://drioxmaster.cl/'
+          'resttvpost/updateArchivosMediaEquipo.php',
+          body: {
+        'f_serial':'$serial',
+        'f_layoutActual':'$f_layoutActual',
+        'F_TipoArchivoPorcion1':'$F_TipoArchivoPorcion1',
+        'F_TipoArchivoPorcion2':'$F_TipoArchivoPorcion2',
+        'F_TipoArchivoPorcion3':'$F_TipoArchivoPorcion3',
+        'F_ArchivoPorcion1':'$F_ArchivoPorcion1',
+        'F_ArchivoPorcion2':'$F_ArchivoPorcion2',
+        'F_ArchivoPorcion3':'$F_ArchivoPorcion3',
+      });
       return "listo";
     } catch (e) {
       print("Error: ${e.toString()}");

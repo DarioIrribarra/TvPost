@@ -98,7 +98,7 @@ class _SeleccionarImagenState extends State<SeleccionarImagen> {
                                 String nombre = DatosEstaticos.
                                 listadoNombresImagenes[index];
                                 //DatosEstaticos.wiget1 = imagen;
-                                RedireccionarCrearLayout(imagen, nombre, false);
+                                RedireccionarCrearLayout(imagen, "/var/www/html/ImagenesPostTv/$nombre", false);
                                 return;
                               },
                               child: Image.network('http://'
@@ -233,7 +233,7 @@ class _SeleccionarImagenState extends State<SeleccionarImagen> {
                       if(resultado){
                         //Si el envío es correcto, se redirecciona
                         Image imagen = Image.file(imagenFinal,);
-                        RedireccionarCrearLayout(imagen, nombreNuevaImagen,true);
+                        RedireccionarCrearLayout(imagen, "/var/www/html/ImagenesPostTv/$nombreNuevaImagen",true);
 
                       }else{
                         //Cierra popup cargando

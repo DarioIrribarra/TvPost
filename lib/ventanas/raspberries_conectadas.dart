@@ -49,6 +49,7 @@ class _RaspberriesConectadasState extends State<RaspberriesConectadas> {
                           onTap: () {
                             //Libera los widgets y datos creados
                             LimpiarDatosEstaticos();
+                            DatosEstaticos.indexSeleccionado = index;
                             return Navigator.pushNamed(
                               context,
                               '/detalle_equipo',

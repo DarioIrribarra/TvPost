@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:convert';
 import 'dart:io';
 import 'dart:typed_data';
 import 'package:flutter/cupertino.dart';
@@ -20,7 +19,6 @@ class _DetalleEquipoState extends State<DetalleEquipo> {
   Map datosDesdeVentanaAnterior = {};
   int indexEquipoGrid = 0;
   Image _screenshotProcesada = Image.asset('imagenes/logohorizontal.png');
-  TextEditingController _controladorAliasEquipo = TextEditingController();
   TextEditingController _controladorTexto = TextEditingController();
   //Guarda el estado del context para usarlo con el snackbar
   final _scaffoldKey = GlobalKey<ScaffoldState>();
@@ -44,79 +42,85 @@ class _DetalleEquipoState extends State<DetalleEquipo> {
     DatosEstaticos.ipSeleccionada = ObtieneDatos.listadoEquipos
     [indexEquipoGrid]['f_ip'].toString();
 
-    return Scaffold(
-      key: _scaffoldKey,
-      //Appbar viene de archivo custom_widgets.dart
-      appBar: CustomAppBar(),
-      body: SingleChildScrollView(
-        child: Container(
-          margin: EdgeInsets.all(20.0),
-          child:
-          Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
+    return WillPopScope(
+      onWillPop: (){
+        Navigator.popUntil(context, ModalRoute.withName('/raspberries_conectadas'));
+        return;
+      },
+      child: Scaffold(
+        key: _scaffoldKey,
+        //Appbar viene de archivo custom_widgets.dart
+        appBar: CustomAppBar(),
+        body: SingleChildScrollView(
+          child: Container(
+            margin: EdgeInsets.all(20.0),
+            child:
             Column(
-              children: [
-                FutureBuilder(
-                  future: _getScreenShot(),
-                  builder: (context, snapshot) {
-                    if (snapshot.connectionState == ConnectionState.done) {
-                      if (snapshot.data == null) {
-                        return Image.asset('imagenes/logohorizontal.png');
-                      } else {
-                        //Retorna el widget con la imagen de screenshot
-                        //return Image.network('http://${DatosEstaticos.ipSeleccionada}/ImagenesPostTv/Screenshot/pantalla.png');
-                        return _getScreenShotProcesada();
-                      }
-                    } else {
-                      return CircularProgressIndicator();
-                    }
-                  },
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text('Alias: '),
-                    Text(ObtieneDatos.listadoEquipos[indexEquipoGrid]['f_alias']
-                        .toString()),
-                    IconButton(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Column(
+                    children: [
+                      FutureBuilder(
+                        future: _getScreenShot(),
+                        builder: (context, snapshot) {
+                          if (snapshot.connectionState == ConnectionState.done) {
+                            if (snapshot.data == null) {
+                              return Image.asset('imagenes/logohorizontal.png');
+                            } else {
+                              //Retorna el widget con la imagen de screenshot
+                              //return Image.network('http://${DatosEstaticos.ipSeleccionada}/ImagenesPostTv/Screenshot/pantalla.png');
+                              return _getScreenShotProcesada();
+                            }
+                          } else {
+                            return CircularProgressIndicator();
+                          }
+                        },
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text('Alias: '),
+                          Text(ObtieneDatos.listadoEquipos[indexEquipoGrid]['f_alias']
+                              .toString()),
+                          IconButton(
+                            onPressed: () async {
+                              _widgetPopUpAlias(context);
+                            },
+                            icon: Icon(Icons.edit),
+                          )
+                        ],
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        children: [
+                          Text('Ip: '),
+                          Text(ObtieneDatos.listadoEquipos[indexEquipoGrid]['f_ip']
+                              .toString()),
+                        ],
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        children: [
+                          Text('Serial: '),
+                          Text(ObtieneDatos.listadoEquipos[indexEquipoGrid]
+                          ['f_serial']
+                              .toString()),
+                        ],
+                      ),
+                    ],
+                  ),
+                  Align(
+                    alignment: Alignment.bottomCenter,
+                    heightFactor: 4.0,
+                    child: RaisedButton(
                       onPressed: () async {
-                        _widgetPopUpAlias(context);
+                        Navigator.pushNamed(context, '/seleccionar_layout');
                       },
-                      icon: Icon(Icons.edit),
-                    )
-                  ],
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: [
-                    Text('Ip: '),
-                    Text(ObtieneDatos.listadoEquipos[indexEquipoGrid]['f_ip']
-                        .toString()),
-                  ],
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: [
-                    Text('Serial: '),
-                    Text(ObtieneDatos.listadoEquipos[indexEquipoGrid]
-                    ['f_serial']
-                        .toString()),
-                  ],
-                ),
-              ],
-            ),
-            Align(
-              alignment: Alignment.bottomCenter,
-              heightFactor: 4.0,
-              child: RaisedButton(
-                onPressed: () {
-                  Navigator.pushNamed(context, '/seleccionar_layout');
-                },
-                child: Text('Crear Layout'),
-              ),
-            )
-          ]),
+                      child: Text('Modificar Layout'),
+                    ),
+                  )
+                ]),
+          ),
         ),
       ),
     );
@@ -196,7 +200,7 @@ class _DetalleEquipoState extends State<DetalleEquipo> {
                         ObtieneDatos datos = ObtieneDatos();
                         String serial = await ObtieneDatos.listadoEquipos
                         [indexEquipoGrid]['f_serial'];
-                        String resultado = await datos.updateAliasEquipo(serial,
+                        await datos.updateAliasEquipo(serial,
                             _controladorTexto.text.toString());
                         //print(resultado);
                         await datos.getDatosEquipos();
