@@ -39,10 +39,23 @@ class _DetalleEquipoState extends State<DetalleEquipo> {
 
     datosDesdeVentanaAnterior = ModalRoute.of(context).settings.arguments;
     indexEquipoGrid = datosDesdeVentanaAnterior['indexEquipoGrid'];
-    DatosEstaticos.ipSeleccionada = ObtieneDatos.listadoEquipos
-    [indexEquipoGrid]['f_ip'].toString();
+
+    //Se obtiene serial para manejar todos los datos en un listado de
+    // datos propio de esa serial
+    String serialSeleccionada = ObtieneDatos.listadoEquipos
+    [indexEquipoGrid]['f_serial'].toString();
+
+    //Se pasan todos los datos del equipo seleccionado a su propio listado
+    DatosEstaticos.listadoDatosEquipoSeleccionado =
+        ObtieneDatos.listadoEquipos.where((equipo) =>
+        equipo['f_serial'] == serialSeleccionada).toList();
+
+    DatosEstaticos.ipSeleccionada = DatosEstaticos.
+    listadoDatosEquipoSeleccionado[0]['f_ip'];
 
     return WillPopScope(
+      //Cierra todas las ventanas anteriores existentes y llega a
+      // la ruta entregada
       onWillPop: (){
         Navigator.popUntil(context, ModalRoute.withName('/raspberries_conectadas'));
         return;
@@ -80,8 +93,8 @@ class _DetalleEquipoState extends State<DetalleEquipo> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Text('Alias: '),
-                          Text(ObtieneDatos.listadoEquipos[indexEquipoGrid]['f_alias']
-                              .toString()),
+                          Text(DatosEstaticos.
+                          listadoDatosEquipoSeleccionado[0]['f_alias']),
                           IconButton(
                             onPressed: () async {
                               _widgetPopUpAlias(context);
@@ -94,17 +107,16 @@ class _DetalleEquipoState extends State<DetalleEquipo> {
                         mainAxisAlignment: MainAxisAlignment.spaceAround,
                         children: [
                           Text('Ip: '),
-                          Text(ObtieneDatos.listadoEquipos[indexEquipoGrid]['f_ip']
-                              .toString()),
+                          Text(DatosEstaticos.
+                          listadoDatosEquipoSeleccionado[0]['f_ip']),
                         ],
                       ),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceAround,
                         children: [
                           Text('Serial: '),
-                          Text(ObtieneDatos.listadoEquipos[indexEquipoGrid]
-                          ['f_serial']
-                              .toString()),
+                          Text(DatosEstaticos.
+                          listadoDatosEquipoSeleccionado[0]['f_serial']),
                         ],
                       ),
                     ],
@@ -130,7 +142,7 @@ class _DetalleEquipoState extends State<DetalleEquipo> {
     //Utilizar el memoizer hace que la función de Future solo ocurra una vez
     return _memoizer.runOnce(() async {
 
-      String host = ObtieneDatos.listadoEquipos[indexEquipoGrid]['f_ip'];
+      String host = DatosEstaticos.listadoDatosEquipoSeleccionado[0]['f_ip'];
       Uint8List _respuesta;
       List<int> listadoRespuestas = [];
       //int _largoEvent = 0;
@@ -198,8 +210,8 @@ class _DetalleEquipoState extends State<DetalleEquipo> {
                       if (_keyValidador.currentState.validate()){
                         PopUps.popUpCargando(context, 'Actualizando alias...');
                         ObtieneDatos datos = ObtieneDatos();
-                        String serial = await ObtieneDatos.listadoEquipos
-                        [indexEquipoGrid]['f_serial'];
+                        String serial = DatosEstaticos.
+                        listadoDatosEquipoSeleccionado[0]['f_serial'];
                         await datos.updateAliasEquipo(serial,
                             _controladorTexto.text.toString());
                         //print(resultado);

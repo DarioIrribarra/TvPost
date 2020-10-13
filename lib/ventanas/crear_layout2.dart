@@ -136,7 +136,8 @@ class _CrearLayout2State extends State<CrearLayout2> {
               actualizaEstado: () {
                 setState(() {});
               },
-            )
+            ),
+            BotonEnviarAEquipo(visible: _visible),
           ],
         ),
       ),

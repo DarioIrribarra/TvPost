@@ -1,8 +1,10 @@
+import 'dart:convert';
+import 'dart:io';
+import 'dart:typed_data';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:tvpost_flutter/utilidades/custom_widgets.dart';
 import 'package:tvpost_flutter/utilidades/datos_estaticos.dart';
-import 'package:tvpost_flutter/utilidades/obtiene_datos_webservice.dart';
 
 class SeleccionarLayout extends StatefulWidget {
   @override
@@ -42,7 +44,7 @@ class _SeleccionarLayoutState extends State<SeleccionarLayout> {
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Text('Layout actual seleccionado',textAlign: TextAlign.center,),
+                      Text('Layout actualmente utilizado',textAlign: TextAlign.center,),
                       Padding(
                         padding: const EdgeInsets.only(bottom: 20.0),
                         child: Container(
@@ -100,17 +102,59 @@ class _SeleccionarLayoutState extends State<SeleccionarLayout> {
   recargarListadoEquipos() async{
     //Se actualizan los datos de equipo cada vez que se selecciona
     // un tipo de layout
-    ObtieneDatos datos = ObtieneDatos();
-    await datos.getDatosEquipos();
+    //Acá se realizan las consultas para obtener los datos de lo que se
+    // está reproduciendo en el equipo
+    int _layoutSeleccionado;
+    String resp;
+    //String tipoNuevoLayout;
+    Uint8List _respuesta;
+    List<int> listadoRespuestas = [];
+    Socket socket;
+    try{
+      socket = await Socket.connect(DatosEstaticos.ipSeleccionada, 
+          DatosEstaticos.puertoSocketRaspberry).timeout(Duration(seconds: 5));
+      socket.write('TVPOSTGETDATOSREPRODUCCIONACTUAL');
+      socket.listen((event) {
+        listadoRespuestas.addAll(event.toList());
+      }).onDone(() {
+        _respuesta = Uint8List.fromList(listadoRespuestas);
+        socket.close();
+        return;
+      });
 
-    //Acá se preparan los widgets iniciales
+      await socket.done.whenComplete(() => resp = utf8.decode(_respuesta));
+      //Al ya tener los datos, se convierten en diccionario y se pueden utilizar
+      DatosEstaticos.mapaDatosReproduccionEquipoSeleccionado = json.decode(resp);
 
-    int _layoutSeleccionado = int.parse(ObtieneDatos.listadoEquipos[0]['f_layoutActual']);
+      if (DatosEstaticos.mapaDatosReproduccionEquipoSeleccionado.isNotEmpty){
+        _layoutSeleccionado = int.parse(DatosEstaticos
+            .mapaDatosReproduccionEquipoSeleccionado['layout']);
+        DatosEstaticos.nombreArchivoWidget1 = DatosEstaticos
+            .mapaDatosReproduccionEquipoSeleccionado['archivo1'];
+        DatosEstaticos.nombreArchivoWidget2 = DatosEstaticos
+            .mapaDatosReproduccionEquipoSeleccionado['archivo2'];
+        DatosEstaticos.nombreArchivoWidget3 = DatosEstaticos
+            .mapaDatosReproduccionEquipoSeleccionado['archivo3'];
+      } else {
+        _layoutSeleccionado = 0;
+      }
+
+    } catch(e){
+      print("Error al recargar listado equipos: " + e.toString());
+    }
     return _layoutSeleccionado;
   }
 
   void PorcionSeleccionada (int seleccionada){
     switch(seleccionada){
+      case 0:
+        _decorationLayoutSeleccionado1 = BoxDecoration(
+            border: Border.all(color: Colors.transparent, width: 10));
+        _decorationLayoutSeleccionado2 = BoxDecoration(
+            border: Border.all(color: Colors.transparent, width: 10));
+        _decorationLayoutSeleccionado3 = BoxDecoration(
+            border: Border.all(color: Colors.transparent, width: 10));
+        break;
       case 1:
         _decorationLayoutSeleccionado1 = BoxDecoration(
             border: Border.all(color: Colors.red, width: 10));

@@ -215,7 +215,8 @@ class _OpcionesSeleccionMediaState extends State<OpcionesSeleccionMedia> {
     Widget _webview;
     _webview = WebView(
       initialUrl: url,
-      javascriptMode: JavascriptMode.unrestricted,
+      //Para que no carguen los videos automáticamente
+      javascriptMode: JavascriptMode.disabled,
       onWebViewCreated: (WebViewController controlador){
         webViewController = controlador;
         if (widget.divisionLayout.contains('-1')){
@@ -328,59 +329,89 @@ class BotonEnviarAEquipo extends StatelessWidget {
     //Comparar datos que están almacenados con nuevos
     //Datos guardados en bd
 
+
+
     List<String> respuesta = [];
 
-    //String tipoWidget1EnBDM = ObtieneDatos.listadoEquipos[0]['F_TipoArchivoPorcion1'];
-    //String tipoWidget2EnBDM = ObtieneDatos.listadoEquipos[0]['F_TipoArchivoPorcion2'];
-    //String tipoWidget3EnBDM = ObtieneDatos.listadoEquipos[0]['F_TipoArchivoPorcion3'];
-    String link1EnBDM = ObtieneDatos.listadoEquipos[0]['F_ArchivoPorcion1'];
-    String link2EnBDM = ObtieneDatos.listadoEquipos[0]['F_ArchivoPorcion2'];
-    String link3EnBDM = ObtieneDatos.listadoEquipos[0]['F_ArchivoPorcion3'];
     String tipoLayoutAEnviar = "";
-    String link1AEnviar;
-    String link2AEnviar;
-    String link3AEnviar;
+    String layoutEnEquipo = DatosEstaticos.layoutSeleccionado.toString();
 
-    //Se envia solo el archivo que es distinto para hacer el cambio
-    if (DatosEstaticos.nombreArchivoWidget1==link1EnBDM){
-      link1AEnviar = "0";
-    }else {
-      link1AEnviar = DatosEstaticos.nombreArchivoWidget1??'0';
+    //Nombres de widgets hasta el momento
+    String tipoWidget1AEnviar = DatosEstaticos.wiget1.runtimeType.toString();
+    String tipoWidget2AEnviar = DatosEstaticos.wiget2.runtimeType.toString();
+    String tipoWidget3AEnviar = DatosEstaticos.wiget3.runtimeType.toString();
+    if (tipoWidget1AEnviar == 'Null'){tipoWidget1AEnviar = "0";}
+    if (tipoWidget2AEnviar == 'Null'){tipoWidget2AEnviar = "0";}
+    if (tipoWidget3AEnviar == 'Null'){tipoWidget3AEnviar = "0";}
+
+    //nombres de archivos a enviar
+    String link1AEnviar = DatosEstaticos.nombreArchivoWidget1;
+    String link2AEnviar = DatosEstaticos.nombreArchivoWidget2;
+    String link3AEnviar = DatosEstaticos.nombreArchivoWidget3;
+    if (link1AEnviar.isEmpty){link1AEnviar = "0";}
+    if (link2AEnviar.isEmpty){link2AEnviar = "0";}
+    if (link3AEnviar.isEmpty){link3AEnviar = "0";}
+
+    //Si los datos del archivo del equipo no están vacíos se suplantan
+    // para hacer comparación
+
+/*
+
+    if (DatosEstaticos.mapaDatosReproduccionEquipoSeleccionado.isNotEmpty && !nuevoLayout){
+      layoutEnEquipo = DatosEstaticos.mapaDatosReproduccionEquipoSeleccionado['layout'];
+      tipoWidget1EnEquipo = DatosEstaticos.mapaDatosReproduccionEquipoSeleccionado['tipoArchivo1'];
+      tipoWidget2EnEquipo = DatosEstaticos.mapaDatosReproduccionEquipoSeleccionado['tipoArchivo2'];
+      tipoWidget3EnEquipo = DatosEstaticos.mapaDatosReproduccionEquipoSeleccionado['tipoArchivo3'];
+      link1EnEquipo = DatosEstaticos.mapaDatosReproduccionEquipoSeleccionado['archivo1'];
+      link2EnEquipo = DatosEstaticos.mapaDatosReproduccionEquipoSeleccionado['archivo2'];
+      link3EnEquipo = DatosEstaticos.mapaDatosReproduccionEquipoSeleccionado['archivo3'];
+
+      //Se envia solo el archivo que es distinto para hacer el cambio
+      if (DatosEstaticos.nombreArchivoWidget1==link1EnEquipo){
+        link1AEnviar = "0";
+      }else {
+        link1AEnviar = DatosEstaticos.nombreArchivoWidget1??'0';
+      }
+      if (DatosEstaticos.nombreArchivoWidget2==link2EnEquipo){
+        link2AEnviar = "0";
+      }else {
+        link2AEnviar = DatosEstaticos.nombreArchivoWidget2??'0';
+      }
+      if (DatosEstaticos.nombreArchivoWidget3==link3EnEquipo){
+        link3AEnviar = "0";
+      }else {
+        link3AEnviar = DatosEstaticos.nombreArchivoWidget3??'0';
+      }
     }
-    if (DatosEstaticos.nombreArchivoWidget2==link2EnBDM){
-      link2AEnviar = "0";
-    }else {
-      link2AEnviar = DatosEstaticos.nombreArchivoWidget2??'0';
-    }
-    if (DatosEstaticos.nombreArchivoWidget3==link3EnBDM){
-      link3AEnviar = "0";
-    }else {
-      link3AEnviar = DatosEstaticos.nombreArchivoWidget3??'0';
-    }
+*/
 
     //Tipo de layout
-    if (DatosEstaticos.layoutSeleccionado == 1){
+    /*if (DatosEstaticos.layoutSeleccionado.toString() != layoutEnEquipo){
+      layoutEnEquipo = DatosEstaticos.layoutSeleccionado.toString();
+    }*/
+
+    if (layoutEnEquipo == "1"){
       tipoLayoutAEnviar = "100";
-      _Instruccion = link1AEnviar;
+      _Instruccion = "$tipoWidget1AEnviar 0 "
+          "0 $link1AEnviar 0 0";
     }
-    if (DatosEstaticos.layoutSeleccionado == 2){
+    if (layoutEnEquipo == "2"){
       tipoLayoutAEnviar = "5050";
-      _Instruccion = "$link1AEnviar $link2AEnviar";
+      _Instruccion = "$tipoWidget1AEnviar $tipoWidget2AEnviar "
+          "0 $link1AEnviar $link2AEnviar 0";
     }
-    if (DatosEstaticos.layoutSeleccionado == 3){
+    if (layoutEnEquipo == "3"){
       tipoLayoutAEnviar = "802010";
-      _Instruccion = "$link1AEnviar $link2AEnviar $link3AEnviar";
+      _Instruccion = "$tipoWidget1AEnviar $tipoWidget2AEnviar "
+          "$tipoWidget3AEnviar $link1AEnviar $link2AEnviar $link3AEnviar";
     }
 
     //Si es nuevo se envia el nuevo layout
     if (nuevoLayout){
-
       _Instruccion = "TVPOSTNEWLAYOUT $tipoLayoutAEnviar $_Instruccion";
     }else{
-      _Instruccion = "TVPOSTMODLAYOUT $_Instruccion";
+      _Instruccion = "TVPOSTMODLAYOUT $tipoLayoutAEnviar $_Instruccion";
     }
-
-
 
     respuesta.add(_Instruccion);
     respuesta.add(link1AEnviar);
@@ -393,7 +424,7 @@ class BotonEnviarAEquipo extends StatelessWidget {
   actualizarDatosMediaEquipoBD(String layoutSeleccionado,
       String archivoPorcion1, String archivoPorcion2,
       String archivoPorcion3)async{
-    String serial = ObtieneDatos.listadoEquipos[0]['f_serial'];
+    String serial = DatosEstaticos.listadoDatosEquipoSeleccionado[0]['f_serial'];
     String F_TipoArchivoPorcion1 = DatosEstaticos.wiget1.runtimeType.toString();
     String F_TipoArchivoPorcion2 = DatosEstaticos.wiget2.runtimeType.toString();
     String F_TipoArchivoPorcion3 = DatosEstaticos.wiget3.runtimeType.toString();
@@ -414,12 +445,17 @@ class BotonEnviarAEquipo extends StatelessWidget {
   }
 
   Widget EsperarRespuestaProyeccion(){
-    int layoutActualEnBD = int.parse(ObtieneDatos.listadoEquipos[0]['f_layoutActual']);
+    /*int layoutActualEnEquipo = 0;
+    if (DatosEstaticos.mapaDatosReproduccionEquipoSeleccionado.isNotEmpty){
+      layoutActualEnEquipo = int.parse(DatosEstaticos
+          .mapaDatosReproduccionEquipoSeleccionado['layout']);
+    }*/
+
     String InstruccionEnviar;
     List<String> listaDatosEnvio = [];
     //Si es distinto se llama al CrearLayout, sino, se llama al Modificar Layout
     //Eso se maneja con el valor bool en PrepararDatosMEdiaEnvioEquipo
-    if (DatosEstaticos.layoutSeleccionado!=layoutActualEnBD){
+    /*if (DatosEstaticos.layoutSeleccionado!=layoutActualEnEquipo){
       listaDatosEnvio = PreparaDatosMediaEnvioEquipo(true);
       InstruccionEnviar = listaDatosEnvio[0];
     }
@@ -427,6 +463,9 @@ class BotonEnviarAEquipo extends StatelessWidget {
       listaDatosEnvio = PreparaDatosMediaEnvioEquipo(false);
       InstruccionEnviar = listaDatosEnvio[0];
     }
+*/
+    listaDatosEnvio = PreparaDatosMediaEnvioEquipo(true);
+    InstruccionEnviar = listaDatosEnvio[0];
 
     return FutureBuilder(
       future: ComunicacionRaspberry.ConfigurarLayout(InstruccionEnviar),
@@ -435,8 +474,8 @@ class BotonEnviarAEquipo extends StatelessWidget {
           if (snapshot.data != null){
             //Actualiza datos de bd del equipo si los datos de respuesta
             // no son nulos
-            actualizarDatosMediaEquipoBD("${DatosEstaticos.layoutSeleccionado}",
-                listaDatosEnvio[1], listaDatosEnvio[2], listaDatosEnvio[3]);
+            /*actualizarDatosMediaEquipoBD("${DatosEstaticos.layoutSeleccionado}",
+                listaDatosEnvio[1], listaDatosEnvio[2], listaDatosEnvio[3]);*/
             return Column(
               mainAxisSize: MainAxisSize.min,
               children: [
