@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:tvpost_flutter/utilidades/datos_estaticos.dart';
 import 'package:tvpost_flutter/utilidades/obtiene_datos_webservice.dart';
 import 'package:tvpost_flutter/utilidades/custom_widgets.dart';
-import 'package:async/async.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class DetalleEquipo extends StatefulWidget {
   @override
@@ -24,7 +24,7 @@ class _DetalleEquipoState extends State<DetalleEquipo> {
   final _scaffoldKey = GlobalKey<ScaffoldState>();
   //Utilizar el memoizer hace que la función de Future (getScreenShot())
   // solo ocurra una vez. De lo contrario se llama con cada acción del build
-  final AsyncMemoizer _memoizer = AsyncMemoizer();
+  //final AsyncMemoizer _memoizer = AsyncMemoizer();
 
   @override
   void dispose() {
@@ -81,8 +81,33 @@ class _DetalleEquipoState extends State<DetalleEquipo> {
                               return Image.asset('imagenes/logohorizontal.png');
                             } else {
                               //Retorna el widget con la imagen de screenshot
-                              //return Image.network('http://${DatosEstaticos.ipSeleccionada}/ImagenesPostTv/Screenshot/pantalla.png');
-                              return _getScreenShotProcesada();
+                              return Column(
+                                children: [
+                                  _getScreenShotProcesada(),
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                    children: [
+                                      FloatingActionButton(
+                                        heroTag: null,
+                                        child: Icon(Icons.refresh),
+                                        onPressed: (){
+                                          setState(() {
+
+                                          });
+                                        },
+                                      ),
+                                      FloatingActionButton(
+                                        heroTag: null,
+                                        child: Icon(Icons.screen_search_desktop),
+                                        onPressed: (){
+                                          _vncRaspberryWeb();
+                                        },
+                                      )
+
+                                    ],
+                                  ),
+                                ],
+                              );
                             }
                           } else {
                             return CircularProgressIndicator();
@@ -138,42 +163,48 @@ class _DetalleEquipoState extends State<DetalleEquipo> {
     );
   }
 
-  Future _getScreenShot() {
+  _vncRaspberryWeb() async{
+    String url = 'http://${DatosEstaticos.ipSeleccionada}:6080/vnc.html';
+    if (await canLaunch(url)) {
+    await launch(url, enableJavaScript: true,);
+    } else {
+    throw 'Could not launch $url';
+    }
+  }
+
+  Future _getScreenShot() async {
     //Utilizar el memoizer hace que la función de Future solo ocurra una vez
-    return _memoizer.runOnce(() async {
+    String host = DatosEstaticos.listadoDatosEquipoSeleccionado[0]['f_ip'];
+    Uint8List _respuesta;
+    List<int> listadoRespuestas = [];
+    //int _largoEvent = 0;
+    //Hacer llamada al socket con comando de screenshot
+    Socket socket;
+    try {
+      socket = await Socket.connect(host, DatosEstaticos.puertoSocketRaspberry)
+          .timeout(Duration(seconds: 5));
+      socket.write('TVPOSTGETSCREEN');
+      socket.listen((event) {
+        listadoRespuestas.addAll(event);
+        socket.flush();
+        //_largoEvent = _largoEvent + event.length;
+        //print("Largo del event: ${_largoEvent.toString()}");
+        //print(listadoRespuestas.length);
+      }).onDone(() {
+        socket.close();
+        return;
+      });
 
-      String host = DatosEstaticos.listadoDatosEquipoSeleccionado[0]['f_ip'];
-      Uint8List _respuesta;
-      List<int> listadoRespuestas = [];
-      //int _largoEvent = 0;
-      //Hacer llamada al socket con comando de screenshot
-      Socket socket;
-      try {
-        socket = await Socket.connect(host, DatosEstaticos.puertoSocketRaspberry)
-            .timeout(Duration(seconds: 5));
-        socket.write('TVPOSTGETSCREEN');
-        socket.listen((event) {
-          listadoRespuestas.addAll(event);
-          socket.flush();
-          //_largoEvent = _largoEvent + event.length;
-          //print("Largo del event: ${_largoEvent.toString()}");
-          //print(listadoRespuestas.length);
-        }).onDone(() {
-          socket.close();
-          return;
-        });
-
-        //El retornar esto, hace que el FutureBuilder espere al "done"
-        //Si no se retorna el whencomplete, se salta al final
-        return socket.done.whenComplete(() {
-          _respuesta = Uint8List.fromList(listadoRespuestas);
-          _screenshotProcesada = Image.memory(_respuesta);
-          //print(listadoRespuestas.length);
-        });
-      } catch (e) {
-        print("Error: ${e.toString()}");
-      }
-    });
+      //El retornar esto, hace que el FutureBuilder espere al "done"
+      //Si no se retorna el whencomplete, se salta al final
+      return socket.done.whenComplete(() {
+        _respuesta = Uint8List.fromList(listadoRespuestas);
+        _screenshotProcesada = Image.memory(_respuesta);
+        //print(listadoRespuestas.length);
+      });
+    } catch (e) {
+      print("Error: ${e.toString()}");
+    }
   }
 
   Widget _getScreenShotProcesada(){
