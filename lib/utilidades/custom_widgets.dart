@@ -392,16 +392,34 @@ class BotonEnviarAEquipo extends StatelessWidget {
 
     if (layoutEnEquipo == "1"){
       tipoLayoutAEnviar = "100";
+      if (link1AEnviar!="0" && !link1AEnviar.contains('/var/www/html') && !link1AEnviar.contains('http')){
+        link1AEnviar = '/var/www/html$link1AEnviar';
+      }
       _Instruccion = "$tipoWidget1AEnviar 0 "
           "0 $link1AEnviar 0 0";
     }
     if (layoutEnEquipo == "2"){
       tipoLayoutAEnviar = "5050";
+      if (link1AEnviar!="0" && !link1AEnviar.contains('/var/www/html') && !link1AEnviar.contains('http')){
+        link1AEnviar = '/var/www/html$link1AEnviar';
+      }
+      if (link2AEnviar!="0" && !link2AEnviar.contains('/var/www/html') && !link2AEnviar.contains('http')){
+        link2AEnviar = '/var/www/html$link2AEnviar';
+      }
       _Instruccion = "$tipoWidget1AEnviar $tipoWidget2AEnviar "
           "0 $link1AEnviar $link2AEnviar 0";
     }
     if (layoutEnEquipo == "3"){
       tipoLayoutAEnviar = "802010";
+      if (link1AEnviar!="0" && !link1AEnviar.contains('/var/www/html') && !link1AEnviar.contains('http')){
+        link1AEnviar = '/var/www/html$link1AEnviar';
+      }
+      if (link2AEnviar!="0" && !link2AEnviar.contains('/var/www/html') && !link2AEnviar.contains('http')){
+        link2AEnviar = '/var/www/html$link2AEnviar';
+      }
+      if (link3AEnviar!="0" && !link3AEnviar.contains('/var/www/html') && !link3AEnviar.contains('http')){
+        link3AEnviar = '/var/www/html$link3AEnviar';
+      }
       _Instruccion = "$tipoWidget1AEnviar $tipoWidget2AEnviar "
           "$tipoWidget3AEnviar $link1AEnviar $link2AEnviar $link3AEnviar";
     }
@@ -509,6 +527,24 @@ class BotonEnviarAEquipo extends StatelessWidget {
 
   }
 
+}
+
+class WebViewPropio extends StatefulWidget {
+  var urlPropia;
+  WebViewPropio({this.urlPropia});
+  @override
+  _WebViewPropioState createState() => _WebViewPropioState();
+}
+
+class _WebViewPropioState extends State<WebViewPropio> {
+
+  @override
+  Widget build(BuildContext context) {
+    return WebView(
+      initialUrl: widget.urlPropia,
+      javascriptMode: JavascriptMode.disabled,
+    );
+  }
 }
 
 

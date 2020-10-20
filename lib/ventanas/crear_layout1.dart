@@ -121,7 +121,8 @@ class _CrearLayout1State extends State<CrearLayout1> {
   //Ignora los controles del webview para que no intervenga con el onTap de
   // seleccionar medio
   Widget ignorarInteraccionesElemento(Widget widget){
-    if (widget.runtimeType.toString() == 'WebView'){
+    if (widget.runtimeType.toString() == 'WebView' ||
+        widget.runtimeType.toString() == 'WebViewPropio'){
       return IgnorePointer(child: widget,);
     }else{
       return widget;

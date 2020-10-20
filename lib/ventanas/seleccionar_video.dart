@@ -280,6 +280,9 @@ class _SeleccionarVideoState extends State<SeleccionarVideo> {
   }
 }
 
+
+
+
 class ReproductorVideos extends StatefulWidget {
   var url;  //here declared
   ReproductorVideos({this.url});

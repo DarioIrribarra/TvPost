@@ -5,6 +5,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:tvpost_flutter/utilidades/custom_widgets.dart';
 import 'package:tvpost_flutter/utilidades/datos_estaticos.dart';
+import 'package:tvpost_flutter/ventanas/seleccionar_video.dart';
 
 class SeleccionarLayout extends StatefulWidget {
   @override
@@ -135,6 +136,52 @@ class _SeleccionarLayoutState extends State<SeleccionarLayout> {
             .mapaDatosReproduccionEquipoSeleccionado['archivo2'];
         DatosEstaticos.nombreArchivoWidget3 = DatosEstaticos
             .mapaDatosReproduccionEquipoSeleccionado['archivo3'];
+
+        //Se asignan los widgets correspondientes a los tipos y archivos
+        switch (DatosEstaticos.mapaDatosReproduccionEquipoSeleccionado['tipoArchivo1']){
+          case 'Image':
+            DatosEstaticos.wiget1 = Image.network(_direccionArchivo(DatosEstaticos.nombreArchivoWidget1));
+            break;
+          case 'ReproductorVideos':
+            DatosEstaticos.wiget1 = ReproductorVideos(url: _direccionArchivo(DatosEstaticos.nombreArchivoWidget1));
+            break;
+          case 'WebView':
+            DatosEstaticos.wiget1 = WebViewPropio(urlPropia: DatosEstaticos.nombreArchivoWidget1);
+            break;
+          case 'WebViewPropio':
+            DatosEstaticos.wiget1 = WebViewPropio(urlPropia: DatosEstaticos.nombreArchivoWidget1);
+            break;
+        }
+
+        switch (DatosEstaticos.mapaDatosReproduccionEquipoSeleccionado['tipoArchivo2']){
+          case 'Image':
+            DatosEstaticos.wiget2 = Image.network(_direccionArchivo(DatosEstaticos.nombreArchivoWidget2));
+            break;
+          case 'ReproductorVideos':
+            DatosEstaticos.wiget2 = ReproductorVideos(url: _direccionArchivo(DatosEstaticos.nombreArchivoWidget2));
+            break;
+          case 'WebView':
+            DatosEstaticos.wiget2 = WebViewPropio(urlPropia: DatosEstaticos.nombreArchivoWidget2);
+            break;
+          case 'WebViewPropio':
+            DatosEstaticos.wiget2 = WebViewPropio(urlPropia: DatosEstaticos.nombreArchivoWidget2);
+            break;
+        }
+
+        switch (DatosEstaticos.mapaDatosReproduccionEquipoSeleccionado['tipoArchivo3']){
+          case 'Image':
+            DatosEstaticos.wiget3 = Image.network(_direccionArchivo(DatosEstaticos.nombreArchivoWidget3));
+            break;
+          case 'ReproductorVideos':
+            DatosEstaticos.wiget3 = ReproductorVideos(url: _direccionArchivo(DatosEstaticos.nombreArchivoWidget3));
+            break;
+          case 'WebView':
+            DatosEstaticos.wiget3 = WebViewPropio(urlPropia: DatosEstaticos.nombreArchivoWidget3);
+            break;
+          case 'WebViewPropio':
+            DatosEstaticos.wiget3 = WebViewPropio(urlPropia: DatosEstaticos.nombreArchivoWidget3);
+            break;
+        }
       } else {
         _layoutSeleccionado = 0;
       }
@@ -143,6 +190,12 @@ class _SeleccionarLayoutState extends State<SeleccionarLayout> {
       print("Error al recargar listado equipos: " + e.toString());
     }
     return _layoutSeleccionado;
+  }
+
+  String _direccionArchivo(String direccionWidget){
+    String _direccionCompleta = "http://${DatosEstaticos.ipSeleccionada}"
+        "$direccionWidget";
+    return _direccionCompleta;
   }
 
   void PorcionSeleccionada (int seleccionada){

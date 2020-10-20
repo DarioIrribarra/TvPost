@@ -55,3 +55,19 @@ de videos, así se puede reproduciir en un videoView
 *Se agrega Theme.Dialog en manifest a la activity del popup
 *************************VIDEO*************************
 Realizar integración
+*******************************************************
+Servidor:
+Pruebas con imagenes:
+    1 porcion = ok
+    2 porciones = ok
+    3 porciones = ok
+
+    *Transición:
+        1 porción a 2 porciones = ok
+        1 porción a 3 porciones = ok
+        2 porciones a 1 porción = A veces no cierra la imagen anterior cuando no se cambia la imagen
+                                    seleccionada
+        2 porciones a 3 porciones = ok
+        3 porciones a 1 porción = ok
+        3 porciones a 2 porciones =
+
