@@ -1,7 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:tvpost_flutter/utilidades/datos_estaticos.dart';
-import 'package:tvpost_flutter/utilidades/obtiene_datos_webservice.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:tvpost_flutter/utilidades/comunicacion_raspberry.dart';
@@ -327,10 +326,6 @@ class BotonEnviarAEquipo extends StatelessWidget {
   List<String> PreparaDatosMediaEnvioEquipo(bool nuevoLayout){
     String _Instruccion;
     //Comparar datos que están almacenados con nuevos
-    //Datos guardados en bd
-
-
-
     List<String> respuesta = [];
 
     String tipoLayoutAEnviar = "";
@@ -395,8 +390,7 @@ class BotonEnviarAEquipo extends StatelessWidget {
       if (link1AEnviar!="0" && !link1AEnviar.contains('/var/www/html') && !link1AEnviar.contains('http')){
         link1AEnviar = '/var/www/html$link1AEnviar';
       }
-      _Instruccion = "$tipoWidget1AEnviar 0 "
-          "0 $link1AEnviar 0 0";
+      _Instruccion = "$tipoWidget1AEnviar 0 0 $link1AEnviar 0 0";
     }
     if (layoutEnEquipo == "2"){
       tipoLayoutAEnviar = "5050";
@@ -428,7 +422,8 @@ class BotonEnviarAEquipo extends StatelessWidget {
     if (nuevoLayout){
       _Instruccion = "TVPOSTNEWLAYOUT $tipoLayoutAEnviar $_Instruccion";
     }else{
-      _Instruccion = "TVPOSTMODLAYOUT $tipoLayoutAEnviar $_Instruccion";
+      String _porcionACambiar = _definirPorcionACambiar();
+      _Instruccion = "TVPOSTMODLAYOUT $tipoLayoutAEnviar $_porcionACambiar $_Instruccion";
     }
 
     respuesta.add(_Instruccion);
@@ -439,41 +434,18 @@ class BotonEnviarAEquipo extends StatelessWidget {
     return respuesta;
   }
 
-  actualizarDatosMediaEquipoBD(String layoutSeleccionado,
-      String archivoPorcion1, String archivoPorcion2,
-      String archivoPorcion3)async{
-    String serial = DatosEstaticos.listadoDatosEquipoSeleccionado[0]['f_serial'];
-    String F_TipoArchivoPorcion1 = DatosEstaticos.wiget1.runtimeType.toString();
-    String F_TipoArchivoPorcion2 = DatosEstaticos.wiget2.runtimeType.toString();
-    String F_TipoArchivoPorcion3 = DatosEstaticos.wiget3.runtimeType.toString();
-    if (F_TipoArchivoPorcion1 == 'Null') {F_TipoArchivoPorcion1 = '';}
-    if (F_TipoArchivoPorcion2 == 'Null') {F_TipoArchivoPorcion2 = '';}
-    if (F_TipoArchivoPorcion3 == 'Null') {F_TipoArchivoPorcion3 = '';}
-
-
-
-    ObtieneDatos datos = ObtieneDatos();
-    await datos.updateDatosMediaEquipo(serial, layoutSeleccionado,
-        F_TipoArchivoPorcion1, F_TipoArchivoPorcion2,
-        F_TipoArchivoPorcion3, archivoPorcion1, archivoPorcion2,
-        archivoPorcion3
-    );
-    return true;
-
-  }
-
   Widget EsperarRespuestaProyeccion(){
-    /*int layoutActualEnEquipo = 0;
+    int layoutActualEnEquipo = 0;
     if (DatosEstaticos.mapaDatosReproduccionEquipoSeleccionado.isNotEmpty){
       layoutActualEnEquipo = int.parse(DatosEstaticos
           .mapaDatosReproduccionEquipoSeleccionado['layout']);
-    }*/
+    }
 
     String InstruccionEnviar;
     List<String> listaDatosEnvio = [];
     //Si es distinto se llama al CrearLayout, sino, se llama al Modificar Layout
     //Eso se maneja con el valor bool en PrepararDatosMEdiaEnvioEquipo
-    /*if (DatosEstaticos.layoutSeleccionado!=layoutActualEnEquipo){
+    if (DatosEstaticos.layoutSeleccionado!=layoutActualEnEquipo){
       listaDatosEnvio = PreparaDatosMediaEnvioEquipo(true);
       InstruccionEnviar = listaDatosEnvio[0];
     }
@@ -481,9 +453,8 @@ class BotonEnviarAEquipo extends StatelessWidget {
       listaDatosEnvio = PreparaDatosMediaEnvioEquipo(false);
       InstruccionEnviar = listaDatosEnvio[0];
     }
-*/
-    listaDatosEnvio = PreparaDatosMediaEnvioEquipo(true);
-    InstruccionEnviar = listaDatosEnvio[0];
+    /*listaDatosEnvio = PreparaDatosMediaEnvioEquipo(false);
+    InstruccionEnviar = listaDatosEnvio[0];*/
 
     return FutureBuilder(
       future: ComunicacionRaspberry.ConfigurarLayout(InstruccionEnviar),
@@ -527,6 +498,52 @@ class BotonEnviarAEquipo extends StatelessWidget {
 
   }
 
+  String _definirPorcionACambiar(){
+    int ls = DatosEstaticos.layoutSeleccionado;
+
+    switch(ls){
+      case 1:
+        if (DatosEstaticos.reemplazarPorcion1){
+          return "1-1";
+        }
+        break;
+      case 2:
+        if (DatosEstaticos.reemplazarPorcion1 && DatosEstaticos.reemplazarPorcion2){
+          return "2-3";
+        }
+        if (DatosEstaticos.reemplazarPorcion1){
+          return "2-1";
+        }
+        if (DatosEstaticos.reemplazarPorcion2){
+          return "2-2";
+        }
+        break;
+      case 3:
+        if (DatosEstaticos.reemplazarPorcion1 && DatosEstaticos.reemplazarPorcion2 && DatosEstaticos.reemplazarPorcion3){
+          return "3-4";
+        }
+        if (DatosEstaticos.reemplazarPorcion1 && DatosEstaticos.reemplazarPorcion2){
+          return "3-5";
+        }
+        if (DatosEstaticos.reemplazarPorcion1 && DatosEstaticos.reemplazarPorcion3){
+          return "3-7";
+        }
+        if (DatosEstaticos.reemplazarPorcion2 && DatosEstaticos.reemplazarPorcion3){
+          return "3-6";
+        }
+        if (DatosEstaticos.reemplazarPorcion1){
+          return "3-1";
+        }
+        if (DatosEstaticos.reemplazarPorcion2){
+          return "3-2";
+        }
+        if (DatosEstaticos.reemplazarPorcion3){
+          return "3-3";
+        }
+        break;
+    }
+  }
+
 }
 
 class WebViewPropio extends StatefulWidget {
@@ -546,5 +563,28 @@ class _WebViewPropioState extends State<WebViewPropio> {
     );
   }
 }
+
+/*  actualizarDatosMediaEquipoBD(String layoutSeleccionado,
+      String archivoPorcion1, String archivoPorcion2,
+      String archivoPorcion3)async{
+    String serial = DatosEstaticos.listadoDatosEquipoSeleccionado[0]['f_serial'];
+    String F_TipoArchivoPorcion1 = DatosEstaticos.wiget1.runtimeType.toString();
+    String F_TipoArchivoPorcion2 = DatosEstaticos.wiget2.runtimeType.toString();
+    String F_TipoArchivoPorcion3 = DatosEstaticos.wiget3.runtimeType.toString();
+    if (F_TipoArchivoPorcion1 == 'Null') {F_TipoArchivoPorcion1 = '';}
+    if (F_TipoArchivoPorcion2 == 'Null') {F_TipoArchivoPorcion2 = '';}
+    if (F_TipoArchivoPorcion3 == 'Null') {F_TipoArchivoPorcion3 = '';}
+
+
+
+    ObtieneDatos datos = ObtieneDatos();
+    await datos.updateDatosMediaEquipo(serial, layoutSeleccionado,
+        F_TipoArchivoPorcion1, F_TipoArchivoPorcion2,
+        F_TipoArchivoPorcion3, archivoPorcion1, archivoPorcion2,
+        archivoPorcion3
+    );
+    return true;
+
+  }*/
 
 

@@ -24,4 +24,8 @@ class DatosEstaticos {
   //Valor para tomar screenshots del index correspondiente a la raspberry
   //en la pantalla raspberries conectadas
   static int indexSeleccionado;
+  //Valor para ver si una porción es reemplazada o no
+static bool reemplazarPorcion1 = false;
+static bool reemplazarPorcion2 = false;
+static bool reemplazarPorcion3 = false;
 }

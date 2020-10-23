@@ -164,7 +164,7 @@ class _DetalleEquipoState extends State<DetalleEquipo> {
   }
 
   _vncRaspberryWeb() async{
-    String url = 'http://${DatosEstaticos.ipSeleccionada}:6080/vnc.html';
+    String url = 'http://${DatosEstaticos.ipSeleccionada}:6080/vnc_lite.html';
     if (await canLaunch(url)) {
     await launch(url, enableJavaScript: true,);
     } else {

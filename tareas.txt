@@ -71,3 +71,18 @@ Pruebas con imagenes:
         3 porciones a 1 porción = ok
         3 porciones a 2 porciones =
 
+******************************************************
+
+Reemplazo de media en Equipo remoto.
+*Tomar en cuenta division_Layout: Al momento de seleccionar una porción para cambiar, se selecciona
+o no el checkbox correspondiente y el division_layout se cambia dependiendo de cuantas casillas son
+seleccionadas
+
+selecicon a modificar:
+*manejar un arreglo de datos que almacene las porciones a cambiar para luego evaluar. Por ejemplo
+si se selecciona el layout 3, y se quiere cambiar la porción 1 y 2, al momento de seleccionar el
+archivo de la porción 1, se añade '1' al arreglo, lo mismo para la otra porción. quedando el
+arreglo ['1', '2']. hacer 3 ifs dependiendo si el largo del arreglo es 1, 2 o 3.
+Si es 1, se pregunta que valor es y se combina con la primera parte del division_layout
+Si es 2 se itera y guardan los valores para comparar. Ejemplo, si el se selecciona el layout 3 y
+se quieren cambiar solo 1 y 2, se toma el prrimer valor y se guarda, luego

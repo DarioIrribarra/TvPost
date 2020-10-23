@@ -282,40 +282,47 @@ class _SeleccionarImagenState extends State<SeleccionarImagen> {
     DatosEstaticos.webViewControllerWidget2 = null;
     DatosEstaticos.webViewControllerWidget3 = null;
 
+    //Se asigna además que porcion del layout se reemplazará
     switch(divisionLayout){
       case '1-1': {
         DatosEstaticos.wiget1 = imagen;
         DatosEstaticos.nombreArchivoWidget1 = nombre;
+        DatosEstaticos.reemplazarPorcion1 = true;
         Navigator.pop(context, true);
       }
       break;
       case '2-1': {
         DatosEstaticos.wiget1 = imagen;
         DatosEstaticos.nombreArchivoWidget1 = nombre;
+        DatosEstaticos.reemplazarPorcion1 = true;
         Navigator.pop(context, true);
       }
       break;
       case '2-2': {
         DatosEstaticos.wiget2 = imagen;
         DatosEstaticos.nombreArchivoWidget2 = nombre;
+        DatosEstaticos.reemplazarPorcion2 = true;
         Navigator.pop(context, true);
       }
       break;
       case '3-1': {
         DatosEstaticos.wiget1 = imagen;
         DatosEstaticos.nombreArchivoWidget1 = nombre;
+        DatosEstaticos.reemplazarPorcion1 = true;
         Navigator.pop(context, true);
       }
       break;
       case '3-2': {
         DatosEstaticos.wiget2 = imagen;
         DatosEstaticos.nombreArchivoWidget2 = nombre;
+        DatosEstaticos.reemplazarPorcion2 = true;
         Navigator.pop(context, true);
       }
       break;
       case '3-3': {
         DatosEstaticos.wiget3 = imagen;
         DatosEstaticos.nombreArchivoWidget3 = nombre;
+        DatosEstaticos.reemplazarPorcion3 = true;
         Navigator.pop(context, true);
         /*Navigator.popAndPushNamed(context,
             '/crear_layout3');*/

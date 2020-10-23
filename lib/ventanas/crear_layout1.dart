@@ -128,6 +128,8 @@ class _CrearLayout1State extends State<CrearLayout1> {
       return widget;
     }
   }
+}
+
 /*navegarYEsperarRespuesta(String rutaVentana) async {
     final result = await Navigator.pushNamed(context, rutaVentana, arguments: {
       'division_layout': divisionLayout,
@@ -136,7 +138,7 @@ class _CrearLayout1State extends State<CrearLayout1> {
       setState(() {});
     }
   }*/
-}
+
 
 /*class CrearLayout1 extends StatelessWidget {
   //Datos que se envía completo desde la ventana de selección de media

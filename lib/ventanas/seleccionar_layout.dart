@@ -123,11 +123,21 @@ class _SeleccionarLayoutState extends State<SeleccionarLayout> {
         return;
       });
 
+      //Se limpian los datos de seleccion de porcion a cambiar
+      DatosEstaticos.reemplazarPorcion1 = false;
+      DatosEstaticos.reemplazarPorcion2 = false;
+      DatosEstaticos.reemplazarPorcion3 = false;
+
       await socket.done.whenComplete(() => resp = utf8.decode(_respuesta));
       //Al ya tener los datos, se convierten en diccionario y se pueden utilizar
       DatosEstaticos.mapaDatosReproduccionEquipoSeleccionado = json.decode(resp);
 
       if (DatosEstaticos.mapaDatosReproduccionEquipoSeleccionado.isNotEmpty){
+        //Se limpian los datos guardados
+        DatosEstaticos.wiget1 = null;
+        DatosEstaticos.wiget2 = null;
+        DatosEstaticos.wiget3 = null;
+
         _layoutSeleccionado = int.parse(DatosEstaticos
             .mapaDatosReproduccionEquipoSeleccionado['layout']);
         DatosEstaticos.nombreArchivoWidget1 = DatosEstaticos
