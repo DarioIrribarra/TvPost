@@ -157,10 +157,10 @@ class _SeleccionarVideoState extends State<SeleccionarVideo> {
                     controller: _controladorTexto,
                     validator: (textoEscrito){
                       if(textoEscrito.isEmpty){
-                        return "Error: Nombre de imagen vacío";
+                        return "Error: Nombre de video vacío";
                       }
                       if(textoEscrito.trim().length<= 0){
-                        return "Error: Nombre de imagen vacío";
+                        return "Error: Nombre de video vacío";
                       }
                       else {
                         nombreNuevoVideo = textoEscrito.trim()
@@ -168,7 +168,7 @@ class _SeleccionarVideoState extends State<SeleccionarVideo> {
                         //Chequear si el valor ya existe
                         if (DatosEstaticos.listadoNombresVideos.contains(
                             nombreNuevoVideo)){
-                          return "Error: Nombre de imagen ya existe";
+                          return "Error: Nombre de video ya existe";
                         } else {
                           return null;
                         }
@@ -196,7 +196,7 @@ class _SeleccionarVideoState extends State<SeleccionarVideo> {
                         //Cierra popup cargando
                         Navigator.of(context, rootNavigator: true).pop();
 
-                        PopUps.PopUpConWidget(context, Text('Error al enviar imagen'));
+                        PopUps.PopUpConWidget(context, Text('Error al enviar video'));
                       }
 
                     }

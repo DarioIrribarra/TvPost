@@ -7,7 +7,7 @@ import 'package:tvpost_flutter/utilidades/datos_estaticos.dart';
 class ComunicacionRaspberry{
 
   ///El orden del String para enviar a Raspberry es:
-  ///1.- Comando (TVPOSTNEWLAYOUT)
+  ///1.- Comando (TVPOSTMODLAYOUT)
   ///2.- Tipo de layout (100, 5050, 802010)
   ///3.- Porciones a modificar (1-1, 2-1, 2-2, 3-1, 3-2, 3-3, 3-4, 3-5, 3-6,
   ///3-7)
