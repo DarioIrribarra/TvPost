@@ -21,6 +21,7 @@ class _CrearLayout3State extends State<CrearLayout3> {
   BoxDecoration _decorationPorcion1;
   BoxDecoration _decorationPorcion2;
   BoxDecoration _decorationPorcion3;
+  bool _visible_btn_envio_reloj = false;
 
   @override
   void initState() {
@@ -177,6 +178,36 @@ class _CrearLayout3State extends State<CrearLayout3> {
                   ),
                 ],
               ),
+            ),
+
+            //Manejo del reloj
+            Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Expanded(
+                  flex: 2,
+                  child: CheckboxListTile(
+                    title: Text('¿Activar reloj?'),
+                    secondary: Icon(Icons.more_time_rounded),
+                    controlAffinity: ListTileControlAffinity.trailing,
+                    value: DatosEstaticos.relojEnPantalla,
+                    onChanged: (bool value){
+                      setState(() {
+                        _visible_btn_envio_reloj = true;
+                        DatosEstaticos.relojEnPantalla = value;
+                      });
+                    },
+                  ),
+                ),
+
+                Expanded(
+                  flex: 1,
+                  child: BotonEnviarAEquipo(
+                    visible: _visible_btn_envio_reloj,
+                    mensaje_boton: "Enviar Solo reloj",
+                  ),
+                )
+              ],
             ),
 
             //Acá va el widget de los botones

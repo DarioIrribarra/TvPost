@@ -300,11 +300,19 @@ class _OpcionesSeleccionMediaState extends State<OpcionesSeleccionMedia> {
 class BotonEnviarAEquipo extends StatelessWidget {
   BotonEnviarAEquipo({
     @required this.visible,
+    this.mensaje_boton,
   });
   final bool visible;
+  String mensaje_boton;
+
 
   @override
   Widget build(BuildContext context) {
+
+    if (this.mensaje_boton == null){
+      mensaje_boton = "Modificar pantalla";
+    }
+
     return Visibility(
       visible: this.visible,
       child: RaisedButton(
@@ -320,7 +328,7 @@ class BotonEnviarAEquipo extends StatelessWidget {
             PopUps.PopUpConWidget(context, Text('Error: Contenido no seleccionado'));
           }
         },
-        child: Text('Enviar a pantalla'),
+        child: Text(mensaje_boton),
       ),
     );
   }
@@ -329,7 +337,7 @@ class BotonEnviarAEquipo extends StatelessWidget {
   //Comprueba datos con base de datos para archivos de media
   String PreparaDatosMediaEnvioEquipo(){
     String _Instruccion;
-
+    String relojEnPantalla;
     String tipoLayoutAEnviar = "";
     String layoutEnEquipo = DatosEstaticos.layoutSeleccionado.toString();
 
@@ -349,12 +357,16 @@ class BotonEnviarAEquipo extends StatelessWidget {
     if (link2AEnviar.isEmpty){link2AEnviar = "0";}
     if (link3AEnviar.isEmpty){link3AEnviar = "0";}
 
+    //valor de reloj en pantalla
+    if (DatosEstaticos.relojEnPantalla) {relojEnPantalla = "on";}
+    else {relojEnPantalla = "off";}
+
     if (layoutEnEquipo == "1"){
       tipoLayoutAEnviar = "100";
       if (link1AEnviar!="0" && !link1AEnviar.contains('/var/www/html') && !link1AEnviar.contains('http')){
         link1AEnviar = '/var/www/html$link1AEnviar';
       }
-      _Instruccion = "$tipoWidget1AEnviar 0 0 $link1AEnviar 0 0";
+      _Instruccion = "$tipoWidget1AEnviar 0 0 $link1AEnviar 0 0 $relojEnPantalla";
     }
     if (layoutEnEquipo == "2"){
       tipoLayoutAEnviar = "5050";
@@ -365,7 +377,7 @@ class BotonEnviarAEquipo extends StatelessWidget {
         link2AEnviar = '/var/www/html$link2AEnviar';
       }
       _Instruccion = "$tipoWidget1AEnviar $tipoWidget2AEnviar "
-          "0 $link1AEnviar $link2AEnviar 0";
+          "0 $link1AEnviar $link2AEnviar 0 $relojEnPantalla";
     }
     if (layoutEnEquipo == "3"){
       tipoLayoutAEnviar = "802010";
@@ -378,9 +390,10 @@ class BotonEnviarAEquipo extends StatelessWidget {
       if (link3AEnviar!="0" && !link3AEnviar.contains('/var/www/html') && !link3AEnviar.contains('http')){
         link3AEnviar = '/var/www/html$link3AEnviar';
       }
+
       //Envío de instrucción final
       _Instruccion = "$tipoWidget1AEnviar $tipoWidget2AEnviar "
-          "$tipoWidget3AEnviar $link1AEnviar $link2AEnviar $link3AEnviar";
+          "$tipoWidget3AEnviar $link1AEnviar $link2AEnviar $link3AEnviar $relojEnPantalla";
     }
 
     String _porcionACambiar = _definirPorcionACambiar();

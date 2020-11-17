@@ -137,6 +137,7 @@ class _SeleccionarLayoutState extends State<SeleccionarLayout> {
         DatosEstaticos.wiget1 = null;
         DatosEstaticos.wiget2 = null;
         DatosEstaticos.wiget3 = null;
+        DatosEstaticos.relojEnPantalla = false;
 
         _layoutSeleccionado = int.parse(DatosEstaticos
             .mapaDatosReproduccionEquipoSeleccionado['layout']);
@@ -191,6 +192,18 @@ class _SeleccionarLayoutState extends State<SeleccionarLayout> {
           case 'WebViewPropio':
             DatosEstaticos.wiget3 = WebViewPropio(urlPropia: DatosEstaticos.nombreArchivoWidget3);
             break;
+        }
+
+        //Se asigna de visibilidad del reloj
+        switch(DatosEstaticos.mapaDatosReproduccionEquipoSeleccionado['relojEnPantalla']){
+          case "on":
+              DatosEstaticos.relojEnPantalla = true;
+            break;
+          case "off":
+            DatosEstaticos.relojEnPantalla = false;
+            break;
+          default:
+            DatosEstaticos.relojEnPantalla = false;
         }
       } else {
         _layoutSeleccionado = 0;
