@@ -310,19 +310,6 @@ class _CrearLayout3State extends State<CrearLayout3> {
 
                 ],
               ),
-              /*actions: [
-                Container(
-                  width: MediaQuery.of(context).size.width,
-                  child: ColorPicker(
-                    pickerColorFondo: pickerColorFondo,
-                    onColorChanged: (color){
-                      changeColor(color);
-                      setState((){});
-                    },
-                    pickerAreaHeightPercent: 0.5,
-                  ),
-                ),
-              ],*/
             ),
           );
         }
