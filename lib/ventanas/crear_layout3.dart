@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:tvpost_flutter/utilidades/custom_widgets.dart';
 import 'package:tvpost_flutter/utilidades/datos_estaticos.dart';
 import 'package:webview_flutter/webview_flutter.dart';
+import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 
 class CrearLayout3 extends StatefulWidget {
   @override
@@ -193,6 +194,9 @@ class _CrearLayout3State extends State<CrearLayout3> {
                     value: DatosEstaticos.relojEnPantalla,
                     onChanged: (bool value){
                       setState(() {
+                        if (value){
+                          PopUps.PopUpConWidgetYEventos(context, EditarReloj());
+                        }
                         _visible_btn_envio_reloj = true;
                         DatosEstaticos.relojEnPantalla = value;
                       });
@@ -226,6 +230,107 @@ class _CrearLayout3State extends State<CrearLayout3> {
       ),
     );
   }
+
+  StatefulBuilder EditarReloj (){
+
+    // Valores para color de fonddo y texto
+    Color pickerColorFondo = HexColor(DatosEstaticos.color_fondo_reloj);
+    Color pickerColorTexto = HexColor(DatosEstaticos.color_texto_reloj);
+
+    //Funciones que cambian y devuelven color
+    void changeColorFondo(Color color) {
+      setState(() {
+        pickerColorFondo = color;
+        //El valor viene en int, así que para pasarlo al reloj en la pantalla
+        //se debe transformar a hex.
+        var hex = '#${color.value.toRadixString(16).padLeft(6, '0').toUpperCase()}';
+        DatosEstaticos.color_fondo_reloj = hex;
+      });
+    }
+
+    //Funciones que cambian y devuelven color
+    void changeColorLetras(Color color) {
+      setState(() {
+        pickerColorTexto = color;
+        //El valor viene en int, así que para pasarlo al reloj en la pantalla
+        //se debe transformar a hex.
+        var hex = '#${color.value.toRadixString(16).padLeft(6, '0').toUpperCase()}';
+        DatosEstaticos.color_texto_reloj = hex;
+      });
+    }
+
+    return StatefulBuilder(
+        builder: (context, setState){
+          return SingleChildScrollView(
+            child: AlertDialog(
+              title: Text("Vista Previa Reloj", textAlign: TextAlign.center,),
+              content: Column(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: 15.0),
+                    child: DecoratedBox(
+                      decoration: BoxDecoration(
+                        color: pickerColorFondo,
+                      ),
+                      child: Text('12:00:00', textScaleFactor: 2.0,
+                        textAlign: TextAlign.center, style: TextStyle(color: pickerColorTexto),),
+                    ),
+                  ),
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      Text("Fondo", textScaleFactor: 1.5, style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),),
+                      ColorPicker(
+                        pickerColor: pickerColorFondo,
+                        showLabel: false,
+                        displayThumbColor: true,
+                        pickerAreaHeightPercent: 0.25,
+                        onColorChanged: (color){
+                          changeColorFondo(color);
+                          setState((){});
+                        },
+                      ),
+                      Text("Hora", textScaleFactor: 1.5, style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),),
+                      ColorPicker(
+                        pickerColor: pickerColorTexto,
+                        showLabel: false,
+                        displayThumbColor: true,
+                        pickerAreaHeightPercent: 0.25,
+                        onColorChanged: (color){
+                          changeColorLetras(color);
+                          setState((){});
+                        },
+                      ),
+                      RaisedButton(
+                        child: Text("Guardar"),
+                        onPressed: () => Navigator.of(context, rootNavigator: true).pop()
+                      ),
+                    ],
+                  ),
+
+                ],
+              ),
+              /*actions: [
+                Container(
+                  width: MediaQuery.of(context).size.width,
+                  child: ColorPicker(
+                    pickerColorFondo: pickerColorFondo,
+                    onColorChanged: (color){
+                      changeColor(color);
+                      setState((){});
+                    },
+                    pickerAreaHeightPercent: 0.5,
+                  ),
+                ),
+              ],*/
+            ),
+          );
+        }
+    );
+  }
+
+
+
 
   void PorcionSeleccionada (int seleccionada){
     switch(seleccionada){

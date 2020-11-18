@@ -37,6 +37,16 @@ class PopUps{
       },
     );
   }
+
+  //Crear un popup con cualquier widget de contenido
+  static PopUpConWidgetYEventos(BuildContext context, StatefulBuilder contenidoPopUp){
+    showDialog(barrierDismissible: true,
+      context:context,
+      builder:(context){
+        return contenidoPopUp;
+      },
+    );
+  }
 }
 
 class CustomAppBar extends PreferredSize{
@@ -360,6 +370,8 @@ class BotonEnviarAEquipo extends StatelessWidget {
     //valor de reloj en pantalla
     if (DatosEstaticos.relojEnPantalla) {relojEnPantalla = "on";}
     else {relojEnPantalla = "off";}
+    //Se añaden los colores del reloj
+    relojEnPantalla = relojEnPantalla + DatosEstaticos.color_fondo_reloj + DatosEstaticos.color_texto_reloj;
 
     if (layoutEnEquipo == "1"){
       tipoLayoutAEnviar = "100";
@@ -507,4 +519,17 @@ class _WebViewPropioState extends State<WebViewPropio> {
       javascriptMode: JavascriptMode.disabled,
     );
   }
+}
+
+//Transforma color hex a int
+class HexColor extends Color {
+  static int _getColorFromHex(String hexColor) {
+    hexColor = hexColor.toUpperCase().replaceAll("#", "");
+    if (hexColor.length == 6) {
+      hexColor = "FF" + hexColor;
+    }
+    return int.parse(hexColor, radix: 16);
+  }
+
+  HexColor(final String hexColor) : super(_getColorFromHex(hexColor));
 }

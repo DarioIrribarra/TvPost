@@ -29,4 +29,6 @@ class DatosEstaticos {
   static bool reemplazarPorcion2 = false;
   static bool reemplazarPorcion3 = false;
   static bool relojEnPantalla = false;
+  static String color_fondo_reloj = "#FFFFFF";
+  static String color_texto_reloj = "#000000";
 }

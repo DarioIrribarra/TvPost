@@ -195,15 +195,11 @@ class _SeleccionarLayoutState extends State<SeleccionarLayout> {
         }
 
         //Se asigna de visibilidad del reloj
-        switch(DatosEstaticos.mapaDatosReproduccionEquipoSeleccionado['relojEnPantalla']){
-          case "on":
-              DatosEstaticos.relojEnPantalla = true;
-            break;
-          case "off":
-            DatosEstaticos.relojEnPantalla = false;
-            break;
-          default:
-            DatosEstaticos.relojEnPantalla = false;
+        String relojEnPantalla = DatosEstaticos.mapaDatosReproduccionEquipoSeleccionado['relojEnPantalla'];
+        if (relojEnPantalla.contains("on")){
+          DatosEstaticos.relojEnPantalla = true;
+        } else {
+          DatosEstaticos.relojEnPantalla = false;
         }
       } else {
         _layoutSeleccionado = 0;
