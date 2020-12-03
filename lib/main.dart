@@ -9,6 +9,7 @@ import 'package:tvpost_flutter/ventanas/detalle_equipo.dart';
 import 'package:tvpost_flutter/ventanas/seleccionar_imagen.dart';
 import 'package:tvpost_flutter/ventanas/seleccionar_layout.dart';
 import 'package:tvpost_flutter/ventanas/seleccionar_video.dart';
+import 'package:tvpost_flutter/ventanas/crear_contenido.dart';
 
 
 Future<void> main() async {
@@ -29,6 +30,7 @@ Future<void> main() async {
       '/crear_layout3': (context) => CrearLayout3(),
       '/seleccionar_imagen': (context) => SeleccionarImagen(),
       '/seleccionar_video': (context) => SeleccionarVideo(),
+      '/crear_contenido': (context) => CrearContenido(),
     },
   ));
 }

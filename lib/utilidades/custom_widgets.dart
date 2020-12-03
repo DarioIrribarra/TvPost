@@ -1,3 +1,6 @@
+import 'dart:convert';
+import 'dart:io';
+import 'package:http/http.dart' as http;
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:tvpost_flutter/utilidades/datos_estaticos.dart';
@@ -47,6 +50,45 @@ class PopUps{
       },
     );
   }
+
+  static Future<bool> enviarImagen(String nombre, File imagen) async{
+    String imabenBytes = base64Encode(imagen.readAsBytesSync());
+    bool resultado = await http.post(DatosEstaticos.rutaSubidaImagenes, body: {
+      "image": imabenBytes,
+      "name": nombre,
+    }).then((result) {
+      //print("Resultado: " + result.statusCode.toString());
+      if (result.statusCode == 200) {return true;}
+    }).catchError((error) {
+      return false;
+    });
+    return resultado;
+  }
+
+  static Future<List> getNombresImagenes() async {
+    List<int> listadoValoresBytes = [];
+    List datos;
+    Socket socket;
+    try{
+      socket= await Socket.connect(DatosEstaticos.ipSeleccionada,
+          DatosEstaticos.puertoSocketRaspberry).timeout(Duration(seconds: 5));
+      socket.write('TVPOSTGETNOMBREIMAGENES');
+      socket.listen((event) {
+        listadoValoresBytes.addAll(event.toList());
+      }).onDone(() {
+        datos =  utf8.decode(listadoValoresBytes).split(",");
+        DatosEstaticos.listadoNombresImagenes = datos;
+        socket.close();
+      });
+
+      await socket.done.whenComplete(() => datos);
+      return datos;
+
+    } catch(e){
+      print("Error " + e.toString());
+    }
+  }
+
 }
 
 class CustomAppBar extends PreferredSize{
@@ -156,7 +198,10 @@ class _OpcionesSeleccionMediaState extends State<OpcionesSeleccionMedia> {
                   child: Text('Url'),
                 ),
                 RaisedButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    //Va a la otra ventana esperando respuesta
+                    navegarYEsperarRespuesta('/crear_contenido');
+                  },
                   child: Text('Crear'),
                 ),
               ],

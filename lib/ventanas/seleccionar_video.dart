@@ -218,7 +218,6 @@ class _SeleccionarVideoState extends State<SeleccionarVideo> {
       "video": videoBytes,
       "name": nombre,
     }).then((result) {
-      //print("Resultado: " + result.statusCode.toString());
       if (result.statusCode == 200) {return true;}
     }).catchError((error) {
       return false;
@@ -277,8 +276,6 @@ class _SeleccionarVideoState extends State<SeleccionarVideo> {
         DatosEstaticos.nombreArchivoWidget3 = nombre;
         DatosEstaticos.reemplazarPorcion3 = true;
         Navigator.pop(context, true);
-        /*Navigator.popAndPushNamed(context,
-            '/crear_layout3');*/
       }
       break;
     }
@@ -350,62 +347,3 @@ class _ReproductorVideosState extends State<ReproductorVideos> {
     );
   }
 }
-
-/*class ChewieListItem extends StatefulWidget {
-
-  VideoPlayerController videoPlayerControllerChewie;
-  bool looping;
-
-  ChewieListItem({
-    @required this.videoPlayerControllerChewie,
-    this.looping,
-    Key key,
-  }) : super(key:key);
-
-  @override
-  _ChewieListItemState createState() => _ChewieListItemState();
-}
-
-class _ChewieListItemState extends State<ChewieListItem> {
-  ChewieController _chewieController;
-
-  @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
-    _chewieController = ChewieController(
-      videoPlayerController: widget.videoPlayerControllerChewie,
-      showControls: true,
-      aspectRatio: 16 / 9,
-      autoInitialize: true,
-      looping: false,
-      errorBuilder: (context, errorMessage){
-        return Center(
-          child: Text(
-            errorMessage,
-          ),
-        );
-      }
-    );
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Chewie(
-      controller: _chewieController,
-    );
-  }
-
-  @override
-  void dispose() {
-    // TODO: implement dispose
-    super.dispose();
-    if (widget.videoPlayerControllerChewie!=null){
-      widget.videoPlayerControllerChewie.dispose();
-    }
-    if(_chewieController!=null){
-      _chewieController.dispose();
-    }
-
-  }
-}*/
