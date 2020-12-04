@@ -898,7 +898,7 @@ class _CrearContenidoState extends State<CrearContenido> {
                     }
                     else {
                       nombreNuevaImagen = textoEscrito.trim()
-                          .toString() + '.jpg';
+                          .toString() + '.png';
                       //Chequear si el valor ya existe
                       if (DatosEstaticos.listadoNombresImagenes.contains(
                           nombreNuevaImagen)){

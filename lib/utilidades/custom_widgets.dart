@@ -405,13 +405,12 @@ class BotonEnviarAEquipo extends StatelessWidget {
     if (tipoWidget3AEnviar == 'Null'){tipoWidget3AEnviar = "0";}
 
     //nombres de archivos a enviar
-    String link1AEnviar = DatosEstaticos.nombreArchivoWidget1;
-    String link2AEnviar = DatosEstaticos.nombreArchivoWidget2;
-    String link3AEnviar = DatosEstaticos.nombreArchivoWidget3;
+    String link1AEnviar = DatosEstaticos.nombreArchivoWidget1.replaceAll(RegExp(' +'),'<!-!>');
+    String link2AEnviar = DatosEstaticos.nombreArchivoWidget2.replaceAll(RegExp(' +'),'<!-!>');
+    String link3AEnviar = DatosEstaticos.nombreArchivoWidget3.replaceAll(RegExp(' +'),'<!-!>');
     if (link1AEnviar.isEmpty){link1AEnviar = "0";}
     if (link2AEnviar.isEmpty){link2AEnviar = "0";}
     if (link3AEnviar.isEmpty){link3AEnviar = "0";}
-
     //valor de reloj en pantalla
     if (DatosEstaticos.relojEnPantalla) {relojEnPantalla = "on";}
     else {relojEnPantalla = "off";}
