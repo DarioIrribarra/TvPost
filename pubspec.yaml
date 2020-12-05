@@ -53,6 +53,7 @@ dev_dependencies:
   share: ^0.6.5+4
   esys_flutter_share: ^1.0.2
   image: ^2.1.19
+  network_image_to_byte: ^0.0.1
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec

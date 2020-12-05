@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
+import 'dart:typed_data';
 import 'package:http/http.dart' as http;
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -7,6 +8,9 @@ import 'package:tvpost_flutter/utilidades/datos_estaticos.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:tvpost_flutter/utilidades/comunicacion_raspberry.dart';
+import 'package:esys_flutter_share/esys_flutter_share.dart';
+import 'package:network_image_to_byte/network_image_to_byte.dart';
+
 
 class PopUps{
 
@@ -356,8 +360,12 @@ class BotonEnviarAEquipo extends StatelessWidget {
   BotonEnviarAEquipo({
     @required this.visible,
     this.mensaje_boton,
+    this.publicar_porcion,
+    this.publicar_rrss,
   });
-  final bool visible;
+  bool visible = false;
+  int publicar_porcion = 0;
+  bool publicar_rrss = false;
   String mensaje_boton;
 
 
@@ -466,10 +474,16 @@ class BotonEnviarAEquipo extends StatelessWidget {
       builder: (context, snapshot){
         if (snapshot.connectionState == ConnectionState.done){
           if (snapshot.data != null){
+            //Acá se publica
+
+            if (this.publicar_rrss){
+              PublicarEnRedesSociales();
+            }
+
             return Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                Text(snapshot.data.toString()),
+                Text('Ok, vea sus pantallas'),
                 RaisedButton(
                   child: Text('Aceptar'),
                   onPressed: (){
@@ -543,6 +557,29 @@ class BotonEnviarAEquipo extends StatelessWidget {
         }
         break;
     }
+  }
+
+  void PublicarEnRedesSociales() async {
+    String nombreNuevaImagen;
+    switch(this.publicar_porcion){
+      case 1:
+        RegExp expresion = new RegExp('ImagenesPostTv\/(.+)');
+        var match = expresion.firstMatch(DatosEstaticos.nombreArchivoWidget1);
+        nombreNuevaImagen = match.group(1);
+        Uint8List byteImage = await networkImageToByte("http://${DatosEstaticos.ipSeleccionada}/ImagenesPostTv/$nombreNuevaImagen");
+        Share.file("Publicación TvPost Izquierda", "TvPost_Izquierda.png",
+            byteImage, "image/png");
+        break;
+      case 2:
+        RegExp expresion = new RegExp('ImagenesPostTv\/(.+)');
+        var match = expresion.firstMatch(DatosEstaticos.nombreArchivoWidget2);
+        nombreNuevaImagen = match.group(1);
+        Uint8List byteImage = await networkImageToByte("http://${DatosEstaticos.ipSeleccionada}/ImagenesPostTv/$nombreNuevaImagen");
+        Share.file("Publicación TvPost Derecha", "TvPost_Derecha.png",
+            byteImage, "image/png");
+        break;
+    }
+
   }
 
 }

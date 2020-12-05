@@ -22,7 +22,7 @@ class _CrearLayout3State extends State<CrearLayout3> {
   BoxDecoration _decorationPorcion1;
   BoxDecoration _decorationPorcion2;
   BoxDecoration _decorationPorcion3;
-  bool _visible_btn_envio_reloj = false;
+  bool publicar_redes_sociales = false;
 
   @override
   void initState() {
@@ -40,14 +40,6 @@ class _CrearLayout3State extends State<CrearLayout3> {
         String url = widgetWebView.initialUrl;
         DatosEstaticos.webViewControllerWidget1?.loadUrl(url);
         widget1 = DatosEstaticos.wiget1;
-        /*try{
-          DatosEstaticos.webViewControllerWidget1?.loadUrl(url);
-          widget1 = DatosEstaticos.wiget1;
-          //DatosEstaticos.webViewControllerWidget1 = null;
-        } catch (e) {
-          widget1 = DatosEstaticos.wiget1;
-          print("Error al loadurl: " + e.toString());
-        }*/
 
       }else {
         widget1 = DatosEstaticos.wiget1;
@@ -64,14 +56,6 @@ class _CrearLayout3State extends State<CrearLayout3> {
         String url = widgetWebView.initialUrl;
         DatosEstaticos.webViewControllerWidget2?.loadUrl(url);
         widget2 = DatosEstaticos.wiget2;
-        /*try{
-          DatosEstaticos.webViewControllerWidget1?.loadUrl(url);
-          widget1 = DatosEstaticos.wiget1;
-          //DatosEstaticos.webViewControllerWidget1 = null;
-        } catch (e) {
-          widget1 = DatosEstaticos.wiget1;
-          print("Error al loadurl: " + e.toString());
-        }*/
 
       }else {
         widget2 = DatosEstaticos.wiget2;
@@ -104,7 +88,6 @@ class _CrearLayout3State extends State<CrearLayout3> {
       Widget _imageSeleccionLayout = Image.asset('imagenes/layout1a.png');
       widget3 = _imageSeleccionLayout;
     }
-
 
     return Scaffold(
       //Appbar viene de archivo custom_widgets.dart
@@ -181,7 +164,59 @@ class _CrearLayout3State extends State<CrearLayout3> {
               ),
             ),
 
-            //Manejo del reloj
+            //Publicacion
+            Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Expanded(
+                  flex: 2,
+                  child: CheckboxListTile(
+                    title: Text('¿Porción izquierda en redes sociales?'),
+                    secondary: Icon(Icons.share),
+                    controlAffinity: ListTileControlAffinity.trailing,
+                    value: publicar_redes_sociales,
+                    onChanged: (bool value){
+                      setState(() {
+                        if (value){
+                          if (DatosEstaticos.wiget1 != null ){
+                            if (DatosEstaticos.wiget1.runtimeType.toString() != 'Image'){
+                              Column cont = Column(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Text('Solo se pueden publicar imágenes'),
+                                  RaisedButton(onPressed: () => Navigator.of(context, rootNavigator: true).pop(),
+                                    child: Text('Aceptar'),),
+                                ],
+                              );
+                              PopUps.PopUpConWidget(context, cont);
+                              publicar_redes_sociales = false;
+                            } else {
+                              publicar_redes_sociales = true;
+                            }
+                          } else {
+                            Column cont = Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Text('La imagen no puede estar vacía'),
+                                RaisedButton(onPressed: () => Navigator.of(context, rootNavigator: true).pop(),
+                                  child: Text('Aceptar'),),
+                              ],
+                            );
+                            PopUps.PopUpConWidget(context, cont);
+                            publicar_redes_sociales = false;
+                          }
+                        }  else {
+                          publicar_redes_sociales = false;
+                        }
+                      });
+
+                    },
+                  ),
+                ),
+              ],
+            ),
+
+            //Manejo reloj
             Row(
               mainAxisSize: MainAxisSize.min,
               children: [
@@ -197,7 +232,6 @@ class _CrearLayout3State extends State<CrearLayout3> {
                         if (value){
                           PopUps.PopUpConWidgetYEventos(context, EditarReloj());
                         }
-                        _visible_btn_envio_reloj = true;
                         DatosEstaticos.relojEnPantalla = value;
                       });
                     },
@@ -207,7 +241,9 @@ class _CrearLayout3State extends State<CrearLayout3> {
                 Expanded(
                   flex: 1,
                   child: BotonEnviarAEquipo(
-                    visible: _visible_btn_envio_reloj,
+                    publicar_rrss: publicar_redes_sociales,
+                    publicar_porcion: 1,
+                    visible: true,
                     mensaje_boton: "Enviar Solo reloj",
                   ),
                 )
@@ -224,7 +260,9 @@ class _CrearLayout3State extends State<CrearLayout3> {
                 setState(() {});
               },
             ),
-            BotonEnviarAEquipo(visible: _visible),
+            BotonEnviarAEquipo(visible: _visible,
+              publicar_rrss: publicar_redes_sociales,
+              publicar_porcion: 1,),
           ],
         ),
       ),
@@ -261,54 +299,58 @@ class _CrearLayout3State extends State<CrearLayout3> {
 
     return StatefulBuilder(
         builder: (context, setState){
-          return SingleChildScrollView(
-            child: AlertDialog(
-              title: Text("Vista Previa Reloj", textAlign: TextAlign.center,),
-              content: Column(
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.only(bottom: 15.0),
-                    child: DecoratedBox(
-                      decoration: BoxDecoration(
-                        color: pickerColorFondo,
+          return Center(
+            child: SingleChildScrollView(
+              child: AlertDialog(
+                title: Text("Vista Previa Reloj", textAlign: TextAlign.center,),
+                content: Column(
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.only(bottom: 15.0),
+                      child: DecoratedBox(
+                        decoration: BoxDecoration(
+                          color: pickerColorFondo,
+                        ),
+                        child: Text('12:00:00', textScaleFactor: 2.0,
+                          textAlign: TextAlign.center, style: TextStyle(color: pickerColorTexto),),
                       ),
-                      child: Text('12:00:00', textScaleFactor: 2.0,
-                        textAlign: TextAlign.center, style: TextStyle(color: pickerColorTexto),),
                     ),
-                  ),
-                  Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      Text("Fondo", textScaleFactor: 1.5, style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),),
-                      ColorPicker(
-                        pickerColor: pickerColorFondo,
-                        showLabel: false,
-                        displayThumbColor: true,
-                        pickerAreaHeightPercent: 0.25,
-                        onColorChanged: (color){
-                          changeColorFondo(color);
-                          setState((){});
-                        },
-                      ),
-                      Text("Hora", textScaleFactor: 1.5, style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),),
-                      ColorPicker(
-                        pickerColor: pickerColorTexto,
-                        showLabel: false,
-                        displayThumbColor: true,
-                        pickerAreaHeightPercent: 0.25,
-                        onColorChanged: (color){
-                          changeColorLetras(color);
-                          setState((){});
-                        },
-                      ),
-                      RaisedButton(
-                        child: Text("Guardar"),
-                        onPressed: () => Navigator.of(context, rootNavigator: true).pop()
-                      ),
-                    ],
-                  ),
+                    Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        Text("Fondo", textScaleFactor: 1.5, style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),),
+                        ColorPicker(
+                          pickerColor: pickerColorFondo,
+                          showLabel: false,
+                          enableAlpha: false,
+                          displayThumbColor: true,
+                          pickerAreaHeightPercent: 0.25,
+                          onColorChanged: (color){
+                            changeColorFondo(color);
+                            setState((){});
+                          },
+                        ),
+                        Text("Hora", textScaleFactor: 1.5, style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),),
+                        ColorPicker(
+                          pickerColor: pickerColorTexto,
+                          showLabel: false,
+                          enableAlpha: false,
+                          displayThumbColor: true,
+                          pickerAreaHeightPercent: 0.25,
+                          onColorChanged: (color){
+                            changeColorLetras(color);
+                            setState((){});
+                          },
+                        ),
+                        RaisedButton(
+                          child: Text("Guardar"),
+                          onPressed: () => Navigator.of(context, rootNavigator: true).pop()
+                        ),
+                      ],
+                    ),
 
-                ],
+                  ],
+                ),
               ),
             ),
           );

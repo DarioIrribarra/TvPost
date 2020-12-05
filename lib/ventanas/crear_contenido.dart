@@ -13,7 +13,6 @@ import 'package:tvpost_flutter/utilidades_crear_contenido/editableitem.dart';
 import 'package:tvpost_flutter/utilidades_crear_contenido/emoticones.dart';
 import 'package:tvpost_flutter/utilidades_crear_contenido/utilidad_widgetimagen.dart';
 import 'package:tvpost_flutter/utilidades_crear_contenido/widgetimagen.dart';
-import 'package:esys_flutter_share/esys_flutter_share.dart';
 import 'package:path_provider/path_provider.dart';
 
 class CrearContenido extends StatefulWidget {
@@ -38,7 +37,7 @@ class _CrearContenidoState extends State<CrearContenido> {
   TextEditingController controladorOferta;
   bool isEmojiVisible = false, isKeyboardVisible = false;
   GlobalKey key1, key2;
-  Uint8List bytes1, bytes2;
+  Uint8List bytes2;
   Map datosDesdeVentanaAnterior = {};
   double altoCanvas = 350, anchoCanvas = 250;
 
@@ -156,13 +155,6 @@ class _CrearContenidoState extends State<CrearContenido> {
                       botonTexto(),
                       botonEmoji(),
                       botonOferta(),
-                      FlatButton(
-                        child: Icon(Icons.share),
-                        onPressed: () async {
-                          Share.file("titulo draxchaos", "draxchaos_prueba.png",
-                              bytes1.buffer.asUint8List(), "image/png");
-                        },
-                      )
                     ],
                   ),
                 ),
@@ -181,13 +173,16 @@ class _CrearContenidoState extends State<CrearContenido> {
                     style: TextStyle(color: Colors.white),
                   ),
                   onPressed: () async {
+                    PopUps.popUpCargando(context, 'Guardando Imagen');
                     final bytes1 = await Utils.capture(key1);
-                    setState(() {
+                    //Cierra popup cargando
+                    Navigator.of(context, rootNavigator: true).pop();
+                    /*setState(() {
                       this.bytes1 = bytes1;
-                    });
+                    });*/
                     //Acá tiene que aparecer el popup para guardar imagen con nombre,
                     //al igual que en el seleccionar imagen
-                    _finalizarGuardado(this.bytes1);
+                    await _finalizarGuardado(bytes1);
                   },
                 ),
               ),
@@ -439,6 +434,8 @@ class _CrearContenidoState extends State<CrearContenido> {
               children: <Widget>[
                 GestureDetector(
                   child: new ColorPicker(
+                    enableAlpha: false,
+                    showLabel: false,
                     pickerColor: Colors.black,
                     onColorChanged: (value) {
                       setState(() {
@@ -543,6 +540,8 @@ class _CrearContenidoState extends State<CrearContenido> {
                   },
                 ),
                 new ColorPicker(
+                  enableAlpha: false,
+                  showLabel: false,
                   displayThumbColor: true,
                   pickerColor: colorTexto,
                   onColorChanged: (value) {
@@ -674,116 +673,118 @@ class _CrearContenidoState extends State<CrearContenido> {
         }
 
         return StatefulBuilder(builder: (context, setState) {
-          return SingleChildScrollView(
-            child: GestureDetector(
-              onTap: () {
-                FocusScope.of(context).unfocus();
-                Limite(controladorOferta.text.length);
-              },
-              child: AlertDialog(
-                title: Text(
-                  "Vista Previa Oferta",
-                  textAlign: TextAlign.center,
-                ),
-                content: Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    WidgetToImage(builder: (key) {
-                      this.key2 = key;
-                      return Container(
-                        width: MediaQuery.of(context).size.width / 2,
-                        height: MediaQuery.of(context).size.height / 6,
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          color: pickerColorFondo,
-                        ),
-                        child: Container(
-                          margin: EdgeInsets.only(left: 5.0),
-                          alignment: Alignment.center,
-                          child: TextFormField(
-                            autofocus: true,
-                            controller: controladorOferta,
-                            maxLengthEnforced: true,
-                            textAlign: TextAlign.center,
-                            textAlignVertical: TextAlignVertical.center,
-                            maxLength: 3,
-                            maxLines: 1,
-                            onEditingComplete: () {
-                              Limite(controladorOferta.text.length);
-                            },
-                            //Decoración caja
-                            decoration: InputDecoration(
-                              border: InputBorder.none,
-                              focusedBorder: InputBorder.none,
-                              enabledBorder: InputBorder.none,
-                              errorBorder: InputBorder.none,
-                              disabledBorder: InputBorder.none,
-                              counterText: "",
+          return Center(
+            child: SingleChildScrollView(
+              child: GestureDetector(
+                onTap: () {
+                  FocusScope.of(context).unfocus();
+                  Limite(controladorOferta.text.length);
+                },
+                child: AlertDialog(
+                  title: Text(
+                    "Vista Previa Oferta",
+                    textAlign: TextAlign.center,
+                  ),
+                  content: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      WidgetToImage(builder: (key) {
+                        this.key2 = key;
+                        return Container(
+                          width: MediaQuery.of(context).size.width / 2,
+                          height: MediaQuery.of(context).size.height / 6,
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            color: pickerColorFondo,
+                          ),
+                          child: Container(
+                            margin: EdgeInsets.only(left: 5.0),
+                            alignment: Alignment.center,
+                            child: TextFormField(
+                              autofocus: true,
+                              controller: controladorOferta,
+                              maxLengthEnforced: true,
+                              textAlign: TextAlign.center,
+                              textAlignVertical: TextAlignVertical.center,
+                              maxLength: 3,
+                              maxLines: 1,
+                              onEditingComplete: () {
+                                Limite(controladorOferta.text.length);
+                              },
+                              //Decoración caja
+                              decoration: InputDecoration(
+                                border: InputBorder.none,
+                                focusedBorder: InputBorder.none,
+                                enabledBorder: InputBorder.none,
+                                errorBorder: InputBorder.none,
+                                disabledBorder: InputBorder.none,
+                                counterText: "",
+                              ),
+                              //Decoración Texto
+                              style: TextStyle(
+                                color: pickerColorTexto,
+                                fontWeight: FontWeight.bold,
+                                fontSize: MediaQuery.of(context).size.height / 25,
+                              ),
                             ),
-                            //Decoración Texto
+                          ),
+                        );
+                      }),
+                      Column(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          Text(
+                            "Fondo",
+                            textScaleFactor: 1.5,
                             style: TextStyle(
-                              color: pickerColorTexto,
-                              fontWeight: FontWeight.bold,
-                              fontSize: MediaQuery.of(context).size.height / 25,
+                                color: Colors.black, fontWeight: FontWeight.bold),
+                          ),
+                          ColorPicker(
+                            //Sin barra deslizadora de degradación
+                            enableAlpha: false,
+                            pickerColor: pickerColorFondo,
+                            showLabel: false,
+                            displayThumbColor: true,
+                            pickerAreaHeightPercent: 0.15,
+                            onColorChanged: (color) {
+                              changeColorFondo(color);
+                              setState(() {});
+                            },
+                          ),
+                          Text(
+                            "Oferta",
+                            textScaleFactor: 1.5,
+                            style: TextStyle(
+                                color: Colors.black, fontWeight: FontWeight.bold),
+                          ),
+                          ColorPicker(
+                            //Sin barra deslizadora de degradación
+                            enableAlpha: false,
+                            pickerColor: pickerColorTexto,
+                            showLabel: false,
+                            displayThumbColor: true,
+                            pickerAreaHeightPercent: 0.15,
+                            onColorChanged: (color) {
+                              changeColorLetras(color);
+                              setState(() {});
+                            },
+                          ),
+                          RaisedButton(
+                            onPressed: () async {
+                              //Acá se debe sacar el screenshot de la oferta
+                              // o moverlo
+                              //**//
+                              _ponerOferta(context);
+                            },
+                            child: Icon(
+                              Icons.check_circle,
+                              color: Colors.lightBlue,
                             ),
-                          ),
-                        ),
-                      );
-                    }),
-                    Column(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        Text(
-                          "Fondo",
-                          textScaleFactor: 1.5,
-                          style: TextStyle(
-                              color: Colors.black, fontWeight: FontWeight.bold),
-                        ),
-                        ColorPicker(
-                          //Sin barra deslizadora de degradación
-                          enableAlpha: false,
-                          pickerColor: pickerColorFondo,
-                          showLabel: false,
-                          displayThumbColor: true,
-                          pickerAreaHeightPercent: 0.15,
-                          onColorChanged: (color) {
-                            changeColorFondo(color);
-                            setState(() {});
-                          },
-                        ),
-                        Text(
-                          "Oferta",
-                          textScaleFactor: 1.5,
-                          style: TextStyle(
-                              color: Colors.black, fontWeight: FontWeight.bold),
-                        ),
-                        ColorPicker(
-                          //Sin barra deslizadora de degradación
-                          enableAlpha: false,
-                          pickerColor: pickerColorTexto,
-                          showLabel: false,
-                          displayThumbColor: true,
-                          pickerAreaHeightPercent: 0.15,
-                          onColorChanged: (color) {
-                            changeColorLetras(color);
-                            setState(() {});
-                          },
-                        ),
-                        RaisedButton(
-                          onPressed: () async {
-                            //Acá se debe sacar el screenshot de la oferta
-                            // o moverlo
-                            //**//
-                            _ponerOferta(context);
-                          },
-                          child: Icon(
-                            Icons.check_circle,
-                            color: Colors.lightBlue,
-                          ),
-                        )
-                      ],
-                    ),
-                  ],
+                          )
+                        ],
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ),
@@ -865,11 +866,14 @@ class _CrearContenidoState extends State<CrearContenido> {
     Fluttertoast.showToast(msg: info, toastLength: Toast.LENGTH_LONG);
   }*/
 
-  void _finalizarGuardado(Uint8List imagenEnBytes) async {
+  Future _finalizarGuardado(Uint8List imagenEnBytes) async {
     GlobalKey<FormState> _keyValidadorTxtImagen = GlobalKey<FormState>();
-
+    PopUps.popUpCargando(context, 'Cambiando tamaño');
     //Redimensiono imagen en memoria
     imagenEnBytes = await Utils.redimensionarImg(imagenEnBytes, divisionLayout);
+
+    //Cierra popup cargando
+    Navigator.of(context, rootNavigator: true).pop();
 
     /*String dir = (await getTemporaryDirectory()).path;
     File temporal = new File('$dir/screen_widgets.png');

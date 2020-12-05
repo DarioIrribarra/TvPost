@@ -19,6 +19,10 @@ class _CrearLayout2State extends State<CrearLayout2> {
   bool _visible = false;
   BoxDecoration _decorationPorcion1;
   BoxDecoration _decorationPorcion2;
+  bool publicar_redes_sociales = false;
+  bool publicar_porcion_izquierda = false;
+  bool publicar_porcion_derecha = false;
+  int porcion_publicar_rrss = 1;
 
   @override
   void initState() {
@@ -127,6 +131,126 @@ class _CrearLayout2State extends State<CrearLayout2> {
                 ],
               ),
             ),
+
+            //Publicacion
+            Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Expanded(
+                  flex: 2,
+                  child: CheckboxListTile(
+                    title: Text('¿Porción izquierda en redes sociales?'),
+                    secondary: Icon(Icons.share),
+                    controlAffinity: ListTileControlAffinity.trailing,
+                    value: publicar_porcion_izquierda,
+                    onChanged: (bool value){
+                      setState(() {
+                        if (publicar_porcion_derecha){
+                          publicar_porcion_derecha = false;
+                        }
+                        if (value){
+                          if (DatosEstaticos.wiget1 != null ){
+                            if (DatosEstaticos.wiget1.runtimeType.toString() != 'Image'){
+                              Column cont = Column(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Text('Solo se pueden publicar imágenes'),
+                                  RaisedButton(onPressed: () => Navigator.of(context, rootNavigator: true).pop(),
+                                    child: Text('Aceptar'),),
+                                ],
+                              );
+                              PopUps.PopUpConWidget(context, cont);
+                              publicar_redes_sociales = false;
+                              publicar_porcion_izquierda = false;
+                            } else {
+                              publicar_redes_sociales = true;
+                              publicar_porcion_izquierda = true;
+                              porcion_publicar_rrss = 1;
+                            }
+                          } else {
+                            Column cont = Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Text('La imagen no puede estar vacía'),
+                                RaisedButton(onPressed: () => Navigator.of(context, rootNavigator: true).pop(),
+                                  child: Text('Aceptar'),),
+                              ],
+                            );
+                            PopUps.PopUpConWidget(context, cont);
+                            publicar_redes_sociales = false;
+                            publicar_porcion_izquierda = false;
+                          }
+                        }  else {
+                          publicar_redes_sociales = false;
+                          publicar_porcion_izquierda = false;
+                        }
+                      });
+
+                    },
+                  ),
+                ),
+              ],
+            ),
+
+            Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Expanded(
+                  flex: 2,
+                  child: CheckboxListTile(
+                    title: Text('¿Porción derecha en redes sociales?'),
+                    secondary: Icon(Icons.share),
+                    controlAffinity: ListTileControlAffinity.trailing,
+                    value: publicar_porcion_derecha,
+                    onChanged: (bool value){
+                      if (publicar_porcion_izquierda){
+                        publicar_porcion_izquierda = false;
+                      }
+                      setState(() {
+                        if (value){
+                          if (DatosEstaticos.wiget2 != null ){
+                            if (DatosEstaticos.wiget2.runtimeType.toString() != 'Image'){
+                              Column cont = Column(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Text('Solo se pueden publicar imágenes'),
+                                  RaisedButton(onPressed: () => Navigator.of(context, rootNavigator: true).pop(),
+                                    child: Text('Aceptar'),),
+                                ],
+                              );
+                              PopUps.PopUpConWidget(context, cont);
+                              publicar_redes_sociales = false;
+                              publicar_porcion_derecha = false;
+                            } else {
+                              publicar_redes_sociales = true;
+                              publicar_porcion_derecha = true;
+                              porcion_publicar_rrss = 2;
+                            }
+                          } else {
+                            Column cont = Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Text('La imagen no puede estar vacía'),
+                                RaisedButton(onPressed: () => Navigator.of(context, rootNavigator: true).pop(),
+                                  child: Text('Aceptar'),),
+                              ],
+                            );
+                            PopUps.PopUpConWidget(context, cont);
+                            publicar_redes_sociales = false;
+                            publicar_porcion_derecha = false;
+                          }
+                        }  else {
+                          publicar_redes_sociales = false;
+                          publicar_porcion_derecha = false;
+                        }
+                      });
+
+                    },
+                  ),
+                ),
+              ],
+            ),
+
             //Acá va el widget de los botones
             OpcionesSeleccionMedia(
               visible: _visible,
@@ -137,7 +261,9 @@ class _CrearLayout2State extends State<CrearLayout2> {
                 setState(() {});
               },
             ),
-            BotonEnviarAEquipo(visible: _visible),
+            BotonEnviarAEquipo(visible: _visible,
+              publicar_rrss: publicar_redes_sociales,
+              publicar_porcion: porcion_publicar_rrss,),
           ],
         ),
       ),

@@ -20,6 +20,7 @@ class _CrearLayout1State extends State<CrearLayout1> {
   //Widget dentro del mapa de datos de ventana anterior
   Widget widget1;
   bool _visible = false;
+  bool publicar_redes_sociales = false;
   //Decoración que permite el poner un borde al seleccionar la porción de
   // pantalla
   BoxDecoration _decorationPorcion1;
@@ -41,14 +42,6 @@ class _CrearLayout1State extends State<CrearLayout1> {
         String url = widgetWebView.initialUrl;
         DatosEstaticos.webViewControllerWidget1?.loadUrl(url);
         widget1 = DatosEstaticos.wiget1;
-        /*try{
-          DatosEstaticos.webViewControllerWidget1?.loadUrl(url);
-          widget1 = DatosEstaticos.wiget1;
-          //DatosEstaticos.webViewControllerWidget1 = null;
-        } catch (e) {
-          widget1 = DatosEstaticos.wiget1;
-          print("Error al loadurl: " + e.toString());
-        }*/
 
       }else {
         widget1 = DatosEstaticos.wiget1;
@@ -87,6 +80,59 @@ class _CrearLayout1State extends State<CrearLayout1> {
                   ),
                 ),
               ),
+
+              //Publicacion
+              Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Expanded(
+                    flex: 2,
+                    child: CheckboxListTile(
+                      title: Text('¿Porción central en redes sociales?'),
+                      secondary: Icon(Icons.share),
+                      controlAffinity: ListTileControlAffinity.trailing,
+                      value: publicar_redes_sociales,
+                      onChanged: (bool value){
+                        setState(() {
+                          if (value){
+                            if (DatosEstaticos.wiget1 != null ){
+                              if (DatosEstaticos.wiget1.runtimeType.toString() != 'Image'){
+                                Column cont = Column(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    Text('Solo se pueden publicar imágenes'),
+                                    RaisedButton(onPressed: () => Navigator.of(context, rootNavigator: true).pop(),
+                                      child: Text('Aceptar'),),
+                                  ],
+                                );
+                                PopUps.PopUpConWidget(context, cont);
+                                publicar_redes_sociales = false;
+                              } else {
+                                publicar_redes_sociales = true;
+                              }
+                            } else {
+                              Column cont = Column(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Text('La imagen no puede estar vacía'),
+                                  RaisedButton(onPressed: () => Navigator.of(context, rootNavigator: true).pop(),
+                                    child: Text('Aceptar'),),
+                                ],
+                              );
+                              PopUps.PopUpConWidget(context, cont);
+                              publicar_redes_sociales = false;
+                            }
+                          }  else {
+                            publicar_redes_sociales = false;
+                          }
+                        });
+
+                      },
+                    ),
+                  ),
+                ],
+              ),
+
               //Acá va el widget de los botones
               OpcionesSeleccionMedia(
                 //keywebview: webViewKey,
@@ -98,7 +144,9 @@ class _CrearLayout1State extends State<CrearLayout1> {
                   setState(() {});
                 },
               ),
-              BotonEnviarAEquipo(visible: _visible),
+              BotonEnviarAEquipo(visible: _visible,
+                publicar_rrss: publicar_redes_sociales,
+                publicar_porcion: 1,),
             ],
           ),
       ),
