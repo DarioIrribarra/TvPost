@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 import 'dart:io';
 import 'dart:typed_data';
 import 'package:flutter/cupertino.dart';
@@ -81,6 +82,10 @@ class _DetalleEquipoState extends State<DetalleEquipo> {
                               return Image.asset('imagenes/logohorizontal.png');
                             } else {
                               //Retorna el widget con la imagen de screenshot
+
+                              //Acá obtengo las dimensiones base exactas de la pantalla
+                              ObtenerSizePixelesPantalla();
+
                               return Column(
                                 children: [
                                   _getScreenShotProcesada(),
@@ -269,5 +274,33 @@ class _DetalleEquipoState extends State<DetalleEquipo> {
     );
 
     PopUps.PopUpConWidget(context, _widgetCompleto);
+  }
+
+  void ObtenerSizePixelesPantalla() async {
+    String resp;
+    Uint8List _respuesta;
+    List<int> listadoRespuestas = [];
+    try{
+      Socket socket;
+      socket = await Socket.connect(DatosEstaticos.ipSeleccionada,
+          DatosEstaticos.puertoSocketRaspberry).timeout(Duration(seconds: 5));
+      socket.write('TVPOSTGETSIZEPANTALLA');
+      socket.listen((event) {
+        listadoRespuestas.addAll(event.toList());
+      }).onDone(() {
+        _respuesta = Uint8List.fromList(listadoRespuestas);
+        socket.close();
+        return;
+      });
+
+      await socket.done.whenComplete(() => resp = utf8.decode(_respuesta));
+      //Se manipula la respuesta de datos
+      Map<String,dynamic> datosRecibidos = json.decode(resp);
+      DatosEstaticos.ancho_pantalla_seleccionada = int.parse(datosRecibidos['anchoPantalla'].toString());
+      DatosEstaticos.alto_pantalla_seleccionada = int.parse(datosRecibidos['altoPantalla'].toString());
+
+    }catch (e){
+
+    }
   }
 }

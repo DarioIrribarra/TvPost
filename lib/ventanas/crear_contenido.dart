@@ -70,7 +70,7 @@ class _CrearContenidoState extends State<CrearContenido> {
       divisionLayout = datosDesdeVentanaAnterior['division_layout'];
       if (divisionLayout.contains('-1')){
         anchoCanvas = MediaQuery.of(context).size.width;
-        altoCanvas = MediaQuery.of(context).size.height/2.5;
+        altoCanvas = MediaQuery.of(context).size.height/4;
       }
       if (divisionLayout.contains('2-')){
         anchoCanvas = MediaQuery.of(context).size.width;
@@ -82,7 +82,7 @@ class _CrearContenidoState extends State<CrearContenido> {
       }
       if (divisionLayout.contains('-3')){
         anchoCanvas = MediaQuery.of(context).size.width;
-        altoCanvas = MediaQuery.of(context).size.height/6;
+        altoCanvas = MediaQuery.of(context).size.height/8;
       }
     }
 
@@ -106,7 +106,6 @@ class _CrearContenidoState extends State<CrearContenido> {
               WidgetToImage(builder: (key) {
                 this.key1 = key;
                 return Container(
-                  margin: EdgeInsets.all(10),
                   height: altoCanvas,
                   width: anchoCanvas,
                   color: colorFondo,
@@ -185,11 +184,10 @@ class _CrearContenidoState extends State<CrearContenido> {
                     final bytes1 = await Utils.capture(key1);
                     setState(() {
                       this.bytes1 = bytes1;
-                      _finalizarGuardado(this.bytes1);
                     });
                     //Acá tiene que aparecer el popup para guardar imagen con nombre,
                     //al igual que en el seleccionar imagen
-
+                    _finalizarGuardado(this.bytes1);
                   },
                 ),
               ),
@@ -869,9 +867,13 @@ class _CrearContenidoState extends State<CrearContenido> {
 
   void _finalizarGuardado(Uint8List imagenEnBytes) async {
     GlobalKey<FormState> _keyValidadorTxtImagen = GlobalKey<FormState>();
-    String dir = (await getTemporaryDirectory()).path;
+
+    //Redimensiono imagen en memoria
+    imagenEnBytes = await Utils.redimensionarImg(imagenEnBytes, divisionLayout);
+
+    /*String dir = (await getTemporaryDirectory()).path;
     File temporal = new File('$dir/screen_widgets.png');
-    await temporal.writeAsBytes(imagenEnBytes);
+    await temporal.writeAsBytes(imagenEnBytes);*/
     //print(temporal.path);
     String nombreNuevaImagen = "";
 
@@ -884,7 +886,11 @@ class _CrearContenidoState extends State<CrearContenido> {
             mainAxisSize: MainAxisSize.min,
             children: [
               Container(
-                child: Image.memory(imagenEnBytes, height:MediaQuery.of(context).size.height/3,),
+                child: Image.memory(
+                  imagenEnBytes,
+                  width: MediaQuery.of(context).size.width-10,
+                  height:MediaQuery.of(context).size.height/3,
+                ),
               ),
               Center(
                 child: TextFormField(
@@ -917,15 +923,18 @@ class _CrearContenidoState extends State<CrearContenido> {
                   if(_keyValidadorTxtImagen.currentState.validate()){
                     //Se abre el popup de cargando
                     PopUps.popUpCargando(context, 'Añadiendo imagen...');
+
+                    //Se crea el archivo final del tamaño modificado
+                    File temporal = await Utils.crearArchivoTemporalRedimensionado(imagenEnBytes);
+
                     //Obtengo el resultado del envio
                     var resultado = await PopUps.enviarImagen(nombreNuevaImagen,
                         temporal).then((value) => value);
 
                     if(resultado){
                       //Si el envío es correcto, se redirecciona
-                      Image imagen = Image.file(temporal,);
+                      Image imagen = Image.network("http://${DatosEstaticos.ipSeleccionada}/ImagenesPostTv/$nombreNuevaImagen");
                       RedireccionarCrearLayout(imagen, "/var/www/html/ImagenesPostTv/$nombreNuevaImagen",true);
-
                     }else{
                       //Cierra popup cargando
                       Navigator.of(context, rootNavigator: true).pop();
@@ -946,7 +955,7 @@ class _CrearContenidoState extends State<CrearContenido> {
   }
 
   // ignore: non_constant_identifier_names
-  void RedireccionarCrearLayout(Widget imagen, String nombre,bool vieneDePopUp){
+  Future<void> RedireccionarCrearLayout(Widget imagen, String nombre,bool vieneDePopUp) async {
     if (vieneDePopUp){
       //Cierra popup cargando
       Navigator.of(context, rootNavigator: true).pop();
@@ -964,47 +973,42 @@ class _CrearContenidoState extends State<CrearContenido> {
         DatosEstaticos.wiget1 = imagen;
         DatosEstaticos.nombreArchivoWidget1 = nombre;
         DatosEstaticos.reemplazarPorcion1 = true;
-        Navigator.pop(context, true);
       }
       break;
       case '2-1': {
         DatosEstaticos.wiget1 = imagen;
         DatosEstaticos.nombreArchivoWidget1 = nombre;
         DatosEstaticos.reemplazarPorcion1 = true;
-        Navigator.pop(context, true);
       }
       break;
       case '2-2': {
         DatosEstaticos.wiget2 = imagen;
         DatosEstaticos.nombreArchivoWidget2 = nombre;
         DatosEstaticos.reemplazarPorcion2 = true;
-        Navigator.pop(context, true);
       }
       break;
       case '3-1': {
         DatosEstaticos.wiget1 = imagen;
         DatosEstaticos.nombreArchivoWidget1 = nombre;
         DatosEstaticos.reemplazarPorcion1 = true;
-        Navigator.pop(context, true);
       }
       break;
       case '3-2': {
         DatosEstaticos.wiget2 = imagen;
         DatosEstaticos.nombreArchivoWidget2 = nombre;
         DatosEstaticos.reemplazarPorcion2 = true;
-        Navigator.pop(context, true);
       }
       break;
       case '3-3': {
         DatosEstaticos.wiget3 = imagen;
         DatosEstaticos.nombreArchivoWidget3 = nombre;
         DatosEstaticos.reemplazarPorcion3 = true;
-        Navigator.pop(context, true);
-        /*Navigator.popAndPushNamed(context,
-            '/crear_layout3');*/
       }
       break;
     }
+    //Eliminar archivos temporales
+    Directory dir = await getTemporaryDirectory();
+    dir.deleteSync(recursive: true);
+    Navigator.pop(context, true);
   }
-
 }

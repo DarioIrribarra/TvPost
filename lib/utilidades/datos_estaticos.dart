@@ -31,4 +31,7 @@ class DatosEstaticos {
   static bool relojEnPantalla = false;
   static String color_fondo_reloj = "#FFFFFF";
   static String color_texto_reloj = "#000000";
+  //Tamaños base de pantalla
+  static int ancho_pantalla_seleccionada = 0;
+  static int alto_pantalla_seleccionada = 0;
 }

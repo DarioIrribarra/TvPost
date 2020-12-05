@@ -110,8 +110,9 @@ class _SeleccionarLayoutState extends State<SeleccionarLayout> {
     //String tipoNuevoLayout;
     Uint8List _respuesta;
     List<int> listadoRespuestas = [];
-    Socket socket;
+
     try{
+      Socket socket;
       socket = await Socket.connect(DatosEstaticos.ipSeleccionada, 
           DatosEstaticos.puertoSocketRaspberry).timeout(Duration(seconds: 5));
       socket.write('TVPOSTGETDATOSREPRODUCCIONACTUAL');
