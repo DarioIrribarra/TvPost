@@ -84,12 +84,12 @@ class _SeleccionarVideoState extends State<SeleccionarVideo> {
                       children: List.generate(
                           DatosEstaticos.listadoNombresVideos.length, (index) {
                         return GestureDetector(
-                          onDoubleTap: (){
-                            Widget video = ReproductorVideos(url: 'http://${DatosEstaticos.ipSeleccionada}/VideosPostTv/${DatosEstaticos.listadoNombresVideos[index]}',);
-                            String nombre = DatosEstaticos.listadoNombresVideos[index];
-                            RedireccionarCrearLayout(video, "/var/www/html/VideosPostTv/$nombre", false);
-                          },
-                          child: ReproductorVideos(url: 'http://${DatosEstaticos.ipSeleccionada}/VideosPostTv/${DatosEstaticos.listadoNombresVideos[index]}',)
+                            child: ReproductorVideos(url: 'http://${DatosEstaticos.ipSeleccionada}/VideosPostTv/${DatosEstaticos.listadoNombresVideos[index]}',),
+                            onDoubleTap: (){
+                              Widget video = ReproductorVideos(url: 'http://${DatosEstaticos.ipSeleccionada}/VideosPostTv/${DatosEstaticos.listadoNombresVideos[index]}', divisionLayout: divisionLayout,);
+                              String nombre = DatosEstaticos.listadoNombresVideos[index];
+                              RedireccionarCrearLayout(video, "/var/www/html/VideosPostTv/$nombre", false);
+                            },
                         );
                       }),
                     );
@@ -288,8 +288,10 @@ class _SeleccionarVideoState extends State<SeleccionarVideo> {
 
 
 class ReproductorVideos extends StatefulWidget {
-  var url;  //here declared
-  ReproductorVideos({this.url});
+  String divisionLayout;
+  var url;
+
+  ReproductorVideos({this.url, this.divisionLayout = ""});
   @override
   _ReproductorVideosState createState() => _ReproductorVideosState();
 }
@@ -297,7 +299,6 @@ class ReproductorVideos extends StatefulWidget {
 class _ReproductorVideosState extends State<ReproductorVideos> {
 
   VideoPlayerController _controller;
-
   @override
   void initState() {
     if(widget.url.runtimeType != String){
@@ -320,29 +321,46 @@ class _ReproductorVideosState extends State<ReproductorVideos> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      height: 300,
-      width: MediaQuery.of(context).size.width,
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          Expanded(
-              child: VideoPlayer(_controller)
-          ),
-          FlatButton(
-            child: Icon(_controller.value.isPlaying ? Icons.pause : Icons.play_arrow),
-            onPressed: (){
-              setState(() {
-                if(_controller.value.isPlaying){
-                    _controller.pause();
-                }else{
-                  _controller.play();
-                }
-              });
-            },
-          ),
-        ],
+    double ancho_video = MediaQuery.of(context).size.width;
+    double alto_video = MediaQuery.of(context).size.height;
+    if (widget.divisionLayout!=""){
+
+      switch (widget.divisionLayout){
+        case '3-2':
+          alto_video = alto_video/8;
+          break;
+      }
+    }
+
+    return Center(
+      child: Container(
+        width: ancho_video,
+        child: Stack(
+          clipBehavior: Clip.hardEdge,
+          children: [
+            Container(
+              width: ancho_video,
+              height: alto_video,
+              child: VideoPlayer(_controller),
+            ),
+            Container(
+              width: MediaQuery.of(context).size.width/7,
+              child: RaisedButton(
+                shape: CircleBorder(),
+                child: Icon(_controller.value.isPlaying ? Icons.pause : Icons.play_arrow, size: MediaQuery.of(context).size.width/15,),
+                onPressed: (){
+                  setState(() {
+                    if(_controller.value.isPlaying){
+                      _controller.pause();
+                    }else{
+                      _controller.play();
+                    }
+                  });
+                },
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

@@ -20,7 +20,8 @@ class _DetalleEquipoState extends State<DetalleEquipo> {
   Map datosDesdeVentanaAnterior = {};
   int indexEquipoGrid = 0;
   Image _screenshotProcesada = Image.asset('imagenes/logohorizontal.png');
-  TextEditingController _controladorTexto = TextEditingController();
+  GlobalKey<FormState> _keyValidador = GlobalKey<FormState>();
+  TextEditingController _controladorTexto = TextEditingController(text: "");
   //Guarda el estado del context para usarlo con el snackbar
   final _scaffoldKey = GlobalKey<ScaffoldState>();
   //Utilizar el memoizer hace que la función de Future (getScreenShot())
@@ -127,7 +128,7 @@ class _DetalleEquipoState extends State<DetalleEquipo> {
                           listadoDatosEquipoSeleccionado[0]['f_alias']),
                           IconButton(
                             onPressed: () async {
-                              _widgetPopUpAlias(context);
+                              _widgetPopUpAlias();
                             },
                             icon: Icon(Icons.edit),
                           )
@@ -216,7 +217,78 @@ class _DetalleEquipoState extends State<DetalleEquipo> {
     return _screenshotProcesada;
   }
 
-  void _widgetPopUpAlias(BuildContext context) async{
+  _widgetPopUpAlias() async {
+    await showDialog<String>(
+      context: context,
+      child: _SystemPadding(child: new AlertDialog(
+        contentPadding: const EdgeInsets.all(16.0),
+        content: Form(
+          key: _keyValidador,
+          child: Container(
+            child: new Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                TextFormField(
+                  controller: _controladorTexto,
+                  validator: (textoEscrito){
+                    if(textoEscrito.isEmpty){
+                      return "Error: Alias vacío";
+                    }
+                    if(textoEscrito.trim().length<= 0){
+                      return "Error: Alias vacío";
+                    }
+                    else {return null;}
+                  },
+                ),
+                RaisedButton(
+                  child: Text('Cambiar Alias'),
+                  onPressed: () async{
+                    if (_keyValidador.currentState.validate()){
+                      PopUps.popUpCargando(context, 'Actualizando alias...');
+                      ObtieneDatos datos = ObtieneDatos();
+                      String serial = DatosEstaticos.
+                      listadoDatosEquipoSeleccionado[0]['f_serial'];
+                      await datos.updateAliasEquipo(serial,
+                          _controladorTexto.text.toString());
+                      //print(resultado);
+                      await datos.getDatosEquipos();
+                      //Cierra popup cargando
+                      Navigator.of(context).pop();
+                      Navigator.of(context).pop();
+
+                      //Cierra popup de cambiar Alias
+                      //Navigator.of(context, rootNavigator: true).pop();
+                      //Realiza el cambio en la ventana raiz
+                      setState(() {});
+                      await Future.delayed(Duration(milliseconds: 500));
+                      SnackBar snackbar = SnackBar(content: Text('Alias '
+                          'cambiado exitosamente'), );
+                      _scaffoldKey.currentState.showSnackBar(snackbar);
+                    }
+                  },
+                ),
+              ],
+            ),
+          ),
+        ),
+        /*actions: <Widget>[
+          new FlatButton(
+              child: const Text('CANCEL'),
+              onPressed: () {
+                Navigator.pop(context);
+              }),
+          new FlatButton(
+              child: const Text('OPEN'),
+              onPressed: () {
+                Navigator.pop(context);
+              })
+        ],*/
+      ),),
+    );
+  }
+/*
+
+  void _widgetPopUpAlias2(BuildContext context) async{
     GlobalKey<FormState> _keyValidador = GlobalKey<FormState>();
     Widget _widgetCompleto = 
     SingleChildScrollView(
@@ -275,6 +347,7 @@ class _DetalleEquipoState extends State<DetalleEquipo> {
 
     PopUps.PopUpConWidget(context, _widgetCompleto);
   }
+*/
 
   void ObtenerSizePixelesPantalla() async {
     String resp;
@@ -302,5 +375,20 @@ class _DetalleEquipoState extends State<DetalleEquipo> {
     }catch (e){
 
     }
+  }
+}
+
+class _SystemPadding extends StatelessWidget {
+  final Widget child;
+
+  _SystemPadding({Key key, this.child}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    var mediaQuery = MediaQuery.of(context);
+    return new AnimatedContainer(
+        padding: mediaQuery.padding,
+        duration: const Duration(milliseconds: 300),
+        child: child);
   }
 }

@@ -2,7 +2,6 @@ import 'dart:io';
 import 'dart:typed_data';
 import 'dart:ui';
 import 'package:flutter/material.dart';
-import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -47,8 +46,8 @@ class _CrearContenidoState extends State<CrearContenido> {
     //Acá se hace el llamado al listado de nombres de imágenes
     PopUps.getNombresImagenes();
     _requestPermission();
-
-    KeyboardVisibility.onChange.listen((bool isKeyboardVisible) {
+    controladorOferta = TextEditingController();
+    /*KeyboardVisibility.onChange.listen((bool isKeyboardVisible) {
       setState(() {
         this.isKeyboardVisible = isKeyboardVisible;
       });
@@ -58,7 +57,17 @@ class _CrearContenidoState extends State<CrearContenido> {
           isEmojiVisible = false;
         });
       }
-    });
+    });*/
+  }
+
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    super.dispose();
+    if(this.mounted){
+      controladorOferta.dispose();
+      controller.dispose();
+    }
   }
 
   @override
@@ -552,18 +561,22 @@ class _CrearContenidoState extends State<CrearContenido> {
                 ),
                 RaisedButton(
                   onPressed: () {
-                    setState(() {
-                      txt = Text(
-                        textoo,
-                        style: DefaultTextStyle.of(context).style.apply(fontSizeFactor: 0.5, decoration: TextDecoration.none, color: colorTexto),
-                      );
-                      mockData.add(
-                        EditableItem()
-                          ..type = ItemType.Text
-                          ..value = txt,
-                      );
-                    });
 
+                    if (textoo!=null){
+                      if (textoo.isNotEmpty && textoo.trim().length > 0){
+                        setState(() {
+                          txt = Text(
+                            textoo,
+                            style: DefaultTextStyle.of(context).style.apply(fontSizeFactor: 0.5, decoration: TextDecoration.none, color: colorTexto),
+                          );
+                          mockData.add(
+                            EditableItem()
+                              ..type = ItemType.Text
+                              ..value = txt,
+                          );
+                        });
+                      }
+                    }
                     Navigator.of(context).pop();
                   },
                   child: Icon(
@@ -608,7 +621,7 @@ class _CrearContenidoState extends State<CrearContenido> {
       width: 55,
       child: RaisedButton(
         onPressed: () {
-          return PopUpOferta(context);
+          return PopUpOferta();
         },
         child: Icon(
           Icons.local_offer,
@@ -625,8 +638,7 @@ class _CrearContenidoState extends State<CrearContenido> {
     );
   }
 
-  PopUpOferta(BuildContext context) {
-    controladorOferta = TextEditingController();
+  PopUpOferta() {
     // Valores para color de fonddo y texto
     Color pickerColorFondo = Color(0xFFFF0000);
     Color pickerColorTexto = Color(0xffffffff);

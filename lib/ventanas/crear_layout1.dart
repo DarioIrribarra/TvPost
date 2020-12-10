@@ -47,7 +47,7 @@ class _CrearLayout1State extends State<CrearLayout1> {
         widget1 = DatosEstaticos.wiget1;
       }
     } else {
-      Widget _imageSeleccionLayout = Image.asset('imagenes/layout1a.png');
+      Widget _imageSeleccionLayout = Image.asset('imagenes/layout1a.png',fit: BoxFit.fill);
       widget1 = _imageSeleccionLayout;
     }
     return Scaffold(
@@ -59,11 +59,11 @@ class _CrearLayout1State extends State<CrearLayout1> {
             children: [
               //Ink well para poder tener feedback como botón de cualquier widget
               Container(
-                margin: EdgeInsets.only(left: 5, right: 5),
+                width: MediaQuery.of(context).size.width,
+                height: MediaQuery.of(context).size.height/3,
+                margin: EdgeInsets.all(5),
                 decoration: BoxDecoration(border: Border.all(color: Colors.black, width: 5)),
                 child: Container(
-                  width: MediaQuery.of(context).size.width,
-                  height: MediaQuery.of(context).size.height/3,
                   decoration: _decorationPorcion1,
                   child: InkWell(
                     enableFeedback: true,

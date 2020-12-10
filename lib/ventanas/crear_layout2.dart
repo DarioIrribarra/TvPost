@@ -88,44 +88,48 @@ class _CrearLayout2State extends State<CrearLayout2> {
         child: Column(
           children: [
             Container(
-              margin: EdgeInsets.only(left: 5, right: 5),
+              height: MediaQuery.of(context).size.height/3,
+              margin: EdgeInsets.all(5),
               decoration: BoxDecoration(border: Border.all(color: Colors.black, width: 5)),
               child: Row(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  Container(
-                    width: MediaQuery.of(context).size.width/2.15,
-                    height: MediaQuery.of(context).size.height/3,
-                    decoration: _decorationPorcion1,
-                    child: InkWell(
-                        enableFeedback: true,
-                        onTap: () {
-                          setState(() {
-                            PorcionSeleccionada(1);
-                            if (!_visible) {
-                              _visible = true;
-                            }
-                            divisionLayout = '2-1';
-                          });
-                        },
-                        child: ignorarInteraccionesElemento(widget1),
+                  Expanded(
+                    flex:1,
+                    child: Container(
+                      decoration: _decorationPorcion1,
+                      child: InkWell(
+                          enableFeedback: true,
+                          onTap: () {
+                            setState(() {
+                              PorcionSeleccionada(1);
+                              if (!_visible) {
+                                _visible = true;
+                              }
+                              divisionLayout = '2-1';
+                            });
+                          },
+                          child: ignorarInteraccionesElemento(widget1),
+                      ),
                     ),
                   ),
-                  Container(
-                    width: MediaQuery.of(context).size.width/2.059,
-                    height: MediaQuery.of(context).size.height/3,
-                    decoration: _decorationPorcion2,
-                    child: InkWell(
-                        enableFeedback: true,
-                        onTap: () {
-                          setState(() {
-                            PorcionSeleccionada(2);
-                            if (!_visible) {
-                              _visible = true;
-                            }
-                            divisionLayout = '2-2';
-                          });
-                        },
-                        child: ignorarInteraccionesElemento(widget2),
+                  Expanded(
+                    flex: 1,
+                    child: Container(
+                      decoration: _decorationPorcion2,
+                      child: InkWell(
+                          enableFeedback: true,
+                          onTap: () {
+                            setState(() {
+                              PorcionSeleccionada(2);
+                              if (!_visible) {
+                                _visible = true;
+                              }
+                              divisionLayout = '2-2';
+                            });
+                          },
+                          child: ignorarInteraccionesElemento(widget2),
+                      ),
                     ),
                   ),
                 ],

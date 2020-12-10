@@ -45,7 +45,7 @@ class _CrearLayout3State extends State<CrearLayout3> {
         widget1 = DatosEstaticos.wiget1;
       }
     } else {
-      Widget _imageSeleccionLayout = Image.asset('imagenes/layout1a.png');
+      Widget _imageSeleccionLayout = Image.asset('imagenes/layout1a.png', fit: BoxFit.fill,);
       widget1 = _imageSeleccionLayout;
     }
 
@@ -61,7 +61,7 @@ class _CrearLayout3State extends State<CrearLayout3> {
         widget2 = DatosEstaticos.wiget2;
       }
     } else {
-      Widget _imageSeleccionLayout = Image.asset('imagenes/layout1a.png');
+      Widget _imageSeleccionLayout = Image.asset('imagenes/layout1a.png', fit: BoxFit.fitHeight,);
       widget2 = _imageSeleccionLayout;
     }
 
@@ -85,7 +85,7 @@ class _CrearLayout3State extends State<CrearLayout3> {
         widget3 = DatosEstaticos.wiget3;
       }
     } else {
-      Widget _imageSeleccionLayout = Image.asset('imagenes/layout1a.png');
+      Widget _imageSeleccionLayout = Image.asset('imagenes/layout1a.png', fit: BoxFit.fitWidth,);
       widget3 = _imageSeleccionLayout;
     }
 
@@ -96,68 +96,82 @@ class _CrearLayout3State extends State<CrearLayout3> {
         child: Column(
           children: [
             Container(
-              margin: EdgeInsets.only(left: 5, right: 5),
-              decoration: BoxDecoration(border: Border.all(color: Colors.black, width: 5)),
               width: MediaQuery.of(context).size.width,
               height: MediaQuery.of(context).size.height/3,
+              margin: EdgeInsets.all(5),
+              decoration: BoxDecoration(border: Border.all(color: Colors.black, width: 5)),
               child: Column(
                 children: [
-                  Row(
-                    children: [
-                      Container(
-                        width: MediaQuery.of(context).size.width - (MediaQuery.of(context).size.width * 0.169),
-                        height:MediaQuery.of(context).size.height - (MediaQuery.of(context).size.height * 0.779),
-                        decoration: _decorationPorcion1,
-                        child: InkWell(
-                            enableFeedback: true,
-                            onTap: () {
-                              setState(() {
-                                PorcionSeleccionada(1);
-                                if (!_visible) {
-                                  _visible = true;
-                                }
-                                divisionLayout = '3-1';
-                              });
-                            },
-                            child: ignorarInteraccionesElemento(widget1),
+                  Expanded(
+                    flex: 3,
+                    child: Row(
+                      children: [
+                        Expanded(
+                          flex:4,
+                          child: Container(
+                            /*width: MediaQuery.of(context).size.width - (MediaQuery.of(context).size.width * 0.169),
+                            height:MediaQuery.of(context).size.height - (MediaQuery.of(context).size.height * 0.779),*/
+                            decoration: _decorationPorcion1,
+                            child: InkWell(
+                                enableFeedback: true,
+                                onTap: () {
+                                  setState(() {
+                                    PorcionSeleccionada(1);
+                                    if (!_visible) {
+                                      _visible = true;
+                                    }
+                                    divisionLayout = '3-1';
+                                  });
+                                },
+                                child: ignorarInteraccionesElemento(widget1),
+                            ),
+                          ),
                         ),
-                      ),
-                      Container(
-                        width: MediaQuery.of(context).size.width - (MediaQuery.of(context).size.width * 0.88),
-                        height:MediaQuery.of(context).size.height - (MediaQuery.of(context).size.height * 0.779),
-                        decoration: _decorationPorcion2,
-                        child: InkWell(
-                            enableFeedback: true,
-                            onTap: () {
-                              setState(() {
-                                PorcionSeleccionada(2);
-                                if (!_visible) {
-                                  _visible = true;
-                                }
-                                divisionLayout = '3-2';
-                              });
-                            },
-                            child: ignorarInteraccionesElemento(widget2),
+                        Expanded(
+                          flex: 1,
+                          child: Container(
+                            height: MediaQuery.of(context).size.height,
+                            /*width: MediaQuery.of(context).size.width - (MediaQuery.of(context).size.width * 0.88),
+                            height:MediaQuery.of(context).size.height - (MediaQuery.of(context).size.height * 0.779),*/
+                            decoration: _decorationPorcion2,
+                            child: InkWell(
+                                enableFeedback: true,
+                                onTap: () {
+                                  setState(() {
+                                    PorcionSeleccionada(2);
+                                    if (!_visible) {
+                                      _visible = true;
+                                    }
+                                    divisionLayout = '3-2';
+                                  });
+                                },
+                                child: ignorarInteraccionesElemento(widget2),
+                            ),
+                          ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
-                  Container(
-                    width: MediaQuery.of(context).size.width,
-                    height: MediaQuery.of(context).size.height - (MediaQuery.of(context).size.height * 0.91),
-                    decoration: _decorationPorcion3,
-                    child: InkWell(
-                        enableFeedback: true,
-                        onTap: () {
-                          setState(() {
-                            PorcionSeleccionada(3);
-                            if (!_visible) {
-                              _visible = true;
-                            }
-                            divisionLayout = '3-3';
-                          });
-                        },
-                        child: ignorarInteraccionesElemento(widget3),
+                  Expanded(
+                    flex:1,
+                    child: Container(
+                      width: MediaQuery.of(context).size.width,
+                      /*width: MediaQuery.of(context).size.width,
+                      height: MediaQuery.of(context).size.height - (MediaQuery.of(context).size.height * 0.91),*/
+                      decoration: _decorationPorcion3,
+                      child: InkWell(
+                          enableFeedback: true,
+                          onTap: () {
+                            setState(() {
+                              PorcionSeleccionada(3);
+                              if (!_visible) {
+                                _visible = true;
+                              }
+                              divisionLayout = '3-3';
+                            });
+                          },
+                          child: ignorarInteraccionesElemento(widget3),
+                      ),
                     ),
                   ),
                 ],
