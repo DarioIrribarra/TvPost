@@ -135,9 +135,9 @@ class _SeleccionarLayoutState extends State<SeleccionarLayout> {
 
       if (DatosEstaticos.mapaDatosReproduccionEquipoSeleccionado.isNotEmpty){
         //Se limpian los datos guardados
-        DatosEstaticos.wiget1 = null;
-        DatosEstaticos.wiget2 = null;
-        DatosEstaticos.wiget3 = null;
+        DatosEstaticos.widget1 = null;
+        DatosEstaticos.widget2 = null;
+        DatosEstaticos.widget3 = null;
         DatosEstaticos.relojEnPantalla = false;
 
         _layoutSeleccionado = int.parse(DatosEstaticos
@@ -152,46 +152,46 @@ class _SeleccionarLayoutState extends State<SeleccionarLayout> {
         //Se asignan los widgets correspondientes a los tipos y archivos
         switch (DatosEstaticos.mapaDatosReproduccionEquipoSeleccionado['tipoArchivo1']){
           case 'Image':
-            DatosEstaticos.wiget1 = Image.network(_direccionArchivo(DatosEstaticos.nombreArchivoWidget1));
+            DatosEstaticos.widget1 = Image.network(_direccionArchivo(DatosEstaticos.nombreArchivoWidget1));
             break;
           case 'ReproductorVideos':
-            DatosEstaticos.wiget1 = ReproductorVideos(url: _direccionArchivo(DatosEstaticos.nombreArchivoWidget1));
+            DatosEstaticos.widget1 = ReproductorVideos(url: _direccionArchivo(DatosEstaticos.nombreArchivoWidget1));
             break;
           case 'WebView':
-            DatosEstaticos.wiget1 = WebViewPropio(urlPropia: DatosEstaticos.nombreArchivoWidget1);
+            DatosEstaticos.widget1 = WebViewPropio(urlPropia: DatosEstaticos.nombreArchivoWidget1);
             break;
           case 'WebViewPropio':
-            DatosEstaticos.wiget1 = WebViewPropio(urlPropia: DatosEstaticos.nombreArchivoWidget1);
+            DatosEstaticos.widget1 = WebViewPropio(urlPropia: DatosEstaticos.nombreArchivoWidget1);
             break;
         }
 
         switch (DatosEstaticos.mapaDatosReproduccionEquipoSeleccionado['tipoArchivo2']){
           case 'Image':
-            DatosEstaticos.wiget2 = Image.network(_direccionArchivo(DatosEstaticos.nombreArchivoWidget2));
+            DatosEstaticos.widget2 = Image.network(_direccionArchivo(DatosEstaticos.nombreArchivoWidget2));
             break;
           case 'ReproductorVideos':
-            DatosEstaticos.wiget2 = ReproductorVideos(url: _direccionArchivo(DatosEstaticos.nombreArchivoWidget2));
+            DatosEstaticos.widget2 = ReproductorVideos(url: _direccionArchivo(DatosEstaticos.nombreArchivoWidget2));
             break;
           case 'WebView':
-            DatosEstaticos.wiget2 = WebViewPropio(urlPropia: DatosEstaticos.nombreArchivoWidget2);
+            DatosEstaticos.widget2 = WebViewPropio(urlPropia: DatosEstaticos.nombreArchivoWidget2);
             break;
           case 'WebViewPropio':
-            DatosEstaticos.wiget2 = WebViewPropio(urlPropia: DatosEstaticos.nombreArchivoWidget2);
+            DatosEstaticos.widget2 = WebViewPropio(urlPropia: DatosEstaticos.nombreArchivoWidget2);
             break;
         }
 
         switch (DatosEstaticos.mapaDatosReproduccionEquipoSeleccionado['tipoArchivo3']){
           case 'Image':
-            DatosEstaticos.wiget3 = Image.network(_direccionArchivo(DatosEstaticos.nombreArchivoWidget3));
+            DatosEstaticos.widget3 = Image.network(_direccionArchivo(DatosEstaticos.nombreArchivoWidget3));
             break;
           case 'ReproductorVideos':
-            DatosEstaticos.wiget3 = ReproductorVideos(url: _direccionArchivo(DatosEstaticos.nombreArchivoWidget3));
+            DatosEstaticos.widget3 = ReproductorVideos(url: _direccionArchivo(DatosEstaticos.nombreArchivoWidget3));
             break;
           case 'WebView':
-            DatosEstaticos.wiget3 = WebViewPropio(urlPropia: DatosEstaticos.nombreArchivoWidget3);
+            DatosEstaticos.widget3 = WebViewPropio(urlPropia: DatosEstaticos.nombreArchivoWidget3);
             break;
           case 'WebViewPropio':
-            DatosEstaticos.wiget3 = WebViewPropio(urlPropia: DatosEstaticos.nombreArchivoWidget3);
+            DatosEstaticos.widget3 = WebViewPropio(urlPropia: DatosEstaticos.nombreArchivoWidget3);
             break;
         }
 

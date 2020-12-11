@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:tvpost_flutter/utilidades/custom_widgets.dart';
 import 'package:tvpost_flutter/utilidades/datos_estaticos.dart';
 import 'package:webview_flutter/webview_flutter.dart';
+import 'package:tvpost_flutter/ventanas/seleccionar_video.dart';
+import 'package:video_player/video_player.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 
 class CrearLayout3 extends StatefulWidget {
@@ -23,10 +25,13 @@ class _CrearLayout3State extends State<CrearLayout3> {
   BoxDecoration _decorationPorcion2;
   BoxDecoration _decorationPorcion3;
   bool publicar_redes_sociales = false;
+  bool videoPorcion2Reemplazado = false;
 
   @override
   void initState() {
     PorcionSeleccionada(0);
+    videoPorcion2Reemplazado = true;
+    DatosEstaticos.primeraVezCargaVideo = true;
     super.initState();
   }
 
@@ -34,15 +39,15 @@ class _CrearLayout3State extends State<CrearLayout3> {
   Widget build(BuildContext context) {
 
     //Si ya se seleccionó un archivo de media se crea un nuevo layout
-    if (DatosEstaticos.wiget1 != null) {
-      if (DatosEstaticos.wiget1.runtimeType.toString() == 'WebView'){
-        WebView widgetWebView = DatosEstaticos.wiget1;
+    if (DatosEstaticos.widget1 != null) {
+      if (DatosEstaticos.widget1.runtimeType.toString() == 'WebView'){
+        WebView widgetWebView = DatosEstaticos.widget1;
         String url = widgetWebView.initialUrl;
         DatosEstaticos.webViewControllerWidget1?.loadUrl(url);
-        widget1 = DatosEstaticos.wiget1;
+        widget1 = DatosEstaticos.widget1;
 
       }else {
-        widget1 = DatosEstaticos.wiget1;
+        widget1 = DatosEstaticos.widget1;
       }
     } else {
       Widget _imageSeleccionLayout = Image.asset('imagenes/layout1a.png', fit: BoxFit.fill,);
@@ -50,28 +55,68 @@ class _CrearLayout3State extends State<CrearLayout3> {
     }
 
     //Si ya se seleccionó un archivo de media se crea un nuevo layout
-    if (DatosEstaticos.wiget2 != null) {
-      if (DatosEstaticos.wiget2.runtimeType.toString() == 'WebView'){
-        WebView widgetWebView = DatosEstaticos.wiget2;
-        String url = widgetWebView.initialUrl;
-        DatosEstaticos.webViewControllerWidget2?.loadUrl(url);
-        widget2 = DatosEstaticos.wiget2;
+    if (DatosEstaticos.widget2 != null) {
+
+      switch(DatosEstaticos.widget2.runtimeType.toString()){
+      //Cambio de tamaño para reproductor en esta porción
+        case 'ReproductorVideos':
+          if (DatosEstaticos.primeraVezCargaVideo == false){
+            ReproductorVideos antiguo = DatosEstaticos.widget2;
+            String dato = antiguo.url;
+            VideoPlayerController controladorantiguo = antiguo.controller;
+            //Se liberan los recursos del controlador antiguo
+            if (controladorantiguo!=null){
+              controladorantiguo.dispose();
+            }
+            ReproductorVideos videoResized = ReproductorVideos(divisionLayout: '3-2', url: dato,);
+            widget2 = videoResized;
+            DatosEstaticos.widget2 = widget2;
+            videoPorcion2Reemplazado = false;
+            DatosEstaticos.primeraVezCargaVideo = false;
+          }
+
+          break;
+
+        case 'WebView':
+          WebView widgetWebView = DatosEstaticos.widget2;
+          String url = widgetWebView.initialUrl;
+          DatosEstaticos.webViewControllerWidget2?.loadUrl(url);
+          widget2 = DatosEstaticos.widget2;
+          break;
+      }
+      widget2 = DatosEstaticos.widget2;
+
+      /*//Cambio de tamaño de video para proporción 5050
+      if (DatosEstaticos.widget2.runtimeType.toString() == 'ReproductorVideos') {
+
+      }
+
+      if (DatosEstaticos.widget2.runtimeType.toString() == 'WebView'){
+
+        *//*try{
+          DatosEstaticos.webViewControllerWidget1?.loadUrl(url);
+          widget1 = DatosEstaticos.wiget1;
+          //DatosEstaticos.webViewControllerWidget1 = null;
+        } catch (e) {
+          widget1 = DatosEstaticos.wiget1;
+          print("Error al loadurl: " + e.toString());
+        }*//*
 
       }else {
-        widget2 = DatosEstaticos.wiget2;
-      }
+        widget2 = DatosEstaticos.widget2;
+      }*/
     } else {
-      Widget _imageSeleccionLayout = Image.asset('imagenes/layout1a.png', fit: BoxFit.fitHeight,);
+      Widget _imageSeleccionLayout = Image.asset('imagenes/layout1a.png');
       widget2 = _imageSeleccionLayout;
     }
 
     //Si ya se seleccionó un archivo de media se crea un nuevo layout
-    if (DatosEstaticos.wiget3 != null) {
-      if (DatosEstaticos.wiget3.runtimeType.toString() == 'WebView'){
-        WebView widgetWebView = DatosEstaticos.wiget3;
+    if (DatosEstaticos.widget3 != null) {
+      if (DatosEstaticos.widget3.runtimeType.toString() == 'WebView'){
+        WebView widgetWebView = DatosEstaticos.widget3;
         String url = widgetWebView.initialUrl;
         DatosEstaticos.webViewControllerWidget3?.loadUrl(url);
-        widget3 = DatosEstaticos.wiget3;
+        widget3 = DatosEstaticos.widget3;
         /*try{
           DatosEstaticos.webViewControllerWidget1?.loadUrl(url);
           widget1 = DatosEstaticos.wiget1;
@@ -82,12 +127,16 @@ class _CrearLayout3State extends State<CrearLayout3> {
         }*/
 
       }else {
-        widget3 = DatosEstaticos.wiget3;
+        widget3 = DatosEstaticos.widget3;
       }
     } else {
       Widget _imageSeleccionLayout = Image.asset('imagenes/layout1a.png', fit: BoxFit.fitWidth,);
       widget3 = _imageSeleccionLayout;
     }
+
+    setState(() {
+      DatosEstaticos.primeraVezCargaVideo = false;
+    });
 
     return Scaffold(
       //Appbar viene de archivo custom_widgets.dart
@@ -192,8 +241,8 @@ class _CrearLayout3State extends State<CrearLayout3> {
                     onChanged: (bool value){
                       setState(() {
                         if (value){
-                          if (DatosEstaticos.wiget1 != null ){
-                            if (DatosEstaticos.wiget1.runtimeType.toString() != 'Image'){
+                          if (DatosEstaticos.widget1 != null ){
+                            if (DatosEstaticos.widget1.runtimeType.toString() != 'Image'){
                               Column cont = Column(
                                 mainAxisSize: MainAxisSize.min,
                                 children: [
@@ -271,7 +320,9 @@ class _CrearLayout3State extends State<CrearLayout3> {
               //Función que al ser ejecutada desde la ventana siguiente
               //actualiza el state (puede hacer cualquier cosa)
               actualizaEstado: () {
-                setState(() {});
+                setState(() {
+                  videoPorcion2Reemplazado = true;
+                });
               },
             ),
             BotonEnviarAEquipo(visible: _visible,

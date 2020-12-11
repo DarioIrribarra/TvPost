@@ -178,9 +178,9 @@ class _RaspberriesConectadasState extends State<RaspberriesConectadas> {
   }
 
   void LimpiarDatosEstaticos() {
-    DatosEstaticos.wiget1 = null;
-    DatosEstaticos.wiget2 = null;
-    DatosEstaticos.wiget3 = null;
+    DatosEstaticos.widget1 = null;
+    DatosEstaticos.widget2 = null;
+    DatosEstaticos.widget3 = null;
     DatosEstaticos.nombreArchivoWidget1 = "";
     DatosEstaticos.nombreArchivoWidget2 = "";
     DatosEstaticos.nombreArchivoWidget3 = "";

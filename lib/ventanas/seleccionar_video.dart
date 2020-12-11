@@ -25,7 +25,7 @@ class _SeleccionarVideoState extends State<SeleccionarVideo> {
   int itemsVisiblesGrid = 0;
   FilePickerResult videoSeleccionadoGaleria;
   TextEditingController _controladorTexto = TextEditingController();
-  //VideoPlayerController _controller;
+  //VideoPlayerController widget.controller;
   //Future<void> _initializeVideoPlayerFuture;
   ChewieController chewieController;
 
@@ -86,7 +86,7 @@ class _SeleccionarVideoState extends State<SeleccionarVideo> {
                         return GestureDetector(
                             child: ReproductorVideos(url: 'http://${DatosEstaticos.ipSeleccionada}/VideosPostTv/${DatosEstaticos.listadoNombresVideos[index]}',),
                             onDoubleTap: (){
-                              Widget video = ReproductorVideos(url: 'http://${DatosEstaticos.ipSeleccionada}/VideosPostTv/${DatosEstaticos.listadoNombresVideos[index]}', divisionLayout: divisionLayout,);
+                              Widget video = ReproductorVideos(url: 'http://${DatosEstaticos.ipSeleccionada}/VideosPostTv/${DatosEstaticos.listadoNombresVideos[index]}', divisionLayout: divisionLayout, seleccionado: true,);
                               String nombre = DatosEstaticos.listadoNombresVideos[index];
                               RedireccionarCrearLayout(video, "/var/www/html/VideosPostTv/$nombre", false);
                             },
@@ -150,7 +150,7 @@ class _SeleccionarVideoState extends State<SeleccionarVideo> {
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                videoAEnviar = ReproductorVideos(url:videoFinal),
+                videoAEnviar = ReproductorVideos(url:videoFinal, seleccionado: true,),
                 Center(
                   child: TextFormField(
                     textAlign: TextAlign.center,
@@ -237,42 +237,46 @@ class _SeleccionarVideoState extends State<SeleccionarVideo> {
     //Se asigna además que porcion del layout se reemplazará
     switch(divisionLayout){
       case '1-1': {
-        DatosEstaticos.wiget1 = video;
+        DatosEstaticos.widget1 = video;
         DatosEstaticos.nombreArchivoWidget1 = nombre;
         DatosEstaticos.reemplazarPorcion1 = true;
         Navigator.pop(context, true);
       }
       break;
       case '2-1': {
-        DatosEstaticos.wiget1 = video;
+        DatosEstaticos.widget1 = video;
         DatosEstaticos.nombreArchivoWidget1 = nombre;
         DatosEstaticos.reemplazarPorcion1 = true;
         Navigator.pop(context, true);
       }
       break;
       case '2-2': {
-        DatosEstaticos.wiget2 = video;
+        DatosEstaticos.widget2 = video;
         DatosEstaticos.nombreArchivoWidget2 = nombre;
         DatosEstaticos.reemplazarPorcion2 = true;
+        DatosEstaticos.reemplazarVideoPorcion2Layout2 = false;
+        DatosEstaticos.reemplazarVideoPorcion2Layout3 = true;
         Navigator.pop(context, true);
       }
       break;
       case '3-1': {
-        DatosEstaticos.wiget1 = video;
+        DatosEstaticos.widget1 = video;
         DatosEstaticos.nombreArchivoWidget1 = nombre;
         DatosEstaticos.reemplazarPorcion1 = true;
         Navigator.pop(context, true);
       }
       break;
       case '3-2': {
-        DatosEstaticos.wiget2 = video;
+        DatosEstaticos.widget2 = video;
         DatosEstaticos.nombreArchivoWidget2 = nombre;
         DatosEstaticos.reemplazarPorcion2 = true;
+        DatosEstaticos.reemplazarVideoPorcion2Layout2 = true;
+        DatosEstaticos.reemplazarVideoPorcion2Layout3 = false;
         Navigator.pop(context, true);
       }
       break;
       case '3-3': {
-        DatosEstaticos.wiget3 = video;
+        DatosEstaticos.widget3 = video;
         DatosEstaticos.nombreArchivoWidget3 = nombre;
         DatosEstaticos.reemplazarPorcion3 = true;
         Navigator.pop(context, true);
@@ -280,88 +284,172 @@ class _SeleccionarVideoState extends State<SeleccionarVideo> {
       break;
     }
 
-
   }
 }
-
-
-
 
 class ReproductorVideos extends StatefulWidget {
   String divisionLayout;
   var url;
+  bool seleccionado;
+  VideoPlayerController controller;
 
-  ReproductorVideos({this.url, this.divisionLayout = ""});
+  ReproductorVideos({this.url, this.divisionLayout = "",
+    this.seleccionado = false, this.controller});
   @override
   _ReproductorVideosState createState() => _ReproductorVideosState();
 }
 
 class _ReproductorVideosState extends State<ReproductorVideos> {
 
-  VideoPlayerController _controller;
-  @override
-  void initState() {
-    if(widget.url.runtimeType != String){
-      _controller = VideoPlayerController.file(widget.url,);
-    }else{
-      _controller = VideoPlayerController.network(widget.url,);
-    }
-    // TODO: implement initState
-
-    _controller.initialize();
-    super.initState();
-  }
-
   @override
   void dispose() {
-    // TODO: implement dispose
-    _controller.dispose();
+    widget.controller.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
+
+    //Dato para no reinicializar el constructor al reproducir
+    //y que cambie el ícono correctamente
+    if (!DatosEstaticos.reproducirVideo){
+      //Se inicializa acá para que cambie cada vez que se elige otro video
+      if(widget.url.runtimeType != String){
+        widget.controller = VideoPlayerController.file(widget.url,);
+      }else{
+        widget.controller = VideoPlayerController.network(widget.url,);
+      }
+      widget.controller.initialize();
+    }
+    DatosEstaticos.reproducirVideo = false;
+
     double ancho_video = MediaQuery.of(context).size.width;
     double alto_video = MediaQuery.of(context).size.height;
-    if (widget.divisionLayout!=""){
 
+    //Widget hijo por defecto. Este cambia visualmente en las porciones del
+    //layout 3
+    Widget hijo = Stack(
+      clipBehavior: Clip.hardEdge,
+      children: [
+        Container(
+          width: ancho_video,
+          height: alto_video,
+          child: VideoPlayer(widget.controller),
+        ),
+        Container(
+          width: MediaQuery.of(context).size.width/7,
+          child: RaisedButton(
+            shape: CircleBorder(),
+            child: Icon(widget.controller.value.isPlaying ? Icons.pause : Icons.play_arrow, size: MediaQuery.of(context).size.width/15,),
+            onPressed: (){
+              accionReproducir();
+            },
+          ),
+        ),
+      ],
+    );
+
+
+    //Cambio visual de videos según layout 3 y porciones
+    if (widget.divisionLayout!=""){
       switch (widget.divisionLayout){
+
+        case '2-2':
+          hijo = Stack(
+            clipBehavior: Clip.hardEdge,
+            children: [
+              Container(
+                width: ancho_video,
+                height: alto_video,
+                child: VideoPlayer(widget.controller),
+              ),
+              Container(
+                width: MediaQuery.of(context).size.width/7,
+                child: RaisedButton(
+                  shape: CircleBorder(),
+                  child: Icon(widget.controller.value.isPlaying ? Icons.pause : Icons.play_arrow, size: MediaQuery.of(context).size.width/15,),
+                  onPressed: (){
+                    accionReproducir();
+                  },
+                ),
+              ),
+            ],
+          );
+          break;
+
         case '3-2':
-          alto_video = alto_video/8;
+          alto_video = alto_video/12;
+          hijo = Column(
+            children: [
+              Container(
+                width: MediaQuery.of(context).size.width/7,
+                child: RaisedButton(
+                  shape: CircleBorder(),
+                  child: Icon(widget.controller.value.isPlaying ? Icons.pause : Icons.play_arrow,
+                    size: MediaQuery.of(context).size.width/15,
+                  ),
+                  onPressed: (){
+                    accionReproducir();
+                  },
+                ),
+              ),
+              Container(
+                width: ancho_video,
+                height: alto_video,
+                child: VideoPlayer(widget.controller),
+              ),
+            ],
+          );
+          break;
+
+        case '3-3':
+          ancho_video = ancho_video/6;
+          hijo = Padding(
+            padding: EdgeInsets.only(left: MediaQuery.of(context).size.width/3.7),
+            child: Row(
+              children: [
+                Container(
+                  width: MediaQuery.of(context).size.width/7,
+                  child: RaisedButton(
+                    shape: CircleBorder(),
+                    child: Icon(widget.controller.value.isPlaying ? Icons.pause : Icons.play_arrow,
+                      size: MediaQuery.of(context).size.width/15,
+                    ),
+                    onPressed: (){
+                      accionReproducir();
+                    },
+                  ),
+                ),
+                Container(
+                  width: ancho_video,
+                  height: alto_video,
+                  child: VideoPlayer(widget.controller),
+                ),
+              ],
+            ),
+          );
           break;
       }
     }
 
+
+
     return Center(
       child: Container(
-        width: ancho_video,
-        child: Stack(
-          clipBehavior: Clip.hardEdge,
-          children: [
-            Container(
-              width: ancho_video,
-              height: alto_video,
-              child: VideoPlayer(_controller),
-            ),
-            Container(
-              width: MediaQuery.of(context).size.width/7,
-              child: RaisedButton(
-                shape: CircleBorder(),
-                child: Icon(_controller.value.isPlaying ? Icons.pause : Icons.play_arrow, size: MediaQuery.of(context).size.width/15,),
-                onPressed: (){
-                  setState(() {
-                    if(_controller.value.isPlaying){
-                      _controller.pause();
-                    }else{
-                      _controller.play();
-                    }
-                  });
-                },
-              ),
-            ),
-          ],
-        ),
+        child: hijo,
       ),
     );
+  }
+
+  void accionReproducir(){
+    setState(() {
+      if(widget.controller.value.isPlaying){
+        widget.controller.pause();
+        DatosEstaticos.reproducirVideo = true;
+      }else{
+        widget.controller.play();
+        DatosEstaticos.reproducirVideo = true;
+      }
+    });
   }
 }

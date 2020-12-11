@@ -10,8 +10,6 @@ class CrearLayout1 extends StatefulWidget {
 }
 
 class _CrearLayout1State extends State<CrearLayout1> {
-  //Acá va el cambio desde VSCode - 2
-  //Acá va el cambio desde Android
 
   //dato que indica que parte del layout se quiere modificar y se envia a la
   // selección de contenido correspondiente
@@ -36,15 +34,15 @@ class _CrearLayout1State extends State<CrearLayout1> {
   Widget build(BuildContext context) {
     //final webViewKey = GlobalKey<ScaffoldState>();
     //Si ya se seleccionó un archivo de media se crea un nuevo layout
-    if (DatosEstaticos.wiget1 != null) {
-      if (DatosEstaticos.wiget1.runtimeType.toString() == 'WebView'){
-        WebView widgetWebView = DatosEstaticos.wiget1;
+    if (DatosEstaticos.widget1 != null) {
+      if (DatosEstaticos.widget1.runtimeType.toString() == 'WebView'){
+        WebView widgetWebView = DatosEstaticos.widget1;
         String url = widgetWebView.initialUrl;
         DatosEstaticos.webViewControllerWidget1?.loadUrl(url);
-        widget1 = DatosEstaticos.wiget1;
+        widget1 = DatosEstaticos.widget1;
 
       }else {
-        widget1 = DatosEstaticos.wiget1;
+        widget1 = DatosEstaticos.widget1;
       }
     } else {
       Widget _imageSeleccionLayout = Image.asset('imagenes/layout1a.png',fit: BoxFit.fill);
@@ -95,8 +93,8 @@ class _CrearLayout1State extends State<CrearLayout1> {
                       onChanged: (bool value){
                         setState(() {
                           if (value){
-                            if (DatosEstaticos.wiget1 != null ){
-                              if (DatosEstaticos.wiget1.runtimeType.toString() != 'Image'){
+                            if (DatosEstaticos.widget1 != null ){
+                              if (DatosEstaticos.widget1.runtimeType.toString() != 'Image'){
                                 Column cont = Column(
                                   mainAxisSize: MainAxisSize.min,
                                   children: [
@@ -141,7 +139,8 @@ class _CrearLayout1State extends State<CrearLayout1> {
                 //Función que al ser ejecutada desde la ventana siguiente
                 //actualiza el state (puede hacer cualquier cosa)
                 actualizaEstado: () {
-                  setState(() {});
+                  setState(() {
+                  });
                 },
               ),
               BotonEnviarAEquipo(visible: _visible,

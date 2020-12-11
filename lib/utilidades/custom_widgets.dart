@@ -297,32 +297,32 @@ class _OpcionesSeleccionMediaState extends State<OpcionesSeleccionMedia> {
 
     switch (widget.divisionLayout){
       case '1-1':
-        DatosEstaticos.wiget1 = _webview;
+        DatosEstaticos.widget1 = _webview;
         DatosEstaticos.nombreArchivoWidget1 = url;
         DatosEstaticos.reemplazarPorcion1 = true;
         break;
       case '2-1':
-        DatosEstaticos.wiget1 = _webview;
+        DatosEstaticos.widget1 = _webview;
         DatosEstaticos.nombreArchivoWidget1 = url;
         DatosEstaticos.reemplazarPorcion1 = true;
         break;
       case '2-2':
-        DatosEstaticos.wiget2 = _webview;
+        DatosEstaticos.widget2 = _webview;
         DatosEstaticos.nombreArchivoWidget2 = url;
         DatosEstaticos.reemplazarPorcion2 = true;
         break;
       case '3-1':
-        DatosEstaticos.wiget1 = _webview;
+        DatosEstaticos.widget1 = _webview;
         DatosEstaticos.nombreArchivoWidget1 = url;
         DatosEstaticos.reemplazarPorcion1 = true;
         break;
       case '3-2':
-        DatosEstaticos.wiget2 = _webview;
+        DatosEstaticos.widget2 = _webview;
         DatosEstaticos.nombreArchivoWidget2 = url;
         DatosEstaticos.reemplazarPorcion2 = true;
         break;
       case '3-3':
-        DatosEstaticos.wiget3 = _webview;
+        DatosEstaticos.widget3 = _webview;
         DatosEstaticos.nombreArchivoWidget3 = url;
         DatosEstaticos.reemplazarPorcion3 = true;
         break;
@@ -405,9 +405,9 @@ class BotonEnviarAEquipo extends StatelessWidget {
     String layoutEnEquipo = DatosEstaticos.layoutSeleccionado.toString();
 
     //Nombres de widgets hasta el momento
-    String tipoWidget1AEnviar = DatosEstaticos.wiget1.runtimeType.toString();
-    String tipoWidget2AEnviar = DatosEstaticos.wiget2.runtimeType.toString();
-    String tipoWidget3AEnviar = DatosEstaticos.wiget3.runtimeType.toString();
+    String tipoWidget1AEnviar = DatosEstaticos.widget1.runtimeType.toString();
+    String tipoWidget2AEnviar = DatosEstaticos.widget2.runtimeType.toString();
+    String tipoWidget3AEnviar = DatosEstaticos.widget3.runtimeType.toString();
     if (tipoWidget1AEnviar == 'Null'){tipoWidget1AEnviar = "0";}
     if (tipoWidget2AEnviar == 'Null'){tipoWidget2AEnviar = "0";}
     if (tipoWidget3AEnviar == 'Null'){tipoWidget3AEnviar = "0";}

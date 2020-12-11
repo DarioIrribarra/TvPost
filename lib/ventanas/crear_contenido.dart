@@ -986,37 +986,37 @@ class _CrearContenidoState extends State<CrearContenido> {
     //Se asigna además que porcion del layout se reemplazará
     switch(divisionLayout){
       case '1-1': {
-        DatosEstaticos.wiget1 = imagen;
+        DatosEstaticos.widget1 = imagen;
         DatosEstaticos.nombreArchivoWidget1 = nombre;
         DatosEstaticos.reemplazarPorcion1 = true;
       }
       break;
       case '2-1': {
-        DatosEstaticos.wiget1 = imagen;
+        DatosEstaticos.widget1 = imagen;
         DatosEstaticos.nombreArchivoWidget1 = nombre;
         DatosEstaticos.reemplazarPorcion1 = true;
       }
       break;
       case '2-2': {
-        DatosEstaticos.wiget2 = imagen;
+        DatosEstaticos.widget2 = imagen;
         DatosEstaticos.nombreArchivoWidget2 = nombre;
         DatosEstaticos.reemplazarPorcion2 = true;
       }
       break;
       case '3-1': {
-        DatosEstaticos.wiget1 = imagen;
+        DatosEstaticos.widget1 = imagen;
         DatosEstaticos.nombreArchivoWidget1 = nombre;
         DatosEstaticos.reemplazarPorcion1 = true;
       }
       break;
       case '3-2': {
-        DatosEstaticos.wiget2 = imagen;
+        DatosEstaticos.widget2 = imagen;
         DatosEstaticos.nombreArchivoWidget2 = nombre;
         DatosEstaticos.reemplazarPorcion2 = true;
       }
       break;
       case '3-3': {
-        DatosEstaticos.wiget3 = imagen;
+        DatosEstaticos.widget3 = imagen;
         DatosEstaticos.nombreArchivoWidget3 = nombre;
         DatosEstaticos.reemplazarPorcion3 = true;
       }
