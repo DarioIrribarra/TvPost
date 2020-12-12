@@ -58,43 +58,91 @@ class _SeleccionarVideoState extends State<SeleccionarVideo> {
       body: SafeArea(
         child: Column(
           children: <Widget>[
-            Row(
-              children: [
-                Expanded(
-                    child: Center(
-                      child: Text('Seleccione un video'),
-                    )
-                ),
-                IconButton(
-                  icon: Icon(Icons.add),
-                  onPressed: (){abrirGaleria(context);},
-                ),
-              ],
+            Container(
+              margin: EdgeInsets.only(bottom: 10),
+              padding: EdgeInsets.only(bottom: 5),
+              decoration: BoxDecoration(
+                  border: Border(bottom: BorderSide(width: 5,color: Colors.green),)
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  Stack(
+                    alignment: Alignment.center,
+                    children: [
+                      Align(
+                        alignment: Alignment.center,
+                        child: Text('Seleccione un video', textScaleFactor: 1.3,),
+                      ),
+                      Align(
+                        alignment: Alignment.centerRight,
+                        child: FloatingActionButton(
+                            child: Icon(Icons.add),
+                            heroTag: null,
+                            onPressed: (){
+                              abrirGaleria(context);
+                            }
+                        ),
+                      )
+                    ],
+                  ),
+                ],
+              ),
             ),
             Expanded(
               child: FutureBuilder(
                 future: _listadoNombresVideos,
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.done){
-                    //Future Builder para el gridview de videos
-                    return GridView.count(
-                      crossAxisSpacing: 5,
-                      shrinkWrap: true,
-                      crossAxisCount: 2,
-                      children: List.generate(
-                          DatosEstaticos.listadoNombresVideos.length, (index) {
-                        return GestureDetector(
+
+                    if (snapshot.data == null){
+                      return Center(
+                        child: Text('Error de conexión', textScaleFactor: 1.3,),
+                      );
+                    } else {
+                      if (snapshot.data[0] == ""){
+                        return Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Image.asset(
+                              'imagenes/arrow.png',
+                              width: MediaQuery.of(context).size.width/1.5,
+                            ),
+                            Padding(
+                              padding: EdgeInsets.only(top: 5),
+                              child: Text("Presione el ícono para agregar videos", textScaleFactor: 1.3,),
+                            ),
+                          ],
+                        );
+                      }
+                      //Future Builder para el gridview de videos
+                      return GridView.count(
+                        crossAxisSpacing: 5,
+                        shrinkWrap: true,
+                        crossAxisCount: 2,
+                        children: List.generate(
+                            DatosEstaticos.listadoNombresVideos.length, (index) {
+                          return GestureDetector(
                             child: ReproductorVideos(url: 'http://${DatosEstaticos.ipSeleccionada}/VideosPostTv/${DatosEstaticos.listadoNombresVideos[index]}',),
                             onDoubleTap: (){
                               Widget video = ReproductorVideos(url: 'http://${DatosEstaticos.ipSeleccionada}/VideosPostTv/${DatosEstaticos.listadoNombresVideos[index]}', divisionLayout: divisionLayout, seleccionado: true,);
                               String nombre = DatosEstaticos.listadoNombresVideos[index];
                               RedireccionarCrearLayout(video, "/var/www/html/VideosPostTv/$nombre", false);
                             },
-                        );
-                      }),
+                          );
+                        }),
+                      );
+                    }
+                  }
+                  if (snapshot.connectionState == ConnectionState.waiting){
+                    return Center(
+                      child: CircularProgressIndicator(),
                     );
-                  } else {
-                    return Center();
+                  }
+                  else{
+                    return Center(
+                      child: CircularProgressIndicator(),
+                    );
                   }
                 },
               ),
