@@ -20,8 +20,6 @@ class DatosEstaticos {
   static WebViewController webViewControllerWidget1;
   static WebViewController webViewControllerWidget2;
   static WebViewController webViewControllerWidget3;
-  static bool reemplazarVideoPorcion2Layout2 = false;
-  static bool reemplazarVideoPorcion2Layout3 = false;
   static bool reproducirVideo = false;
   static bool primeraVezCargaVideo = true;
   static int layoutSeleccionado;
@@ -33,8 +31,8 @@ class DatosEstaticos {
   static bool reemplazarPorcion2 = false;
   static bool reemplazarPorcion3 = false;
   static bool relojEnPantalla = false;
-  static String color_fondo_reloj = "#FFFFFF";
-  static String color_texto_reloj = "#000000";
+  static String color_fondo_reloj = "#FFFFFD";
+  static String color_texto_reloj = "#010000";
   //Tamaños base de pantalla
   static int ancho_pantalla_seleccionada = 0;
   static int alto_pantalla_seleccionada = 0;

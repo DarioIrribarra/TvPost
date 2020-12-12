@@ -161,7 +161,6 @@ class _SeleccionarImagenState extends State<SeleccionarImagen> {
   }
 
 
-
   abrirGaleria(BuildContext context) async {
     GlobalKey<FormState> _keyValidador = GlobalKey<FormState>();
     String nombreNuevaImagen = "";
@@ -173,72 +172,80 @@ class _SeleccionarImagenState extends State<SeleccionarImagen> {
       String extension = p.extension(imagenSeleccionadaGaleria.paths[0]);
       //Acá obtengo el archivo desde la  ruta
       File imagenFinal = File(imagenSeleccionadaGaleria.paths[0]);
-      Widget widget =
-      SingleChildScrollView(
-        child: Card(
-          child: Form(
-            key: _keyValidador,
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Image.file(imagenFinal,),
-                Center(
-                  child: TextFormField(
-                    textAlign: TextAlign.center,
-                    controller: _controladorTexto,
-                    validator: (textoEscrito){
-                      if(textoEscrito.isEmpty){
-                        return "Error: Nombre de imagen vacío";
-                      }
-                      if(textoEscrito.trim().length<= 0){
-                        return "Error: Nombre de imagen vacío";
-                      }
-                      else {
-                        nombreNuevaImagen = textoEscrito.trim()
-                            .toString() + extension;
-                        //Chequear si el valor ya existe
-                        if (DatosEstaticos.listadoNombresImagenes.contains(
-                            nombreNuevaImagen)){
-                          return "Error: Nombre de imagen ya existe";
-                        } else {
-                          return null;
-                        }
-                      }
-                    },
+      await showDialog<String>(
+        context: context,
+        child: AnimacionPadding(child: new AlertDialog(
+            content: SingleChildScrollView(
+              child: Card(
+                child: Form(
+                  key: _keyValidador,
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Image.file(
+                        imagenFinal,
+                        width: MediaQuery.of(context).size.width/2,
+                        height: MediaQuery.of(context).size.height/4,
+                      ),
+                      Center(
+                        child: TextFormField(
+                          textAlign: TextAlign.center,
+                          controller: _controladorTexto,
+                          validator: (textoEscrito){
+                            if(textoEscrito.isEmpty){
+                              return "Error: Nombre de imagen vacío";
+                            }
+                            if(textoEscrito.trim().length<= 0){
+                              return "Error: Nombre de imagen vacío";
+                            }
+                            else {
+                              nombreNuevaImagen = textoEscrito.trim()
+                                  .toString() + extension;
+                              //Chequear si el valor ya existe
+                              if (DatosEstaticos.listadoNombresImagenes.contains(
+                                  nombreNuevaImagen)){
+                                return "Error: Nombre de imagen ya existe";
+                              } else {
+                                return null;
+                              }
+                            }
+                          },
+                        ),
+                      ),
+                      RaisedButton(
+                        child: Text('Añadir'),
+                        autofocus: true,
+                        onPressed: () async {
+                          if(_keyValidador.currentState.validate()){
+                            //Se abre el popup de cargando
+                            PopUps.popUpCargando(context, 'Añadiendo imagen...');
+                            //Obtengo el resultado del envio
+                            var resultado = await PopUps.enviarImagen(nombreNuevaImagen,
+                                imagenFinal).then((value) => value);
+
+                            if(resultado){
+                              //Si el envío es correcto, se redirecciona
+                              Image imagen = Image.file(imagenFinal,);
+                              RedireccionarCrearLayout(imagen, "/var/www/html/ImagenesPostTv/$nombreNuevaImagen",true);
+
+                            }else{
+                              //Cierra popup cargando
+                              Navigator.of(context, rootNavigator: true).pop();
+
+                              PopUps.PopUpConWidget(context, Text('Error al enviar imagen'));
+                            }
+
+                          }
+                        },
+                      ),
+                    ],
                   ),
                 ),
-                RaisedButton(
-                  child: Text('Añadir'),
-                  autofocus: true,
-                  onPressed: () async {
-                    if(_keyValidador.currentState.validate()){
-                      //Se abre el popup de cargando
-                      PopUps.popUpCargando(context, 'Añadiendo imagen...');
-                      //Obtengo el resultado del envio
-                      var resultado = await PopUps.enviarImagen(nombreNuevaImagen,
-                          imagenFinal).then((value) => value);
-
-                      if(resultado){
-                        //Si el envío es correcto, se redirecciona
-                        Image imagen = Image.file(imagenFinal,);
-                        RedireccionarCrearLayout(imagen, "/var/www/html/ImagenesPostTv/$nombreNuevaImagen",true);
-
-                      }else{
-                        //Cierra popup cargando
-                        Navigator.of(context, rootNavigator: true).pop();
-
-                        PopUps.PopUpConWidget(context, Text('Error al enviar imagen'));
-                      }
-
-                    }
-                  },
-                ),
-              ],
+              ),
             ),
-          ),
+        ),
         ),
       );
-      PopUps.PopUpConWidget(context, widget);
     }
   }
 

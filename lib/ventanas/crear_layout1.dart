@@ -140,6 +140,7 @@ class _CrearLayout1State extends State<CrearLayout1> {
                 //actualiza el state (puede hacer cualquier cosa)
                 actualizaEstado: () {
                   setState(() {
+                    widget1 = DatosEstaticos.widget1;
                   });
                 },
               ),

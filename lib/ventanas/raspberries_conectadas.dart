@@ -184,6 +184,8 @@ class _RaspberriesConectadasState extends State<RaspberriesConectadas> {
     DatosEstaticos.nombreArchivoWidget1 = "";
     DatosEstaticos.nombreArchivoWidget2 = "";
     DatosEstaticos.nombreArchivoWidget3 = "";
+    DatosEstaticos.color_fondo_reloj = "#FFFFFD";
+    DatosEstaticos.color_texto_reloj = "#010000";
   }
 
 }

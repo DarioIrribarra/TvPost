@@ -69,7 +69,8 @@ class _CrearLayout2State extends State<CrearLayout2> {
         case 'ReproductorVideos':
           if (DatosEstaticos.primeraVezCargaVideo == false){
             ReproductorVideos antiguo = DatosEstaticos.widget2;
-            String dato = antiguo.url;
+            var dato = antiguo.url;
+            //"http://${DatosEstaticos.ipSeleccionada}/ImagenesPostTv/$nombreNuevaImagen"
             VideoPlayerController controladorantiguo = antiguo.controller;
             //Se liberan los recursos del controlador antiguo
             if (controladorantiguo!=null){

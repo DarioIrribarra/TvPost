@@ -28,10 +28,10 @@ class _SeleccionarVideoState extends State<SeleccionarVideo> {
   //VideoPlayerController widget.controller;
   //Future<void> _initializeVideoPlayerFuture;
   ChewieController chewieController;
+  GlobalKey<FormState> _keyValidador = GlobalKey<FormState>();
 
   @override
   void initState() {
-    // TODO: implement initState
     //Acá se hace el llamado al listado de nombres de imágenes
     _listadoNombresVideos = _getNombresVideos();
 
@@ -80,7 +80,7 @@ class _SeleccionarVideoState extends State<SeleccionarVideo> {
                             child: Icon(Icons.add),
                             heroTag: null,
                             onPressed: (){
-                              abrirGaleria(context);
+                              abrirGaleria();
                             }
                         ),
                       )
@@ -180,8 +180,7 @@ class _SeleccionarVideoState extends State<SeleccionarVideo> {
     }
   }
 
-  abrirGaleria(BuildContext context) async {
-    GlobalKey<FormState> _keyValidador = GlobalKey<FormState>();
+  abrirGaleria() async {
     String nombreNuevoVideo = "";
     videoSeleccionadoGaleria = await FilePicker.platform.pickFiles(
         type: FileType.video);
@@ -190,72 +189,83 @@ class _SeleccionarVideoState extends State<SeleccionarVideo> {
       String extension = p.extension(videoSeleccionadoGaleria.paths[0]);
       //print(extension);
       File videoFinal = File(videoSeleccionadoGaleria.paths[0]);
-      Widget widget =
-      SingleChildScrollView(
-        child: Card(
-          child: Form(
-            key: _keyValidador,
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                videoAEnviar = ReproductorVideos(url:videoFinal, seleccionado: true,),
-                Center(
-                  child: TextFormField(
-                    textAlign: TextAlign.center,
-                    controller: _controladorTexto,
-                    validator: (textoEscrito){
-                      if(textoEscrito.isEmpty){
-                        return "Error: Nombre de video vacío";
-                      }
-                      if(textoEscrito.trim().length<= 0){
-                        return "Error: Nombre de video vacío";
-                      }
-                      else {
-                        nombreNuevoVideo = textoEscrito.trim()
-                            .toString() + extension;
-                        //Chequear si el valor ya existe
-                        if (DatosEstaticos.listadoNombresVideos.contains(
-                            nombreNuevoVideo)){
-                          return "Error: Nombre de video ya existe";
-                        } else {
-                          return null;
-                        }
-                      }
-                    },
+
+      await showDialog<String>(
+        context: context,
+        child: StatefulBuilder(builder: (context, setState){
+          return AnimacionPadding(child: new AlertDialog(
+            content: SingleChildScrollView(
+              child: Card(
+                child: Form(
+                  key: _keyValidador,
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Container(
+                        width: MediaQuery.of(context).size.width/2,
+                        height: MediaQuery.of(context).size.height/4,
+                        child: videoAEnviar = ReproductorVideos(url:videoFinal, seleccionado: true,),
+                      ),
+                      Center(
+                        child: TextFormField(
+                          textAlign: TextAlign.center,
+                          controller: _controladorTexto,
+                          validator: (textoEscrito){
+                            if(textoEscrito.isEmpty){
+                              return "Error: Nombre de video vacío";
+                            }
+                            if(textoEscrito.trim().length<= 0){
+                              return "Error: Nombre de video vacío";
+                            }
+                            else {
+                              nombreNuevoVideo = textoEscrito.trim()
+                                  .toString() + extension;
+                              //Chequear si el valor ya existe
+                              if (DatosEstaticos.listadoNombresVideos.contains(
+                                  nombreNuevoVideo)){
+                                return "Error: Nombre de video ya existe";
+                              } else {
+                                return null;
+                              }
+                            }
+                          },
+                        ),
+                      ),
+                      RaisedButton(
+                        child: Text('Añadir'),
+                        autofocus: true,
+                        onPressed: () async {
+                          if(_keyValidador.currentState.validate()){
+                            //Se abre el popup de cargando
+                            PopUps.popUpCargando(context, 'Añadiendo video...');
+                            //Obtengo el resultado del envio
+                            var resultado = await enviarVideo(nombreNuevoVideo,
+                                videoFinal).then((value) => value);
+
+                            if(resultado){
+                              //Si el envío es correcto, se redirecciona
+                              videoAEnviar = ReproductorVideos(url: 'http://${DatosEstaticos.ipSeleccionada}/VideosPostTv/$nombreNuevoVideo', divisionLayout: divisionLayout, seleccionado: true,);
+                              RedireccionarCrearLayout(videoAEnviar, "/var/www/html/VideosPostTv/$nombreNuevoVideo",true);
+                            }else{
+                              //Cierra popup cargando
+                              Navigator.of(context, rootNavigator: true).pop();
+
+                              PopUps.PopUpConWidget(context, Text('Error al enviar video'));
+                            }
+
+                          }
+                        },
+                      ),
+                    ],
                   ),
                 ),
-                RaisedButton(
-                  child: Text('Añadir'),
-                  autofocus: true,
-                  onPressed: () async {
-                    if(_keyValidador.currentState.validate()){
-                      //Se abre el popup de cargando
-                      PopUps.popUpCargando(context, 'Añadiendo video...');
-                      //Obtengo el resultado del envio
-                      var resultado = await enviarVideo(nombreNuevoVideo,
-                          videoFinal).then((value) => value);
-
-                      if(resultado){
-                        //Si el envío es correcto, se redirecciona
-                        //VideoElement video = Video
-                        RedireccionarCrearLayout(videoAEnviar, "/var/www/html/VideosPostTv/$nombreNuevoVideo",true);
-
-                      }else{
-                        //Cierra popup cargando
-                        Navigator.of(context, rootNavigator: true).pop();
-
-                        PopUps.PopUpConWidget(context, Text('Error al enviar video'));
-                      }
-
-                    }
-                  },
-                ),
-              ],
+              ),
             ),
           ),
-        ),
+          );
+        }),
       );
-      PopUps.PopUpConWidget(context, widget);
+
     }
 
   }
@@ -277,9 +287,9 @@ class _SeleccionarVideoState extends State<SeleccionarVideo> {
   void RedireccionarCrearLayout(Widget video, String nombre,bool vieneDePopUp){
     if (vieneDePopUp){
       //Cierra popup cargando
-      Navigator.of(context, rootNavigator: true).pop();
-      //Cierra popup imagen
-      Navigator.of(context, rootNavigator: true).pop();
+      Navigator.pop(context);
+
+      Navigator.pop(context);
     }
 
     //Se asigna además que porcion del layout se reemplazará
@@ -302,8 +312,6 @@ class _SeleccionarVideoState extends State<SeleccionarVideo> {
         DatosEstaticos.widget2 = video;
         DatosEstaticos.nombreArchivoWidget2 = nombre;
         DatosEstaticos.reemplazarPorcion2 = true;
-        DatosEstaticos.reemplazarVideoPorcion2Layout2 = false;
-        DatosEstaticos.reemplazarVideoPorcion2Layout3 = true;
         Navigator.pop(context, true);
       }
       break;
@@ -318,8 +326,6 @@ class _SeleccionarVideoState extends State<SeleccionarVideo> {
         DatosEstaticos.widget2 = video;
         DatosEstaticos.nombreArchivoWidget2 = nombre;
         DatosEstaticos.reemplazarPorcion2 = true;
-        DatosEstaticos.reemplazarVideoPorcion2Layout2 = true;
-        DatosEstaticos.reemplazarVideoPorcion2Layout3 = false;
         Navigator.pop(context, true);
       }
       break;
@@ -350,6 +356,11 @@ class ReproductorVideos extends StatefulWidget {
 class _ReproductorVideosState extends State<ReproductorVideos> {
 
   @override
+  void initState() {
+    super.initState();
+  }
+
+  @override
   void dispose() {
     widget.controller.dispose();
     super.dispose();
@@ -369,6 +380,7 @@ class _ReproductorVideosState extends State<ReproductorVideos> {
       }
       widget.controller.initialize();
     }
+
     DatosEstaticos.reproducirVideo = false;
 
     double ancho_video = MediaQuery.of(context).size.width;
@@ -479,8 +491,6 @@ class _ReproductorVideosState extends State<ReproductorVideos> {
           break;
       }
     }
-
-
 
     return Center(
       child: Container(

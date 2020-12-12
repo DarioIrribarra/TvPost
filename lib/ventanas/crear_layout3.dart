@@ -433,6 +433,8 @@ class _CrearLayout3State extends State<CrearLayout3> {
             border: Border.all(color: Colors.transparent, width: 10));
         _decorationPorcion2 = BoxDecoration(
             border: Border.all(color: Colors.transparent, width: 10));
+        _decorationPorcion3 = BoxDecoration(
+            border: Border.all(color: Colors.transparent, width: 10));
         break;
       case 1:
         _decorationPorcion1 = BoxDecoration(
