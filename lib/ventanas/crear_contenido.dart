@@ -893,7 +893,81 @@ class _CrearContenidoState extends State<CrearContenido> {
     //print(temporal.path);
     String nombreNuevaImagen = "";
 
-    Widget widget =
+    await showDialog<String>(
+      context: context,
+      child: AnimacionPadding(child: new AlertDialog(
+        content: Form(
+          key: _keyValidadorTxtImagen,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Container(
+                child: Image.memory(
+                  imagenEnBytes,
+                  width: MediaQuery.of(context).size.width-10,
+                  height:MediaQuery.of(context).size.height/4,
+                ),
+              ),
+              Center(
+                child: TextFormField(
+                  textAlign: TextAlign.center,
+                  validator: (textoEscrito){
+                    if(textoEscrito.isEmpty){
+                      return "Error: Nombre de imagen vacío";
+                    }
+                    if(textoEscrito.trim().length<= 0){
+                      return "Error: Nombre de imagen vacío";
+                    }
+                    else {
+                      nombreNuevaImagen = textoEscrito.trim()
+                          .toString() + '.png';
+                      //Chequear si el valor ya existe
+                      if (DatosEstaticos.listadoNombresImagenes.contains(
+                          nombreNuevaImagen)){
+                        return "Error: Nombre de imagen ya existe";
+                      } else {
+                        return null;
+                      }
+                    }
+                  },
+                ),
+              ),
+              RaisedButton(
+                child: Text('Añadir'),
+                autofocus: true,
+                onPressed: () async {
+                  if(_keyValidadorTxtImagen.currentState.validate()){
+                    //Se abre el popup de cargando
+                    PopUps.popUpCargando(context, 'Añadiendo imagen...');
+
+                    //Se crea el archivo final del tamaño modificado
+                    File temporal = await Utils.crearArchivoTemporalRedimensionado(imagenEnBytes);
+
+                    //Obtengo el resultado del envio
+                    var resultado = await PopUps.enviarImagen(nombreNuevaImagen,
+                        temporal).then((value) => value);
+
+                    if(resultado){
+                      //Si el envío es correcto, se redirecciona
+                      Image imagen = Image.network("http://${DatosEstaticos.ipSeleccionada}/ImagenesPostTv/$nombreNuevaImagen");
+                      RedireccionarCrearLayout(imagen, "/var/www/html/ImagenesPostTv/$nombreNuevaImagen",true);
+                    }else{
+                      //Cierra popup cargando
+                      Navigator.of(context, rootNavigator: true).pop();
+
+                      PopUps.PopUpConWidget(context, Text('Error al enviar imagen'));
+                    }
+
+                  }
+                },
+              ),
+            ],
+          ),
+        ),
+      ),),
+    );
+
+    /*Widget widget =
     SingleChildScrollView(
       child: Card(
         child: Form(
@@ -966,7 +1040,7 @@ class _CrearContenidoState extends State<CrearContenido> {
         ),
       ),
     );
-    PopUps.PopUpConWidget(context, widget);
+    PopUps.PopUpConWidget(context, widget);*/
 
   }
 

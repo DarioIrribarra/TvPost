@@ -8,6 +8,7 @@ import 'package:tvpost_flutter/utilidades/datos_estaticos.dart';
 import 'package:tvpost_flutter/utilidades/obtiene_datos_webservice.dart';
 import 'package:tvpost_flutter/utilidades/custom_widgets.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:liquid_pull_to_refresh/liquid_pull_to_refresh.dart';
 
 class DetalleEquipo extends StatefulWidget {
   @override
@@ -30,7 +31,6 @@ class _DetalleEquipoState extends State<DetalleEquipo> {
 
   @override
   void dispose() {
-    // TODO: implement dispose
     _controladorTexto.dispose();
     super.dispose();
   }
@@ -66,103 +66,135 @@ class _DetalleEquipoState extends State<DetalleEquipo> {
         key: _scaffoldKey,
         //Appbar viene de archivo custom_widgets.dart
         appBar: CustomAppBar(),
-        body: SingleChildScrollView(
-          child: Container(
-            margin: EdgeInsets.all(20.0),
-            child:
-            Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Column(
-                    children: [
-                      FutureBuilder(
-                        future: _getScreenShot(),
-                        builder: (context, snapshot) {
-                          if (snapshot.connectionState == ConnectionState.done) {
-                            if (snapshot.data == null) {
-                              return Image.asset('imagenes/logohorizontal.png');
-                            } else {
-                              //Retorna el widget con la imagen de screenshot
+        body: LiquidPullToRefresh(
+          springAnimationDurationInMilliseconds: 450,
+          onRefresh: () =>_recargarGrid(),
+          child: ListView(
+            children: [
+              Container(
+                margin: EdgeInsets.all(20.0),
+                child:
+                Center(
+                  child: FutureBuilder(
+                    future: _getScreenShot(),
+                    builder: (context, snapshot) {
+                      Widget widgetError = Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Container(
+                            width: MediaQuery.of(context).size.width,
+                            height: MediaQuery.of(context).size.height/3,
+                            child: _screenshotProcesada,
+                            color: Colors.green,
+                            margin: EdgeInsets.only(bottom: 10),
+                          ),
+                          Center(
+                              child: Padding(
+                                padding: const EdgeInsets.only(bottom: 10),
+                                child: Text("¡Ups, algo ha salido mal!", textScaleFactor: 1.2,),
+                              )
+                          ),
+                          Text("Deslice hacia abajo para recargar imagen", textScaleFactor: 1.2,),
 
-                              //Acá obtengo las dimensiones base exactas de la pantalla
-                              ObtenerSizePixelesPantalla();
+                        ],
+                      );
+                      if (snapshot.connectionState == ConnectionState.done) {
+                        if (snapshot.data == null) {
+                          return widgetError;
+                        } else {
+                          //Retorna el widget con la imagen de screenshot
+                          var tipoimage = _screenshotProcesada.image.runtimeType.toString();
+                          if (tipoimage == "AssetImage"){
+                            return widgetError;
+                          }
 
-                              return Column(
+                          //Acá obtengo las dimensiones base exactas de la pantalla
+                          ObtenerSizePixelesPantalla();
+
+                          return Column(
+                            children: [
+                              Column(
                                 children: [
-                                  _getScreenShotProcesada(),
+                                  _screenshotProcesada,
                                   Row(
-                                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                    mainAxisAlignment:
+                                    MainAxisAlignment.spaceEvenly,
                                     children: [
                                       FloatingActionButton(
                                         heroTag: null,
                                         child: Icon(Icons.refresh),
-                                        onPressed: (){
-                                          setState(() {
-
-                                          });
+                                        onPressed: () {
+                                          setState(() {});
                                         },
                                       ),
                                       FloatingActionButton(
                                         heroTag: null,
                                         child: Icon(Icons.screen_search_desktop),
-                                        onPressed: (){
+                                        onPressed: () {
                                           _vncRaspberryWeb();
                                         },
                                       )
-
+                                    ],
+                                  ),
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Text('Alias: '),
+                                      Text(DatosEstaticos
+                                          .listadoDatosEquipoSeleccionado[0]
+                                      ['f_alias']),
+                                      IconButton(
+                                        onPressed: () async {
+                                          _widgetPopUpAlias();
+                                        },
+                                        icon: Icon(Icons.edit),
+                                      )
+                                    ],
+                                  ),
+                                  Row(
+                                    mainAxisAlignment:
+                                    MainAxisAlignment.spaceAround,
+                                    children: [
+                                      Text('Ip: '),
+                                      Text(DatosEstaticos
+                                          .listadoDatosEquipoSeleccionado[0]
+                                      ['f_ip']),
+                                    ],
+                                  ),
+                                  Row(
+                                    mainAxisAlignment:
+                                    MainAxisAlignment.spaceAround,
+                                    children: [
+                                      Text('Serial: '),
+                                      Text(DatosEstaticos
+                                          .listadoDatosEquipoSeleccionado[0]
+                                      ['f_serial']),
                                     ],
                                   ),
                                 ],
-                              );
-                            }
-                          } else {
-                            return CircularProgressIndicator();
-                          }
-                        },
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text('Alias: '),
-                          Text(DatosEstaticos.
-                          listadoDatosEquipoSeleccionado[0]['f_alias']),
-                          IconButton(
-                            onPressed: () async {
-                              _widgetPopUpAlias();
-                            },
-                            icon: Icon(Icons.edit),
-                          )
-                        ],
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceAround,
-                        children: [
-                          Text('Ip: '),
-                          Text(DatosEstaticos.
-                          listadoDatosEquipoSeleccionado[0]['f_ip']),
-                        ],
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceAround,
-                        children: [
-                          Text('Serial: '),
-                          Text(DatosEstaticos.
-                          listadoDatosEquipoSeleccionado[0]['f_serial']),
-                        ],
-                      ),
-                    ],
+                              ),
+                              Align(
+                                alignment: Alignment.bottomCenter,
+                                heightFactor: 4.0,
+                                child: RaisedButton(
+                                  onPressed: () async {
+                                    Navigator.pushNamed(
+                                        context, '/seleccionar_layout');
+                                  },
+                                  child: Text('Modificar Layout'),
+                                ),
+                              )
+                            ],
+                          );
+                        }
+                      } else {
+                        return CircularProgressIndicator();
+                      }
+                    },
                   ),
-                  Align(
-                    alignment: Alignment.bottomCenter,
-                    heightFactor: 4.0,
-                    child: RaisedButton(
-                      onPressed: () async {
-                        Navigator.pushNamed(context, '/seleccionar_layout');
-                      },
-                      child: Text('Modificar Layout'),
-                    ),
-                  )
-                ]),
+                ),
+              ),
+            ],
           ),
         ),
       ),
@@ -205,16 +237,16 @@ class _DetalleEquipoState extends State<DetalleEquipo> {
       //Si no se retorna el whencomplete, se salta al final
       return socket.done.whenComplete(() {
         _respuesta = Uint8List.fromList(listadoRespuestas);
-        _screenshotProcesada = Image.memory(_respuesta);
+        if (_respuesta.isEmpty){
+          _screenshotProcesada = Image.asset('imagenes/logohorizontal.png');
+        }else {
+          _screenshotProcesada = Image.memory(_respuesta);
+        }
         //print(listadoRespuestas.length);
       });
     } catch (e) {
       print("Error: ${e.toString()}");
     }
-  }
-
-  Widget _getScreenShotProcesada(){
-    return _screenshotProcesada;
   }
 
   _widgetPopUpAlias() async {
@@ -348,6 +380,12 @@ class _DetalleEquipoState extends State<DetalleEquipo> {
     PopUps.PopUpConWidget(context, _widgetCompleto);
   }
 */
+
+  Future<void> _recargarGrid() async {
+    setState(() {
+
+    });
+  }
 
   void ObtenerSizePixelesPantalla() async {
     String resp;

@@ -197,7 +197,8 @@ class _OpcionesSeleccionMediaState extends State<OpcionesSeleccionMedia> {
                 RaisedButton(
                   onPressed: () {
                     //Aparece popup de ingresar link
-                    PopUps.PopUpConWidget(context, contenidoPopUpSeleccionUrl());
+                    //PopUps.PopUpConWidget(context, contenidoPopUpSeleccionUrl());
+                    contenidoPopUpSeleccionUrl();
                   },
                   child: Text('Url'),
                 ),
@@ -216,53 +217,63 @@ class _OpcionesSeleccionMediaState extends State<OpcionesSeleccionMedia> {
     );
   }
 
-  Widget contenidoPopUpSeleccionUrl(){
+  contenidoPopUpSeleccionUrl() async{
     GlobalKey<FormState> _keyValidador = GlobalKey<FormState>();
-    return Form(
-      key: _keyValidador,
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          TextFormField(
-            controller: controladorTextoUrl,
-            decoration: InputDecoration(
-              suffixIcon: IconButton(
-                icon: Icon(Icons.search),
-                onPressed: (){_abrirBuscador();},
+    await showDialog<String>(
+        context: context,
+        child: StatefulBuilder(builder: (context, setState) {
+          return AnimacionPadding(
+            child: new AlertDialog(
+              content: SingleChildScrollView(
+                child: Card(
+                  child: Form(
+                    key: _keyValidador,
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        TextFormField(
+                          controller: controladorTextoUrl,
+                          decoration: InputDecoration(
+                            suffixIcon: IconButton(
+                              icon: Icon(Icons.search),
+                              onPressed: () {
+                                _abrirBuscador();
+                              },
+                            ),
+                          ),
+                          validator: (urlEscrita) {
+                            if (urlEscrita.isEmpty) {
+                              return 'Ingrese un enlace web';
+                            }
+                            if (urlEscrita.trim().length <= 0) {
+                              return 'Ingrese un enlace web';
+                            }
+                            return null;
+                          },
+                        ),
+                        RaisedButton(
+                          child: Text('Ingresar enlace'),
+                          onPressed: () {
+                            if (_keyValidador.currentState.validate()) {
+                              //Crea webvbiew
+                              crearWebView(
+                                  controladorTextoUrl.text.toString().trim());
+                              //Cierra popup cargando
+                              Navigator.of(context, rootNavigator: true).pop();
+
+                              widget.actualizaEstado();
+                            }
+                          },
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
               ),
             ),
-            validator: (urlEscrita) {
-              if (urlEscrita.isEmpty){
-                return 'Ingrese un enlace web';
-              }
-              if(urlEscrita.trim().length<= 0){
-                return 'Ingrese un enlace web';
-              }
-              return null;
-            },
-          ),
-          RaisedButton(
-            child: Text(
-                'Ingresar enlace'
-            ),
-            onPressed: (){
-              if (_keyValidador.currentState.validate()){
-                //Crea webvbiew
-                crearWebView(controladorTextoUrl.text.toString().trim());
-                //this._webViewController.reload();
-                /*_keyValidador.currentState?.setState(() {
-
-                });*/
-                //Cierra popup cargando
-                Navigator.of(context, rootNavigator: true).pop();
-
-                widget.actualizaEstado();
-              }
-            },
-          ),
-        ],
-      ),
+          );
+        })
     );
   }
 

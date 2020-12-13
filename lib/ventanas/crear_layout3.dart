@@ -106,7 +106,7 @@ class _CrearLayout3State extends State<CrearLayout3> {
         widget2 = DatosEstaticos.widget2;
       }*/
     } else {
-      Widget _imageSeleccionLayout = Image.asset('imagenes/layout1a.png');
+      Widget _imageSeleccionLayout = Image.asset('imagenes/layout1a.png', fit: BoxFit.fitHeight,);
       widget2 = _imageSeleccionLayout;
     }
 

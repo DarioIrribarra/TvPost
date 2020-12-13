@@ -1,10 +1,13 @@
 import 'dart:async';
+import 'dart:convert';
 import 'dart:io';
+import 'dart:typed_data';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:tvpost_flutter/utilidades/datos_estaticos.dart';
 import 'package:tvpost_flutter/utilidades/obtiene_datos_webservice.dart';
 import 'package:tvpost_flutter/utilidades/custom_widgets.dart';
+import 'package:liquid_pull_to_refresh/liquid_pull_to_refresh.dart';
 
 
 class RaspberriesConectadas extends StatefulWidget {
@@ -21,8 +24,9 @@ class _RaspberriesConectadasState extends State<RaspberriesConectadas> {
       appBar: CustomAppBar(),
       body: Container(
         //Para refrescar la grid al arrastrar hacia abajo
-        child: RefreshIndicator(
-          onRefresh: () => _recargarGrid(),
+        child: LiquidPullToRefresh(
+          springAnimationDurationInMilliseconds: 450,
+          onRefresh: () =>_recargarGrid(),
           child: GridView.count(
               crossAxisCount: 2,
             children: List.generate(ObtieneDatos.listadoEquipos.length, (index) {
@@ -160,15 +164,39 @@ class _RaspberriesConectadasState extends State<RaspberriesConectadas> {
   ///Prueba de ping con tiempo de espera máximo de 5 segundos
   Future<bool> _ping(String ip) async {
     Socket socket;
+    String resp;
+    //String tipoNuevoLayout;
+    Uint8List _respuesta;
+    List<int> listadoRespuestas = [];
     try{
       socket = await Socket.connect(ip,DatosEstaticos.puertoSocketRaspberry)
           .timeout(Duration(seconds: 5));
       socket.write('TVPOSTPING');
-      socket.close();
+      socket.listen((event) {
+        listadoRespuestas.addAll(event.toList());
+      }).onDone(() {
+        _respuesta = Uint8List.fromList(listadoRespuestas);
+        socket.close();
+        return;
+      });
+
+      await socket.done.whenComplete(() => resp = utf8.decode(_respuesta));
+      if (resp!="") return true;
+    }catch(e){
+      if (socket!=null){
+        socket.close();
+      }
+      return false;
+    }
+    /*try{
+      socket = await Socket.connect(ip,DatosEstaticos.puertoSocketRaspberry)
+          .timeout(Duration(seconds: 5));
+      /*socket.write('TVPOSTPING');
+      socket.close();*/
       return true;
     } catch(e) {
       return false;
-    }
+    }*/
   }
 
   Future<void> _recargarGrid() async {

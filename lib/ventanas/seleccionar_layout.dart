@@ -208,6 +208,7 @@ class _SeleccionarLayoutState extends State<SeleccionarLayout> {
 
     } catch(e){
       print("Error al recargar listado equipos: " + e.toString());
+      Navigator.pop(context);
     }
     return _layoutSeleccionado;
   }

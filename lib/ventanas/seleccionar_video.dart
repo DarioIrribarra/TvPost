@@ -28,7 +28,7 @@ class _SeleccionarVideoState extends State<SeleccionarVideo> {
   //VideoPlayerController widget.controller;
   //Future<void> _initializeVideoPlayerFuture;
   ChewieController chewieController;
-  GlobalKey<FormState> _keyValidador = GlobalKey<FormState>();
+
 
   @override
   void initState() {
@@ -189,7 +189,7 @@ class _SeleccionarVideoState extends State<SeleccionarVideo> {
       String extension = p.extension(videoSeleccionadoGaleria.paths[0]);
       //print(extension);
       File videoFinal = File(videoSeleccionadoGaleria.paths[0]);
-
+      GlobalKey<FormState> _keyValidador = GlobalKey<FormState>();
       await showDialog<String>(
         context: context,
         child: StatefulBuilder(builder: (context, setState){
