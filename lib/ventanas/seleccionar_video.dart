@@ -272,7 +272,8 @@ class _SeleccionarVideoState extends State<SeleccionarVideo> {
 
   Future<bool> enviarVideo(String nombre, File video) async{
     String videoBytes = base64Encode(video.readAsBytesSync());
-    bool resultado = await http.post(DatosEstaticos.rutaSubidaVideos, body: {
+    String rutaSubidaVideos = 'http://' +DatosEstaticos.ipSeleccionada + '/upload_one_video.php';
+    bool resultado = await http.post(rutaSubidaVideos, body: {
       "video": videoBytes,
       "name": nombre,
     }).then((result) {

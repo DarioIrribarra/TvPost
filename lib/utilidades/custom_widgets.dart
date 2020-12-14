@@ -57,7 +57,8 @@ class PopUps{
 
   static Future<bool> enviarImagen(String nombre, File imagen) async{
     String imabenBytes = base64Encode(imagen.readAsBytesSync());
-    bool resultado = await http.post(DatosEstaticos.rutaSubidaImagenes, body: {
+    String rutaSubidaImagenes = 'http://' +DatosEstaticos.ipSeleccionada + '/upload_one_image.php';
+    bool resultado = await http.post(rutaSubidaImagenes, body: {
       "image": imabenBytes,
       "name": nombre,
     }).then((result) {
@@ -485,8 +486,8 @@ class BotonEnviarAEquipo extends StatelessWidget {
       builder: (context, snapshot){
         if (snapshot.connectionState == ConnectionState.done){
           if (snapshot.data != null){
-            //Acá se publica
 
+            //Acá se publica
             if (this.publicar_rrss){
               PublicarEnRedesSociales();
             }

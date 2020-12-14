@@ -9,7 +9,6 @@ import 'package:tvpost_flutter/utilidades/obtiene_datos_webservice.dart';
 import 'package:tvpost_flutter/utilidades/custom_widgets.dart';
 import 'package:liquid_pull_to_refresh/liquid_pull_to_refresh.dart';
 
-
 class RaspberriesConectadas extends StatefulWidget {
   @override
   _RaspberriesConectadasState createState() => _RaspberriesConectadasState();
@@ -201,7 +200,6 @@ class _RaspberriesConectadasState extends State<RaspberriesConectadas> {
 
   Future<void> _recargarGrid() async {
     setState(() {
-
     });
   }
 
@@ -214,6 +212,7 @@ class _RaspberriesConectadasState extends State<RaspberriesConectadas> {
     DatosEstaticos.nombreArchivoWidget3 = "";
     DatosEstaticos.color_fondo_reloj = "#FFFFFD";
     DatosEstaticos.color_texto_reloj = "#010000";
+    DatosEstaticos.ipSeleccionada = null;
   }
 
 }

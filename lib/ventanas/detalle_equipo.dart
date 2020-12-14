@@ -20,7 +20,7 @@ class _DetalleEquipoState extends State<DetalleEquipo> {
 
   Map datosDesdeVentanaAnterior = {};
   int indexEquipoGrid = 0;
-  Image _screenshotProcesada = Image.asset('imagenes/logohorizontal.png');
+  Image _screenshotProcesada = Image.asset('imagenes/logohorizontal.png', fit: BoxFit.fill,);
   GlobalKey<FormState> _keyValidador = GlobalKey<FormState>();
   TextEditingController _controladorTexto = TextEditingController(text: "");
   //Guarda el estado del context para usarlo con el snackbar
@@ -79,7 +79,6 @@ class _DetalleEquipoState extends State<DetalleEquipo> {
                     future: _getScreenShot(),
                     builder: (context, snapshot) {
                       Widget widgetError = Column(
-                        mainAxisSize: MainAxisSize.min,
                         children: [
                           Container(
                             width: MediaQuery.of(context).size.width,
@@ -112,66 +111,74 @@ class _DetalleEquipoState extends State<DetalleEquipo> {
                           ObtenerSizePixelesPantalla();
 
                           return Column(
+                            mainAxisSize: MainAxisSize.min,
                             children: [
-                              Column(
-                                children: [
-                                  _screenshotProcesada,
-                                  Row(
-                                    mainAxisAlignment:
-                                    MainAxisAlignment.spaceEvenly,
-                                    children: [
-                                      FloatingActionButton(
-                                        heroTag: null,
-                                        child: Icon(Icons.refresh),
-                                        onPressed: () {
-                                          setState(() {});
-                                        },
-                                      ),
-                                      FloatingActionButton(
-                                        heroTag: null,
-                                        child: Icon(Icons.screen_search_desktop),
-                                        onPressed: () {
-                                          _vncRaspberryWeb();
-                                        },
-                                      )
-                                    ],
-                                  ),
-                                  Row(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      Text('Alias: '),
-                                      Text(DatosEstaticos
-                                          .listadoDatosEquipoSeleccionado[0]
-                                      ['f_alias']),
-                                      IconButton(
-                                        onPressed: () async {
-                                          _widgetPopUpAlias();
-                                        },
-                                        icon: Icon(Icons.edit),
-                                      )
-                                    ],
-                                  ),
-                                  Row(
-                                    mainAxisAlignment:
-                                    MainAxisAlignment.spaceAround,
-                                    children: [
-                                      Text('Ip: '),
-                                      Text(DatosEstaticos
-                                          .listadoDatosEquipoSeleccionado[0]
-                                      ['f_ip']),
-                                    ],
-                                  ),
-                                  Row(
-                                    mainAxisAlignment:
-                                    MainAxisAlignment.spaceAround,
-                                    children: [
-                                      Text('Serial: '),
-                                      Text(DatosEstaticos
-                                          .listadoDatosEquipoSeleccionado[0]
-                                      ['f_serial']),
-                                    ],
-                                  ),
-                                ],
+                              Container(
+                                child: Column(
+                                  children: [
+                                    Container(
+                                      margin: EdgeInsets.only(bottom: 5),
+                                      width: MediaQuery.of(context).size.width,
+                                      height: MediaQuery.of(context).size.height/3,
+                                      child: _screenshotProcesada
+                                    ),
+                                    Row(
+                                      mainAxisAlignment:
+                                      MainAxisAlignment.spaceEvenly,
+                                      children: [
+                                        FloatingActionButton(
+                                          heroTag: null,
+                                          child: Icon(Icons.refresh),
+                                          onPressed: () {
+                                            setState(() {});
+                                          },
+                                        ),
+                                        FloatingActionButton(
+                                          heroTag: null,
+                                          child: Icon(Icons.screen_search_desktop),
+                                          onPressed: () {
+                                            _vncRaspberryWeb();
+                                          },
+                                        )
+                                      ],
+                                    ),
+                                    Row(
+                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      children: [
+                                        Text('Alias: '),
+                                        Text(DatosEstaticos
+                                            .listadoDatosEquipoSeleccionado[0]
+                                        ['f_alias']),
+                                        IconButton(
+                                          onPressed: () async {
+                                            _widgetPopUpAlias();
+                                          },
+                                          icon: Icon(Icons.edit),
+                                        )
+                                      ],
+                                    ),
+                                    Row(
+                                      mainAxisAlignment:
+                                      MainAxisAlignment.spaceAround,
+                                      children: [
+                                        Text('Ip: '),
+                                        Text(DatosEstaticos
+                                            .listadoDatosEquipoSeleccionado[0]
+                                        ['f_ip']),
+                                      ],
+                                    ),
+                                    Row(
+                                      mainAxisAlignment:
+                                      MainAxisAlignment.spaceAround,
+                                      children: [
+                                        Text('Serial: '),
+                                        Text(DatosEstaticos
+                                            .listadoDatosEquipoSeleccionado[0]
+                                        ['f_serial']),
+                                      ],
+                                    ),
+                                  ],
+                                ),
                               ),
                               Align(
                                 alignment: Alignment.bottomCenter,
@@ -225,9 +232,6 @@ class _DetalleEquipoState extends State<DetalleEquipo> {
       socket.listen((event) {
         listadoRespuestas.addAll(event);
         socket.flush();
-        //_largoEvent = _largoEvent + event.length;
-        //print("Largo del event: ${_largoEvent.toString()}");
-        //print(listadoRespuestas.length);
       }).onDone(() {
         socket.close();
         return;
@@ -289,12 +293,16 @@ class _DetalleEquipoState extends State<DetalleEquipo> {
                       Navigator.of(context).pop();
 
                       //Cierra popup de cambiar Alias
-                      //Navigator.of(context, rootNavigator: true).pop();
                       //Realiza el cambio en la ventana raiz
                       setState(() {});
-                      await Future.delayed(Duration(milliseconds: 500));
-                      SnackBar snackbar = SnackBar(content: Text('Alias '
-                          'cambiado exitosamente'), );
+                      await Future.delayed(Duration(milliseconds: 400));
+                      SnackBar snackbar = SnackBar(
+                        content: Text(
+                          'Alias cambiado exitosamente',
+                          textAlign: TextAlign.center,
+                        ),
+                        duration: Duration(seconds: 1)
+                      );
                       _scaffoldKey.currentState.showSnackBar(snackbar);
                     }
                   },
@@ -383,7 +391,6 @@ class _DetalleEquipoState extends State<DetalleEquipo> {
 
   Future<void> _recargarGrid() async {
     setState(() {
-
     });
   }
 
