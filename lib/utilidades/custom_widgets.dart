@@ -11,59 +11,64 @@ import 'package:tvpost_flutter/utilidades/comunicacion_raspberry.dart';
 import 'package:esys_flutter_share/esys_flutter_share.dart';
 import 'package:network_image_to_byte/network_image_to_byte.dart';
 
-
-class PopUps{
-
+class PopUps {
   //Se crea popup de cargando
-  static popUpCargando(BuildContext context, String texto){
-
-    AlertDialog alert=AlertDialog(
+  static popUpCargando(BuildContext context, String texto) {
+    AlertDialog alert = AlertDialog(
       content: new Row(
         children: [
           CircularProgressIndicator(),
-          Container(margin: EdgeInsets.only(left: 20),child:Text(texto)),
-        ],),
+          Container(margin: EdgeInsets.only(left: 20), child: Text(texto)),
+        ],
+      ),
     );
-    showDialog(barrierDismissible: false,
-      context:context,
-      builder:(BuildContext context){
+    showDialog(
+      barrierDismissible: false,
+      context: context,
+      builder: (BuildContext context) {
         return alert;
       },
     );
   }
 
   //Crear un popup con cualquier widget de contenido
-  static PopUpConWidget(BuildContext context, Widget contenidoPopUp){
-    AlertDialog alert=AlertDialog(
+  static PopUpConWidget(BuildContext context, Widget contenidoPopUp) {
+    AlertDialog alert = AlertDialog(
       content: contenidoPopUp,
     );
-    showDialog(barrierDismissible: true,
-      context:context,
-      builder:(BuildContext context){
+    showDialog(
+      barrierDismissible: true,
+      context: context,
+      builder: (BuildContext context) {
         return alert;
       },
     );
   }
 
   //Crear un popup con cualquier widget de contenido
-  static PopUpConWidgetYEventos(BuildContext context, StatefulBuilder contenidoPopUp){
-    showDialog(barrierDismissible: true,
-      context:context,
-      builder:(context){
+  static PopUpConWidgetYEventos(
+      BuildContext context, StatefulBuilder contenidoPopUp) {
+    showDialog(
+      barrierDismissible: true,
+      context: context,
+      builder: (context) {
         return contenidoPopUp;
       },
     );
   }
 
-  static Future<bool> enviarImagen(String nombre, File imagen) async{
+  static Future<bool> enviarImagen(String nombre, File imagen) async {
     String imabenBytes = base64Encode(imagen.readAsBytesSync());
-    String rutaSubidaImagenes = 'http://' +DatosEstaticos.ipSeleccionada + '/upload_one_image.php';
+    String rutaSubidaImagenes =
+        'http://' + DatosEstaticos.ipSeleccionada + '/upload_one_image.php';
     bool resultado = await http.post(rutaSubidaImagenes, body: {
       "image": imabenBytes,
       "name": nombre,
     }).then((result) {
       //print("Resultado: " + result.statusCode.toString());
-      if (result.statusCode == 200) {return true;}
+      if (result.statusCode == 200) {
+        return true;
+      }
     }).catchError((error) {
       return false;
     });
@@ -74,29 +79,28 @@ class PopUps{
     List<int> listadoValoresBytes = [];
     List datos;
     Socket socket;
-    try{
-      socket= await Socket.connect(DatosEstaticos.ipSeleccionada,
-          DatosEstaticos.puertoSocketRaspberry).timeout(Duration(seconds: 5));
+    try {
+      socket = await Socket.connect(DatosEstaticos.ipSeleccionada,
+              DatosEstaticos.puertoSocketRaspberry)
+          .timeout(Duration(seconds: 5));
       socket.write('TVPOSTGETNOMBREIMAGENES');
       socket.listen((event) {
         listadoValoresBytes.addAll(event.toList());
       }).onDone(() {
-        datos =  utf8.decode(listadoValoresBytes).split(",");
+        datos = utf8.decode(listadoValoresBytes).split(",");
         DatosEstaticos.listadoNombresImagenes = datos;
         socket.close();
       });
 
       await socket.done.whenComplete(() => datos);
       return datos;
-
-    } catch(e){
+    } catch (e) {
       print("Error " + e.toString());
     }
   }
-
 }
 
-class CustomAppBar extends PreferredSize{
+class CustomAppBar extends PreferredSize {
   final double height;
 
   CustomAppBar({
@@ -131,9 +135,8 @@ class CustomAppBar extends PreferredSize{
 }
 
 class OpcionesSeleccionMedia extends StatefulWidget {
-
   OpcionesSeleccionMedia({
-  //@required this.keywebview,
+    //@required this.keywebview,
     @required this.visible,
     @required this.divisionLayout,
     //Se requiere la función que hará que algo pase en la ventan anterior
@@ -150,7 +153,6 @@ class OpcionesSeleccionMedia extends StatefulWidget {
 }
 
 class _OpcionesSeleccionMediaState extends State<OpcionesSeleccionMedia> {
-
   TextEditingController controladorTextoUrl = TextEditingController();
   WebViewController webViewController;
 
@@ -169,46 +171,76 @@ class _OpcionesSeleccionMediaState extends State<OpcionesSeleccionMedia> {
     return Visibility(
       visible: widget.visible,
       child: Container(
-        margin: EdgeInsets.only(left: 115.0),
+        width: 176.1,
+        decoration: new BoxDecoration(
+            borderRadius: BorderRadius.circular(20),
+            gradient: LinearGradient(
+                colors: [Colors.blue, Colors.green],
+                stops: [0.3, 0.7],
+                begin: Alignment.topLeft,
+                end: FractionalOffset.bottomRight)),
+        margin: EdgeInsets.symmetric(
+          horizontal: 92,
+        ),
+        padding: EdgeInsets.symmetric(horizontal: 0),
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          //crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Row(
-              crossAxisAlignment: CrossAxisAlignment.center,
+              //crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                RaisedButton(
+                FlatButton(
+                  color: Colors.transparent,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(18.0),
+                  ),
                   onPressed: () {
                     //Va a la otra ventana esperando respuesta
                     navegarYEsperarRespuesta('/seleccionar_imagen');
                   },
-                  child: Text('Imagen'),
+                  child: Text(
+                    'Imagen',
+                    style: TextStyle(color: Colors.white),
+                  ),
                 ),
-                RaisedButton(
+                FlatButton(
+                  color: Colors.transparent,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(18.0),
+                  ),
                   onPressed: () {
                     //Va a la otra ventana esperando respuesta
                     navegarYEsperarRespuesta('/seleccionar_video');
                   },
-                  child: Text('Video'),
+                  child: Text('Video', style: TextStyle(color: Colors.white)),
                 ),
               ],
             ),
             Row(
-              crossAxisAlignment: CrossAxisAlignment.center,
+              // crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                RaisedButton(
+                FlatButton(
+                  color: Colors.transparent,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(18.0),
+                  ),
                   onPressed: () {
                     //Aparece popup de ingresar link
-                    //PopUps.PopUpConWidget(context, contenidoPopUpSeleccionUrl());
-                    contenidoPopUpSeleccionUrl();
+                    PopUps.PopUpConWidget(
+                        context, contenidoPopUpSeleccionUrl());
                   },
-                  child: Text('Url'),
+                  child: Text('Url', style: TextStyle(color: Colors.white)),
                 ),
-                RaisedButton(
+                FlatButton(
+                  color: Colors.transparent,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(18.0),
+                  ),
                   onPressed: () {
                     //Va a la otra ventana esperando respuesta
                     navegarYEsperarRespuesta('/crear_contenido');
                   },
-                  child: Text('Crear'),
+                  child: Text('Crear', style: TextStyle(color: Colors.white)),
                 ),
               ],
             ),
@@ -218,7 +250,7 @@ class _OpcionesSeleccionMediaState extends State<OpcionesSeleccionMedia> {
     );
   }
 
-  contenidoPopUpSeleccionUrl() async{
+  contenidoPopUpSeleccionUrl() async {
     GlobalKey<FormState> _keyValidador = GlobalKey<FormState>();
     await showDialog<String>(
         context: context,
@@ -274,12 +306,11 @@ class _OpcionesSeleccionMediaState extends State<OpcionesSeleccionMedia> {
               ),
             ),
           );
-        })
-    );
+        }));
   }
 
-  Widget crearWebView(String url){
-    if (!url.contains('https://') && !url.contains('http://')){
+  Widget crearWebView(String url) {
+    if (!url.contains('https://') && !url.contains('http://')) {
       url = 'https://$url';
     }
     Widget _webview;
@@ -287,19 +318,19 @@ class _OpcionesSeleccionMediaState extends State<OpcionesSeleccionMedia> {
       initialUrl: url,
       //Para que no carguen los videos automáticamente
       javascriptMode: JavascriptMode.unrestricted,
-      onWebViewCreated: (WebViewController controlador){
+      onWebViewCreated: (WebViewController controlador) {
         webViewController = controlador;
-        if (widget.divisionLayout.contains('-1')){
+        if (widget.divisionLayout.contains('-1')) {
           DatosEstaticos.webViewControllerWidget1 = webViewController;
           //DatosEstaticos.webViewControllerWidget2 = null;
           //DatosEstaticos.webViewControllerWidget3 = null;
         }
-        if (widget.divisionLayout.contains('-2')){
+        if (widget.divisionLayout.contains('-2')) {
           //DatosEstaticos.webViewControllerWidget1 = null;
           DatosEstaticos.webViewControllerWidget2 = webViewController;
           //DatosEstaticos.webViewControllerWidget3 = null;
         }
-        if (widget.divisionLayout.contains('-3')){
+        if (widget.divisionLayout.contains('-3')) {
           //DatosEstaticos.webViewControllerWidget1 = null;
           //DatosEstaticos.webViewControllerWidget2 = null;
           DatosEstaticos.webViewControllerWidget3 = webViewController;
@@ -307,7 +338,7 @@ class _OpcionesSeleccionMediaState extends State<OpcionesSeleccionMedia> {
       },
     );
 
-    switch (widget.divisionLayout){
+    switch (widget.divisionLayout) {
       case '1-1':
         DatosEstaticos.widget1 = _webview;
         DatosEstaticos.nombreArchivoWidget1 = url;
@@ -340,13 +371,10 @@ class _OpcionesSeleccionMediaState extends State<OpcionesSeleccionMedia> {
         break;
     }
 
-
     return _webview;
-
   }
 
-
-  _abrirBuscador() async{
+  _abrirBuscador() async {
     const url = 'https://www.google.cl';
     if (await canLaunch(url)) {
       await launch(url);
@@ -365,7 +393,6 @@ class _OpcionesSeleccionMediaState extends State<OpcionesSeleccionMedia> {
       widget.actualizaEstado();
     }
   }
-
 }
 
 class BotonEnviarAEquipo extends StatelessWidget {
@@ -380,27 +407,24 @@ class BotonEnviarAEquipo extends StatelessWidget {
   bool publicar_rrss = false;
   String mensaje_boton;
 
-
   @override
   Widget build(BuildContext context) {
-
-    if (this.mensaje_boton == null){
+    if (this.mensaje_boton == null) {
       mensaje_boton = "Modificar pantalla";
     }
 
     return Visibility(
       visible: this.visible,
       child: RaisedButton(
-        onPressed: () async{
-          if (DatosEstaticos.nombreArchivoWidget1 != ""
-              || DatosEstaticos.nombreArchivoWidget2 != ""
-              || DatosEstaticos.nombreArchivoWidget3 != ""){
-
+        onPressed: () async {
+          if (DatosEstaticos.nombreArchivoWidget1 != "" ||
+              DatosEstaticos.nombreArchivoWidget2 != "" ||
+              DatosEstaticos.nombreArchivoWidget3 != "") {
             //Envio instruccion a raspberry. Esto debería tener un await para la respuesta
             PopUps.PopUpConWidget(context, EsperarRespuestaProyeccion());
-
           } else {
-            PopUps.PopUpConWidget(context, Text('Error: Contenido no seleccionado'));
+            PopUps.PopUpConWidget(
+                context, Text('Error: Contenido no seleccionado'));
           }
         },
         child: Text(mensaje_boton),
@@ -410,7 +434,7 @@ class BotonEnviarAEquipo extends StatelessWidget {
 
   //Prepara datos para enviar a raspberry.
   //Comprueba datos con base de datos para archivos de media
-  String PreparaDatosMediaEnvioEquipo(){
+  String PreparaDatosMediaEnvioEquipo() {
     String _Instruccion;
     String relojEnPantalla;
     String tipoLayoutAEnviar = "";
@@ -420,50 +444,83 @@ class BotonEnviarAEquipo extends StatelessWidget {
     String tipoWidget1AEnviar = DatosEstaticos.widget1.runtimeType.toString();
     String tipoWidget2AEnviar = DatosEstaticos.widget2.runtimeType.toString();
     String tipoWidget3AEnviar = DatosEstaticos.widget3.runtimeType.toString();
-    if (tipoWidget1AEnviar == 'Null'){tipoWidget1AEnviar = "0";}
-    if (tipoWidget2AEnviar == 'Null'){tipoWidget2AEnviar = "0";}
-    if (tipoWidget3AEnviar == 'Null'){tipoWidget3AEnviar = "0";}
+    if (tipoWidget1AEnviar == 'Null') {
+      tipoWidget1AEnviar = "0";
+    }
+    if (tipoWidget2AEnviar == 'Null') {
+      tipoWidget2AEnviar = "0";
+    }
+    if (tipoWidget3AEnviar == 'Null') {
+      tipoWidget3AEnviar = "0";
+    }
 
     //nombres de archivos a enviar
-    String link1AEnviar = DatosEstaticos.nombreArchivoWidget1.replaceAll(RegExp(' +'),'<!-!>');
-    String link2AEnviar = DatosEstaticos.nombreArchivoWidget2.replaceAll(RegExp(' +'),'<!-!>');
-    String link3AEnviar = DatosEstaticos.nombreArchivoWidget3.replaceAll(RegExp(' +'),'<!-!>');
-    if (link1AEnviar.isEmpty){link1AEnviar = "0";}
-    if (link2AEnviar.isEmpty){link2AEnviar = "0";}
-    if (link3AEnviar.isEmpty){link3AEnviar = "0";}
-    //valor de reloj en pantalla
-    if (DatosEstaticos.relojEnPantalla) {relojEnPantalla = "on";}
-    else {relojEnPantalla = "off";}
-    //Se añaden los colores del reloj
-    relojEnPantalla = relojEnPantalla + DatosEstaticos.color_fondo_reloj + DatosEstaticos.color_texto_reloj;
-
-    if (layoutEnEquipo == "1"){
-      tipoLayoutAEnviar = "100";
-      if (link1AEnviar!="0" && !link1AEnviar.contains('/var/www/html') && !link1AEnviar.contains('http')){
-        link1AEnviar = '/var/www/html$link1AEnviar';
-      }
-      _Instruccion = "$tipoWidget1AEnviar 0 0 $link1AEnviar 0 0 $relojEnPantalla";
+    String link1AEnviar =
+        DatosEstaticos.nombreArchivoWidget1.replaceAll(RegExp(' +'), '<!-!>');
+    String link2AEnviar =
+        DatosEstaticos.nombreArchivoWidget2.replaceAll(RegExp(' +'), '<!-!>');
+    String link3AEnviar =
+        DatosEstaticos.nombreArchivoWidget3.replaceAll(RegExp(' +'), '<!-!>');
+    if (link1AEnviar.isEmpty) {
+      link1AEnviar = "0";
     }
-    if (layoutEnEquipo == "2"){
-      tipoLayoutAEnviar = "5050";
-      if (link1AEnviar!="0" && !link1AEnviar.contains('/var/www/html') && !link1AEnviar.contains('http')){
+    if (link2AEnviar.isEmpty) {
+      link2AEnviar = "0";
+    }
+    if (link3AEnviar.isEmpty) {
+      link3AEnviar = "0";
+    }
+    //valor de reloj en pantalla
+    if (DatosEstaticos.relojEnPantalla) {
+      relojEnPantalla = "on";
+    } else {
+      relojEnPantalla = "off";
+    }
+    //Se añaden los colores del reloj
+    relojEnPantalla = relojEnPantalla +
+        DatosEstaticos.color_fondo_reloj +
+        DatosEstaticos.color_texto_reloj;
+
+    if (layoutEnEquipo == "1") {
+      tipoLayoutAEnviar = "100";
+      if (link1AEnviar != "0" &&
+          !link1AEnviar.contains('/var/www/html') &&
+          !link1AEnviar.contains('http')) {
         link1AEnviar = '/var/www/html$link1AEnviar';
       }
-      if (link2AEnviar!="0" && !link2AEnviar.contains('/var/www/html') && !link2AEnviar.contains('http')){
+      _Instruccion =
+          "$tipoWidget1AEnviar 0 0 $link1AEnviar 0 0 $relojEnPantalla";
+    }
+    if (layoutEnEquipo == "2") {
+      tipoLayoutAEnviar = "5050";
+      if (link1AEnviar != "0" &&
+          !link1AEnviar.contains('/var/www/html') &&
+          !link1AEnviar.contains('http')) {
+        link1AEnviar = '/var/www/html$link1AEnviar';
+      }
+      if (link2AEnviar != "0" &&
+          !link2AEnviar.contains('/var/www/html') &&
+          !link2AEnviar.contains('http')) {
         link2AEnviar = '/var/www/html$link2AEnviar';
       }
       _Instruccion = "$tipoWidget1AEnviar $tipoWidget2AEnviar "
           "0 $link1AEnviar $link2AEnviar 0 $relojEnPantalla";
     }
-    if (layoutEnEquipo == "3"){
+    if (layoutEnEquipo == "3") {
       tipoLayoutAEnviar = "802010";
-      if (link1AEnviar!="0" && !link1AEnviar.contains('/var/www/html') && !link1AEnviar.contains('http')){
+      if (link1AEnviar != "0" &&
+          !link1AEnviar.contains('/var/www/html') &&
+          !link1AEnviar.contains('http')) {
         link1AEnviar = '/var/www/html$link1AEnviar';
       }
-      if (link2AEnviar!="0" && !link2AEnviar.contains('/var/www/html') && !link2AEnviar.contains('http')){
+      if (link2AEnviar != "0" &&
+          !link2AEnviar.contains('/var/www/html') &&
+          !link2AEnviar.contains('http')) {
         link2AEnviar = '/var/www/html$link2AEnviar';
       }
-      if (link3AEnviar!="0" && !link3AEnviar.contains('/var/www/html') && !link3AEnviar.contains('http')){
+      if (link3AEnviar != "0" &&
+          !link3AEnviar.contains('/var/www/html') &&
+          !link3AEnviar.contains('http')) {
         link3AEnviar = '/var/www/html$link3AEnviar';
       }
 
@@ -474,21 +531,21 @@ class BotonEnviarAEquipo extends StatelessWidget {
 
     String _porcionACambiar = _definirPorcionACambiar();
 
-    _Instruccion = "TVPOSTMODLAYOUT $tipoLayoutAEnviar $_porcionACambiar $_Instruccion";
+    _Instruccion =
+        "TVPOSTMODLAYOUT $tipoLayoutAEnviar $_porcionACambiar $_Instruccion";
     return _Instruccion;
   }
 
-  Widget EsperarRespuestaProyeccion(){
+  Widget EsperarRespuestaProyeccion() {
     String InstruccionEnviar = PreparaDatosMediaEnvioEquipo();
 
     return FutureBuilder(
       future: ComunicacionRaspberry.ConfigurarLayout(InstruccionEnviar),
-      builder: (context, snapshot){
-        if (snapshot.connectionState == ConnectionState.done){
-          if (snapshot.data != null){
-
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.done) {
+          if (snapshot.data != null) {
             //Acá se publica
-            if (this.publicar_rrss){
+            if (this.publicar_rrss) {
               PublicarEnRedesSociales();
             }
 
@@ -498,12 +555,15 @@ class BotonEnviarAEquipo extends StatelessWidget {
                 Text('Ok, vea sus pantallas'),
                 RaisedButton(
                   child: Text('Aceptar'),
-                  onPressed: (){
+                  onPressed: () {
                     Navigator.of(context, rootNavigator: true).pop();
-                    Navigator.pushNamedAndRemoveUntil(context,
+                    Navigator.pushNamedAndRemoveUntil(
+                        context,
                         '/detalle_equipo',
                         ModalRoute.withName('/seleccionar_layout'),
-                        arguments: {"indexEquipoGrid" : DatosEstaticos.indexSeleccionado,});
+                        arguments: {
+                          "indexEquipoGrid": DatosEstaticos.indexSeleccionado,
+                        });
                   },
                 ),
               ],
@@ -512,59 +572,70 @@ class BotonEnviarAEquipo extends StatelessWidget {
           return Row(
             children: [
               CircularProgressIndicator(),
-              Container(margin: EdgeInsets.only(left: 20),child:Text('Preparando pantallas...')),
-            ],);
+              Container(
+                  margin: EdgeInsets.only(left: 20),
+                  child: Text('Preparando pantallas...')),
+            ],
+          );
         }
         return Row(
           children: [
             CircularProgressIndicator(),
-            Container(margin: EdgeInsets.only(left: 20),child:Text('Preparando pantallas...')),
-          ],);
+            Container(
+                margin: EdgeInsets.only(left: 20),
+                child: Text('Preparando pantallas...')),
+          ],
+        );
       },
     );
-
   }
 
-  String _definirPorcionACambiar(){
+  String _definirPorcionACambiar() {
     int ls = DatosEstaticos.layoutSeleccionado;
 
-    switch(ls){
+    switch (ls) {
       case 1:
-        if (DatosEstaticos.reemplazarPorcion1){
+        if (DatosEstaticos.reemplazarPorcion1) {
           return "1-1";
         }
         break;
       case 2:
-        if (DatosEstaticos.reemplazarPorcion1 && DatosEstaticos.reemplazarPorcion2){
+        if (DatosEstaticos.reemplazarPorcion1 &&
+            DatosEstaticos.reemplazarPorcion2) {
           return "2-3";
         }
-        if (DatosEstaticos.reemplazarPorcion1){
+        if (DatosEstaticos.reemplazarPorcion1) {
           return "2-1";
         }
-        if (DatosEstaticos.reemplazarPorcion2){
+        if (DatosEstaticos.reemplazarPorcion2) {
           return "2-2";
         }
         break;
       case 3:
-        if (DatosEstaticos.reemplazarPorcion1 && DatosEstaticos.reemplazarPorcion2 && DatosEstaticos.reemplazarPorcion3){
+        if (DatosEstaticos.reemplazarPorcion1 &&
+            DatosEstaticos.reemplazarPorcion2 &&
+            DatosEstaticos.reemplazarPorcion3) {
           return "3-4";
         }
-        if (DatosEstaticos.reemplazarPorcion1 && DatosEstaticos.reemplazarPorcion2){
+        if (DatosEstaticos.reemplazarPorcion1 &&
+            DatosEstaticos.reemplazarPorcion2) {
           return "3-5";
         }
-        if (DatosEstaticos.reemplazarPorcion1 && DatosEstaticos.reemplazarPorcion3){
+        if (DatosEstaticos.reemplazarPorcion1 &&
+            DatosEstaticos.reemplazarPorcion3) {
           return "3-7";
         }
-        if (DatosEstaticos.reemplazarPorcion2 && DatosEstaticos.reemplazarPorcion3){
+        if (DatosEstaticos.reemplazarPorcion2 &&
+            DatosEstaticos.reemplazarPorcion3) {
           return "3-6";
         }
-        if (DatosEstaticos.reemplazarPorcion1){
+        if (DatosEstaticos.reemplazarPorcion1) {
           return "3-1";
         }
-        if (DatosEstaticos.reemplazarPorcion2){
+        if (DatosEstaticos.reemplazarPorcion2) {
           return "3-2";
         }
-        if (DatosEstaticos.reemplazarPorcion3){
+        if (DatosEstaticos.reemplazarPorcion3) {
           return "3-3";
         }
         break;
@@ -573,12 +644,13 @@ class BotonEnviarAEquipo extends StatelessWidget {
 
   void PublicarEnRedesSociales() async {
     String nombreNuevaImagen;
-    switch(this.publicar_porcion){
+    switch (this.publicar_porcion) {
       case 1:
         RegExp expresion = new RegExp('ImagenesPostTv\/(.+)');
         var match = expresion.firstMatch(DatosEstaticos.nombreArchivoWidget1);
         nombreNuevaImagen = match.group(1);
-        Uint8List byteImage = await networkImageToByte("http://${DatosEstaticos.ipSeleccionada}/ImagenesPostTv/$nombreNuevaImagen");
+        Uint8List byteImage = await networkImageToByte(
+            "http://${DatosEstaticos.ipSeleccionada}/ImagenesPostTv/$nombreNuevaImagen");
         Share.file("Publicación TvPost Izquierda", "TvPost_Izquierda.png",
             byteImage, "image/png");
         break;
@@ -586,14 +658,13 @@ class BotonEnviarAEquipo extends StatelessWidget {
         RegExp expresion = new RegExp('ImagenesPostTv\/(.+)');
         var match = expresion.firstMatch(DatosEstaticos.nombreArchivoWidget2);
         nombreNuevaImagen = match.group(1);
-        Uint8List byteImage = await networkImageToByte("http://${DatosEstaticos.ipSeleccionada}/ImagenesPostTv/$nombreNuevaImagen");
+        Uint8List byteImage = await networkImageToByte(
+            "http://${DatosEstaticos.ipSeleccionada}/ImagenesPostTv/$nombreNuevaImagen");
         Share.file("Publicación TvPost Derecha", "TvPost_Derecha.png",
             byteImage, "image/png");
         break;
     }
-
   }
-
 }
 
 class WebViewPropio extends StatefulWidget {
@@ -604,7 +675,6 @@ class WebViewPropio extends StatefulWidget {
 }
 
 class _WebViewPropioState extends State<WebViewPropio> {
-
   @override
   Widget build(BuildContext context) {
     return WebView(
