@@ -5,6 +5,7 @@ import 'package:http/http.dart' as http;
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:tvpost_flutter/utilidades/datos_estaticos.dart';
+import 'package:tvpost_flutter/utilidades/obtiene_datos_webservice.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:tvpost_flutter/utilidades/comunicacion_raspberry.dart';
@@ -226,8 +227,9 @@ class _OpcionesSeleccionMediaState extends State<OpcionesSeleccionMedia> {
                   ),
                   onPressed: () {
                     //Aparece popup de ingresar link
-                    PopUps.PopUpConWidget(
-                        context, contenidoPopUpSeleccionUrl());
+                    contenidoPopUpSeleccionUrl();
+                    /*PopUps.PopUpConWidget(w
+                        context, contenidoPopUpSeleccionUrl());*/
                   },
                   child: Text('Url', style: TextStyle(color: Colors.white)),
                 ),
@@ -544,6 +546,21 @@ class BotonEnviarAEquipo extends StatelessWidget {
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.done) {
           if (snapshot.data != null) {
+
+            //Actualiza datos en bd
+            ObtieneDatos obtencionDatos = ObtieneDatos();
+            obtencionDatos.updateDatosMediaEquipo(
+              serial: DatosEstaticos.listadoDatosEquipoSeleccionado[0]
+              ['f_serial'],
+              f_layoutActual: DatosEstaticos.layoutSeleccionado.toString(),
+              F_TipoArchivoPorcion1: DatosEstaticos.widget1.runtimeType.toString(),
+              F_TipoArchivoPorcion2: DatosEstaticos.widget2.runtimeType.toString(),
+              F_TipoArchivoPorcion3: DatosEstaticos.widget3.runtimeType.toString(),
+              F_ArchivoPorcion1: DatosEstaticos.nombreArchivoWidget1,
+              F_ArchivoPorcion2: DatosEstaticos.nombreArchivoWidget2,
+              F_ArchivoPorcion3: DatosEstaticos.nombreArchivoWidget3,
+            );
+
             //Acá se publica
             if (this.publicar_rrss) {
               PublicarEnRedesSociales();

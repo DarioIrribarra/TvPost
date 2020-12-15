@@ -5,6 +5,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:tvpost_flutter/utilidades/custom_widgets.dart';
 import 'package:tvpost_flutter/utilidades/datos_estaticos.dart';
+import 'package:tvpost_flutter/utilidades/obtiene_datos_webservice.dart';
 import 'package:tvpost_flutter/ventanas/seleccionar_video.dart';
 
 class SeleccionarLayout extends StatefulWidget {
@@ -204,6 +205,11 @@ class _SeleccionarLayoutState extends State<SeleccionarLayout> {
         }
       } else {
         _layoutSeleccionado = 0;
+
+        ObtieneDatos actualiza = ObtieneDatos();
+        actualiza.updateDatosMediaEquipo(serial: DatosEstaticos.
+        listadoDatosEquipoSeleccionado[0]['f_serial']);
+
       }
 
     } catch(e){

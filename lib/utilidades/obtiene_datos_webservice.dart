@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:flutter/cupertino.dart';
 import 'package:http/http.dart';
 import 'package:tvpost_flutter/utilidades/datos_estaticos.dart';
 
@@ -69,19 +70,20 @@ class ObtieneDatos {
     }
   }
 
-  Future<String> updateDatosMediaEquipo(
+  Future<void> updateDatosMediaEquipo({
+    @required
     String serial,
-    String f_layoutActual,
-    String F_TipoArchivoPorcion1,
-    String F_TipoArchivoPorcion2,
-    String F_TipoArchivoPorcion3,
-    String F_ArchivoPorcion1,
-    String F_ArchivoPorcion2,
-    String F_ArchivoPorcion3,
-  ) async{
-    if (serial==null){
+    String f_layoutActual = "1",
+    String F_TipoArchivoPorcion1 = "0",
+    String F_TipoArchivoPorcion2 = "0",
+    String F_TipoArchivoPorcion3 = "0",
+    String F_ArchivoPorcion1 = "0",
+    String F_ArchivoPorcion2 = "0",
+    String F_ArchivoPorcion3 = "0",
+  }) async{
+    /*if (serial==null){
       return "Error al actualizar equipos: campos no pueden estar vacíos";
-    }
+    }*/
 
     try{
       await post('http://drioxmaster.cl/'
@@ -96,11 +98,13 @@ class ObtieneDatos {
         'F_ArchivoPorcion2':'$F_ArchivoPorcion2',
         'F_ArchivoPorcion3':'$F_ArchivoPorcion3',
       });
-      return "listo";
+      //return "Actualización finalizada";
+
     } catch (e) {
       print("Error: ${e.toString()}");
-      return "Error al actualizar alias: error de conexión";
+      //return "Error al actualizar alias: error de conexión";
     }
+    return;
   }
 
   ///Obtiene el rut de la empresa en base a la respuesta de la llamada de

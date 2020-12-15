@@ -59,7 +59,8 @@ class _DetalleEquipoState extends State<DetalleEquipo> {
       //Cierra todas las ventanas anteriores existentes y llega a
       // la ruta entregada
       onWillPop: (){
-        Navigator.popUntil(context, ModalRoute.withName('/raspberries_conectadas'));
+        //Navigator.popUntil(context, ModalRoute.withName('/raspberries_conectadas'));
+        Navigator.of(context).pushNamedAndRemoveUntil('/raspberries_conectadas', (route) => true);
         return;
       },
       child: Scaffold(

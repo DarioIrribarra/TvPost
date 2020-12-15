@@ -9,6 +9,8 @@ import 'package:tvpost_flutter/utilidades/obtiene_datos_webservice.dart';
 import 'package:tvpost_flutter/utilidades/custom_widgets.dart';
 import 'package:liquid_pull_to_refresh/liquid_pull_to_refresh.dart';
 
+int cantidad;
+
 class RaspberriesConectadas extends StatefulWidget {
   @override
   _RaspberriesConectadasState createState() => _RaspberriesConectadasState();
@@ -16,8 +18,20 @@ class RaspberriesConectadas extends StatefulWidget {
 
 class _RaspberriesConectadasState extends State<RaspberriesConectadas> {
 
+
+  @override
+  void initState() {
+    //Comprueba cantidad de equipos
+    listarEquipos();
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
+
+    //Se inicializa el listado de equipos
+    listarEquipos();
+
     return Scaffold(
       //Appbar viene de archivo custom_widgets.dart
       appBar: CustomAppBar(),
@@ -110,6 +124,9 @@ class _RaspberriesConectadasState extends State<RaspberriesConectadas> {
     //El dato [0] es alias
     //El dato [1] es dirección de imagen
     //El dato [2] es activo o con conexión
+    //Actualiza datos de equipos
+    ObtieneDatos actualizaDatos = ObtieneDatos();
+    await actualizaDatos.getDatosEquipos();
     List datos = List();
     String alias = await ObtieneDatos.listadoEquipos[_index]['f_alias'];
     if (alias == null){
@@ -129,6 +146,9 @@ class _RaspberriesConectadasState extends State<RaspberriesConectadas> {
     bool conectado = await _ping(ip);
 
     if (activo && conectado){
+
+      //Future<int> layout= obtieneDatosLayout(ip);
+
       if (layoutEquipo.toString() == '1'){
         datos.add('imagenes/layout1a.png');
         datos.add(true);
@@ -143,7 +163,10 @@ class _RaspberriesConectadasState extends State<RaspberriesConectadas> {
         return datos;
       }
     } else {
-      if (layoutEquipo.toString() == '1'){
+      datos.add('imagenes/layoutdeshabilitado1.png');
+      datos.add(false);
+      return datos;
+      /*if (layoutEquipo.toString() == '1'){
         datos.add('imagenes/layoutdeshabilitado1.png');
         datos.add(false);
         return datos;
@@ -155,7 +178,7 @@ class _RaspberriesConectadasState extends State<RaspberriesConectadas> {
         datos.add('imagenes/layoutdeshabilitado3.png');
         datos.add(false);
         return datos;
-      }
+      }*/
     }
     return datos;
   }
@@ -215,4 +238,46 @@ class _RaspberriesConectadasState extends State<RaspberriesConectadas> {
     DatosEstaticos.ipSeleccionada = null;
   }
 
+  void listarEquipos() async {
+    ObtieneDatos datos = ObtieneDatos();
+    await datos.getDatosEquipos();
+  }
+
+  /*Future<int> obtieneDatosLayout(String ip) async {
+    int _layoutSeleccionado;
+    String resp;
+    //String tipoNuevoLayout;
+    Uint8List _respuesta;
+    List<int> listadoRespuestas;
+    try{
+      Socket socket;
+      socket = await Socket.connect(ip,
+          DatosEstaticos.puertoSocketRaspberry).timeout(Duration(seconds: 5));
+      socket.write('TVPOSTGETDATOSREPRODUCCIONACTUAL');
+      socket.listen((event) {
+        listadoRespuestas.addAll(event.toList());
+      }).onDone(() {
+        _respuesta = Uint8List.fromList(listadoRespuestas);
+        socket.close();
+        return;
+      });
+
+      await socket.done.whenComplete(() => resp = utf8.decode(_respuesta));
+      //Al ya tener los datos, se convierten en diccionario y se pueden utilizar
+      Map<String,dynamic> mapaDatos = json.decode(resp);
+
+      if (mapaDatos.isNotEmpty){
+        _layoutSeleccionado = int.parse(DatosEstaticos
+            .mapaDatosReproduccionEquipoSeleccionado['layout']);
+      } else {
+        _layoutSeleccionado = 1;
+      }
+
+    } catch(e){
+      print("Error al obtener layout equipos listados: " + e.toString());
+      _layoutSeleccionado = 1;
+    }
+    return _layoutSeleccionado;
+  }
+*/
 }
