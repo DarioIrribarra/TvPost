@@ -257,74 +257,64 @@ class _DetalleEquipoState extends State<DetalleEquipo> {
   _widgetPopUpAlias() async {
     await showDialog<String>(
       context: context,
-      child: AnimacionPadding(child: new AlertDialog(
-        contentPadding: const EdgeInsets.all(16.0),
-        content: Form(
-          key: _keyValidador,
-          child: Container(
-            child: new Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                TextFormField(
-                  controller: _controladorTexto,
-                  validator: (textoEscrito){
-                    if(textoEscrito.isEmpty){
-                      return "Error: Alias vacío";
-                    }
-                    if(textoEscrito.trim().length<= 0){
-                      return "Error: Alias vacío";
-                    }
-                    else {return null;}
-                  },
-                ),
-                RaisedButton(
-                  child: Text('Cambiar Alias'),
-                  onPressed: () async{
-                    if (_keyValidador.currentState.validate()){
-                      PopUps.popUpCargando(context, 'Actualizando alias...');
-                      ObtieneDatos datos = ObtieneDatos();
-                      String serial = DatosEstaticos.
-                      listadoDatosEquipoSeleccionado[0]['f_serial'];
-                      await datos.updateAliasEquipo(serial,
-                          _controladorTexto.text.toString());
-                      //print(resultado);
-                      await datos.getDatosEquipos();
-                      //Cierra popup cargando
-                      Navigator.of(context).pop();
-                      Navigator.of(context).pop();
+      child: AnimacionPadding(
+        child: new AlertDialog(
+          contentPadding: const EdgeInsets.all(16.0),
+          content: Form(
+            key: _keyValidador,
+            child: Container(
+              child: new Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  TextFormField(
+                    controller: _controladorTexto,
+                    validator: (textoEscrito) {
+                      if (textoEscrito.isEmpty) {
+                        return "Error: Alias vacío";
+                      }
+                      if (textoEscrito.trim().length <= 0) {
+                        return "Error: Alias vacío";
+                      } else {
+                        return null;
+                      }
+                    },
+                  ),
+                  RaisedButton(
+                    child: Text('Cambiar Alias'),
+                    onPressed: () async {
+                      if (_keyValidador.currentState.validate()) {
+                        PopUps.popUpCargando(context, 'Actualizando alias...');
+                        ObtieneDatos datos = ObtieneDatos();
+                        String serial = DatosEstaticos
+                            .listadoDatosEquipoSeleccionado[0]['f_serial'];
+                        await datos.updateAliasEquipo(
+                            serial, _controladorTexto.text.toString());
+                        //print(resultado);
+                        await datos.getDatosEquipos();
+                        //Cierra popup cargando
+                        Navigator.of(context).pop();
+                        Navigator.of(context).pop();
 
-                      //Cierra popup de cambiar Alias
-                      //Realiza el cambio en la ventana raiz
-                      setState(() {});
-                      await Future.delayed(Duration(milliseconds: 400));
-                      SnackBar snackbar = SnackBar(
-                        content: Text(
-                          'Alias cambiado exitosamente',
-                          textAlign: TextAlign.center,
-                        ),
-                        duration: Duration(seconds: 1)
-                      );
-                      _scaffoldKey.currentState.showSnackBar(snackbar);
-                    }
-                  },
-                ),
-              ],
+                        //Cierra popup de cambiar Alias
+                        //Realiza el cambio en la ventana raiz
+                        setState(() {});
+                        await Future.delayed(Duration(milliseconds: 400));
+                        SnackBar snackbar = SnackBar(
+                            content: Text(
+                              'Alias cambiado exitosamente',
+                              textAlign: TextAlign.center,
+                            ),
+                            duration: Duration(seconds: 1));
+                        _scaffoldKey.currentState.showSnackBar(snackbar);
+                      }
+                    },
+                  ),
+                ],
+              ),
             ),
           ),
         ),
-        /*actions: <Widget>[
-          new FlatButton(
-              child: const Text('CANCEL'),
-              onPressed: () {
-                Navigator.pop(context);
-              }),
-          new FlatButton(
-              child: const Text('OPEN'),
-              onPressed: () {
-                Navigator.pop(context);
-              })
-        ],*/
-      ),),
+      ),
     );
   }
 /*

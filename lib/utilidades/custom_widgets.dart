@@ -308,7 +308,8 @@ class _OpcionesSeleccionMediaState extends State<OpcionesSeleccionMedia> {
               ),
             ),
           );
-        }));
+        }),
+    );
   }
 
   Widget crearWebView(String url) {
