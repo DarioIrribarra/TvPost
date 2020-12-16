@@ -13,7 +13,6 @@ class Login extends StatefulWidget {
 }
 
 class _LoginState extends State<Login> {
-
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   String rutEmpresa = "";
   String nombreUsuario = "";
@@ -35,92 +34,176 @@ class _LoginState extends State<Login> {
 
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
-      backgroundColor: Colors.amber,
-      body: SafeArea(
-        child: Form(
-          key: _formKey,
-          child: SingleChildScrollView(
-            child: Container(
-              margin: EdgeInsets.fromLTRB(40.0, 100.0, 40.0, 0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  Image.asset('imagenes/logovertical.png'),
-                  TextFormField(
-                    initialValue: rutEmpresa,
-                    maxLength: 12,
-                    decoration: InputDecoration(
-                      hintText: 'Sin puntos ni guión',
-                      labelText: 'Rut Empresa',),
-                    onChanged: (texto){rutEmpresa = texto;},
-                    validator: (texto) => validaRutEmpresa,
-                  ),
-                  TextFormField(
-                    decoration: InputDecoration(labelText: 'Nombre de usuario',),
-                    //Se asigna lo que se escribe a la variable
-                    initialValue: nombreUsuario,
-                    onChanged: (texto){nombreUsuario = texto;},
-                    validator: (texto) => validaNombreUsuario,
-                  ),
-                  TextFormField(
-                    obscureText: true,
-                    decoration: InputDecoration(labelText: 'Contraseña',),
-                    initialValue: password,
-                    onChanged: (texto){password = texto;},
-                    validator: (password) => validaPasword,
-                  ),
-                  RaisedButton(
-                    child: Text('Entrar'),
-                      onPressed: () async{
-                        //Se crea popup de cargando
-                        PopUps.popUpCargando(context, 'Cargando...');
-                    //Se cambia el estado para asignar valor de rut empresa a la
-                    //variable local. Ir a buscar el dato de empresa
-                    ObtieneDatos datos = ObtieneDatos();
-                    if (rutEmpresa!=null){
-                      await datos.getDatosEmpresa(rutEmpresa.trim());
-                    }
-                    if (nombreUsuario!=null){
-                      await datos.getDatosUsuario(nombreUsuario.trim());
-                    }
+      body: Container(
+        height: double.infinity,
+        decoration: new BoxDecoration(
+            borderRadius: BorderRadius.circular(20),
+            gradient: LinearGradient(
+                colors: [HexColor("#3edb9b"), HexColor("#0683ff")],
+                stops: [0.3, 0.7],
+                begin: Alignment.topLeft,
+                end: FractionalOffset.bottomRight)),
+        child: SafeArea(
+          child: Form(
+            key: _formKey,
+            child: SingleChildScrollView(
+              child: Container(
+                margin: EdgeInsets.fromLTRB(40.0, 100.0, 40.0, 0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    SizedBox(
+                      height: 60,
+                    ),
+                    Container(
+                      width: 150,
+                      height: 150,
+                      child: Image.asset(
+                        'imagenes/logovertical.png',
+                      ),
+                    ),
+                    SizedBox(
+                      height: 45,
+                    ),
+                    Container(
+                      height: 45,
+                      decoration: new BoxDecoration(
+                          borderRadius: BorderRadius.circular(45),
+                          color: Colors.white),
+                      child: Center(
+                        child: TextFormField(
+                          textAlign: TextAlign.left,
+                          initialValue: rutEmpresa,
+                          maxLength: 12,
+                          decoration: InputDecoration(
+                              contentPadding: EdgeInsets.only(
+                                  top: 3, bottom: 3, left: 15, right: 3),
+                              hintText: 'Rut Empresa (sin puntos ni guión)',
+                              labelStyle: TextStyle(color: Colors.white),
+                              enabledBorder: new UnderlineInputBorder(
+                                  borderSide: new BorderSide(
+                                      color: Colors.transparent))),
+                          onChanged: (texto) {
+                            rutEmpresa = texto;
+                          },
+                          validator: (texto) => validaRutEmpresa,
+                        ),
+                      ),
+                    ),
+                    SizedBox(
+                      height: 15,
+                    ),
+                    Container(
+                      height: 45,
+                      decoration: new BoxDecoration(
+                          borderRadius: BorderRadius.circular(45),
+                          color: Colors.white),
+                      child: TextFormField(
+                        decoration: InputDecoration(
+                            contentPadding: EdgeInsets.only(
+                                top: 3, bottom: 3, left: 15, right: 3),
+                            hintText: 'Nombre de usuario',
+                            labelStyle: TextStyle(color: Colors.white),
+                            enabledBorder: new UnderlineInputBorder(
+                                borderSide:
+                                    new BorderSide(color: Colors.transparent))),
+                        //Se asigna lo que se escribe a la variable
+                        initialValue: nombreUsuario,
+                        onChanged: (texto) {
+                          nombreUsuario = texto;
+                        },
+                        validator: (texto) => validaNombreUsuario,
+                      ),
+                    ),
+                    SizedBox(
+                      height: 15,
+                    ),
+                    Container(
+                      height: 45,
+                      decoration: new BoxDecoration(
+                          borderRadius: BorderRadius.circular(45),
+                          color: Colors.white),
+                      child: TextFormField(
+                        obscureText: true,
+                        decoration: InputDecoration(
+                            contentPadding: EdgeInsets.only(
+                                top: 3, bottom: 3, left: 15, right: 3),
+                            hintText: 'Contraseña',
+                            labelStyle: TextStyle(color: Colors.white),
+                            enabledBorder: new UnderlineInputBorder(
+                                borderSide:
+                                    new BorderSide(color: Colors.transparent))),
+                        initialValue: password,
+                        onChanged: (texto) {
+                          password = texto;
+                        },
+                        validator: (password) => validaPasword,
+                      ),
+                    ),
+                    SizedBox(
+                      height: 15,
+                    ),
+                    RaisedButton(
+                        color: Colors.blue,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(18.0),
+                          side: BorderSide(
+                            width: 2.3,
+                            color: Colors.white,
+                          ),
+                        ),
+                        child: Text('Entrar'),
+                        onPressed: () async {
+                          //Se crea popup de cargando
+                          PopUps.popUpCargando(context, 'Cargando...');
+                          //Se cambia el estado para asignar valor de rut empresa a la
+                          //variable local. Ir a buscar el dato de empresa
+                          ObtieneDatos datos = ObtieneDatos();
+                          if (rutEmpresa != null) {
+                            await datos.getDatosEmpresa(rutEmpresa.trim());
+                          }
+                          if (nombreUsuario != null) {
+                            await datos.getDatosUsuario(nombreUsuario.trim());
+                          }
 
-                    //Espera el resultado de la función async para validar rut
-                    await datos.ValidaRutEmpresa();
-                    //Espera el resultado de la función async para validar
-                    // nombre de usuario
-                    await datos.ValidaNombreUsuario();
-                    //Espera el resultado de la función async para validar
-                    // password
-                    if(password != null && nombreUsuario != null){
-                      await datos.ValidaPasswordUsuario(password.trim(),
-                          nombreUsuario.trim());
-                    }
+                          //Espera el resultado de la función async para validar rut
+                          await datos.ValidaRutEmpresa();
+                          //Espera el resultado de la función async para validar
+                          // nombre de usuario
+                          await datos.ValidaNombreUsuario();
+                          //Espera el resultado de la función async para validar
+                          // password
+                          if (password != null && nombreUsuario != null) {
+                            await datos.ValidaPasswordUsuario(
+                                password.trim(), nombreUsuario.trim());
+                          }
 
-                    //Se inicializa el listado de equipos
-                    await datos.getDatosEquipos();
+                          //Se inicializa el listado de equipos
+                          await datos.getDatosEquipos();
 
-                    //Set state para cambiar los valores del validador
-                    setState(() {
-                      validaRutEmpresa = datos.rutEmpresaDevuelto;
-                      validaNombreUsuario = datos.nombreUsuarioDevuelto;
-                      validaPasword = datos.passwordDevuelto;
-                    });
-                    //Al pasar todas las validaciones se utiliza el shared
-                    //preferences
-                    if(_formKey.currentState.validate()){
-                        GuardarSharedPreferences();
-                        Navigator.pop(context);
-                        //Al guardar to do se va a la otra ventana
-                      Navigator.pushNamed(context, '/raspberries_conectadas');
-                    } else {
-                      Navigator.pop(context);
-                    }
+                          //Set state para cambiar los valores del validador
+                          setState(() {
+                            validaRutEmpresa = datos.rutEmpresaDevuelto;
+                            validaNombreUsuario = datos.nombreUsuarioDevuelto;
+                            validaPasword = datos.passwordDevuelto;
+                          });
+                          //Al pasar todas las validaciones se utiliza el shared
+                          //preferences
+                          if (_formKey.currentState.validate()) {
+                            GuardarSharedPreferences();
+                            Navigator.pop(context);
+                            //Al guardar to do se va a la otra ventana
+                            Navigator.pushNamed(
+                                context, '/raspberries_conectadas');
+                          } else {
+                            Navigator.pop(context);
+                          }
 
-                    //print(validaRutEmpresa);
-                  }),
-                ],
+                          //print(validaRutEmpresa);
+                        }),
+                  ],
+                ),
               ),
             ),
           ),
