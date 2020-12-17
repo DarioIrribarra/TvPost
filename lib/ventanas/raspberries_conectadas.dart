@@ -54,7 +54,7 @@ class _RaspberriesConectadasState extends State<RaspberriesConectadas> {
                       return Card(
                         child: Center(
                           child: Text(
-                              'SIN DATOS'
+                              'DESLICE PARA ACTUALIZAR RECEPTOR'
                           ),
                         ),
                       );
@@ -64,108 +64,178 @@ class _RaspberriesConectadasState extends State<RaspberriesConectadas> {
                       //Si tiene conexión o está activo se puede hacer click
                       //Y se le pasa la ip
                       if (snapshot.data[2] == true && snapshot.data[3] == true){
-                        return Column(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          children:[
-                            GestureDetector(
-                            onTap: () {
-                              //Libera los widgets y datos creados
-                              LimpiarDatosEstaticos();
-                              DatosEstaticos.indexSeleccionado = index;
-                              return Navigator.pushNamed(
-                                context,
-                                '/detalle_equipo',
-                                arguments: {
-                                  "indexEquipoGrid" : index,
-                                });
-                              },
-                            child: Card(
+                        return Card(
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            children:[
+                              GestureDetector(
+                              onTap: () {
+                                //Libera los widgets y datos creados
+                                LimpiarDatosEstaticos();
+                                DatosEstaticos.indexSeleccionado = index;
+                                return Navigator.pushNamed(
+                                  context,
+                                  '/detalle_equipo',
+                                  arguments: {
+                                    "indexEquipoGrid" : index,
+                                  });
+                                },
                               child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Image.asset(snapshot.data[1].toString()),
+                                  ],
+                                ),
+                              /*child: Card(
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Image.asset(snapshot.data[1].toString()),
+                                  ],
+                                ),
+                              ),*/
+                            ),
+                              Row(
+                                mainAxisSize: MainAxisSize.min,
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
-                                  Image.asset(snapshot.data[1].toString()),
-                                ],
-                              ),
-                            ),
-                          ),
-                            Row(
-                              mainAxisSize: MainAxisSize.min,
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                SizedBox(
-                                  width: MediaQuery.of(context).size.width/6.5,
-                                  child: Row(
-                                    children: [
-                                      Expanded(
-                                        flex:1,
+                                  SizedBox(
+                                    width: MediaQuery.of(context).size.width/6.5,
+                                    child: Row(
+                                      children: [
+                                        Expanded(
+                                          flex:1,
+                                          child: GestureDetector(
+                                              onTap: (){
+                                                VistaPreviaReproduccion(index);
+                                              },
+                                              child: Center(
+                                                child: Icon(
+                                                  Icons.remove_red_eye_sharp,
+                                                  color: Colors.blueAccent,
+                                                ),
+                                              )
+                                          ),
+                                        ),
+                                        Expanded(
+                                        flex: 1,
                                         child: GestureDetector(
-                                            onTap: (){
-                                              VistaPreviaReproduccion(index);
+                                            onTap: () {
+                                              AlertaDesactivar(index);
                                             },
                                             child: Center(
                                               child: Icon(
-                                                Icons.remove_red_eye_sharp,
-                                                color: Colors.blueAccent,
+                                                Icons.desktop_windows,
+                                                color: Colors.red,
                                               ),
                                             )
                                         ),
                                       ),
-                                      Expanded(
-                                      flex: 1,
-                                      child: GestureDetector(
-                                          onTap: () {
-                                            AlertaDesactivar(index);
-                                          },
-                                          child: Center(
-                                            child: Icon(
-                                              Icons.desktop_access_disabled,
-                                              color: Colors.red,
-                                            ),
-                                          )
-                                      ),
+                                      ],
                                     ),
-                                    ],
                                   ),
-                                ),
 
-                                SizedBox(
-                                  width: MediaQuery.of(context).size.width/3.2,
-                                  child: Text(
-                                    '${snapshot.data[0].toString().toUpperCase()}',
-                                    textScaleFactor: 1.1,
-                                    textAlign: TextAlign.right,
-                                    style: TextStyle(fontWeight: FontWeight.bold),
+                                  SizedBox(
+                                    width: MediaQuery.of(context).size.width/3.2,
+                                    child: Text(
+                                      '${snapshot.data[0].toString().toUpperCase()}',
+                                      textScaleFactor: 1.1,
+                                      textAlign: TextAlign.right,
+                                      style: TextStyle(fontWeight: FontWeight.bold),
+                                    ),
                                   ),
-                                ),
-                              ],
-                            ),
-                          ]
+                                ],
+                              ),
+                            ]
+                          ),
                         );
                       }
                       //Equipo conectado pero desactivado por el usuario
                       else if (snapshot.data[2] == true && snapshot.data[3] == false){
-                        return Column(
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                            children:[
-                              GestureDetector(
-                                onTap: () {
-                                  /*//Libera los widgets y datos creados
-                                  LimpiarDatosEstaticos();
-                                  DatosEstaticos.indexSeleccionado = index;
-                                  return Navigator.pushNamed(
-                                      context,
-                                      '/detalle_equipo',
-                                      arguments: {
-                                        "indexEquipoGrid" : index,
-                                      });*/
-                                },
-                                child: Card(
+                        return Card(
+                          child: Column(
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              children:[
+                                GestureDetector(
+                                  onTap: () {
+                                    MensajeActivarEquipo(index);
+                                  },
                                   child: Column(
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
                                       Image.asset(snapshot.data[1].toString()),
                                     ],
                                   ),
+                                ),
+                                Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    SizedBox(
+                                      width: MediaQuery.of(context).size.width/6.5,
+                                      child: Row(
+                                        children: [
+                                          Expanded(
+                                            flex:1,
+                                            child: GestureDetector(
+                                                onTap: (){
+                                                  MensajeActivarEquipo(index);
+                                                },
+                                                child: Center(
+                                                  child: Icon(
+                                                    Icons.remove_red_eye,
+                                                    color: Colors.red,
+                                                  ),
+                                                )
+                                            ),
+                                          ),
+                                          Expanded(
+                                            flex: 1,
+                                            child: GestureDetector(
+                                                onTap: () {
+                                                  AlertaActivar(index);
+                                                },
+                                                child: Center(
+                                                  child: Icon(
+                                                    Icons.desktop_windows,
+                                                    color: Colors.blueAccent,
+                                                  ),
+                                                )
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+
+                                    SizedBox(
+                                      width: MediaQuery.of(context).size.width/3.2,
+                                      child: Text(
+                                        '${snapshot.data[0].toString().toUpperCase()}',
+                                        textScaleFactor: 1.1,
+                                        textAlign: TextAlign.right,
+                                        style: TextStyle(fontWeight: FontWeight.bold),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ]
+                          ),
+                        );
+                      }
+                      else {
+                        return Card(
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            children: [
+                              GestureDetector(
+                                onTap: () {
+                                  EquipoSinConexion(index);
+                                },
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Image.asset(snapshot.data[1].toString()),
+                                  ],
                                 ),
                               ),
                               Row(
@@ -180,11 +250,11 @@ class _RaspberriesConectadasState extends State<RaspberriesConectadas> {
                                           flex:1,
                                           child: GestureDetector(
                                               onTap: (){
-                                                //VistaPreviaReproduccion(index);
+                                                EquipoSinConexion(index);
                                               },
                                               child: Center(
                                                 child: Icon(
-                                                  Icons.remove_red_eye,
+                                                  Icons.do_disturb_alt_outlined,
                                                   color: Colors.red,
                                                 ),
                                               )
@@ -194,12 +264,12 @@ class _RaspberriesConectadasState extends State<RaspberriesConectadas> {
                                           flex: 1,
                                           child: GestureDetector(
                                               onTap: () {
-                                                AlertaActivar(index);
+                                                EquipoSinConexion(index);
                                               },
                                               child: Center(
                                                 child: Icon(
-                                                  Icons.desktop_windows,
-                                                  color: Colors.blueAccent,
+                                                  Icons.desktop_access_disabled,
+                                                  color: Colors.red,
                                                 ),
                                               )
                                           ),
@@ -219,11 +289,10 @@ class _RaspberriesConectadasState extends State<RaspberriesConectadas> {
                                   ),
                                 ],
                               ),
-                            ]
+                            ],
+                          ),
                         );
-                      }
-                      else {
-                        return Card(
+                        /*return Card(
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
@@ -231,7 +300,7 @@ class _RaspberriesConectadasState extends State<RaspberriesConectadas> {
                               Text('${snapshot.data[0]}'),
                             ],
                           ),
-                        );
+                        );*/
                       }
                     }
                   } else if(snapshot.hasError){
@@ -415,32 +484,6 @@ class _RaspberriesConectadasState extends State<RaspberriesConectadas> {
                       Widget widgetError = Column(
                         children: [
                           _screenshotProcesada,
-                          /*Expanded(
-                            flex:1,
-                            child: Container(
-                              child: _screenshotProcesada,
-                              color: Colors.green,
-                              margin: EdgeInsets.only(bottom: 10),
-                            ),
-                          ),
-                          Expanded(
-                            flex:1,
-                            child: Container(
-                              color: Colors.red,
-                              width:120,
-                              child: Center(
-                                  child: Padding(
-                                    padding: const EdgeInsets.only(bottom: 10),
-                                    child: Text("¡Ups, algo ha salido mal!", textScaleFactor: 1.2,),
-                                  )
-                              ),
-                            ),
-                          ),
-                          Expanded(
-                              flex:1,
-                              child: Text("Vuelva a intentar ver la captura de imagen", textScaleFactor: 1.2, textAlign: TextAlign.center,)
-                          ),*/
-
                         ],
                       );
                       if (snapshot.connectionState == ConnectionState.done) {
@@ -472,72 +515,6 @@ class _RaspberriesConectadasState extends State<RaspberriesConectadas> {
       },
     );
 
-    /*await showDialog<String>(
-      context: context,
-      child: new AlertDialog(
-        content: StatefulBuilder(builder: (context, setState) {
-          return Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Container(
-                width: MediaQuery.of(context).size.width,
-                height: MediaQuery.of(context).size.height/3,
-                child: FutureBuilder(
-                  future: _getScreenShot(ip),
-                  builder: (context, snapshot) {
-                    Widget widgetError = Column(
-                      children: [
-                        Expanded(
-                          flex:1,
-                          child: Container(
-                            child: _screenshotProcesada,
-                            color: Colors.green,
-                            margin: EdgeInsets.only(bottom: 10),
-                          ),
-                        ),
-                        Expanded(
-                          flex:1,
-                          child: Center(
-                              child: Padding(
-                                padding: const EdgeInsets.only(bottom: 10),
-                                child: Text("¡Ups, algo ha salido mal!", textScaleFactor: 1.2,),
-                              )
-                          ),
-                        ),
-                        Expanded(
-                            flex:1,
-                            child: Text("Vuelva a intentar ver la captura de imagen", textScaleFactor: 1.2, textAlign: TextAlign.center,)
-                        ),
-
-                      ],
-                    );
-                    if (snapshot.connectionState == ConnectionState.done) {
-                      if (snapshot.data == null) {
-                        return widgetError;
-                      } else {
-                        //Retorna el widget con la imagen de screenshot
-                        var tipoimage = _screenshotProcesada.image.runtimeType.toString();
-                        if (tipoimage == "AssetImage"){
-                          return widgetError;
-                        }
-                        return Container(
-                            child: Center(
-                                child: _screenshotProcesada
-                            )
-                        );
-                      }
-                    } else {
-                      return Center(child: CircularProgressIndicator());
-                    }
-                  },
-
-                ),
-              ),
-            ],
-          );
-        }),
-      ),
-    );*/
   }
 
   Future _getScreenShot(String ip) async {
@@ -580,7 +557,7 @@ class _RaspberriesConectadasState extends State<RaspberriesConectadas> {
     String ip = ObtieneDatos.listadoEquipos[index]['f_ip'].toString();
     String serial = ObtieneDatos.listadoEquipos[index]['f_serial'].toString();
     String alias = ObtieneDatos.listadoEquipos[index]['f_alias'].toString();
-    //ObtieneDatos actualizarEstado = ObtieneDatos();
+    ObtieneDatos actualizarEstado = ObtieneDatos();
 
     await showDialog<String>(
       context: context,
@@ -594,7 +571,7 @@ class _RaspberriesConectadasState extends State<RaspberriesConectadas> {
             Text('Serial: ${serial}', textAlign: TextAlign.center,),
             Text('Ip: ${ip}', textAlign: TextAlign.center,),
             SizedBox(
-              height: 5,
+              height: 10,
             ),
             Row(
               children: [
@@ -603,13 +580,27 @@ class _RaspberriesConectadasState extends State<RaspberriesConectadas> {
                   child: RaisedButton(
                     child: Text('Aceptar', textScaleFactor: 1.3,),
                     onPressed: () async{
-                      /*actualizarEstado.updateDatosMediaEquipo(
-                        serial: serial,
-                        f_layoutActual: "1"
-                      );*/
-                      setState(() {
-                        Navigator.pop(context);
-                      });
+                      PopUps.popUpCargando(context, 'Actualizando estado...');
+                      var resultado = await actualizarEstado.updateEstadoEquipo(
+                                          serial: serial,estado: "0");
+                      if (resultado == 1) {
+                        setState(() {
+                          Navigator.pop(context);
+                          Navigator.pop(context);
+                          Widget contenidoPopUp = Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Text('Equipo $alias desactivado'),
+                              SizedBox(width: 10,),
+                              RaisedButton(
+                                child: Text('Aceptar', textScaleFactor: 1.3,),
+                                onPressed: (){Navigator.pop(context);},
+                              ),
+                            ],
+                          );
+                          PopUps.PopUpConWidget(context, contenidoPopUp);
+                        });
+                      }
                     },
                   )
                 ),
@@ -634,6 +625,7 @@ class _RaspberriesConectadasState extends State<RaspberriesConectadas> {
     String ip = ObtieneDatos.listadoEquipos[index]['f_ip'].toString();
     String serial = ObtieneDatos.listadoEquipos[index]['f_serial'].toString();
     String alias = ObtieneDatos.listadoEquipos[index]['f_alias'].toString();
+    ObtieneDatos actualizarEstado = ObtieneDatos();
 
     await showDialog<String>(
       context: context,
@@ -647,7 +639,7 @@ class _RaspberriesConectadasState extends State<RaspberriesConectadas> {
             Text('Serial: ${serial}', textAlign: TextAlign.center,),
             Text('Ip: ${ip}', textAlign: TextAlign.center,),
             SizedBox(
-              height: 5,
+              height: 10,
             ),
             Row(
               children: [
@@ -655,7 +647,29 @@ class _RaspberriesConectadasState extends State<RaspberriesConectadas> {
                     flex:1,
                     child: RaisedButton(
                       child: Text('Aceptar', textScaleFactor: 1.3,),
-                      onPressed: (){},
+                      onPressed: () async{
+                        PopUps.popUpCargando(context, 'Actualizando estado...');
+                        var resultado = await actualizarEstado.updateEstadoEquipo(
+                            serial: serial,estado: "1");
+                        if (resultado == 1) {
+                          setState(() {
+                            Navigator.pop(context);
+                            Navigator.pop(context);
+                            Widget contenidoPopUp = Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Text('Equipo $alias activado'),
+                                SizedBox(width: 10,),
+                                RaisedButton(
+                                  child: Text('Aceptar', textScaleFactor: 1.3,),
+                                  onPressed: (){Navigator.pop(context);},
+                                ),
+                              ],
+                            );
+                            PopUps.PopUpConWidget(context, contenidoPopUp);
+                          });
+                        }
+                      },
                     )
                 ),
                 SizedBox(width: 10,),
@@ -673,6 +687,69 @@ class _RaspberriesConectadasState extends State<RaspberriesConectadas> {
       ),
 
     );
+  }
+
+  void EquipoSinConexion(int index) {
+    String ip = ObtieneDatos.listadoEquipos[index]['f_ip'].toString();
+    String serial = ObtieneDatos.listadoEquipos[index]['f_serial'].toString();
+    String alias = ObtieneDatos.listadoEquipos[index]['f_alias'].toString();
+    Widget contenidoPopUp = Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        //Título
+        Text(
+          'Receptor sin comunicación',
+          textAlign: TextAlign.center,
+          textScaleFactor: 1.2,
+          style: TextStyle(fontWeight: FontWeight.bold),
+        ),
+        SizedBox(height:10,),
+        Text('Alias: ${alias}', textAlign: TextAlign.center,),
+        Text('Serial: ${serial}', textAlign: TextAlign.center,),
+        Text('Ip: ${ip}', textAlign: TextAlign.center,),
+        SizedBox(
+          height: 10,
+        ),
+        Text('Compruebe conexión de red y energía', textAlign: TextAlign.center,),
+        SizedBox(height:10,),
+        RaisedButton(
+          child: Text('Aceptar', textScaleFactor: 1.3,),
+          onPressed: (){Navigator.pop(context);},
+        ),
+      ],
+    );
+    PopUps.PopUpConWidget(context, contenidoPopUp);
+  }
+
+  void MensajeActivarEquipo(int index) {
+    String alias = ObtieneDatos.listadoEquipos[index]['f_alias'].toString();
+    Widget contenidoPopUp = Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        //Título
+        Text(
+          'Función no permitida',
+          textAlign: TextAlign.center,
+          textScaleFactor: 1.2,
+          style: TextStyle(fontWeight: FontWeight.bold),
+        ),
+        /*SizedBox(height:10,),
+        Text('Alias: ${alias}', textAlign: TextAlign.center,),
+        Text('Serial: ${serial}', textAlign: TextAlign.center,),
+        Text('Ip: ${ip}', textAlign: TextAlign.center,),
+        SizedBox(
+          height: 10,
+        ),*/
+        SizedBox(height:10,),
+        Text("Active equipo ' $alias ' y vuelva a intentarlo", textAlign: TextAlign.center,),
+        SizedBox(height:10,),
+        RaisedButton(
+          child: Text('Aceptar', textScaleFactor: 1.3,),
+          onPressed: (){Navigator.pop(context);},
+        ),
+      ],
+    );
+    PopUps.PopUpConWidget(context, contenidoPopUp);
   }
 
   /*Future<int> obtieneDatosLayout(String ip) async {

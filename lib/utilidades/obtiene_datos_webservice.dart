@@ -107,6 +107,33 @@ class ObtieneDatos {
     return;
   }
 
+  Future<int> updateEstadoEquipo({
+    @required
+    String serial,
+    @required
+    String estado,
+    Response resultado,
+  }) async{
+
+    try{
+      resultado = await post('http://drioxmaster.cl/'
+          'resttvpost/updateEstadoEquipo.php',
+          body: {
+            'f_serial':'$serial',
+            'f_equipoActivo': '$estado',
+          });
+
+      if (resultado.reasonPhrase == 'OK'){
+        return 1;
+      }
+
+    } catch (e) {
+      print("Error: ${e.toString()}");
+      //return "Error al actualizar alias: error de conexión";
+    }
+    return 0;
+  }
+
   ///Obtiene el rut de la empresa en base a la respuesta de la llamada de
   ///getDatosEmpresa y lo valida
   Future<void> ValidaRutEmpresa() async{
