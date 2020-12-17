@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:tvpost_flutter/utilidades/datos_estaticos.dart';
 import 'package:tvpost_flutter/utilidades/obtiene_datos_webservice.dart';
 import 'package:tvpost_flutter/utilidades/custom_widgets.dart';
+import 'package:tvpost_flutter/ventanas/raspberries_conectadas.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:liquid_pull_to_refresh/liquid_pull_to_refresh.dart';
 
@@ -60,7 +61,10 @@ class _DetalleEquipoState extends State<DetalleEquipo> {
       // la ruta entregada
       onWillPop: (){
         //Navigator.popUntil(context, ModalRoute.withName('/raspberries_conectadas'));
-        Navigator.of(context).pushNamedAndRemoveUntil('/raspberries_conectadas', (route) => true);
+        Navigator.of(context).pushAndRemoveUntil(
+          MaterialPageRoute(builder: (BuildContext context) => RaspberriesConectadas()),
+          ModalRoute.withName('/'),
+        );
         return;
       },
       child: Scaffold(
