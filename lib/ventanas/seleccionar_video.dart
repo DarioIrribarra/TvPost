@@ -10,6 +10,8 @@ import 'package:path/path.dart' as p;
 import 'package:file_picker/file_picker.dart';
 import 'package:video_player/video_player.dart';
 import 'package:chewie/chewie.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+
 
 class SeleccionarVideo extends StatefulWidget {
   @override
@@ -124,6 +126,14 @@ class _SeleccionarVideoState extends State<SeleccionarVideo> {
                             DatosEstaticos.listadoNombresVideos.length, (index) {
                           return GestureDetector(
                             child: ReproductorVideos(url: 'http://${DatosEstaticos.ipSeleccionada}/VideosPostTv/${DatosEstaticos.listadoNombresVideos[index]}',),
+                            onTap: (){
+                              Fluttertoast.showToast(
+                                msg: "Presione dos veces para seleccionar video",
+                                toastLength: Toast.LENGTH_LONG,
+                                webBgColor: "#e74c3c",
+                                timeInSecForIosWeb: 10,
+                              );
+                            },
                             onDoubleTap: (){
                               Widget video = ReproductorVideos(url: 'http://${DatosEstaticos.ipSeleccionada}/VideosPostTv/${DatosEstaticos.listadoNombresVideos[index]}', divisionLayout: divisionLayout, seleccionado: true,);
                               String nombre = DatosEstaticos.listadoNombresVideos[index];
@@ -397,6 +407,7 @@ class _ReproductorVideosState extends State<ReproductorVideos> {
           height: alto_video,
           child: VideoPlayer(widget.controller),
         ),
+
         Container(
           width: MediaQuery.of(context).size.width/7,
           child: RaisedButton(

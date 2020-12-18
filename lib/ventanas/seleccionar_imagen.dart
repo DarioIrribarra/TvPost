@@ -6,6 +6,7 @@ import 'package:tvpost_flutter/utilidades/custom_widgets.dart';
 import 'package:tvpost_flutter/utilidades/datos_estaticos.dart';
 import 'package:path/path.dart' as p;
 import 'package:file_picker/file_picker.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 class SeleccionarImagen extends StatefulWidget {
   @override
@@ -120,6 +121,14 @@ class _SeleccionarImagenState extends State<SeleccionarImagen> {
                             //Por cada imagen, busca su imagen.
                             // El nombre lo toma del listado estático
                             return GestureDetector(
+                              onTap: (){
+                                Fluttertoast.showToast(
+                                  msg: "Presione dos veces para seleccionar imagen",
+                                  toastLength: Toast.LENGTH_LONG,
+                                  webBgColor: "#e74c3c",
+                                  timeInSecForIosWeb: 10,
+                                );
+                              },
                               onDoubleTap: (){
                                 Widget imagen = Image.network('http://'
                                     '${DatosEstaticos.ipSeleccionada}'
