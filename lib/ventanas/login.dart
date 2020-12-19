@@ -41,7 +41,7 @@ class _LoginState extends State<Login> {
             borderRadius: BorderRadius.circular(20),
             gradient: LinearGradient(
                 colors: [HexColor("#3edb9b"), HexColor("#0683ff")],
-                stops: [0.3, 0.7],
+                stops: [0.5, 1],
                 begin: Alignment.topLeft,
                 end: FractionalOffset.bottomRight)),
         child: SafeArea(
