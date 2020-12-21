@@ -10,6 +10,7 @@ import 'package:tvpost_flutter/utilidades/custom_widgets.dart';
 import 'package:tvpost_flutter/ventanas/raspberries_conectadas.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:liquid_pull_to_refresh/liquid_pull_to_refresh.dart';
+import 'package:path_provider/path_provider.dart';
 
 class DetalleEquipo extends StatefulWidget {
   @override
@@ -190,6 +191,8 @@ class _DetalleEquipoState extends State<DetalleEquipo> {
                                 heightFactor: 4.0,
                                 child: RaisedButton(
                                   onPressed: () async {
+                                    String dir = (await getTemporaryDirectory()).path;
+                                    File temporal = new File('$dir/img_temp_creada.png');
                                     Navigator.pushNamed(
                                         context, '/seleccionar_layout');
                                   },

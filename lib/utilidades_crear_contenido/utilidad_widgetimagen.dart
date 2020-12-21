@@ -11,15 +11,19 @@ import 'package:tvpost_flutter/utilidades/datos_estaticos.dart';
 
 class Utils {
   static Future capture(GlobalKey key) async {
-    //Listado para devolver dirección temporal e imagen
-    //List datosImagen = [];
-    if (key == null) return null;
-    //Transforma la imagen original
-    RenderRepaintBoundary boundary = key.currentContext.findRenderObject();
-    ui.Image image = await boundary.toImage(pixelRatio: 3);
-    final byteData = await image.toByteData(format: ui.ImageByteFormat.png);
-    Uint8List pngBytes = byteData.buffer.asUint8List();
-    return pngBytes;
+    try {
+      //Listado para devolver dirección temporal e imagen
+      //List datosImagen = [];
+      if (key == null) return null;
+      //Transforma la imagen original
+      RenderRepaintBoundary boundary = key.currentContext.findRenderObject();
+      ui.Image image = await boundary.toImage(pixelRatio: 3);
+      final byteData = await image.toByteData(format: ui.ImageByteFormat.png);
+      Uint8List pngBytes = byteData.buffer.asUint8List();
+      return pngBytes;
+    } catch (e){
+      print('Error al tomar pantallazo${e.toString()}');
+    }
   }
 
   static Future<Uint8List> redimensionarImg(Uint8List pngBytesOriginales,
@@ -65,12 +69,19 @@ class Utils {
 
   //Devuelve la imagen redimensionada en bytes
   static Future<ui.Image> redimencionarUiImage(String imageAssetPath, int height, int width) async {
-    final ByteData assetImageByteData = await rootBundle.load(imageAssetPath);
-    image.Image baseSizeImage = image.decodeImage(assetImageByteData.buffer.asUint8List());
-    image.Image resizeImage = image.copyResize(baseSizeImage, height: height, width: width);
-    ui.Codec codec = await ui.instantiateImageCodec(image.encodePng(resizeImage));
-    ui.FrameInfo frameInfo = await codec.getNextFrame();
-    return frameInfo.image;
+    try {
+      Uint8List img = await File(imageAssetPath).readAsBytes();
+      final ByteData assetImageByteData = ByteData.view(img.buffer);
+      //final ByteData assetImageByteData = await rootBundle.load(imageAssetPath);
+      image.Image baseSizeImage = image.decodeImage(assetImageByteData.buffer.asUint8List());
+      image.Image resizeImage = image.copyResize(baseSizeImage, height: height, width: width);
+      ui.Codec codec = await ui.instantiateImageCodec(image.encodePng(resizeImage));
+      ui.FrameInfo frameInfo = await codec.getNextFrame();
+      return frameInfo.image;
+    } catch (e){
+      print('Error abrir img: ${e.toString()}');
+    }
+
   }
 
   //Devuelve un archivo temporal con las nuevas dimensiones

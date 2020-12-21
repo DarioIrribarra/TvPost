@@ -15,4 +15,6 @@
     <style name="NormalTheme" parent="@android:style/Theme.Black.NoTitleBar">
         <item name="android:windowBackground">@android:color/white</item>
     </style>
+    <!--Id TvPost Facebook-->
+    <string name="facebook_app_id">390929331996534</string>
 </resources>
