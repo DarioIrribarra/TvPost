@@ -1,6 +1,5 @@
 import 'dart:convert';
 import 'dart:io';
-import 'dart:typed_data';
 import 'package:http/http.dart' as http;
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -9,8 +8,7 @@ import 'package:tvpost_flutter/utilidades/obtiene_datos_webservice.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:tvpost_flutter/utilidades/comunicacion_raspberry.dart';
-import 'package:esys_flutter_share/esys_flutter_share.dart';
-import 'package:network_image_to_byte/network_image_to_byte.dart';
+import 'package:flutter_social_content_share/flutter_social_content_share.dart';
 
 class PopUps {
   //Se crea popup de cargando
@@ -562,10 +560,7 @@ class BotonEnviarAEquipo extends StatelessWidget {
               F_ArchivoPorcion3: DatosEstaticos.nombreArchivoWidget3,
             );
 
-            //Acá se publica
-            if (this.publicar_rrss) {
-              PublicarEnRedesSociales();
-            }
+
 
             return Column(
               mainAxisSize: MainAxisSize.min,
@@ -573,15 +568,44 @@ class BotonEnviarAEquipo extends StatelessWidget {
                 Text('Ok, vea sus pantallas'),
                 RaisedButton(
                   child: Text('Aceptar'),
-                  onPressed: () {
-                    Navigator.of(context, rootNavigator: true).pop();
-                    Navigator.pushNamedAndRemoveUntil(
-                        context,
-                        '/detalle_equipo',
-                        ModalRoute.withName('/seleccionar_layout'),
-                        arguments: {
-                          "indexEquipoGrid": DatosEstaticos.indexSeleccionado,
-                        });
+                  onPressed: () async{
+                    //Acá se publica
+                    if (this.publicar_rrss) {
+                      String resultado = await PublicarEnRedesSociales();
+                      if (resultado != 'Success'){
+                        Widget contenidoPopUp = Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Text(
+                              'Error de publicación',
+                              textAlign: TextAlign.center,
+                              textScaleFactor: 1.3,
+                              style: TextStyle(fontWeight: FontWeight.bold),
+                            ),
+                            SizedBox(height: 10,),
+                            Text(
+                                'Instale, otorgue permisos y configure '
+                                    'Instagram para realizar una publicación',
+                              textAlign: TextAlign.center,
+
+                            ),
+                            SizedBox(height: 10,),
+                            RaisedButton(
+                              child: Text('Aceptar', textScaleFactor: 1.3,),
+                              onPressed: (){
+                                  Navigator.pop(context);
+                                  VolverADetalleEquipo(context);
+                              },
+                            ),
+                          ],
+                        );
+                        PopUps.PopUpConWidget(context, contenidoPopUp);
+                      } else {
+                        VolverADetalleEquipo(context);
+                      }
+                    }else{
+                      VolverADetalleEquipo(context);
+                    }
                   },
                 ),
               ],
@@ -660,28 +684,49 @@ class BotonEnviarAEquipo extends StatelessWidget {
     }
   }
 
-  void PublicarEnRedesSociales() async {
+  Future<String> PublicarEnRedesSociales() async {
     String nombreNuevaImagen;
+    String resultado = "";
     switch (this.publicar_porcion) {
       case 1:
         RegExp expresion = new RegExp('ImagenesPostTv\/(.+)');
         var match = expresion.firstMatch(DatosEstaticos.nombreArchivoWidget1);
         nombreNuevaImagen = match.group(1);
-        Uint8List byteImage = await networkImageToByte(
+        /*Uint8List byteImage = await networkImageToByte(
             "http://${DatosEstaticos.ipSeleccionada}/ImagenesPostTv/$nombreNuevaImagen");
         Share.file("Publicación TvPost Izquierda", "TvPost_Izquierda.png",
-            byteImage, "image/png");
+            byteImage, "image/png");*/
+        resultado = await FlutterSocialContentShare.share(
+            type: ShareType.instagramWithImageUrl,
+            imageUrl:
+            "http://${DatosEstaticos.ipSeleccionada}/ImagenesPostTv/$nombreNuevaImagen");
         break;
       case 2:
         RegExp expresion = new RegExp('ImagenesPostTv\/(.+)');
         var match = expresion.firstMatch(DatosEstaticos.nombreArchivoWidget2);
         nombreNuevaImagen = match.group(1);
-        Uint8List byteImage = await networkImageToByte(
+        /*Uint8List byteImage = await networkImageToByte(
             "http://${DatosEstaticos.ipSeleccionada}/ImagenesPostTv/$nombreNuevaImagen");
         Share.file("Publicación TvPost Derecha", "TvPost_Derecha.png",
-            byteImage, "image/png");
+            byteImage, "image/png");*/
+        resultado = await FlutterSocialContentShare.share(
+            type: ShareType.instagramWithImageUrl,
+            imageUrl:
+            "http://${DatosEstaticos.ipSeleccionada}/ImagenesPostTv/$nombreNuevaImagen");
         break;
     }
+    return resultado;
+  }
+
+  void VolverADetalleEquipo(BuildContext context) {
+    Navigator.of(context, rootNavigator: true).pop();
+    Navigator.pushNamedAndRemoveUntil(
+        context,
+        '/detalle_equipo',
+        ModalRoute.withName('/seleccionar_layout'),
+        arguments: {
+          "indexEquipoGrid": DatosEstaticos.indexSeleccionado,
+        });
   }
 }
 
