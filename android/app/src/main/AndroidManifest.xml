@@ -13,7 +13,7 @@
 
     <application
         android:name="io.flutter.app.FlutterApplication"
-        android:label="tvpost_flutter"
+        android:label="TvPost"
         android:usesCleartextTraffic="true"
         android:icon="@mipmap/ic_launcher"
         tools:targetApi="n">
