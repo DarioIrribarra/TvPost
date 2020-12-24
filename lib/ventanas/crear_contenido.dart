@@ -64,7 +64,7 @@ class _CrearContenidoState extends State<CrearContenido> {
   void dispose() {
     // TODO: implement dispose
     super.dispose();
-    if(this.mounted){
+    if (this.mounted) {
       controladorOferta.dispose();
       controller.dispose();
     }
@@ -74,29 +74,30 @@ class _CrearContenidoState extends State<CrearContenido> {
   Widget build(BuildContext context) {
     //Tomo los datos que vienen de la ventana anterior
     datosDesdeVentanaAnterior = ModalRoute.of(context).settings.arguments;
-    if (datosDesdeVentanaAnterior != null){
+    if (datosDesdeVentanaAnterior != null) {
       divisionLayout = datosDesdeVentanaAnterior['division_layout'];
-      if (divisionLayout.contains('-1')){
+      if (divisionLayout.contains('-1')) {
         anchoCanvas = MediaQuery.of(context).size.width;
-        altoCanvas = MediaQuery.of(context).size.height/4;
+        altoCanvas = MediaQuery.of(context).size.height / 4;
       }
-      if (divisionLayout.contains('2-')){
+      if (divisionLayout.contains('2-')) {
         anchoCanvas = MediaQuery.of(context).size.width;
-        altoCanvas = MediaQuery.of(context).size.height/2;
+        altoCanvas = MediaQuery.of(context).size.height / 2;
       }
-      if (divisionLayout.contains('3-2')){
-        anchoCanvas = MediaQuery.of(context).size.width/3;
-        altoCanvas = MediaQuery.of(context).size.height/2;
+      if (divisionLayout.contains('3-2')) {
+        anchoCanvas = MediaQuery.of(context).size.width / 3;
+        altoCanvas = MediaQuery.of(context).size.height / 2;
       }
-      if (divisionLayout.contains('-3')){
+      if (divisionLayout.contains('-3')) {
         anchoCanvas = MediaQuery.of(context).size.width;
-        altoCanvas = MediaQuery.of(context).size.height/8;
+        altoCanvas = MediaQuery.of(context).size.height / 8;
       }
     }
 
     final screen = MediaQuery.of(context).size;
 
     return Scaffold(
+      appBar: CustomAppBar(),
       body: Center(
         child: SingleChildScrollView(
           scrollDirection: Axis.vertical,
@@ -457,15 +458,15 @@ class _CrearContenidoState extends State<CrearContenido> {
                 ),
                 GestureDetector(
                     child: RaisedButton(
-                      onPressed: () {
-                        Navigator.of(context).pop();
-                      },
-                      child: Icon(
-                        Icons.check_circle,
-                        color: Colors.lightBlue,
-                      ),
-                      color: Colors.white,
-                    ))
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                  child: Icon(
+                    Icons.check_circle,
+                    color: Colors.lightBlue,
+                  ),
+                  color: Colors.white,
+                ))
               ],
             ),
           ),
@@ -561,13 +562,15 @@ class _CrearContenidoState extends State<CrearContenido> {
                 ),
                 RaisedButton(
                   onPressed: () {
-
-                    if (textoo!=null){
-                      if (textoo.isNotEmpty && textoo.trim().length > 0){
+                    if (textoo != null) {
+                      if (textoo.isNotEmpty && textoo.trim().length > 0) {
                         setState(() {
                           txt = Text(
                             textoo,
-                            style: DefaultTextStyle.of(context).style.apply(fontSizeFactor: 0.5, decoration: TextDecoration.none, color: colorTexto),
+                            style: DefaultTextStyle.of(context).style.apply(
+                                fontSizeFactor: 0.5,
+                                decoration: TextDecoration.none,
+                                color: colorTexto),
                           );
                           mockData.add(
                             EditableItem()
@@ -736,7 +739,8 @@ class _CrearContenidoState extends State<CrearContenido> {
                               style: TextStyle(
                                 color: pickerColorTexto,
                                 fontWeight: FontWeight.bold,
-                                fontSize: MediaQuery.of(context).size.height / 25,
+                                fontSize:
+                                    MediaQuery.of(context).size.height / 25,
                               ),
                             ),
                           ),
@@ -749,7 +753,8 @@ class _CrearContenidoState extends State<CrearContenido> {
                             "Fondo",
                             textScaleFactor: 1.5,
                             style: TextStyle(
-                                color: Colors.black, fontWeight: FontWeight.bold),
+                                color: Colors.black,
+                                fontWeight: FontWeight.bold),
                           ),
                           ColorPicker(
                             //Sin barra deslizadora de degradación
@@ -767,7 +772,8 @@ class _CrearContenidoState extends State<CrearContenido> {
                             "Oferta",
                             textScaleFactor: 1.5,
                             style: TextStyle(
-                                color: Colors.black, fontWeight: FontWeight.bold),
+                                color: Colors.black,
+                                fontWeight: FontWeight.bold),
                           ),
                           ColorPicker(
                             //Sin barra deslizadora de degradación
@@ -838,14 +844,19 @@ class _CrearContenidoState extends State<CrearContenido> {
 
   void onEmojiSelected(String emojiEscogido) {
     setState(
-          () {
+      () {
         this.emoji = emojiEscogido;
         Navigator.of(context).pop();
         temoji = this.emoji;
         mockData.add(
           EditableItem()
             ..type = ItemType.Text
-            ..value = Text(temoji, style: DefaultTextStyle.of(context).style.apply(fontSizeFactor: 1.5, decoration: TextDecoration.none),),
+            ..value = Text(
+              temoji,
+              style: DefaultTextStyle.of(context)
+                  .style
+                  .apply(fontSizeFactor: 1.5, decoration: TextDecoration.none),
+            ),
         );
       },
     );
@@ -895,76 +906,84 @@ class _CrearContenidoState extends State<CrearContenido> {
 
     await showDialog<String>(
       context: context,
-      child: AnimacionPadding(child: new AlertDialog(
-        content: Form(
-          key: _keyValidadorTxtImagen,
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Container(
-                child: Image.memory(
-                  imagenEnBytes,
-                  width: MediaQuery.of(context).size.width-10,
-                  height:MediaQuery.of(context).size.height/4,
+      child: AnimacionPadding(
+        child: new AlertDialog(
+          content: Form(
+            key: _keyValidadorTxtImagen,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Container(
+                  child: Image.memory(
+                    imagenEnBytes,
+                    width: MediaQuery.of(context).size.width - 10,
+                    height: MediaQuery.of(context).size.height / 4,
+                  ),
                 ),
-              ),
-              Center(
-                child: TextFormField(
-                  textAlign: TextAlign.center,
-                  validator: (textoEscrito){
-                    if(textoEscrito.isEmpty){
-                      return "Error: Nombre de imagen vacío";
-                    }
-                    if(textoEscrito.trim().length<= 0){
-                      return "Error: Nombre de imagen vacío";
-                    }
-                    else {
-                      nombreNuevaImagen = textoEscrito.trim()
-                          .toString() + '.png';
-                      //Chequear si el valor ya existe
-                      if (DatosEstaticos.listadoNombresImagenes.contains(
-                          nombreNuevaImagen)){
-                        return "Error: Nombre de imagen ya existe";
+                Center(
+                  child: TextFormField(
+                    textAlign: TextAlign.center,
+                    validator: (textoEscrito) {
+                      if (textoEscrito.isEmpty) {
+                        return "Error: Nombre de imagen vacío";
+                      }
+                      if (textoEscrito.trim().length <= 0) {
+                        return "Error: Nombre de imagen vacío";
                       } else {
-                        return null;
+                        nombreNuevaImagen =
+                            textoEscrito.trim().toString() + '.png';
+                        //Chequear si el valor ya existe
+                        if (DatosEstaticos.listadoNombresImagenes
+                            .contains(nombreNuevaImagen)) {
+                          return "Error: Nombre de imagen ya existe";
+                        } else {
+                          return null;
+                        }
+                      }
+                    },
+                  ),
+                ),
+                RaisedButton(
+                  child: Text('Añadir'),
+                  autofocus: true,
+                  onPressed: () async {
+                    if (_keyValidadorTxtImagen.currentState.validate()) {
+                      //Se abre el popup de cargando
+                      PopUps.popUpCargando(context, 'Añadiendo imagen...');
+
+                      //Se crea el archivo final del tamaño modificado
+                      File temporal =
+                          await Utils.crearArchivoTemporalRedimensionado(
+                              imagenEnBytes);
+
+                      //Obtengo el resultado del envio
+                      var resultado =
+                          await PopUps.enviarImagen(nombreNuevaImagen, temporal)
+                              .then((value) => value);
+
+                      if (resultado) {
+                        //Si el envío es correcto, se redirecciona
+                        Image imagen = Image.network(
+                            "http://${DatosEstaticos.ipSeleccionada}/ImagenesPostTv/$nombreNuevaImagen");
+                        RedireccionarCrearLayout(
+                            imagen,
+                            "/var/www/html/ImagenesPostTv/$nombreNuevaImagen",
+                            true);
+                      } else {
+                        //Cierra popup cargando
+                        Navigator.of(context, rootNavigator: true).pop();
+
+                        PopUps.PopUpConWidget(
+                            context, Text('Error al enviar imagen'));
                       }
                     }
                   },
                 ),
-              ),
-              RaisedButton(
-                child: Text('Añadir'),
-                autofocus: true,
-                onPressed: () async {
-                  if(_keyValidadorTxtImagen.currentState.validate()){
-                    //Se abre el popup de cargando
-                    PopUps.popUpCargando(context, 'Añadiendo imagen...');
-
-                    //Se crea el archivo final del tamaño modificado
-                    File temporal = await Utils.crearArchivoTemporalRedimensionado(imagenEnBytes);
-
-                    //Obtengo el resultado del envio
-                    var resultado = await PopUps.enviarImagen(nombreNuevaImagen,
-                        temporal).then((value) => value);
-
-                    if(resultado){
-                      //Si el envío es correcto, se redirecciona
-                      Image imagen = Image.network("http://${DatosEstaticos.ipSeleccionada}/ImagenesPostTv/$nombreNuevaImagen");
-                      RedireccionarCrearLayout(imagen, "/var/www/html/ImagenesPostTv/$nombreNuevaImagen",true);
-                    }else{
-                      //Cierra popup cargando
-                      Navigator.of(context, rootNavigator: true).pop();
-
-                      PopUps.PopUpConWidget(context, Text('Error al enviar imagen'));
-                    }
-
-                  }
-                },
-              ),
-            ],
+              ],
+            ),
           ),
         ),
-      ),),
+      ),
     );
 
     /*Widget widget =
@@ -1041,12 +1060,12 @@ class _CrearContenidoState extends State<CrearContenido> {
       ),
     );
     PopUps.PopUpConWidget(context, widget);*/
-
   }
 
   // ignore: non_constant_identifier_names
-  Future<void> RedireccionarCrearLayout(Widget imagen, String nombre,bool vieneDePopUp) async {
-    if (vieneDePopUp){
+  Future<void> RedireccionarCrearLayout(
+      Widget imagen, String nombre, bool vieneDePopUp) async {
+    if (vieneDePopUp) {
       //Cierra popup cargando
       Navigator.of(context, rootNavigator: true).pop();
       //Cierra popup imagen
@@ -1058,43 +1077,49 @@ class _CrearContenidoState extends State<CrearContenido> {
     DatosEstaticos.webViewControllerWidget3 = null;
 
     //Se asigna además que porcion del layout se reemplazará
-    switch(divisionLayout){
-      case '1-1': {
-        DatosEstaticos.widget1 = imagen;
-        DatosEstaticos.nombreArchivoWidget1 = nombre;
-        DatosEstaticos.reemplazarPorcion1 = true;
-      }
-      break;
-      case '2-1': {
-        DatosEstaticos.widget1 = imagen;
-        DatosEstaticos.nombreArchivoWidget1 = nombre;
-        DatosEstaticos.reemplazarPorcion1 = true;
-      }
-      break;
-      case '2-2': {
-        DatosEstaticos.widget2 = imagen;
-        DatosEstaticos.nombreArchivoWidget2 = nombre;
-        DatosEstaticos.reemplazarPorcion2 = true;
-      }
-      break;
-      case '3-1': {
-        DatosEstaticos.widget1 = imagen;
-        DatosEstaticos.nombreArchivoWidget1 = nombre;
-        DatosEstaticos.reemplazarPorcion1 = true;
-      }
-      break;
-      case '3-2': {
-        DatosEstaticos.widget2 = imagen;
-        DatosEstaticos.nombreArchivoWidget2 = nombre;
-        DatosEstaticos.reemplazarPorcion2 = true;
-      }
-      break;
-      case '3-3': {
-        DatosEstaticos.widget3 = imagen;
-        DatosEstaticos.nombreArchivoWidget3 = nombre;
-        DatosEstaticos.reemplazarPorcion3 = true;
-      }
-      break;
+    switch (divisionLayout) {
+      case '1-1':
+        {
+          DatosEstaticos.widget1 = imagen;
+          DatosEstaticos.nombreArchivoWidget1 = nombre;
+          DatosEstaticos.reemplazarPorcion1 = true;
+        }
+        break;
+      case '2-1':
+        {
+          DatosEstaticos.widget1 = imagen;
+          DatosEstaticos.nombreArchivoWidget1 = nombre;
+          DatosEstaticos.reemplazarPorcion1 = true;
+        }
+        break;
+      case '2-2':
+        {
+          DatosEstaticos.widget2 = imagen;
+          DatosEstaticos.nombreArchivoWidget2 = nombre;
+          DatosEstaticos.reemplazarPorcion2 = true;
+        }
+        break;
+      case '3-1':
+        {
+          DatosEstaticos.widget1 = imagen;
+          DatosEstaticos.nombreArchivoWidget1 = nombre;
+          DatosEstaticos.reemplazarPorcion1 = true;
+        }
+        break;
+      case '3-2':
+        {
+          DatosEstaticos.widget2 = imagen;
+          DatosEstaticos.nombreArchivoWidget2 = nombre;
+          DatosEstaticos.reemplazarPorcion2 = true;
+        }
+        break;
+      case '3-3':
+        {
+          DatosEstaticos.widget3 = imagen;
+          DatosEstaticos.nombreArchivoWidget3 = nombre;
+          DatosEstaticos.reemplazarPorcion3 = true;
+        }
+        break;
     }
     //Eliminar archivos temporales
     Directory dir = await getTemporaryDirectory();

@@ -113,20 +113,29 @@ class CustomAppBar extends PreferredSize {
   Widget build(BuildContext context) {
     return AppBar(
       actions: [
-        Row(
-          children: [
-            Container(
-              padding: EdgeInsets.all(5.0),
-              margin: EdgeInsets.only(right: 30.0),
-              child: Image.asset('imagenes/logohorizontal.png'),
-            ),
-            IconButton(
-              icon: Icon(
-                Icons.menu,
+        Container(
+          decoration: new BoxDecoration(
+              borderRadius: BorderRadius.circular(20),
+              gradient: LinearGradient(
+                  colors: [HexColor("#0683ff"), HexColor("#3edb9b")],
+                  stops: [0.5, 1],
+                  begin: Alignment.centerLeft,
+                  end: FractionalOffset.centerRight)),
+          child: Row(
+            children: [
+              Container(
+                padding: EdgeInsets.all(10.0),
+                margin: EdgeInsets.only(right: 30.0),
+                child: Image.asset('imagenes/logohorizontal.png'),
               ),
-              onPressed: () {},
-            ),
-          ],
+              IconButton(
+                icon: Icon(
+                  Icons.menu,
+                ),
+                onPressed: () {},
+              ),
+            ],
+          ),
         ),
       ],
     );
@@ -253,60 +262,60 @@ class _OpcionesSeleccionMediaState extends State<OpcionesSeleccionMedia> {
   contenidoPopUpSeleccionUrl() async {
     GlobalKey<FormState> _keyValidador = GlobalKey<FormState>();
     await showDialog<String>(
-        context: context,
-        child: StatefulBuilder(builder: (context, setState) {
-          return AnimacionPadding(
-            child: new AlertDialog(
-              content: SingleChildScrollView(
-                child: Card(
-                  child: Form(
-                    key: _keyValidador,
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        TextFormField(
-                          controller: controladorTextoUrl,
-                          decoration: InputDecoration(
-                            suffixIcon: IconButton(
-                              icon: Icon(Icons.search),
-                              onPressed: () {
-                                _abrirBuscador();
-                              },
-                            ),
+      context: context,
+      child: StatefulBuilder(builder: (context, setState) {
+        return AnimacionPadding(
+          child: new AlertDialog(
+            content: SingleChildScrollView(
+              child: Card(
+                child: Form(
+                  key: _keyValidador,
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      TextFormField(
+                        controller: controladorTextoUrl,
+                        decoration: InputDecoration(
+                          suffixIcon: IconButton(
+                            icon: Icon(Icons.search),
+                            onPressed: () {
+                              _abrirBuscador();
+                            },
                           ),
-                          validator: (urlEscrita) {
-                            if (urlEscrita.isEmpty) {
-                              return 'Ingrese un enlace web';
-                            }
-                            if (urlEscrita.trim().length <= 0) {
-                              return 'Ingrese un enlace web';
-                            }
-                            return null;
-                          },
                         ),
-                        RaisedButton(
-                          child: Text('Ingresar enlace'),
-                          onPressed: () {
-                            if (_keyValidador.currentState.validate()) {
-                              //Crea webvbiew
-                              crearWebView(
-                                  controladorTextoUrl.text.toString().trim());
-                              //Cierra popup cargando
-                              Navigator.of(context, rootNavigator: true).pop();
+                        validator: (urlEscrita) {
+                          if (urlEscrita.isEmpty) {
+                            return 'Ingrese un enlace web';
+                          }
+                          if (urlEscrita.trim().length <= 0) {
+                            return 'Ingrese un enlace web';
+                          }
+                          return null;
+                        },
+                      ),
+                      RaisedButton(
+                        child: Text('Ingresar enlace'),
+                        onPressed: () {
+                          if (_keyValidador.currentState.validate()) {
+                            //Crea webvbiew
+                            crearWebView(
+                                controladorTextoUrl.text.toString().trim());
+                            //Cierra popup cargando
+                            Navigator.of(context, rootNavigator: true).pop();
 
-                              widget.actualizaEstado();
-                            }
-                          },
-                        ),
-                      ],
-                    ),
+                            widget.actualizaEstado();
+                          }
+                        },
+                      ),
+                    ],
                   ),
                 ),
               ),
             ),
-          );
-        }),
+          ),
+        );
+      }),
     );
   }
 
@@ -545,22 +554,22 @@ class BotonEnviarAEquipo extends StatelessWidget {
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.done) {
           if (snapshot.data != null) {
-
             //Actualiza datos en bd
             ObtieneDatos obtencionDatos = ObtieneDatos();
             obtencionDatos.updateDatosMediaEquipo(
               serial: DatosEstaticos.listadoDatosEquipoSeleccionado[0]
-              ['f_serial'],
+                  ['f_serial'],
               f_layoutActual: DatosEstaticos.layoutSeleccionado.toString(),
-              F_TipoArchivoPorcion1: DatosEstaticos.widget1.runtimeType.toString(),
-              F_TipoArchivoPorcion2: DatosEstaticos.widget2.runtimeType.toString(),
-              F_TipoArchivoPorcion3: DatosEstaticos.widget3.runtimeType.toString(),
+              F_TipoArchivoPorcion1:
+                  DatosEstaticos.widget1.runtimeType.toString(),
+              F_TipoArchivoPorcion2:
+                  DatosEstaticos.widget2.runtimeType.toString(),
+              F_TipoArchivoPorcion3:
+                  DatosEstaticos.widget3.runtimeType.toString(),
               F_ArchivoPorcion1: DatosEstaticos.nombreArchivoWidget1,
               F_ArchivoPorcion2: DatosEstaticos.nombreArchivoWidget2,
               F_ArchivoPorcion3: DatosEstaticos.nombreArchivoWidget3,
             );
-
-
 
             return Column(
               mainAxisSize: MainAxisSize.min,
@@ -568,11 +577,11 @@ class BotonEnviarAEquipo extends StatelessWidget {
                 Text('Ok, vea sus pantallas'),
                 RaisedButton(
                   child: Text('Aceptar'),
-                  onPressed: () async{
+                  onPressed: () async {
                     //Acá se publica
                     if (this.publicar_rrss) {
                       String resultado = await PublicarEnRedesSociales();
-                      if (resultado != 'Success'){
+                      if (resultado != 'Success') {
                         Widget contenidoPopUp = Column(
                           mainAxisSize: MainAxisSize.min,
                           children: [
@@ -582,19 +591,25 @@ class BotonEnviarAEquipo extends StatelessWidget {
                               textScaleFactor: 1.3,
                               style: TextStyle(fontWeight: FontWeight.bold),
                             ),
-                            SizedBox(height: 10,),
-                            Text(
-                                'Instale, otorgue permisos y configure '
-                                    'Instagram para realizar una publicación',
-                              textAlign: TextAlign.center,
-
+                            SizedBox(
+                              height: 10,
                             ),
-                            SizedBox(height: 10,),
+                            Text(
+                              'Instale, otorgue permisos y configure '
+                              'Instagram para realizar una publicación',
+                              textAlign: TextAlign.center,
+                            ),
+                            SizedBox(
+                              height: 10,
+                            ),
                             RaisedButton(
-                              child: Text('Aceptar', textScaleFactor: 1.3,),
-                              onPressed: (){
-                                  Navigator.pop(context);
-                                  VolverADetalleEquipo(context);
+                              child: Text(
+                                'Aceptar',
+                                textScaleFactor: 1.3,
+                              ),
+                              onPressed: () {
+                                Navigator.pop(context);
+                                VolverADetalleEquipo(context);
                               },
                             ),
                           ],
@@ -603,7 +618,7 @@ class BotonEnviarAEquipo extends StatelessWidget {
                       } else {
                         VolverADetalleEquipo(context);
                       }
-                    }else{
+                    } else {
                       VolverADetalleEquipo(context);
                     }
                   },
@@ -699,7 +714,7 @@ class BotonEnviarAEquipo extends StatelessWidget {
         resultado = await FlutterSocialContentShare.share(
             type: ShareType.instagramWithImageUrl,
             imageUrl:
-            "http://${DatosEstaticos.ipSeleccionada}/ImagenesPostTv/$nombreNuevaImagen");
+                "http://${DatosEstaticos.ipSeleccionada}/ImagenesPostTv/$nombreNuevaImagen");
         break;
       case 2:
         RegExp expresion = new RegExp('ImagenesPostTv\/(.+)');
@@ -712,7 +727,7 @@ class BotonEnviarAEquipo extends StatelessWidget {
         resultado = await FlutterSocialContentShare.share(
             type: ShareType.instagramWithImageUrl,
             imageUrl:
-            "http://${DatosEstaticos.ipSeleccionada}/ImagenesPostTv/$nombreNuevaImagen");
+                "http://${DatosEstaticos.ipSeleccionada}/ImagenesPostTv/$nombreNuevaImagen");
         break;
     }
     return resultado;
@@ -721,9 +736,7 @@ class BotonEnviarAEquipo extends StatelessWidget {
   void VolverADetalleEquipo(BuildContext context) {
     Navigator.of(context, rootNavigator: true).pop();
     Navigator.pushNamedAndRemoveUntil(
-        context,
-        '/detalle_equipo',
-        ModalRoute.withName('/seleccionar_layout'),
+        context, '/detalle_equipo', ModalRoute.withName('/seleccionar_layout'),
         arguments: {
           "indexEquipoGrid": DatosEstaticos.indexSeleccionado,
         });

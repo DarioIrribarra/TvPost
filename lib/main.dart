@@ -11,7 +11,6 @@ import 'package:tvpost_flutter/ventanas/seleccionar_layout.dart';
 import 'package:tvpost_flutter/ventanas/seleccionar_video.dart';
 import 'package:tvpost_flutter/ventanas/crear_contenido.dart';
 
-
 Future<void> main() async {
   //Se ejecuta el método de carga de shared preferences antes de que
   // inicie la app
@@ -19,6 +18,7 @@ Future<void> main() async {
   await shared_preferences_tvPost.CargarSharedPreferences();
   //Inicia la app
   runApp(MaterialApp(
+    theme: ThemeData(fontFamily: 'tituloAxis'),
     //Rutas para navegar en las páginas
     routes: {
       '/': (context) => Login(),
