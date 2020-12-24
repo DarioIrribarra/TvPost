@@ -38,7 +38,6 @@ android {
         targetSdkVersion 28
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
-        multiDexEnabled true // ADD THIS LINE
     }
 
     buildTypes {
@@ -53,3 +52,7 @@ android {
 flutter {
     source '../..'
 }
+
+/*dependencies {
+    implementation 'com.facebook.android:facebook-android-sdk:[5,6)'
+}*/
