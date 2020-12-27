@@ -40,7 +40,6 @@ class _LoginState extends State<Login> {
       body: Container(
         height: double.infinity,
         decoration: new BoxDecoration(
-            borderRadius: BorderRadius.circular(20),
             gradient: LinearGradient(
                 colors: [HexColor("#3edb9b"), HexColor("#0683ff")],
                 stops: [0.5, 1],
@@ -54,13 +53,14 @@ class _LoginState extends State<Login> {
                 margin: EdgeInsets.fromLTRB(40.0, 100.0, 40.0, 0),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
                     SizedBox(
                       height: 40,
                     ),
                     Container(
-                      width: 150,
-                      height: 150,
+                      width: 135,
+                      height: 135,
                       child: Image.asset(
                         'imagenes/logovertical.png',
                       ),
@@ -69,43 +69,47 @@ class _LoginState extends State<Login> {
                       height: 45,
                     ),
                     Container(
-                      height: 40,
-                      margin: EdgeInsets.fromLTRB(26.0, 0, 26.0, 0),
+                      height: 33.5,
+                      margin: EdgeInsets.fromLTRB(18, 0, 18, 0),
                       decoration: new BoxDecoration(
                           borderRadius: BorderRadius.circular(45),
                           color: Colors.white),
                       child: new Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
                         //crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Expanded(
-                            flex: 1,
+                            flex: 2,
                             child: Text(
                               "RUT EMPRESA",
                               textAlign: TextAlign.right,
                             ),
                           ),
                           Expanded(
-                            flex: 1,
-                            child: new TextFormField(
-                              style: TextStyle(fontFamily: 'textoMont'),
-                              textAlign: TextAlign.center,
-                              initialValue: rutEmpresa,
-                              decoration: InputDecoration(
-                                //   labelText: 'Rut Empresa',
-                                /*contentPadding: EdgeInsets.only(
-                                  top: 3, bottom: 3, left: 15, right: 3),*/
-                                hintText: 'Rut Empresa (sin puntos ni guión)',
-                                //labelStyle: TextStyle(color: Colors.white),
-                                /*enabledBorder: new UnderlineInputBorder(
-                                          borderSide: new BorderSide(
-                                      color: Colors.transparent)
-                                          )*/
+                            flex: 3,
+                            child: Container(
+                              padding: EdgeInsets.only(
+                                  bottom: 9, left: 15, right: 15),
+                              child: new TextFormField(
+                                style: TextStyle(
+                                    fontFamily: 'textoMont',
+                                    fontSize: 12,
+                                    color: Colors.black),
+                                textAlign: TextAlign.center,
+                                initialValue: rutEmpresa,
+                                decoration: InputDecoration(
+                                    errorStyle: TextStyle(height: 2),
+                                    //   labelText: 'Rut Empresa',
+                                    //hintText:'Rut Empresa (sin puntos ni guión)',
+                                    //labelStyle: TextStyle(color: Colors.white),
+                                    enabledBorder: new UnderlineInputBorder(
+                                        borderSide: new BorderSide(
+                                            color: HexColor('#bdbdbd')))),
+                                onChanged: (texto) {
+                                  rutEmpresa = texto;
+                                },
+                                validator: (texto) => validaRutEmpresa,
                               ),
-                              onChanged: (texto) {
-                                rutEmpresa = texto;
-                              },
-                              validator: (texto) => validaRutEmpresa,
                             ),
                           )
                         ],
@@ -115,35 +119,42 @@ class _LoginState extends State<Login> {
                       height: 15,
                     ),
                     Container(
-                      height: 40,
-                      margin: EdgeInsets.fromLTRB(26.0, 0, 26.0, 0),
+                      height: 33.5,
+                      margin: EdgeInsets.fromLTRB(18, 0, 18, 0),
                       decoration: new BoxDecoration(
                           borderRadius: BorderRadius.circular(45),
                           color: Colors.white),
                       child: Row(children: [
                         Expanded(
+                            flex: 2,
                             child: Text(
-                          "USUARIO",
-                          textAlign: TextAlign.right,
-                        )),
+                              "USUARIO",
+                              textAlign: TextAlign.right,
+                            )),
                         Expanded(
-                          child: TextFormField(
-                            style: TextStyle(fontFamily: 'textoMont'),
-                            textAlign: TextAlign.center,
-                            decoration: InputDecoration(
-                                contentPadding: EdgeInsets.only(
-                                    top: 3, bottom: 3, left: 15, right: 3),
-                                hintText: 'Nombre de usuario',
-                                labelStyle: TextStyle(color: Colors.white),
-                                enabledBorder: new UnderlineInputBorder(
-                                    borderSide: new BorderSide(
-                                        color: Colors.transparent))),
-                            //Se asigna lo que se escribe a la variable
-                            initialValue: nombreUsuario,
-                            onChanged: (texto) {
-                              nombreUsuario = texto;
-                            },
-                            validator: (texto) => validaNombreUsuario,
+                          flex: 3,
+                          child: Container(
+                            padding:
+                                EdgeInsets.only(bottom: 9, left: 15, right: 15),
+                            child: TextFormField(
+                              style: TextStyle(
+                                  fontFamily: 'textoMont',
+                                  fontSize: 12,
+                                  color: Colors.black),
+                              textAlign: TextAlign.center,
+                              decoration: InputDecoration(
+                                  errorStyle: TextStyle(height: 2),
+                                  // hintText: 'Nombre de usuario',
+                                  enabledBorder: new UnderlineInputBorder(
+                                      borderSide: new BorderSide(
+                                          color: HexColor('#bdbdbd')))),
+                              //Se asigna lo que se escribe a la variable
+                              initialValue: nombreUsuario,
+                              onChanged: (texto) {
+                                nombreUsuario = texto;
+                              },
+                              validator: (texto) => validaNombreUsuario,
+                            ),
                           ),
                         )
                       ]),
@@ -152,36 +163,42 @@ class _LoginState extends State<Login> {
                       height: 15,
                     ),
                     Container(
-                      height: 40,
-                      margin: EdgeInsets.fromLTRB(26.0, 0, 26.0, 0),
+                      height: 33.5,
+                      margin: EdgeInsets.fromLTRB(18, 0, 18, 0),
                       decoration: new BoxDecoration(
                           borderRadius: BorderRadius.circular(45),
                           color: Colors.white),
                       child: Row(children: [
                         Expanded(
+                            flex: 2,
                             child: Text(
-                          "CONTRASEÑA",
-                          textAlign: TextAlign.right,
-                        )),
+                              "CONTRASEÑA",
+                              textAlign: TextAlign.right,
+                            )),
                         Expanded(
-                          flex: 1,
-                          child: TextFormField(
-                            style: TextStyle(fontFamily: 'textoMont'),
-                            textAlign: TextAlign.center,
-                            obscureText: true,
-                            decoration: InputDecoration(
-                                contentPadding: EdgeInsets.only(
-                                    top: 3, bottom: 3, left: 15, right: 3),
-                                hintText: 'Contraseña',
-                                labelStyle: TextStyle(color: Colors.white),
-                                enabledBorder: new UnderlineInputBorder(
-                                    borderSide: new BorderSide(
-                                        color: Colors.transparent))),
-                            initialValue: password,
-                            onChanged: (texto) {
-                              password = texto;
-                            },
-                            validator: (password) => validaPasword,
+                          flex: 3,
+                          child: Container(
+                            padding:
+                                EdgeInsets.only(bottom: 9, left: 15, right: 15),
+                            child: TextFormField(
+                              style: TextStyle(
+                                  fontFamily: 'textoMont',
+                                  fontSize: 12,
+                                  color: Colors.black),
+                              textAlign: TextAlign.center,
+                              obscureText: true,
+                              decoration: InputDecoration(
+                                  errorStyle: TextStyle(height: 2),
+                                  //hintText: 'Contraseña',
+                                  enabledBorder: new UnderlineInputBorder(
+                                      borderSide: new BorderSide(
+                                          color: HexColor('#bdbdbd')))),
+                              initialValue: password,
+                              onChanged: (texto) {
+                                password = texto;
+                              },
+                              validator: (password) => validaPasword,
+                            ),
                           ),
                         ),
                       ]),
@@ -191,7 +208,7 @@ class _LoginState extends State<Login> {
                     ),
                     Container(
                       height: 50,
-                      margin: EdgeInsets.fromLTRB(26.0, 0, 26.0, 0),
+                      margin: EdgeInsets.fromLTRB(18.0, 0, 18.0, 0),
                       child: RaisedButton(
                           color: HexColor('#0683FF'),
                           shape: RoundedRectangleBorder(

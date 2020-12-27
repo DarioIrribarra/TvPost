@@ -4,10 +4,12 @@ import 'package:http/http.dart';
 import 'package:tvpost_flutter/utilidades/datos_estaticos.dart';
 
 class ObtieneDatos {
-
-  String rutEmpresaDevuelto = "Error: Ingrese rut empresa";
+  /* String rutEmpresaDevuelto = "Error: Ingrese rut empresa";
   String nombreUsuarioDevuelto = "Error: Ingrese nombre usuario";
-  String passwordDevuelto = "Error: Ingrese contraseña";
+  String passwordDevuelto = "Error: Ingrese contraseña";*/
+  String rutEmpresaDevuelto = "Error";
+  String nombreUsuarioDevuelto = "Error";
+  String passwordDevuelto = "Error";
   Response responseEmpresa;
   Response responseUsuario;
   static List<dynamic> listadoUsuarios;
@@ -16,10 +18,10 @@ class ObtieneDatos {
 
   /// Obtiene los datos completos de la empresa
   Future<void> getDatosEmpresa(String rutEmpresa) async {
-    if (rutEmpresa == null){
+    if (rutEmpresa == null) {
       return;
     }
-    if (rutEmpresa.trim().length<8 || rutEmpresa.trim().isEmpty){
+    if (rutEmpresa.trim().length < 8 || rutEmpresa.trim().isEmpty) {
       return;
     }
     responseEmpresa = await get(
@@ -28,40 +30,41 @@ class ObtieneDatos {
 
   /// Obtiene los datos completos del usuario
   Future<void> getDatosUsuario(String nombreUsuario) async {
-    if (nombreUsuario == null){
+    if (nombreUsuario == null) {
       return;
     }
-    if (nombreUsuario.length<1){
+    if (nombreUsuario.length < 1) {
       return;
     }
     responseUsuario = await get(
         'http://drioxmaster.cl/resttvpost/listarUsuarios.php?id_usuario=$nombreUsuario');
   }
 
-  Future<void> getDatosEquipos() async{
-    if(DatosEstaticos.rutEmpresa == null){
+  Future<void> getDatosEquipos() async {
+    if (DatosEstaticos.rutEmpresa == null) {
       return;
     }
     String rut = DatosEstaticos.rutEmpresa;
     Response responseEquipos = await get('http://drioxmaster.cl/resttvpost/'
         'filtrarEquipoEmpresa.php?f_rut_empresa=$rut');
 
-    try{
+    try {
       listadoEquipos = jsonDecode(responseEquipos.body);
-    } catch(e){
+    } catch (e) {
       return;
     }
   }
 
-  Future<String> updateAliasEquipo(String serial, String alias) async{
-    if (serial==null || alias == null){
+  Future<String> updateAliasEquipo(String serial, String alias) async {
+    if (serial == null || alias == null) {
       return "Error al actualizar alias: campos no pueden estar vacíos";
     }
 
-    try{
-      await post('http://drioxmaster.cl/'
+    try {
+      await post(
+          'http://drioxmaster.cl/'
           'resttvpost/updateAlias.php',
-          body: {'f_serial':'$serial', 'f_alias':'$alias'});
+          body: {'f_serial': '$serial', 'f_alias': '$alias'});
       //print(responseUpdateEquipo.body);
       return "listo";
     } catch (e) {
@@ -71,8 +74,7 @@ class ObtieneDatos {
   }
 
   Future<void> updateDatosMediaEquipo({
-    @required
-    String serial,
+    @required String serial,
     String f_layoutActual = "1",
     String F_TipoArchivoPorcion1 = "0",
     String F_TipoArchivoPorcion2 = "0",
@@ -80,24 +82,25 @@ class ObtieneDatos {
     String F_ArchivoPorcion1 = "0",
     String F_ArchivoPorcion2 = "0",
     String F_ArchivoPorcion3 = "0",
-  }) async{
+  }) async {
     /*if (serial==null){
       return "Error al actualizar equipos: campos no pueden estar vacíos";
     }*/
 
-    try{
-      await post('http://drioxmaster.cl/'
+    try {
+      await post(
+          'http://drioxmaster.cl/'
           'resttvpost/updateArchivosMediaEquipo.php',
           body: {
-        'f_serial':'$serial',
-        'f_layoutActual':'$f_layoutActual',
-        'F_TipoArchivoPorcion1':'$F_TipoArchivoPorcion1',
-        'F_TipoArchivoPorcion2':'$F_TipoArchivoPorcion2',
-        'F_TipoArchivoPorcion3':'$F_TipoArchivoPorcion3',
-        'F_ArchivoPorcion1':'$F_ArchivoPorcion1',
-        'F_ArchivoPorcion2':'$F_ArchivoPorcion2',
-        'F_ArchivoPorcion3':'$F_ArchivoPorcion3',
-      });
+            'f_serial': '$serial',
+            'f_layoutActual': '$f_layoutActual',
+            'F_TipoArchivoPorcion1': '$F_TipoArchivoPorcion1',
+            'F_TipoArchivoPorcion2': '$F_TipoArchivoPorcion2',
+            'F_TipoArchivoPorcion3': '$F_TipoArchivoPorcion3',
+            'F_ArchivoPorcion1': '$F_ArchivoPorcion1',
+            'F_ArchivoPorcion2': '$F_ArchivoPorcion2',
+            'F_ArchivoPorcion3': '$F_ArchivoPorcion3',
+          });
       //return "Actualización finalizada";
 
     } catch (e) {
@@ -108,25 +111,22 @@ class ObtieneDatos {
   }
 
   Future<int> updateEstadoEquipo({
-    @required
-    String serial,
-    @required
-    String estado,
+    @required String serial,
+    @required String estado,
     Response resultado,
-  }) async{
-
-    try{
-      resultado = await post('http://drioxmaster.cl/'
+  }) async {
+    try {
+      resultado = await post(
+          'http://drioxmaster.cl/'
           'resttvpost/updateEstadoEquipo.php',
           body: {
-            'f_serial':'$serial',
+            'f_serial': '$serial',
             'f_equipoActivo': '$estado',
           });
 
-      if (resultado.reasonPhrase == 'OK'){
+      if (resultado.reasonPhrase == 'OK') {
         return 1;
       }
-
     } catch (e) {
       print("Error: ${e.toString()}");
       //return "Error al actualizar alias: error de conexión";
@@ -136,106 +136,119 @@ class ObtieneDatos {
 
   ///Obtiene el rut de la empresa en base a la respuesta de la llamada de
   ///getDatosEmpresa y lo valida
-  Future<void> ValidaRutEmpresa() async{
-    if (responseEmpresa==null){
-      rutEmpresaDevuelto = "Error: Rut de empresa incorrecto";
+  Future<void> ValidaRutEmpresa() async {
+    if (responseEmpresa == null) {
+      //rutEmpresaDevuelto = "Error: Rut de empresa incorrecto";
+      rutEmpresaDevuelto = "Error";
       return;
     }
     //Asigna valor obtenido a variable para ser consultada en la validación
-    try{
-      listadoEmpresa= jsonDecode(responseEmpresa.body);
+    try {
+      listadoEmpresa = jsonDecode(responseEmpresa.body);
       rutEmpresaDevuelto = jsonDecode(responseEmpresa.body)[0]['f_rut'];
-      String rutEmpresaActiva = jsonDecode(
-          responseEmpresa.body)[0]['f_activa'].toString();
-      if (rutEmpresaActiva == '0'){
-        rutEmpresaDevuelto = "Error: Rut de empresa inactivo";
-      }else if(rutEmpresaDevuelto!=null){
+      String rutEmpresaActiva =
+          jsonDecode(responseEmpresa.body)[0]['f_activa'].toString();
+      if (rutEmpresaActiva == '0') {
+        //rutEmpresaDevuelto = "Error: Rut de empresa inactivo";
+        rutEmpresaDevuelto = "Error";
+      } else if (rutEmpresaDevuelto != null) {
         //Se asigna la variable estática
         DatosEstaticos.rutEmpresa = rutEmpresaDevuelto;
         //Null para que pase la validación
         rutEmpresaDevuelto = null;
       }
-    } catch(e){
+    } catch (e) {
       //Error para mostrar en el textfield
-      rutEmpresaDevuelto = "Error: Empresa no existe en base de datos";
+      //rutEmpresaDevuelto = "Error: Empresa no existe en base de datos";
+      rutEmpresaDevuelto = "Error";
       return;
     }
   }
 
-  Future<void> ValidaNombreUsuario() async{
-    if (responseUsuario==null){
-      nombreUsuarioDevuelto = "Error: Nombre de usuario incorrecto";
+  Future<void> ValidaNombreUsuario() async {
+    if (responseUsuario == null) {
+      //nombreUsuarioDevuelto = "Error: Nombre de usuario incorrecto";
+      nombreUsuarioDevuelto = "Error";
       return;
     }
-    try{
-      if (DatosEstaticos.rutEmpresa == null) {return;}
+    try {
+      if (DatosEstaticos.rutEmpresa == null) {
+        return;
+      }
       //ForEach para iterar por cada usuario que se obtenga
-      listadoUsuarios= jsonDecode(responseUsuario.body);
+      listadoUsuarios = jsonDecode(responseUsuario.body);
       listadoUsuarios.forEach((usuario) {
-        if(usuario['f_rut_empresa'].toString() == DatosEstaticos.rutEmpresa){
-            if (usuario['f_activo'].toString() == '0') {
-              return;
-            }
-            nombreUsuarioDevuelto = usuario['id_usuario'].toString();
+        if (usuario['f_rut_empresa'].toString() == DatosEstaticos.rutEmpresa) {
+          if (usuario['f_activo'].toString() == '0') {
+            return;
           }
+          nombreUsuarioDevuelto = usuario['id_usuario'].toString();
         }
-      );
+      });
 
-      if(nombreUsuarioDevuelto!=null){
+      if (nombreUsuarioDevuelto != null) {
         //Se hacen validaciones
         nombreUsuarioDevuelto = null;
         return;
       } else {
-        nombreUsuarioDevuelto = "Error: Usuario no asociado a empresa";
+        //nombreUsuarioDevuelto = "Error: Usuario no asociado a empresa";
+        nombreUsuarioDevuelto = "Error";
       }
-    } catch(e){
+    } catch (e) {
       //Error para mostrar en el textfield
-      nombreUsuarioDevuelto = "Error: Nombre de usuario no existe en base de datos";
+      //nombreUsuarioDevuelto = "Error: Nombre de usuario no existe en base de datos";
+      nombreUsuarioDevuelto = "Error";
       return;
     }
   }
 
-  Future<void> ValidaPasswordUsuario(String password, String nombreUsuario) async{
-    if (password == null){
-      nombreUsuarioDevuelto = "Error: Ingrese nombre de usuario";
+  Future<void> ValidaPasswordUsuario(
+      String password, String nombreUsuario) async {
+    if (password == null) {
+      //nombreUsuarioDevuelto = "Error: Ingrese nombre de usuario";
+      nombreUsuarioDevuelto = "Error";
       return;
-    } else if(password.trim().length < 1){
-      nombreUsuarioDevuelto = "Error: Ingrese nombre de usuario";
-      return;
-    }
-    if (password == null){
-      passwordDevuelto = "Error: Ingrese contraseña";
-      return;
-    } else if(password.trim().length < 1){
-      passwordDevuelto = "Error: Ingrese contraseña";
+    } else if (password.trim().length < 1) {
+      //nombreUsuarioDevuelto = "Error: Ingrese nombre de usuario";
+      nombreUsuarioDevuelto = "Error";
       return;
     }
-    if (responseUsuario==null){
-      nombreUsuarioDevuelto = "Error: Nombre de usuario incorrecto";
+    if (password == null) {
+      // passwordDevuelto = "Error: Ingrese contraseña";
+      passwordDevuelto = "Error";
+      return;
+    } else if (password.trim().length < 1) {
+      // passwordDevuelto = "Error: Ingrese contraseña";
+      passwordDevuelto = "Error";
+      return;
+    }
+    if (responseUsuario == null) {
+      // nombreUsuarioDevuelto = "Error: Nombre de usuario incorrecto";
+      nombreUsuarioDevuelto = "Error";
       return;
     }
 
-    try{
+    try {
       listadoUsuarios.forEach((usuario) {
-        if(usuario['id_usuario'].toString() == nombreUsuario){
-          if(usuario['f_password'].toString() == password){
+        if (usuario['id_usuario'].toString() == nombreUsuario) {
+          if (usuario['f_password'].toString() == password) {
             passwordDevuelto = usuario['f_password'].toString();
           }
         }
-      }
-      );
-      if(passwordDevuelto!=null){
+      });
+      if (passwordDevuelto != null) {
         //Se hacen validaciones
         passwordDevuelto = null;
         return;
       } else {
-        passwordDevuelto = "Error: Contraseña incorrecta";
+        //passwordDevuelto = "Error: Contraseña incorrecta";
+        passwordDevuelto = "Error";
       }
-    } catch(e){
+    } catch (e) {
       //Error para mostrar en el textfield
-      passwordDevuelto = "Error: Nombre de usuario o contraseña incorrectos";
+      //passwordDevuelto = "Error: Nombre de usuario o contraseña incorrectos";
+      passwordDevuelto = "Error";
       return;
     }
-
   }
 }

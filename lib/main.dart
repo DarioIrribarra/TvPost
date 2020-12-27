@@ -18,7 +18,13 @@ Future<void> main() async {
   await shared_preferences_tvPost.CargarSharedPreferences();
   //Inicia la app
   runApp(MaterialApp(
-    theme: ThemeData(fontFamily: 'tituloAxis'),
+    theme: ThemeData(
+        fontFamily: 'tituloAxis',
+        textTheme: TextTheme(
+          body1: TextStyle(fontSize: 11),
+          title: TextStyle(fontSize: 11),
+        )),
+
     //Rutas para navegar en las páginas
     routes: {
       '/': (context) => Login(),

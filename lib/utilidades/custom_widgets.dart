@@ -115,7 +115,6 @@ class CustomAppBar extends PreferredSize {
       actions: [
         Container(
           decoration: new BoxDecoration(
-              borderRadius: BorderRadius.circular(20),
               gradient: LinearGradient(
                   colors: [HexColor("#0683ff"), HexColor("#3edb9b")],
                   stops: [0.5, 1],
@@ -126,9 +125,15 @@ class CustomAppBar extends PreferredSize {
               Container(
                 padding: EdgeInsets.all(10.0),
                 margin: EdgeInsets.only(right: 30.0),
-                child: Image.asset('imagenes/logohorizontal.png'),
+                child: Image.asset(
+                  'imagenes/logohorizontal.png',
+                  height: 125,
+                  width: 125,
+                ),
               ),
               IconButton(
+                iconSize: 40,
+                padding: const EdgeInsets.only(right: 20),
                 icon: Icon(
                   Icons.menu,
                 ),

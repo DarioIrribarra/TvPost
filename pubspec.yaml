@@ -90,7 +90,7 @@ flutter:
   #         style: italic
      - family: textoMont
        fonts:
-         - asset: fonts/Mont-Light.ttf
+         - asset: fonts/ikaros-light.ttf
   #       - asset: fonts/TrajanPro_Bold.ttf
   #         weight: 700
   #
