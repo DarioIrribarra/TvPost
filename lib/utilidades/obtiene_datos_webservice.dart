@@ -4,12 +4,12 @@ import 'package:http/http.dart';
 import 'package:tvpost_flutter/utilidades/datos_estaticos.dart';
 
 class ObtieneDatos {
-  /* String rutEmpresaDevuelto = "Error: Ingrese rut empresa";
+  String rutEmpresaDevuelto = "Error: Ingrese rut empresa";
   String nombreUsuarioDevuelto = "Error: Ingrese nombre usuario";
-  String passwordDevuelto = "Error: Ingrese contraseña";*/
-  String rutEmpresaDevuelto = "Error";
+  String passwordDevuelto = "Error: Ingrese contraseña";
+  /*String rutEmpresaDevuelto = "Error";
   String nombreUsuarioDevuelto = "Error";
-  String passwordDevuelto = "Error";
+  String passwordDevuelto = "Error";*/
   Response responseEmpresa;
   Response responseUsuario;
   static List<dynamic> listadoUsuarios;
@@ -138,8 +138,8 @@ class ObtieneDatos {
   ///getDatosEmpresa y lo valida
   Future<void> ValidaRutEmpresa() async {
     if (responseEmpresa == null) {
-      //rutEmpresaDevuelto = "Error: Rut de empresa incorrecto";
-      rutEmpresaDevuelto = "Error";
+      rutEmpresaDevuelto = "Error: Rut de empresa incorrecto";
+      //rutEmpresaDevuelto = "Error";
       return;
     }
     //Asigna valor obtenido a variable para ser consultada en la validación
@@ -149,8 +149,8 @@ class ObtieneDatos {
       String rutEmpresaActiva =
           jsonDecode(responseEmpresa.body)[0]['f_activa'].toString();
       if (rutEmpresaActiva == '0') {
-        //rutEmpresaDevuelto = "Error: Rut de empresa inactivo";
-        rutEmpresaDevuelto = "Error";
+        rutEmpresaDevuelto = "Error: Rut de empresa inactivo";
+        //rutEmpresaDevuelto = "Error";
       } else if (rutEmpresaDevuelto != null) {
         //Se asigna la variable estática
         DatosEstaticos.rutEmpresa = rutEmpresaDevuelto;
@@ -159,16 +159,16 @@ class ObtieneDatos {
       }
     } catch (e) {
       //Error para mostrar en el textfield
-      //rutEmpresaDevuelto = "Error: Empresa no existe en base de datos";
-      rutEmpresaDevuelto = "Error";
+      rutEmpresaDevuelto = "Error: Empresa no existe en base de datos";
+      //rutEmpresaDevuelto = "Error";
       return;
     }
   }
 
   Future<void> ValidaNombreUsuario() async {
     if (responseUsuario == null) {
-      //nombreUsuarioDevuelto = "Error: Nombre de usuario incorrecto";
-      nombreUsuarioDevuelto = "Error";
+      nombreUsuarioDevuelto = "Error: Nombre de usuario incorrecto";
+      //nombreUsuarioDevuelto = "Error";
       return;
     }
     try {
@@ -177,6 +177,10 @@ class ObtieneDatos {
       }
       //ForEach para iterar por cada usuario que se obtenga
       listadoUsuarios = jsonDecode(responseUsuario.body);
+      if(listadoUsuarios.length <= 0){
+        nombreUsuarioDevuelto = "Error: Usuario no asociado a empresa";
+        return;
+      }
       listadoUsuarios.forEach((usuario) {
         if (usuario['f_rut_empresa'].toString() == DatosEstaticos.rutEmpresa) {
           if (usuario['f_activo'].toString() == '0') {
@@ -191,13 +195,13 @@ class ObtieneDatos {
         nombreUsuarioDevuelto = null;
         return;
       } else {
-        //nombreUsuarioDevuelto = "Error: Usuario no asociado a empresa";
-        nombreUsuarioDevuelto = "Error";
+        nombreUsuarioDevuelto = "Error: Usuario no asociado a empresa";
+        //nombreUsuarioDevuelto = "Error";
       }
     } catch (e) {
       //Error para mostrar en el textfield
-      //nombreUsuarioDevuelto = "Error: Nombre de usuario no existe en base de datos";
-      nombreUsuarioDevuelto = "Error";
+      nombreUsuarioDevuelto = "Error: Nombre de usuario no existe en base de datos";
+      //nombreUsuarioDevuelto = "Error";
       return;
     }
   }
@@ -205,26 +209,26 @@ class ObtieneDatos {
   Future<void> ValidaPasswordUsuario(
       String password, String nombreUsuario) async {
     if (password == null) {
-      //nombreUsuarioDevuelto = "Error: Ingrese nombre de usuario";
-      nombreUsuarioDevuelto = "Error";
+      nombreUsuarioDevuelto = "Error: Ingrese nombre de usuario";
+      //nombreUsuarioDevuelto = "Error";
       return;
     } else if (password.trim().length < 1) {
-      //nombreUsuarioDevuelto = "Error: Ingrese nombre de usuario";
-      nombreUsuarioDevuelto = "Error";
+      nombreUsuarioDevuelto = "Error: Ingrese nombre de usuario";
+      //nombreUsuarioDevuelto = "Error";
       return;
     }
     if (password == null) {
-      // passwordDevuelto = "Error: Ingrese contraseña";
-      passwordDevuelto = "Error";
+      passwordDevuelto = "Error: Ingrese contraseña";
+      //passwordDevuelto = "Error";
       return;
     } else if (password.trim().length < 1) {
-      // passwordDevuelto = "Error: Ingrese contraseña";
-      passwordDevuelto = "Error";
+      passwordDevuelto = "Error: Ingrese contraseña";
+      //passwordDevuelto = "Error";
       return;
     }
     if (responseUsuario == null) {
-      // nombreUsuarioDevuelto = "Error: Nombre de usuario incorrecto";
-      nombreUsuarioDevuelto = "Error";
+      nombreUsuarioDevuelto = "Error: Nombre de usuario incorrecto";
+      //nombreUsuarioDevuelto = "Error";
       return;
     }
 
@@ -233,21 +237,29 @@ class ObtieneDatos {
         if (usuario['id_usuario'].toString() == nombreUsuario) {
           if (usuario['f_password'].toString() == password) {
             passwordDevuelto = usuario['f_password'].toString();
+          } else {
+            passwordDevuelto = "Error: Contraseña incorrecta";
+            return;
           }
         }
       });
+
+      if (passwordDevuelto == "Error: Contraseña incorrecta"){
+        return;
+      }
+
       if (passwordDevuelto != null) {
         //Se hacen validaciones
         passwordDevuelto = null;
         return;
       } else {
-        //passwordDevuelto = "Error: Contraseña incorrecta";
-        passwordDevuelto = "Error";
+        passwordDevuelto = "Error: Contraseña incorrecta";
+        //passwordDevuelto = "Error";
       }
     } catch (e) {
       //Error para mostrar en el textfield
-      //passwordDevuelto = "Error: Nombre de usuario o contraseña incorrectos";
-      passwordDevuelto = "Error";
+      passwordDevuelto = "Error: Nombre de usuario o contraseña incorrectos";
+      //passwordDevuelto = "Error";
       return;
     }
   }

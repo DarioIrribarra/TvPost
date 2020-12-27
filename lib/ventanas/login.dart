@@ -23,6 +23,9 @@ class _LoginState extends State<Login> {
   String validaNombreUsuario = "";
   String validaPasword = "";
   ProgressDialog progressDialog;
+  bool visibleErrorRutEmpresa = false;
+  bool visibleErrorUsuario = false;
+  bool visibleErrorPassword= false;
 
   @override
   void initState() {
@@ -68,140 +71,155 @@ class _LoginState extends State<Login> {
                     SizedBox(
                       height: 45,
                     ),
-                    Container(
-                      height: 33.5,
-                      margin: EdgeInsets.fromLTRB(18, 0, 18, 0),
-                      decoration: new BoxDecoration(
-                          borderRadius: BorderRadius.circular(45),
-                          color: Colors.white),
-                      child: new Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceAround,
-                        //crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Expanded(
-                            flex: 2,
-                            child: Text(
-                              "RUT EMPRESA",
-                              textAlign: TextAlign.right,
-                            ),
-                          ),
-                          Expanded(
-                            flex: 3,
-                            child: Container(
-                              padding: EdgeInsets.only(
-                                  bottom: 9, left: 15, right: 15),
-                              child: new TextFormField(
-                                style: TextStyle(
-                                    fontFamily: 'textoMont',
-                                    fontSize: 12,
-                                    color: Colors.black),
-                                textAlign: TextAlign.center,
-                                initialValue: rutEmpresa,
-                                decoration: InputDecoration(
-                                    errorStyle: TextStyle(height: 2),
-                                    //   labelText: 'Rut Empresa',
-                                    //hintText:'Rut Empresa (sin puntos ni guión)',
-                                    //labelStyle: TextStyle(color: Colors.white),
-                                    enabledBorder: new UnderlineInputBorder(
-                                        borderSide: new BorderSide(
-                                            color: HexColor('#bdbdbd')))),
-                                onChanged: (texto) {
-                                  rutEmpresa = texto;
-                                },
-                                validator: (texto) => validaRutEmpresa,
+                    Column(
+                      children: [
+                        Container(
+                          height: 33.5,
+                          margin: EdgeInsets.fromLTRB(18, 0, 18, 0),
+                          decoration: new BoxDecoration(
+                              borderRadius: BorderRadius.circular(45),
+                              color: Colors.white),
+                          child: new Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceAround,
+                            //crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Expanded(
+                                flex: 2,
+                                child: Text(
+                                  "RUT EMPRESA",
+                                  textAlign: TextAlign.right,
+                                ),
                               ),
-                            ),
-                          )
-                        ],
-                      ),
-                    ),
-                    SizedBox(
-                      height: 15,
-                    ),
-                    Container(
-                      height: 33.5,
-                      margin: EdgeInsets.fromLTRB(18, 0, 18, 0),
-                      decoration: new BoxDecoration(
-                          borderRadius: BorderRadius.circular(45),
-                          color: Colors.white),
-                      child: Row(children: [
-                        Expanded(
-                            flex: 2,
-                            child: Text(
-                              "USUARIO",
-                              textAlign: TextAlign.right,
-                            )),
-                        Expanded(
-                          flex: 3,
-                          child: Container(
-                            padding:
-                                EdgeInsets.only(bottom: 9, left: 15, right: 15),
-                            child: TextFormField(
-                              style: TextStyle(
-                                  fontFamily: 'textoMont',
-                                  fontSize: 12,
-                                  color: Colors.black),
-                              textAlign: TextAlign.center,
-                              decoration: InputDecoration(
-                                  errorStyle: TextStyle(height: 2),
-                                  // hintText: 'Nombre de usuario',
-                                  enabledBorder: new UnderlineInputBorder(
-                                      borderSide: new BorderSide(
-                                          color: HexColor('#bdbdbd')))),
-                              //Se asigna lo que se escribe a la variable
-                              initialValue: nombreUsuario,
-                              onChanged: (texto) {
-                                nombreUsuario = texto;
-                              },
-                              validator: (texto) => validaNombreUsuario,
-                            ),
-                          ),
-                        )
-                      ]),
-                    ),
-                    SizedBox(
-                      height: 15,
-                    ),
-                    Container(
-                      height: 33.5,
-                      margin: EdgeInsets.fromLTRB(18, 0, 18, 0),
-                      decoration: new BoxDecoration(
-                          borderRadius: BorderRadius.circular(45),
-                          color: Colors.white),
-                      child: Row(children: [
-                        Expanded(
-                            flex: 2,
-                            child: Text(
-                              "CONTRASEÑA",
-                              textAlign: TextAlign.right,
-                            )),
-                        Expanded(
-                          flex: 3,
-                          child: Container(
-                            padding:
-                                EdgeInsets.only(bottom: 9, left: 15, right: 15),
-                            child: TextFormField(
-                              style: TextStyle(
-                                  fontFamily: 'textoMont',
-                                  fontSize: 12,
-                                  color: Colors.black),
-                              textAlign: TextAlign.center,
-                              obscureText: true,
-                              decoration: InputDecoration(
-                                  errorStyle: TextStyle(height: 2),
-                                  //hintText: 'Contraseña',
-                                  enabledBorder: new UnderlineInputBorder(
-                                      borderSide: new BorderSide(
-                                          color: HexColor('#bdbdbd')))),
-                              initialValue: password,
-                              onChanged: (texto) {
-                                password = texto;
-                              },
-                              validator: (password) => validaPasword,
-                            ),
+                              Expanded(
+                                flex: 3,
+                                child: Container(
+                                  padding: EdgeInsets.only(
+                                      bottom: 9, left: 15, right: 15),
+                                  child: new TextFormField(
+                                    style: TextStyle(
+                                        fontFamily: 'textoMont',
+                                        fontSize: 12,
+                                        color: Colors.black),
+                                    textAlign: TextAlign.center,
+                                    initialValue: rutEmpresa,
+                                    decoration: InputDecoration(
+                                      //errorStyle: TextStyle(height: 2),
+                                      //   labelText: 'Rut Empresa',
+                                      //hintText:'Rut Empresa (sin puntos ni guión)',
+                                      //labelStyle: TextStyle(color: Colors.white),
+                                        enabledBorder: new UnderlineInputBorder(
+                                            borderSide: new BorderSide(
+                                                color: HexColor('#bdbdbd')))),
+                                    onChanged: (texto) {
+                                      rutEmpresa = texto;
+                                    },
+                                    //validator: (texto) => validaRutEmpresa,
+                                  ),
+                                ),
+                              )
+                            ],
                           ),
                         ),
-                      ]),
+                        WidgetError(visible: visibleErrorRutEmpresa, textoError: validaRutEmpresa),
+                      ],
+                    ),
+                    SizedBox(
+                      height: 15,
+                    ),
+                    Column(
+                      children: [
+                        Container(
+                          height: 33.5,
+                          margin: EdgeInsets.fromLTRB(18, 0, 18, 0),
+                          decoration: new BoxDecoration(
+                              borderRadius: BorderRadius.circular(45),
+                              color: Colors.white),
+                          child: Row(children: [
+                            Expanded(
+                                flex: 2,
+                                child: Text(
+                                  "USUARIO",
+                                  textAlign: TextAlign.right,
+                                )),
+                            Expanded(
+                              flex: 3,
+                              child: Container(
+                                padding:
+                                EdgeInsets.only(bottom: 9, left: 15, right: 15),
+                                child: TextFormField(
+                                  style: TextStyle(
+                                      fontFamily: 'textoMont',
+                                      fontSize: 12,
+                                      color: Colors.black),
+                                  textAlign: TextAlign.center,
+                                  decoration: InputDecoration(
+                                    //errorStyle: TextStyle(height: 2),
+                                    // hintText: 'Nombre de usuario',
+                                      enabledBorder: new UnderlineInputBorder(
+                                          borderSide: new BorderSide(
+                                              color: HexColor('#bdbdbd')))),
+                                  //Se asigna lo que se escribe a la variable
+                                  initialValue: nombreUsuario,
+                                  onChanged: (texto) {
+                                    nombreUsuario = texto;
+                                  },
+                                  //validator: (texto) => validaNombreUsuario,
+                                ),
+                              ),
+                            )
+                          ]),
+                        ),
+                        WidgetError(visible: visibleErrorUsuario, textoError: validaNombreUsuario),
+                      ],
+                    ),
+                    SizedBox(
+                      height: 15,
+                    ),
+                    Column(
+                      children: [
+                        Container(
+                          height: 33.5,
+                          margin: EdgeInsets.fromLTRB(18, 0, 18, 0),
+                          decoration: new BoxDecoration(
+                              borderRadius: BorderRadius.circular(45),
+                              color: Colors.white),
+                          child: Row(children: [
+                            Expanded(
+                                flex: 2,
+                                child: Text(
+                                  "CONTRASEÑA",
+                                  textAlign: TextAlign.right,
+                                )),
+                            Expanded(
+                              flex: 3,
+                              child: Container(
+                                padding:
+                                EdgeInsets.only(bottom: 9, left: 15, right: 15),
+                                child: TextFormField(
+                                  style: TextStyle(
+                                      fontFamily: 'textoMont',
+                                      fontSize: 12,
+                                      color: Colors.black),
+                                  textAlign: TextAlign.center,
+                                  obscureText: true,
+                                  decoration: InputDecoration(
+                                    //errorStyle: TextStyle(height: 2),
+                                    //hintText: 'Contraseña',
+                                      enabledBorder: new UnderlineInputBorder(
+                                          borderSide: new BorderSide(
+                                              color: HexColor('#bdbdbd')))),
+                                  initialValue: password,
+                                  onChanged: (texto) {
+                                    password = texto;
+                                  },
+                                  //validator: (password) => validaPasword,
+                                ),
+                              ),
+                            ),
+                          ]),
+                        ),
+                        WidgetError(visible: visibleErrorPassword, textoError: validaPasword),
+                      ],
                     ),
                     SizedBox(
                       height: 25,
@@ -255,10 +273,31 @@ class _LoginState extends State<Login> {
                               validaRutEmpresa = datos.rutEmpresaDevuelto;
                               validaNombreUsuario = datos.nombreUsuarioDevuelto;
                               validaPasword = datos.passwordDevuelto;
+
+                              if(validaRutEmpresa!=null){
+                                visibleErrorRutEmpresa = true;
+
+                              } else {
+                                visibleErrorRutEmpresa = false;
+                              }
+
+                              if(validaNombreUsuario!=null){
+                                visibleErrorUsuario = true;
+
+                              } else {
+                                visibleErrorUsuario = false;
+                              }
+
+                              if(validaPasword!=null){
+                                visibleErrorPassword = true;
+
+                              } else {
+                                visibleErrorPassword = false;
+                              }
                             });
                             //Al pasar todas las validaciones se utiliza el shared
                             //preferences
-                            if (_formKey.currentState.validate()) {
+                            if (visibleErrorUsuario == false && visibleErrorPassword == false && visibleErrorRutEmpresa == false) {
                               GuardarSharedPreferences();
                               Navigator.pop(context);
                               //Al guardar to do se va a la otra ventana
@@ -267,6 +306,15 @@ class _LoginState extends State<Login> {
                             } else {
                               Navigator.pop(context);
                             }
+                            /*if (_formKey.currentState.validate()) {
+                              GuardarSharedPreferences();
+                              Navigator.pop(context);
+                              //Al guardar to do se va a la otra ventana
+                              Navigator.pushNamed(
+                                  context, '/raspberries_conectadas');
+                            } else {
+                              Navigator.pop(context);
+                            }*/
 
                             //print(validaRutEmpresa);
                           }),
@@ -289,3 +337,59 @@ class _LoginState extends State<Login> {
     sharedPreferences.setString('password', password.trim());
   }
 }
+
+//Widget que toma un campo boolean para visibilidad
+//y un String para el error a mostrar
+//Este cambia dependiendo del validador
+class WidgetError extends StatelessWidget {
+  WidgetError({
+    @required
+    this.visible,
+    @required
+    this.textoError,
+    Key key,
+  }) : super(key: key);
+  bool visible;
+  String textoError;
+  @override
+  Widget build(BuildContext context) {
+    return Align(
+      alignment: Alignment.topLeft,
+      child: Container(
+        decoration: new BoxDecoration(
+            borderRadius: BorderRadius.circular(45),
+            //border: Border.all(color: Colors.transparent, style: BorderStyle.solid, width: 1.0),
+            color: Colors.white),
+        margin: EdgeInsets.only(left: 18, top: 2, right: 18),
+        child: Visibility(
+          visible: visible,
+          child: Row(
+            children: [
+              Expanded(
+                  flex: 1,
+                  child: Icon(Icons.error_outline, color: Colors.red,)
+              ),
+              Expanded(
+                flex: 11,
+                child: Align(
+                  alignment: Alignment.centerLeft,
+                  child: Padding(
+                    padding: EdgeInsets.only(top: 1),
+                    child: Text(
+                      //Si elk texto es nulo muestra uno vacío
+                      textoError ?? '',
+                      style: TextStyle(color: Colors.redAccent),
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+
+      ),
+    );
+  }
+}
+
