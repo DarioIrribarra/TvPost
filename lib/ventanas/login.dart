@@ -25,7 +25,7 @@ class _LoginState extends State<Login> {
   ProgressDialog progressDialog;
   bool visibleErrorRutEmpresa = false;
   bool visibleErrorUsuario = false;
-  bool visibleErrorPassword= false;
+  bool visibleErrorPassword = false;
 
   @override
   void initState() {
@@ -74,8 +74,8 @@ class _LoginState extends State<Login> {
                     Column(
                       children: [
                         Container(
-                          height: 33.5,
-                          margin: EdgeInsets.fromLTRB(18, 0, 18, 0),
+                          height: 36.5,
+                          margin: EdgeInsets.fromLTRB(16, 0, 16, 0),
                           decoration: new BoxDecoration(
                               borderRadius: BorderRadius.circular(45),
                               color: Colors.white),
@@ -97,16 +97,16 @@ class _LoginState extends State<Login> {
                                       bottom: 9, left: 15, right: 15),
                                   child: new TextFormField(
                                     style: TextStyle(
-                                        fontFamily: 'textoMont',
-                                        fontSize: 12,
-                                        color: Colors.black),
+                                      fontFamily: 'textoMont',
+                                      fontSize: 11.5,
+                                    ),
                                     textAlign: TextAlign.center,
                                     initialValue: rutEmpresa,
                                     decoration: InputDecoration(
-                                      //errorStyle: TextStyle(height: 2),
-                                      //   labelText: 'Rut Empresa',
-                                      //hintText:'Rut Empresa (sin puntos ni guión)',
-                                      //labelStyle: TextStyle(color: Colors.white),
+                                        //errorStyle: TextStyle(height: 2),
+                                        //   labelText: 'Rut Empresa',
+                                        //hintText:'Rut Empresa (sin puntos ni guión)',
+                                        //labelStyle: TextStyle(color: Colors.white),
                                         enabledBorder: new UnderlineInputBorder(
                                             borderSide: new BorderSide(
                                                 color: HexColor('#bdbdbd')))),
@@ -120,7 +120,9 @@ class _LoginState extends State<Login> {
                             ],
                           ),
                         ),
-                        WidgetError(visible: visibleErrorRutEmpresa, textoError: validaRutEmpresa),
+                        WidgetError(
+                            visible: visibleErrorRutEmpresa,
+                            textoError: validaRutEmpresa),
                       ],
                     ),
                     SizedBox(
@@ -129,8 +131,8 @@ class _LoginState extends State<Login> {
                     Column(
                       children: [
                         Container(
-                          height: 33.5,
-                          margin: EdgeInsets.fromLTRB(18, 0, 18, 0),
+                          height: 36.5,
+                          margin: EdgeInsets.fromLTRB(16, 0, 16, 0),
                           decoration: new BoxDecoration(
                               borderRadius: BorderRadius.circular(45),
                               color: Colors.white),
@@ -144,17 +146,17 @@ class _LoginState extends State<Login> {
                             Expanded(
                               flex: 3,
                               child: Container(
-                                padding:
-                                EdgeInsets.only(bottom: 9, left: 15, right: 15),
+                                padding: EdgeInsets.only(
+                                    bottom: 9, left: 15, right: 15),
                                 child: TextFormField(
                                   style: TextStyle(
                                       fontFamily: 'textoMont',
-                                      fontSize: 12,
+                                      fontSize: 11.5,
                                       color: Colors.black),
                                   textAlign: TextAlign.center,
                                   decoration: InputDecoration(
-                                    //errorStyle: TextStyle(height: 2),
-                                    // hintText: 'Nombre de usuario',
+                                      //errorStyle: TextStyle(height: 2),
+                                      // hintText: 'Nombre de usuario',
                                       enabledBorder: new UnderlineInputBorder(
                                           borderSide: new BorderSide(
                                               color: HexColor('#bdbdbd')))),
@@ -169,7 +171,9 @@ class _LoginState extends State<Login> {
                             )
                           ]),
                         ),
-                        WidgetError(visible: visibleErrorUsuario, textoError: validaNombreUsuario),
+                        WidgetError(
+                            visible: visibleErrorUsuario,
+                            textoError: validaNombreUsuario),
                       ],
                     ),
                     SizedBox(
@@ -178,8 +182,8 @@ class _LoginState extends State<Login> {
                     Column(
                       children: [
                         Container(
-                          height: 33.5,
-                          margin: EdgeInsets.fromLTRB(18, 0, 18, 0),
+                          height: 36.5,
+                          margin: EdgeInsets.fromLTRB(16, 0, 16, 0),
                           decoration: new BoxDecoration(
                               borderRadius: BorderRadius.circular(45),
                               color: Colors.white),
@@ -193,18 +197,18 @@ class _LoginState extends State<Login> {
                             Expanded(
                               flex: 3,
                               child: Container(
-                                padding:
-                                EdgeInsets.only(bottom: 9, left: 15, right: 15),
+                                padding: EdgeInsets.only(
+                                    bottom: 9, left: 15, right: 15),
                                 child: TextFormField(
                                   style: TextStyle(
                                       fontFamily: 'textoMont',
-                                      fontSize: 12,
+                                      fontSize: 11.5,
                                       color: Colors.black),
                                   textAlign: TextAlign.center,
                                   obscureText: true,
                                   decoration: InputDecoration(
-                                    //errorStyle: TextStyle(height: 2),
-                                    //hintText: 'Contraseña',
+                                      //errorStyle: TextStyle(height: 2),
+                                      //hintText: 'Contraseña',
                                       enabledBorder: new UnderlineInputBorder(
                                           borderSide: new BorderSide(
                                               color: HexColor('#bdbdbd')))),
@@ -218,7 +222,9 @@ class _LoginState extends State<Login> {
                             ),
                           ]),
                         ),
-                        WidgetError(visible: visibleErrorPassword, textoError: validaPasword),
+                        WidgetError(
+                            visible: visibleErrorPassword,
+                            textoError: validaPasword),
                       ],
                     ),
                     SizedBox(
@@ -226,7 +232,7 @@ class _LoginState extends State<Login> {
                     ),
                     Container(
                       height: 50,
-                      margin: EdgeInsets.fromLTRB(18.0, 0, 18.0, 0),
+                      margin: EdgeInsets.fromLTRB(16.0, 0, 16.0, 0),
                       child: RaisedButton(
                           color: HexColor('#0683FF'),
                           shape: RoundedRectangleBorder(
@@ -274,30 +280,29 @@ class _LoginState extends State<Login> {
                               validaNombreUsuario = datos.nombreUsuarioDevuelto;
                               validaPasword = datos.passwordDevuelto;
 
-                              if(validaRutEmpresa!=null){
+                              if (validaRutEmpresa != null) {
                                 visibleErrorRutEmpresa = true;
-
                               } else {
                                 visibleErrorRutEmpresa = false;
                               }
 
-                              if(validaNombreUsuario!=null){
+                              if (validaNombreUsuario != null) {
                                 visibleErrorUsuario = true;
-
                               } else {
                                 visibleErrorUsuario = false;
                               }
 
-                              if(validaPasword!=null){
+                              if (validaPasword != null) {
                                 visibleErrorPassword = true;
-
                               } else {
                                 visibleErrorPassword = false;
                               }
                             });
                             //Al pasar todas las validaciones se utiliza el shared
                             //preferences
-                            if (visibleErrorUsuario == false && visibleErrorPassword == false && visibleErrorRutEmpresa == false) {
+                            if (visibleErrorUsuario == false &&
+                                visibleErrorPassword == false &&
+                                visibleErrorRutEmpresa == false) {
                               GuardarSharedPreferences();
                               Navigator.pop(context);
                               //Al guardar to do se va a la otra ventana
@@ -343,10 +348,8 @@ class _LoginState extends State<Login> {
 //Este cambia dependiendo del validador
 class WidgetError extends StatelessWidget {
   WidgetError({
-    @required
-    this.visible,
-    @required
-    this.textoError,
+    @required this.visible,
+    @required this.textoError,
     Key key,
   }) : super(key: key);
   bool visible;
@@ -367,8 +370,10 @@ class WidgetError extends StatelessWidget {
             children: [
               Expanded(
                   flex: 1,
-                  child: Icon(Icons.error_outline, color: Colors.red,)
-              ),
+                  child: Icon(
+                    Icons.error_outline,
+                    color: Colors.red,
+                  )),
               Expanded(
                 flex: 11,
                 child: Align(
@@ -387,9 +392,7 @@ class WidgetError extends StatelessWidget {
             ],
           ),
         ),
-
       ),
     );
   }
 }
-

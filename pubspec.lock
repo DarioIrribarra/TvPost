@@ -184,6 +184,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "4.0.1"
+  fswitch:
+    dependency: "direct main"
+    description:
+      name: fswitch
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.1.2"
   hexcolor:
     dependency: "direct main"
     description:

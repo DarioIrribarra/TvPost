@@ -11,18 +11,20 @@ import 'package:tvpost_flutter/ventanas/raspberries_conectadas.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:liquid_pull_to_refresh/liquid_pull_to_refresh.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:fswitch/fswitch.dart';
 
 class DetalleEquipo extends StatefulWidget {
   @override
   _DetalleEquipoState createState() => _DetalleEquipoState();
 }
 
-
 class _DetalleEquipoState extends State<DetalleEquipo> {
-
   Map datosDesdeVentanaAnterior = {};
   int indexEquipoGrid = 0;
-  Image _screenshotProcesada = Image.asset('imagenes/logohorizontal.png', fit: BoxFit.fill,);
+  Image _screenshotProcesada = Image.asset(
+    'imagenes/logohorizontal.png',
+    fit: BoxFit.fill,
+  );
   GlobalKey<FormState> _keyValidador = GlobalKey<FormState>();
   TextEditingController _controladorTexto = TextEditingController(text: "");
   //Guarda el estado del context para usarlo con el snackbar
@@ -46,24 +48,25 @@ class _DetalleEquipoState extends State<DetalleEquipo> {
 
     //Se obtiene serial para manejar todos los datos en un listado de
     // datos propio de esa serial
-    String serialSeleccionada = ObtieneDatos.listadoEquipos
-    [indexEquipoGrid]['f_serial'].toString();
+    String serialSeleccionada =
+        ObtieneDatos.listadoEquipos[indexEquipoGrid]['f_serial'].toString();
 
     //Se pasan todos los datos del equipo seleccionado a su propio listado
-    DatosEstaticos.listadoDatosEquipoSeleccionado =
-        ObtieneDatos.listadoEquipos.where((equipo) =>
-        equipo['f_serial'] == serialSeleccionada).toList();
+    DatosEstaticos.listadoDatosEquipoSeleccionado = ObtieneDatos.listadoEquipos
+        .where((equipo) => equipo['f_serial'] == serialSeleccionada)
+        .toList();
 
-    DatosEstaticos.ipSeleccionada = DatosEstaticos.
-    listadoDatosEquipoSeleccionado[0]['f_ip'];
+    DatosEstaticos.ipSeleccionada =
+        DatosEstaticos.listadoDatosEquipoSeleccionado[0]['f_ip'];
 
     return WillPopScope(
       //Cierra todas las ventanas anteriores existentes y llega a
       // la ruta entregada
-      onWillPop: (){
+      onWillPop: () {
         //Navigator.popUntil(context, ModalRoute.withName('/raspberries_conectadas'));
         Navigator.of(context).pushAndRemoveUntil(
-          MaterialPageRoute(builder: (BuildContext context) => RaspberriesConectadas()),
+          MaterialPageRoute(
+              builder: (BuildContext context) => RaspberriesConectadas()),
           ModalRoute.withName('/'),
         );
         return;
@@ -74,13 +77,12 @@ class _DetalleEquipoState extends State<DetalleEquipo> {
         appBar: CustomAppBar(),
         body: LiquidPullToRefresh(
           springAnimationDurationInMilliseconds: 450,
-          onRefresh: () =>_recargarGrid(),
+          onRefresh: () => _recargarGrid(),
           child: ListView(
             children: [
               Container(
                 margin: EdgeInsets.all(20.0),
-                child:
-                Center(
+                child: Center(
                   child: FutureBuilder(
                     future: _getScreenShot(),
                     builder: (context, snapshot) {
@@ -88,19 +90,23 @@ class _DetalleEquipoState extends State<DetalleEquipo> {
                         children: [
                           Container(
                             width: MediaQuery.of(context).size.width,
-                            height: MediaQuery.of(context).size.height/3,
+                            height: MediaQuery.of(context).size.height / 3,
                             child: _screenshotProcesada,
                             color: Colors.green,
                             margin: EdgeInsets.only(bottom: 10),
                           ),
                           Center(
                               child: Padding(
-                                padding: const EdgeInsets.only(bottom: 10),
-                                child: Text("¡Ups, algo ha salido mal!", textScaleFactor: 1.2,),
-                              )
+                            padding: const EdgeInsets.only(bottom: 10),
+                            child: Text(
+                              "¡Ups, algo ha salido mal!",
+                              textScaleFactor: 1.2,
+                            ),
+                          )),
+                          Text(
+                            "Deslice hacia abajo para recargar imagen",
+                            textScaleFactor: 1.2,
                           ),
-                          Text("Deslice hacia abajo para recargar imagen", textScaleFactor: 1.2,),
-
                         ],
                       );
                       if (snapshot.connectionState == ConnectionState.done) {
@@ -108,8 +114,9 @@ class _DetalleEquipoState extends State<DetalleEquipo> {
                           return widgetError;
                         } else {
                           //Retorna el widget con la imagen de screenshot
-                          var tipoimage = _screenshotProcesada.image.runtimeType.toString();
-                          if (tipoimage == "AssetImage"){
+                          var tipoimage =
+                              _screenshotProcesada.image.runtimeType.toString();
+                          if (tipoimage == "AssetImage") {
                             return widgetError;
                           }
 
@@ -123,14 +130,16 @@ class _DetalleEquipoState extends State<DetalleEquipo> {
                                 child: Column(
                                   children: [
                                     Container(
-                                      margin: EdgeInsets.only(bottom: 5),
-                                      width: MediaQuery.of(context).size.width,
-                                      height: MediaQuery.of(context).size.height/3,
-                                      child: _screenshotProcesada
-                                    ),
+                                        margin: EdgeInsets.only(bottom: 5),
+                                        width:
+                                            MediaQuery.of(context).size.width,
+                                        height:
+                                            MediaQuery.of(context).size.height /
+                                                3,
+                                        child: _screenshotProcesada),
                                     Row(
                                       mainAxisAlignment:
-                                      MainAxisAlignment.spaceEvenly,
+                                          MainAxisAlignment.spaceEvenly,
                                       children: [
                                         FloatingActionButton(
                                           heroTag: null,
@@ -141,7 +150,8 @@ class _DetalleEquipoState extends State<DetalleEquipo> {
                                         ),
                                         FloatingActionButton(
                                           heroTag: null,
-                                          child: Icon(Icons.screen_search_desktop),
+                                          child:
+                                              Icon(Icons.screen_search_desktop),
                                           onPressed: () {
                                             _vncRaspberryWeb();
                                           },
@@ -149,12 +159,13 @@ class _DetalleEquipoState extends State<DetalleEquipo> {
                                       ],
                                     ),
                                     Row(
-                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
                                       children: [
                                         Text('Alias: '),
                                         Text(DatosEstaticos
-                                            .listadoDatosEquipoSeleccionado[0]
-                                        ['f_alias']),
+                                                .listadoDatosEquipoSeleccionado[
+                                            0]['f_alias']),
                                         IconButton(
                                           onPressed: () async {
                                             _widgetPopUpAlias();
@@ -165,22 +176,22 @@ class _DetalleEquipoState extends State<DetalleEquipo> {
                                     ),
                                     Row(
                                       mainAxisAlignment:
-                                      MainAxisAlignment.spaceAround,
+                                          MainAxisAlignment.spaceAround,
                                       children: [
                                         Text('Ip: '),
                                         Text(DatosEstaticos
-                                            .listadoDatosEquipoSeleccionado[0]
-                                        ['f_ip']),
+                                                .listadoDatosEquipoSeleccionado[
+                                            0]['f_ip']),
                                       ],
                                     ),
                                     Row(
                                       mainAxisAlignment:
-                                      MainAxisAlignment.spaceAround,
+                                          MainAxisAlignment.spaceAround,
                                       children: [
                                         Text('Serial: '),
                                         Text(DatosEstaticos
-                                            .listadoDatosEquipoSeleccionado[0]
-                                        ['f_serial']),
+                                                .listadoDatosEquipoSeleccionado[
+                                            0]['f_serial']),
                                       ],
                                     ),
                                   ],
@@ -191,14 +202,16 @@ class _DetalleEquipoState extends State<DetalleEquipo> {
                                 heightFactor: 4.0,
                                 child: RaisedButton(
                                   onPressed: () async {
-                                    String dir = (await getTemporaryDirectory()).path;
-                                    File temporal = new File('$dir/img_temp_creada.png');
+                                    String dir =
+                                        (await getTemporaryDirectory()).path;
+                                    File temporal =
+                                        new File('$dir/img_temp_creada.png');
                                     Navigator.pushNamed(
                                         context, '/seleccionar_layout');
                                   },
                                   child: Text('Modificar Layout'),
                                 ),
-                              )
+                              ),
                             ],
                           );
                         }
@@ -216,12 +229,15 @@ class _DetalleEquipoState extends State<DetalleEquipo> {
     );
   }
 
-  _vncRaspberryWeb() async{
+  _vncRaspberryWeb() async {
     String url = 'http://${DatosEstaticos.ipSeleccionada}:6080/vnc.html';
     if (await canLaunch(url)) {
-    await launch(url, enableJavaScript: true,);
+      await launch(
+        url,
+        enableJavaScript: true,
+      );
     } else {
-    throw 'Could not launch $url';
+      throw 'Could not launch $url';
     }
   }
 
@@ -249,9 +265,9 @@ class _DetalleEquipoState extends State<DetalleEquipo> {
       //Si no se retorna el whencomplete, se salta al final
       return socket.done.whenComplete(() {
         _respuesta = Uint8List.fromList(listadoRespuestas);
-        if (_respuesta.isEmpty){
+        if (_respuesta.isEmpty) {
           _screenshotProcesada = Image.asset('imagenes/logohorizontal.png');
-        }else {
+        } else {
           _screenshotProcesada = Image.memory(_respuesta);
         }
         //print(listadoRespuestas.length);
@@ -388,18 +404,18 @@ class _DetalleEquipoState extends State<DetalleEquipo> {
 */
 
   Future<void> _recargarGrid() async {
-    setState(() {
-    });
+    setState(() {});
   }
 
   void ObtenerSizePixelesPantalla() async {
     String resp;
     Uint8List _respuesta;
     List<int> listadoRespuestas = [];
-    try{
+    try {
       Socket socket;
       socket = await Socket.connect(DatosEstaticos.ipSeleccionada,
-          DatosEstaticos.puertoSocketRaspberry).timeout(Duration(seconds: 5));
+              DatosEstaticos.puertoSocketRaspberry)
+          .timeout(Duration(seconds: 5));
       socket.write('TVPOSTGETSIZEPANTALLA');
       socket.listen((event) {
         listadoRespuestas.addAll(event.toList());
@@ -411,12 +427,11 @@ class _DetalleEquipoState extends State<DetalleEquipo> {
 
       await socket.done.whenComplete(() => resp = utf8.decode(_respuesta));
       //Se manipula la respuesta de datos
-      Map<String,dynamic> datosRecibidos = json.decode(resp);
-      DatosEstaticos.ancho_pantalla_seleccionada = int.parse(datosRecibidos['anchoPantalla'].toString());
-      DatosEstaticos.alto_pantalla_seleccionada = int.parse(datosRecibidos['altoPantalla'].toString());
-
-    }catch (e){
-
-    }
+      Map<String, dynamic> datosRecibidos = json.decode(resp);
+      DatosEstaticos.ancho_pantalla_seleccionada =
+          int.parse(datosRecibidos['anchoPantalla'].toString());
+      DatosEstaticos.alto_pantalla_seleccionada =
+          int.parse(datosRecibidos['altoPantalla'].toString());
+    } catch (e) {}
   }
 }

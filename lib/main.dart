@@ -21,8 +21,8 @@ Future<void> main() async {
     theme: ThemeData(
         fontFamily: 'tituloAxis',
         textTheme: TextTheme(
-          body1: TextStyle(fontSize: 11),
-          title: TextStyle(fontSize: 11),
+          body1: TextStyle(fontSize: 11.5),
+          title: TextStyle(fontSize: 11.5),
         )),
 
     //Rutas para navegar en las páginas

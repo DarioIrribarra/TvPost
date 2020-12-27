@@ -51,6 +51,8 @@ dependencies:
   liquid_pull_to_refresh: ^1.1.0
   hexcolor: ^1.0.6
   flutter_social_content_share: ^0.0.3
+  fswitch: ^1.1.2
+
 
 dev_dependencies:
   flutter_test:
@@ -90,7 +92,7 @@ flutter:
   #         style: italic
      - family: textoMont
        fonts:
-         - asset: fonts/ikaros-light.ttf
+         - asset: fonts/Lintel-Regular.ttf
   #       - asset: fonts/TrajanPro_Bold.ttf
   #         weight: 700
   #

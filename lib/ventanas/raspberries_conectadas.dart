@@ -9,8 +9,10 @@ import 'package:tvpost_flutter/utilidades/datos_estaticos.dart';
 import 'package:tvpost_flutter/utilidades/obtiene_datos_webservice.dart';
 import 'package:tvpost_flutter/utilidades/custom_widgets.dart';
 import 'package:liquid_pull_to_refresh/liquid_pull_to_refresh.dart';
+import 'package:fswitch/fswitch.dart';
 
 int cantidad;
+bool valorToogle = false;
 
 class RaspberriesConectadas extends StatefulWidget {
   @override
@@ -18,8 +20,10 @@ class RaspberriesConectadas extends StatefulWidget {
 }
 
 class _RaspberriesConectadasState extends State<RaspberriesConectadas> {
-
-  Image _screenshotProcesada = Image.asset('imagenes/logohorizontal.png', fit: BoxFit.fill,);
+  Image _screenshotProcesada = Image.asset(
+    'imagenes/logohorizontal.png',
+    fit: BoxFit.fill,
+  );
 
   @override
   void initState() {
@@ -30,303 +34,381 @@ class _RaspberriesConectadasState extends State<RaspberriesConectadas> {
 
   @override
   Widget build(BuildContext context) {
-
     //Se inicializa el listado de equipos
     listarEquipos();
 
     return Scaffold(
       //Appbar viene de archivo custom_widgets.dart
       appBar: CustomAppBar(),
-      body: Container(
-        //Para refrescar la grid al arrastrar hacia abajo
-        child: LiquidPullToRefresh(
-          springAnimationDurationInMilliseconds: 450,
-          onRefresh: () =>_recargarGrid(),
-          child: GridView.count(
-              crossAxisCount: 2,
-            children: List.generate(ObtieneDatos.listadoEquipos.length, (index) {
-
-              return new FutureBuilder(
-                future: _estadoEquipo(index),
-                builder: (context, AsyncSnapshot snapshot) {
-                  if (snapshot.connectionState == ConnectionState.done){
-                    if (snapshot.data == null){
-                      return Card(
-                        child: Center(
-                          child: Text(
-                              'DESLICE PARA ACTUALIZAR RECEPTOR'
-                          ),
-                        ),
-                      );
-                    }
-                    //Cuando ya se cargó la data, se crea el widget
-                    else {
-                      //Si tiene conexión o está activo se puede hacer click
-                      //Y se le pasa la ip
-                      if (snapshot.data[2] == true && snapshot.data[3] == true){
-                        return Card(
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                            children:[
-                              GestureDetector(
-                              onTap: () {
-                                //Libera los widgets y datos creados
-                                LimpiarDatosEstaticos();
-                                DatosEstaticos.indexSeleccionado = index;
-                                return Navigator.pushNamed(
-                                  context,
-                                  '/detalle_equipo',
-                                  arguments: {
-                                    "indexEquipoGrid" : index,
-                                  });
-                                },
-                              child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    Image.asset(snapshot.data[1].toString()),
-                                  ],
-                                ),
-                              /*child: Card(
-                                child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    Image.asset(snapshot.data[1].toString()),
-                                  ],
-                                ),
-                              ),*/
+      body: Column(
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(20.0),
+            child: Text(
+              "MIS PANTALLAS",
+              style: TextStyle(fontSize: 20),
+            ),
+          ),
+          Container(
+            height: MediaQuery.of(context).size.height - 220,
+            //Para refrescar la grid al arrastrar hacia abajo
+            child: LiquidPullToRefresh(
+              springAnimationDurationInMilliseconds: 450,
+              onRefresh: () => _recargarGrid(),
+              child: GridView.count(
+                crossAxisCount: 2,
+                children:
+                    List.generate(ObtieneDatos.listadoEquipos.length, (index) {
+                  return new FutureBuilder(
+                    future: _estadoEquipo(index),
+                    builder: (context, AsyncSnapshot snapshot) {
+                      if (snapshot.connectionState == ConnectionState.done) {
+                        if (snapshot.data == null) {
+                          return Card(
+                            child: Center(
+                              child: Text('DESLICE PARA ACTUALIZAR RECEPTOR'),
                             ),
-                              Row(
-                                mainAxisSize: MainAxisSize.min,
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  SizedBox(
-                                    width: MediaQuery.of(context).size.width/6.5,
-                                    child: Row(
-                                      children: [
-                                        Expanded(
-                                          flex:1,
-                                          child: GestureDetector(
-                                              onTap: (){
-                                                VistaPreviaReproduccion(index);
-                                              },
-                                              child: Center(
-                                                child: Icon(
-                                                  Icons.remove_red_eye_sharp,
-                                                  color: Colors.blueAccent,
-                                                ),
-                                              )
-                                          ),
-                                        ),
-                                        Expanded(
-                                        flex: 1,
-                                        child: GestureDetector(
-                                            onTap: () {
-                                              AlertaDesactivar(index);
-                                            },
-                                            child: Center(
-                                              child: Icon(
-                                                Icons.desktop_windows,
-                                                color: Colors.red,
-                                              ),
-                                            )
-                                        ),
+                          );
+                        }
+                        //Cuando ya se cargó la data, se crea el widget
+                        else {
+                          //Si tiene conexión o está activo se puede hacer click
+                          //Y se le pasa la ip
+                          if (snapshot.data[2] == true &&
+                              snapshot.data[3] == true) {
+                            return Card(
+                              child: Column(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceEvenly,
+                                  children: [
+                                    GestureDetector(
+                                      onTap: () {
+                                        //Libera los widgets y datos creados
+                                        LimpiarDatosEstaticos();
+                                        DatosEstaticos.indexSeleccionado =
+                                            index;
+                                        return Navigator.pushNamed(
+                                            context, '/detalle_equipo',
+                                            arguments: {
+                                              "indexEquipoGrid": index,
+                                            });
+                                      },
+                                      child: Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          Image.asset(
+                                              snapshot.data[1].toString()),
+                                        ],
                                       ),
-                                      ],
-                                    ),
-                                  ),
-
-                                  SizedBox(
-                                    width: MediaQuery.of(context).size.width/3.2,
-                                    child: Text(
-                                      '${snapshot.data[0].toString().toUpperCase()}',
-                                      textScaleFactor: 1.1,
-                                      textAlign: TextAlign.right,
-                                      style: TextStyle(fontWeight: FontWeight.bold),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ]
-                          ),
-                        );
-                      }
-                      //Equipo conectado pero desactivado por el usuario
-                      else if (snapshot.data[2] == true && snapshot.data[3] == false){
-                        return Card(
-                          child: Column(
-                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                              children:[
-                                GestureDetector(
-                                  onTap: () {
-                                    MensajeActivarEquipo(index);
-                                  },
+                                      /*child: Card(
                                   child: Column(
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
                                       Image.asset(snapshot.data[1].toString()),
                                     ],
                                   ),
-                                ),
-                                Row(
-                                  mainAxisSize: MainAxisSize.min,
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    SizedBox(
-                                      width: MediaQuery.of(context).size.width/6.5,
-                                      child: Row(
-                                        children: [
-                                          Expanded(
-                                            flex:1,
-                                            child: GestureDetector(
-                                                onTap: (){
-                                                  MensajeActivarEquipo(index);
-                                                },
-                                                child: Center(
-                                                  child: Icon(
-                                                    Icons.remove_red_eye,
-                                                    color: Colors.red,
-                                                  ),
-                                                )
-                                            ),
-                                          ),
-                                          Expanded(
-                                            flex: 1,
-                                            child: GestureDetector(
-                                                onTap: () {
-                                                  AlertaActivar(index);
-                                                },
-                                                child: Center(
-                                                  child: Icon(
-                                                    Icons.desktop_windows,
-                                                    color: Colors.blueAccent,
-                                                  ),
-                                                )
-                                            ),
-                                          ),
-                                        ],
-                                      ),
+                                ),*/
                                     ),
-
-                                    SizedBox(
-                                      width: MediaQuery.of(context).size.width/3.2,
-                                      child: Text(
-                                        '${snapshot.data[0].toString().toUpperCase()}',
-                                        textScaleFactor: 1.1,
-                                        textAlign: TextAlign.right,
-                                        style: TextStyle(fontWeight: FontWeight.bold),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ]
-                          ),
-                        );
-                      }
-                      else {
-                        return Card(
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                            children: [
-                              GestureDetector(
-                                onTap: () {
-                                  EquipoSinConexion(index);
-                                },
-                                child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    Image.asset(snapshot.data[1].toString()),
-                                  ],
-                                ),
-                              ),
-                              Row(
-                                mainAxisSize: MainAxisSize.min,
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  SizedBox(
-                                    width: MediaQuery.of(context).size.width/6.5,
-                                    child: Row(
+                                    Row(
+                                      mainAxisSize: MainAxisSize.min,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
                                       children: [
-                                        Expanded(
-                                          flex:1,
-                                          child: GestureDetector(
-                                              onTap: (){
-                                                EquipoSinConexion(index);
-                                              },
-                                              child: Center(
-                                                child: Icon(
-                                                  Icons.do_disturb_alt_outlined,
-                                                  color: Colors.red,
-                                                ),
-                                              )
+                                        SizedBox(
+                                          width: MediaQuery.of(context)
+                                                  .size
+                                                  .width /
+                                              6.5,
+                                          child: Row(
+                                            children: [
+                                              Expanded(
+                                                flex: 1,
+                                                child: GestureDetector(
+                                                    onTap: () {
+                                                      VistaPreviaReproduccion(
+                                                          index);
+                                                    },
+                                                    child: Center(
+                                                      child: Icon(
+                                                        Icons
+                                                            .remove_red_eye_sharp,
+                                                        color:
+                                                            Colors.blueAccent,
+                                                        size: 30,
+                                                      ),
+                                                    )),
+                                              ),
+                                              Expanded(
+                                                flex: 1,
+                                                child: GestureDetector(
+                                                    onTap: () {
+                                                      AlertaDesactivar(index);
+                                                    },
+                                                    child: Center(
+                                                      child: CircleAvatar(
+                                                        backgroundColor:
+                                                            Colors.blueAccent,
+                                                        radius: 10,
+                                                        child: Icon(
+                                                          Icons.edit,
+                                                          size: 17,
+                                                          color: Colors.white,
+                                                        ),
+                                                      ),
+                                                    )),
+                                              ),
+                                            ],
                                           ),
                                         ),
-                                        Expanded(
-                                          flex: 1,
-                                          child: GestureDetector(
-                                              onTap: () {
-                                                EquipoSinConexion(index);
-                                              },
-                                              child: Center(
-                                                child: Icon(
-                                                  Icons.desktop_access_disabled,
-                                                  color: Colors.red,
-                                                ),
-                                              )
+                                        SizedBox(
+                                          width: MediaQuery.of(context)
+                                                  .size
+                                                  .width /
+                                              3.2,
+                                          child: Text(
+                                            '${snapshot.data[0].toString().toUpperCase()}',
+                                            textScaleFactor: 1.1,
+                                            textAlign: TextAlign.center,
+                                            style: TextStyle(
+                                              fontFamily: 'textoMont',
+                                              fontSize: 11.5,
+                                            ),
                                           ),
                                         ),
                                       ],
                                     ),
-                                  ),
-
-                                  SizedBox(
-                                    width: MediaQuery.of(context).size.width/3.2,
-                                    child: Text(
-                                      '${snapshot.data[0].toString().toUpperCase()}',
-                                      textScaleFactor: 1.1,
-                                      textAlign: TextAlign.right,
-                                      style: TextStyle(fontWeight: FontWeight.bold),
+                                  ]),
+                            );
+                          }
+                          //Equipo conectado pero desactivado por el usuario
+                          else if (snapshot.data[2] == true &&
+                              snapshot.data[3] == false) {
+                            return Card(
+                              child: Column(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceEvenly,
+                                  children: [
+                                    GestureDetector(
+                                      onTap: () {
+                                        MensajeActivarEquipo(index);
+                                      },
+                                      child: Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          Image.asset(
+                                              snapshot.data[1].toString()),
+                                        ],
+                                      ),
                                     ),
+                                    Row(
+                                      mainAxisSize: MainAxisSize.min,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        SizedBox(
+                                          width: MediaQuery.of(context)
+                                                  .size
+                                                  .width /
+                                              6.5,
+                                          child: Row(
+                                            children: [
+                                              Expanded(
+                                                flex: 1,
+                                                child: GestureDetector(
+                                                    onTap: () {
+                                                      MensajeActivarEquipo(
+                                                          index);
+                                                    },
+                                                    child: Center(
+                                                      child: Icon(
+                                                        Icons.remove_red_eye,
+                                                        color: Colors.red,
+                                                      ),
+                                                    )),
+                                              ),
+                                              Expanded(
+                                                flex: 1,
+                                                child: GestureDetector(
+                                                    onTap: () {
+                                                      AlertaActivar(index);
+                                                    },
+                                                    child: Center(
+                                                      child: CircleAvatar(
+                                                        backgroundColor:
+                                                            Colors.blueAccent,
+                                                        radius: 10,
+                                                        child: Icon(
+                                                          Icons.edit,
+                                                          size: 17,
+                                                          color: Colors.white,
+                                                        ),
+                                                      ),
+                                                    )),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                        SizedBox(
+                                          width: MediaQuery.of(context)
+                                                  .size
+                                                  .width /
+                                              3.2,
+                                          child: Text(
+                                            '${snapshot.data[0].toString().toUpperCase()}',
+                                            textScaleFactor: 1.1,
+                                            textAlign: TextAlign.center,
+                                            style: TextStyle(
+                                              fontFamily: 'textoMont',
+                                              fontSize: 11.5,
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ]),
+                            );
+                          } else {
+                            return Card(
+                              child: Column(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceEvenly,
+                                children: [
+                                  GestureDetector(
+                                    onTap: () {
+                                      EquipoSinConexion(index);
+                                    },
+                                    child: Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        Image.asset(
+                                            snapshot.data[1].toString()),
+                                      ],
+                                    ),
+                                  ),
+                                  Row(
+                                    mainAxisSize: MainAxisSize.min,
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      SizedBox(
+                                        width:
+                                            MediaQuery.of(context).size.width /
+                                                6.5,
+                                        child: Row(
+                                          children: [
+                                            /*Expanded(
+                                              flex: 1,
+                                              child: GestureDetector(
+                                                  onTap: () {
+                                                    EquipoSinConexion(index);
+                                                  },
+                                                  child: Center(
+                                                    child: Icon(
+                                                      Icons
+                                                          .do_disturb_alt_outlined,
+                                                      color: Colors.red,
+                                                    ),
+                                                  )),
+                                            ),*/
+                                            Expanded(
+                                              flex: 1,
+                                              child: GestureDetector(
+                                                  onTap: () {
+                                                    EquipoSinConexion(index);
+                                                  },
+                                                  child: Center(
+                                                    child: Icon(
+                                                      Icons
+                                                          .do_disturb_on_rounded,
+                                                      color: Colors.red,
+                                                    ),
+                                                  )),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                      SizedBox(
+                                        width:
+                                            MediaQuery.of(context).size.width /
+                                                3.2,
+                                        child: Text(
+                                          '${snapshot.data[0].toString().toUpperCase()}',
+                                          textScaleFactor: 1.1,
+                                          textAlign: TextAlign.center,
+                                          style: TextStyle(
+                                            fontFamily: 'textoMont',
+                                            fontSize: 11.5,
+                                          ),
+                                        ),
+                                      ),
+                                    ],
                                   ),
                                 ],
                               ),
-                            ],
+                            );
+                            /*return Card(
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Image.asset(snapshot.data[1].toString()),
+                                Text('${snapshot.data[0]}'),
+                              ],
+                            ),
+                          );*/
+                          }
+                        }
+                      } else if (snapshot.hasError) {
+                        return Card(
+                          child: Center(
+                            child: Text(
+                              'ERROR: ${snapshot.error.toString()}',
+                            ),
                           ),
                         );
-                        /*return Card(
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Image.asset(snapshot.data[1].toString()),
-                              Text('${snapshot.data[0]}'),
-                            ],
-                          ),
-                        );*/
+                      } else {
+                        return Card(
+                          child: CircularProgressIndicator(),
+                        );
                       }
-                    }
-                  } else if(snapshot.hasError){
-                    return Card(
-                      child: Center(
-                        child: Text(
-                          'ERROR: ${snapshot.error.toString()}',
-                        ),
-                      ),
-                    );
-                  } else {
-                    return Card(
-                      child: CircularProgressIndicator(),
-                    );
-                  }
-                },
-              );
-            }),
+                    },
+                  );
+                }),
+              ),
+            ),
           ),
-        ),
+          FSwitch(
+            onChanged: (v) {},
+            sliderColor: Colors.white,
+            closeChild: CircleAvatar(
+              radius: 17,
+              backgroundColor: Colors.white,
+              child: Icon(
+                Icons.close,
+                color: Colors.red,
+              ),
+            ),
+            openChild: CircleAvatar(
+              radius: 17,
+              child: Icon(
+                Icons.check,
+                size: 25,
+                color: Colors.white,
+              ),
+            ),
+            color: Colors.red,
+            openColor: Colors.green,
+            width: 200,
+            height: 40,
+          )
+        ],
       ),
     );
   }
 
   ///Retorna una lista futura con los detalles para el widget Card
-  Future<List> _estadoEquipo(int _index) async{
+  Future<List> _estadoEquipo(int _index) async {
     //Listado de datos que maneja el snapshot del FutureBuilder
     //El dato [0] es alias
     //El dato [1] es dirección de imagen
@@ -336,66 +418,60 @@ class _RaspberriesConectadasState extends State<RaspberriesConectadas> {
     await actualizaDatos.getDatosEquipos();
     List datos = List();
     String alias = await ObtieneDatos.listadoEquipos[_index]['f_alias'];
-    if (alias == null){
+    if (alias == null) {
       alias = 'Sin Conexión';
     }
     datos.add(alias);
     bool activo = false;
     //Ver si la raspberry en esa posición está activa
-    var equipoActivo = await ObtieneDatos.listadoEquipos[_index]['f_equipoActivo'];
-    if (equipoActivo.toString() == '1'){
+    var equipoActivo =
+        await ObtieneDatos.listadoEquipos[_index]['f_equipoActivo'];
+    if (equipoActivo.toString() == '1') {
       activo = true;
     }
-    var layoutEquipo = await ObtieneDatos.listadoEquipos[_index]['f_layoutActual'];
+    var layoutEquipo =
+        await ObtieneDatos.listadoEquipos[_index]['f_layoutActual'];
     String ip = await ObtieneDatos.listadoEquipos[_index]['f_ip'];
 
     //Veo si la raspberry en esa posición tiene conexión
     bool conectado = await _ping(ip);
 
     //Acá se permiten botones si hay ping pero está desactivado
-    if (activo == false && conectado){
-      if (layoutEquipo.toString() == '1'){
+    if (activo == false && conectado) {
+      if (layoutEquipo.toString() == '1') {
         datos.add('imagenes/layoutdeshabilitado1.png');
         datos.add(true);
         datos.add(false);
-
-      } else if(layoutEquipo.toString() == '2'){
+      } else if (layoutEquipo.toString() == '2') {
         datos.add('imagenes/layoutdeshabilitado2.png');
         datos.add(true);
         datos.add(false);
-
-      } else if(layoutEquipo.toString() == '3'){
+      } else if (layoutEquipo.toString() == '3') {
         datos.add('imagenes/layoutdeshabilitado3.png');
         datos.add(true);
         datos.add(false);
-
       }
       return datos;
-    } else if (activo && conectado){
-
+    } else if (activo && conectado) {
       //Future<int> layout= obtieneDatosLayout(ip);
 
-      if (layoutEquipo.toString() == '1'){
+      if (layoutEquipo.toString() == '1') {
         datos.add('imagenes/layout1a.png');
         datos.add(true);
         datos.add(true);
-
-      } else if(layoutEquipo.toString() == '2'){
+      } else if (layoutEquipo.toString() == '2') {
         datos.add('imagenes/layout2b.png');
         datos.add(true);
         datos.add(true);
-
-      } else if(layoutEquipo.toString() == '3'){
+      } else if (layoutEquipo.toString() == '3') {
         datos.add('imagenes/layout3c.png');
         datos.add(true);
         datos.add(true);
-
       }
     } else {
       datos.add('imagenes/layoutdeshabilitado1.png');
       datos.add(false);
     }
-
 
     return datos;
   }
@@ -407,8 +483,8 @@ class _RaspberriesConectadasState extends State<RaspberriesConectadas> {
     //String tipoNuevoLayout;
     Uint8List _respuesta;
     List<int> listadoRespuestas = [];
-    try{
-      socket = await Socket.connect(ip,DatosEstaticos.puertoSocketRaspberry)
+    try {
+      socket = await Socket.connect(ip, DatosEstaticos.puertoSocketRaspberry)
           .timeout(Duration(seconds: 5));
       socket.write('TVPOSTPING');
       socket.listen((event) {
@@ -420,9 +496,9 @@ class _RaspberriesConectadasState extends State<RaspberriesConectadas> {
       });
 
       await socket.done.whenComplete(() => resp = utf8.decode(_respuesta));
-      if (resp!="") return true;
-    }catch(e){
-      if (socket!=null){
+      if (resp != "") return true;
+    } catch (e) {
+      if (socket != null) {
         socket.close();
       }
       return false;
@@ -439,8 +515,7 @@ class _RaspberriesConectadasState extends State<RaspberriesConectadas> {
   }
 
   Future<void> _recargarGrid() async {
-    setState(() {
-    });
+    setState(() {});
   }
 
   void LimpiarDatosEstaticos() {
@@ -460,7 +535,7 @@ class _RaspberriesConectadasState extends State<RaspberriesConectadas> {
     await datos.getDatosEquipos();
   }
 
-  VistaPreviaReproduccion(int index) async{
+  VistaPreviaReproduccion(int index) async {
     String ip = ObtieneDatos.listadoEquipos[index]['f_ip'].toString();
 
     showGeneralDialog(
@@ -468,16 +543,35 @@ class _RaspberriesConectadasState extends State<RaspberriesConectadas> {
       barrierColor: Colors.black12.withOpacity(0.6), // Color de fondo
       barrierDismissible: true,
       barrierLabel: "Captura_en_vivo", // Etiqueta obligatoria
-      transitionDuration: Duration(milliseconds: 400), //Cuanto demora en desaparecer
-      pageBuilder: (_, __, ___) { //widgets
+      transitionDuration:
+          Duration(milliseconds: 400), //Cuanto demora en desaparecer
+      pageBuilder: (_, __, ___) {
+        //widgets
         return Center(
-          child: SizedBox(
+          child: Container(
+            height: MediaQuery.of(context).size.height / 2.5,
+            width: MediaQuery.of(context).size.width - 50,
+            padding: EdgeInsets.only(top: 20),
+            decoration: new BoxDecoration(
+                borderRadius: BorderRadius.circular(50),
+                color: HexColor('#3EDB9B')
+                /*gradient: LinearGradient(
+                    colors: [HexColor("#3edb9b"), HexColor("#0683ff")],
+                    stops: [0.5, 1],
+                    begin: Alignment.topLeft,
+                    end: FractionalOffset.bottomRight)*/
+                ),
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
                 Container(
-                  width: MediaQuery.of(context).size.width,
-                  height: MediaQuery.of(context).size.height/3,
+                  decoration: new BoxDecoration(
+                      borderRadius: BorderRadius.circular(20),
+                      color: Colors.white),
+                  width: MediaQuery.of(context).size.width / 1.2,
+                  height: MediaQuery.of(context).size.height / 3.8,
+                  padding: EdgeInsets.all(10),
+                  //margin: EdgeInsets.only(right: 35, left: 35),
                   child: FutureBuilder(
                     future: _getScreenShot(ip),
                     builder: (context, snapshot) {
@@ -491,30 +585,53 @@ class _RaspberriesConectadasState extends State<RaspberriesConectadas> {
                           return widgetError;
                         } else {
                           //Retorna el widget con la imagen de screenshot
-                          var tipoimage = _screenshotProcesada.image.runtimeType.toString();
-                          if (tipoimage == "AssetImage"){
+                          var tipoimage =
+                              _screenshotProcesada.image.runtimeType.toString();
+                          if (tipoimage == "AssetImage") {
                             return widgetError;
                           }
                           return Container(
-                              child: Center(
-                                  child: _screenshotProcesada
-                              )
-                          );
+                              child: Center(child: _screenshotProcesada));
                         }
                       } else {
                         return Center(child: CircularProgressIndicator());
                       }
                     },
-
                   ),
                 ),
+                SizedBox(
+                  height: 20,
+                ),
+                FSwitch(
+                  onChanged: (v) {},
+                  sliderColor: Colors.white,
+                  closeChild: CircleAvatar(
+                    radius: 17,
+                    backgroundColor: Colors.white,
+                    child: Icon(
+                      Icons.close,
+                      color: Colors.red,
+                    ),
+                  ),
+                  openChild: CircleAvatar(
+                    radius: 17,
+                    child: Icon(
+                      Icons.check,
+                      size: 25,
+                      color: Colors.white,
+                    ),
+                  ),
+                  color: Colors.red,
+                  openColor: Colors.green,
+                  width: 200,
+                  height: 40,
+                )
               ],
             ),
           ),
         );
       },
     );
-
   }
 
   Future _getScreenShot(String ip) async {
@@ -541,9 +658,9 @@ class _RaspberriesConectadasState extends State<RaspberriesConectadas> {
       //Si no se retorna el whencomplete, se salta al final
       return socket.done.whenComplete(() {
         _respuesta = Uint8List.fromList(listadoRespuestas);
-        if (_respuesta.isEmpty){
+        if (_respuesta.isEmpty) {
           _screenshotProcesada = Image.asset('imagenes/logohorizontal.png');
-        }else {
+        } else {
           _screenshotProcesada = Image.memory(_respuesta);
         }
         //print(listadoRespuestas.length);
@@ -563,61 +680,87 @@ class _RaspberriesConectadasState extends State<RaspberriesConectadas> {
       context: context,
       barrierDismissible: true,
       child: new AlertDialog(
-        title: Text('Desactivar Equipo', textAlign: TextAlign.center,),
+        title: Text(
+          'Desactivar Equipo',
+          textAlign: TextAlign.center,
+        ),
         content: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Text('Alias: ${alias}', textAlign: TextAlign.center,),
-            Text('Serial: ${serial}', textAlign: TextAlign.center,),
-            Text('Ip: ${ip}', textAlign: TextAlign.center,),
+            Text(
+              'Alias: ${alias}',
+              textAlign: TextAlign.center,
+            ),
+            Text(
+              'Serial: ${serial}',
+              textAlign: TextAlign.center,
+            ),
+            Text(
+              'Ip: ${ip}',
+              textAlign: TextAlign.center,
+            ),
             SizedBox(
               height: 10,
             ),
             Row(
               children: [
                 Expanded(
-                  flex:1,
-                  child: RaisedButton(
-                    child: Text('Aceptar', textScaleFactor: 1.3,),
-                    onPressed: () async{
-                      PopUps.popUpCargando(context, 'Actualizando estado...');
-                      var resultado = await actualizarEstado.updateEstadoEquipo(
-                                          serial: serial,estado: "0");
-                      if (resultado == 1) {
-                        setState(() {
-                          Navigator.pop(context);
-                          Navigator.pop(context);
-                          Widget contenidoPopUp = Column(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              Text('Equipo $alias desactivado'),
-                              SizedBox(width: 10,),
-                              RaisedButton(
-                                child: Text('Aceptar', textScaleFactor: 1.3,),
-                                onPressed: (){Navigator.pop(context);},
-                              ),
-                            ],
-                          );
-                          PopUps.PopUpConWidget(context, contenidoPopUp);
-                        });
-                      }
-                    },
-                  )
+                    flex: 1,
+                    child: RaisedButton(
+                      child: Text(
+                        'Aceptar',
+                        textScaleFactor: 1.3,
+                      ),
+                      onPressed: () async {
+                        PopUps.popUpCargando(context, 'Actualizando estado...');
+                        var resultado = await actualizarEstado
+                            .updateEstadoEquipo(serial: serial, estado: "0");
+                        if (resultado == 1) {
+                          setState(() {
+                            Navigator.pop(context);
+                            Navigator.pop(context);
+                            Widget contenidoPopUp = Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Text('Equipo $alias desactivado'),
+                                SizedBox(
+                                  width: 10,
+                                ),
+                                RaisedButton(
+                                  child: Text(
+                                    'Aceptar',
+                                    textScaleFactor: 1.3,
+                                  ),
+                                  onPressed: () {
+                                    Navigator.pop(context);
+                                  },
+                                ),
+                              ],
+                            );
+                            PopUps.PopUpConWidget(context, contenidoPopUp);
+                          });
+                        }
+                      },
+                    )),
+                SizedBox(
+                  width: 10,
                 ),
-                SizedBox(width: 10,),
                 Expanded(
-                  flex:1,
-                  child: RaisedButton(
-                    child: Text('Cancelar', textScaleFactor: 1.3,),
-                    onPressed: (){Navigator.pop(context);},
-                  )
-                ),
+                    flex: 1,
+                    child: RaisedButton(
+                      child: Text(
+                        'Cancelar',
+                        textScaleFactor: 1.3,
+                      ),
+                      onPressed: () {
+                        Navigator.pop(context);
+                      },
+                    )),
               ],
             ),
           ],
         ),
       ),
-
     );
   }
 
@@ -631,26 +774,41 @@ class _RaspberriesConectadasState extends State<RaspberriesConectadas> {
       context: context,
       barrierDismissible: true,
       child: new AlertDialog(
-        title: Text('Activar Equipo', textAlign: TextAlign.center,),
+        title: Text(
+          'Activar Equipo',
+          textAlign: TextAlign.center,
+        ),
         content: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Text('Alias: ${alias}', textAlign: TextAlign.center,),
-            Text('Serial: ${serial}', textAlign: TextAlign.center,),
-            Text('Ip: ${ip}', textAlign: TextAlign.center,),
+            Text(
+              'Alias: ${alias}',
+              textAlign: TextAlign.center,
+            ),
+            Text(
+              'Serial: ${serial}',
+              textAlign: TextAlign.center,
+            ),
+            Text(
+              'Ip: ${ip}',
+              textAlign: TextAlign.center,
+            ),
             SizedBox(
               height: 10,
             ),
             Row(
               children: [
                 Expanded(
-                    flex:1,
+                    flex: 1,
                     child: RaisedButton(
-                      child: Text('Aceptar', textScaleFactor: 1.3,),
-                      onPressed: () async{
+                      child: Text(
+                        'Aceptar',
+                        textScaleFactor: 1.3,
+                      ),
+                      onPressed: () async {
                         PopUps.popUpCargando(context, 'Actualizando estado...');
-                        var resultado = await actualizarEstado.updateEstadoEquipo(
-                            serial: serial,estado: "1");
+                        var resultado = await actualizarEstado
+                            .updateEstadoEquipo(serial: serial, estado: "1");
                         if (resultado == 1) {
                           setState(() {
                             Navigator.pop(context);
@@ -659,10 +817,17 @@ class _RaspberriesConectadasState extends State<RaspberriesConectadas> {
                               mainAxisSize: MainAxisSize.min,
                               children: [
                                 Text('Equipo $alias activado'),
-                                SizedBox(width: 10,),
+                                SizedBox(
+                                  width: 10,
+                                ),
                                 RaisedButton(
-                                  child: Text('Aceptar', textScaleFactor: 1.3,),
-                                  onPressed: (){Navigator.pop(context);},
+                                  child: Text(
+                                    'Aceptar',
+                                    textScaleFactor: 1.3,
+                                  ),
+                                  onPressed: () {
+                                    Navigator.pop(context);
+                                  },
                                 ),
                               ],
                             );
@@ -670,22 +835,26 @@ class _RaspberriesConectadasState extends State<RaspberriesConectadas> {
                           });
                         }
                       },
-                    )
+                    )),
+                SizedBox(
+                  width: 10,
                 ),
-                SizedBox(width: 10,),
                 Expanded(
-                    flex:1,
+                    flex: 1,
                     child: RaisedButton(
-                      child: Text('Cancelar', textScaleFactor: 1.3,),
-                      onPressed: (){Navigator.pop(context);},
-                    )
-                ),
+                      child: Text(
+                        'Cancelar',
+                        textScaleFactor: 1.3,
+                      ),
+                      onPressed: () {
+                        Navigator.pop(context);
+                      },
+                    )),
               ],
             ),
           ],
         ),
       ),
-
     );
   }
 
@@ -703,18 +872,39 @@ class _RaspberriesConectadasState extends State<RaspberriesConectadas> {
           textScaleFactor: 1.2,
           style: TextStyle(fontWeight: FontWeight.bold),
         ),
-        SizedBox(height:10,),
-        Text('Alias: ${alias}', textAlign: TextAlign.center,),
-        Text('Serial: ${serial}', textAlign: TextAlign.center,),
-        Text('Ip: ${ip}', textAlign: TextAlign.center,),
         SizedBox(
           height: 10,
         ),
-        Text('Compruebe conexión de red y energía', textAlign: TextAlign.center,),
-        SizedBox(height:10,),
+        Text(
+          'Alias: ${alias}',
+          textAlign: TextAlign.center,
+        ),
+        Text(
+          'Serial: ${serial}',
+          textAlign: TextAlign.center,
+        ),
+        Text(
+          'Ip: ${ip}',
+          textAlign: TextAlign.center,
+        ),
+        SizedBox(
+          height: 10,
+        ),
+        Text(
+          'Compruebe conexión de red y energía',
+          textAlign: TextAlign.center,
+        ),
+        SizedBox(
+          height: 10,
+        ),
         RaisedButton(
-          child: Text('Aceptar', textScaleFactor: 1.3,),
-          onPressed: (){Navigator.pop(context);},
+          child: Text(
+            'Aceptar',
+            textScaleFactor: 1.3,
+          ),
+          onPressed: () {
+            Navigator.pop(context);
+          },
         ),
       ],
     );
@@ -740,12 +930,24 @@ class _RaspberriesConectadasState extends State<RaspberriesConectadas> {
         SizedBox(
           height: 10,
         ),*/
-        SizedBox(height:10,),
-        Text("Active equipo ' $alias ' y vuelva a intentarlo", textAlign: TextAlign.center,),
-        SizedBox(height:10,),
+        SizedBox(
+          height: 10,
+        ),
+        Text(
+          "Active equipo ' $alias ' y vuelva a intentarlo",
+          textAlign: TextAlign.center,
+        ),
+        SizedBox(
+          height: 10,
+        ),
         RaisedButton(
-          child: Text('Aceptar', textScaleFactor: 1.3,),
-          onPressed: (){Navigator.pop(context);},
+          child: Text(
+            'Aceptar',
+            textScaleFactor: 1.3,
+          ),
+          onPressed: () {
+            Navigator.pop(context);
+          },
         ),
       ],
     );
