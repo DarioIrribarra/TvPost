@@ -113,19 +113,29 @@ class ObtieneDatos {
   Future<int> updateEstadoEquipo({
     @required String serial,
     @required String estado,
+    List<dynamic> listadoEquipos,
     Response resultado,
   }) async {
     try {
-      resultado = await post(
-          'http://drioxmaster.cl/'
-          'resttvpost/updateEstadoEquipo.php',
-          body: {
-            'f_serial': '$serial',
-            'f_equipoActivo': '$estado',
-          });
+      if (serial != "-1") {
+        resultado = await post(
+            'http://drioxmaster.cl/'
+                'resttvpost/updateEstadoEquipo.php',
+            body: {
+              'f_serial': '$serial',
+              'f_equipoActivo': '$estado',
+            });
 
-      if (resultado.reasonPhrase == 'OK') {
-        return 1;
+        if (resultado.reasonPhrase == 'OK') {
+          return 1;
+        }
+      } else {
+        var dato;
+        await AdministrarActivacionEquipos(listadoEquipos: listadoEquipos,
+            estado: estado).then((value) {dato = value;});
+        if (dato == 1){
+          return 1;
+        }
       }
     } catch (e) {
       print("Error: ${e.toString()}");
@@ -263,4 +273,40 @@ class ObtieneDatos {
       return;
     }
   }
+}
+
+Future<int> AdministrarActivacionEquipos({List<dynamic> listadoEquipos, String estado}) async {
+
+  try {
+    for (int contador = 0; contador<= listadoEquipos.length -1; contador++){
+      String serialUtilizar = listadoEquipos[contador]['f_serial'].toString();
+      await post(
+          'http://drioxmaster.cl/'
+              'resttvpost/updateEstadoEquipo.php',
+          body: {
+            'f_serial': '$serialUtilizar',
+            'f_equipoActivo': '$estado',
+          });
+    }
+  }catch(e){
+    return 0;
+  }
+
+  return 1;
+  /*listadoEquipos.forEach((element) {
+    String serialListado = element['f_serial'].toString();
+    await post(
+        'http://drioxmaster.cl/'
+            'resttvpost/updateEstadoEquipo.php',
+        body: {
+          'f_serial': '$serialListado',
+          'f_equipoActivo': '$estado',
+        }).then((value) {
+          contador = contador +1;
+          print(contador);
+
+        });
+  });*/
+
+
 }

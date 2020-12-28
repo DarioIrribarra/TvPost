@@ -25,6 +25,9 @@ class _DetalleEquipoState extends State<DetalleEquipo> {
     'imagenes/logohorizontal.png',
     fit: BoxFit.fill,
   );
+  Image _equipoNoActivado = Image.asset(
+    'imagenes/layoutdeshabilitado1.png',
+  );
   GlobalKey<FormState> _keyValidador = GlobalKey<FormState>();
   TextEditingController _controladorTexto = TextEditingController(text: "");
   //Guarda el estado del context para usarlo con el snackbar
@@ -59,6 +62,240 @@ class _DetalleEquipoState extends State<DetalleEquipo> {
     DatosEstaticos.ipSeleccionada =
         DatosEstaticos.listadoDatosEquipoSeleccionado[0]['f_ip'];
 
+    String equipoActivo = ObtieneDatos.listadoEquipos[indexEquipoGrid]['f_equipoActivo'].toString();
+
+    Widget widgetContenido;
+    if(equipoActivo == '1'){
+      widgetContenido = FutureBuilder(
+        future: _getScreenShot(),
+        builder: (context, snapshot) {
+          Widget widgetError = Column(
+            children: [
+              Container(
+                width: MediaQuery.of(context).size.width,
+                height: MediaQuery.of(context).size.height / 3,
+                child: _screenshotProcesada,
+                color: Colors.green,
+                margin: EdgeInsets.only(bottom: 10),
+              ),
+              Center(
+                  child: Padding(
+                    padding: const EdgeInsets.only(bottom: 10),
+                    child: Text(
+                      "¡Ups, algo ha salido mal!",
+                      textScaleFactor: 1.2,
+                    ),
+                  )),
+              Text(
+                "Deslice hacia abajo para recargar imagen",
+                textScaleFactor: 1.2,
+              ),
+            ],
+          );
+          if (snapshot.connectionState == ConnectionState.done) {
+            if (snapshot.data == null) {
+              return widgetError;
+            } else {
+              //Retorna el widget con la imagen de screenshot
+              var tipoimage =
+              _screenshotProcesada.image.runtimeType.toString();
+              if (tipoimage == "AssetImage") {
+                return widgetError;
+              }
+
+              //Acá obtengo las dimensiones base exactas de la pantalla
+              ObtenerSizePixelesPantalla();
+
+              return Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Container(
+                    child: Column(
+                      children: [
+                        Container(
+                            margin: EdgeInsets.only(bottom: 5),
+                            width:
+                            MediaQuery.of(context).size.width,
+                            height:
+                            MediaQuery.of(context).size.height /
+                                3,
+                            child: _screenshotProcesada),
+                        Row(
+                          mainAxisAlignment:
+                          MainAxisAlignment.spaceEvenly,
+                          children: [
+                            FloatingActionButton(
+                              heroTag: null,
+                              child: Icon(Icons.refresh),
+                              onPressed: () {
+                                setState(() {});
+                              },
+                            ),
+                            FloatingActionButton(
+                              heroTag: null,
+                              child:
+                              Icon(Icons.screen_search_desktop),
+                              onPressed: () {
+                                _vncRaspberryWeb();
+                              },
+                            )
+                          ],
+                        ),
+                        Row(
+                          mainAxisAlignment:
+                          MainAxisAlignment.center,
+                          children: [
+                            Text('Alias: '),
+                            Text(DatosEstaticos
+                                .listadoDatosEquipoSeleccionado[
+                            0]['f_alias']),
+                            IconButton(
+                              onPressed: () async {
+                                _widgetPopUpAlias();
+                              },
+                              icon: Icon(Icons.edit),
+                            )
+                          ],
+                        ),
+                        Row(
+                          mainAxisAlignment:
+                          MainAxisAlignment.spaceAround,
+                          children: [
+                            Text('Ip: '),
+                            Text(DatosEstaticos
+                                .listadoDatosEquipoSeleccionado[
+                            0]['f_ip']),
+                          ],
+                        ),
+                        Row(
+                          mainAxisAlignment:
+                          MainAxisAlignment.spaceAround,
+                          children: [
+                            Text('Serial: '),
+                            Text(DatosEstaticos
+                                .listadoDatosEquipoSeleccionado[
+                            0]['f_serial']),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                  Align(
+                    alignment: Alignment.bottomCenter,
+                    heightFactor: 4.0,
+                    child: RaisedButton(
+                      onPressed: () async {
+                        String dir =
+                            (await getTemporaryDirectory()).path;
+                        File temporal =
+                        new File('$dir/img_temp_creada.png');
+                        Navigator.pushNamed(
+                            context, '/seleccionar_layout');
+                      },
+                      child: Text('Modificar Layout'),
+                    ),
+                  ),
+                ],
+              );
+            }
+          } else {
+            return CircularProgressIndicator();
+          }
+        },
+      );
+    } else {
+      widgetContenido = Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Container(
+            child: Column(
+              children: [
+                Container(
+                    margin: EdgeInsets.only(bottom: 5),
+                    width: MediaQuery.of(context).size.width,
+                    height: MediaQuery.of(context).size.height /3,
+                    child: _equipoNoActivado),
+                Row(
+                  mainAxisAlignment:
+                  MainAxisAlignment.spaceEvenly,
+                  children: [
+                    FloatingActionButton(
+                      heroTag: null,
+                      child: Icon(Icons.refresh),
+                      onPressed: () {
+                        setState(() {});
+                      },
+                    ),
+                    FloatingActionButton(
+                      heroTag: null,
+                      child:
+                      Icon(Icons.screen_search_desktop),
+                      onPressed: () {
+                        _vncRaspberryWeb();
+                      },
+                    )
+                  ],
+                ),
+                Row(
+                  mainAxisAlignment:
+                  MainAxisAlignment.center,
+                  children: [
+                    Text('Alias: '),
+                    Text(DatosEstaticos
+                        .listadoDatosEquipoSeleccionado[
+                    0]['f_alias']),
+                    IconButton(
+                      onPressed: () async {
+                        _widgetPopUpAlias();
+                      },
+                      icon: Icon(Icons.edit),
+                    )
+                  ],
+                ),
+                Row(
+                  mainAxisAlignment:
+                  MainAxisAlignment.spaceAround,
+                  children: [
+                    Text('Ip: '),
+                    Text(DatosEstaticos
+                        .listadoDatosEquipoSeleccionado[
+                    0]['f_ip']),
+                  ],
+                ),
+                Row(
+                  mainAxisAlignment:
+                  MainAxisAlignment.spaceAround,
+                  children: [
+                    Text('Serial: '),
+                    Text(DatosEstaticos
+                        .listadoDatosEquipoSeleccionado[
+                    0]['f_serial']),
+                  ],
+                ),
+              ],
+            ),
+          ),
+          /*Align(
+            alignment: Alignment.bottomCenter,
+            heightFactor: 4.0,
+            child: RaisedButton(
+              onPressed: () async {
+                String dir =
+                    (await getTemporaryDirectory()).path;
+                File temporal =
+                new File('$dir/img_temp_creada.png');
+                Navigator.pushNamed(
+                    context, '/seleccionar_layout');
+              },
+              child: Text('Modificar Layout'),
+            ),
+          ),*/
+        ],
+      );
+    }
+
+
+
     return WillPopScope(
       //Cierra todas las ventanas anteriores existentes y llega a
       // la ruta entregada
@@ -83,143 +320,7 @@ class _DetalleEquipoState extends State<DetalleEquipo> {
               Container(
                 margin: EdgeInsets.all(20.0),
                 child: Center(
-                  child: FutureBuilder(
-                    future: _getScreenShot(),
-                    builder: (context, snapshot) {
-                      Widget widgetError = Column(
-                        children: [
-                          Container(
-                            width: MediaQuery.of(context).size.width,
-                            height: MediaQuery.of(context).size.height / 3,
-                            child: _screenshotProcesada,
-                            color: Colors.green,
-                            margin: EdgeInsets.only(bottom: 10),
-                          ),
-                          Center(
-                              child: Padding(
-                            padding: const EdgeInsets.only(bottom: 10),
-                            child: Text(
-                              "¡Ups, algo ha salido mal!",
-                              textScaleFactor: 1.2,
-                            ),
-                          )),
-                          Text(
-                            "Deslice hacia abajo para recargar imagen",
-                            textScaleFactor: 1.2,
-                          ),
-                        ],
-                      );
-                      if (snapshot.connectionState == ConnectionState.done) {
-                        if (snapshot.data == null) {
-                          return widgetError;
-                        } else {
-                          //Retorna el widget con la imagen de screenshot
-                          var tipoimage =
-                              _screenshotProcesada.image.runtimeType.toString();
-                          if (tipoimage == "AssetImage") {
-                            return widgetError;
-                          }
-
-                          //Acá obtengo las dimensiones base exactas de la pantalla
-                          ObtenerSizePixelesPantalla();
-
-                          return Column(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              Container(
-                                child: Column(
-                                  children: [
-                                    Container(
-                                        margin: EdgeInsets.only(bottom: 5),
-                                        width:
-                                            MediaQuery.of(context).size.width,
-                                        height:
-                                            MediaQuery.of(context).size.height /
-                                                3,
-                                        child: _screenshotProcesada),
-                                    Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceEvenly,
-                                      children: [
-                                        FloatingActionButton(
-                                          heroTag: null,
-                                          child: Icon(Icons.refresh),
-                                          onPressed: () {
-                                            setState(() {});
-                                          },
-                                        ),
-                                        FloatingActionButton(
-                                          heroTag: null,
-                                          child:
-                                              Icon(Icons.screen_search_desktop),
-                                          onPressed: () {
-                                            _vncRaspberryWeb();
-                                          },
-                                        )
-                                      ],
-                                    ),
-                                    Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      children: [
-                                        Text('Alias: '),
-                                        Text(DatosEstaticos
-                                                .listadoDatosEquipoSeleccionado[
-                                            0]['f_alias']),
-                                        IconButton(
-                                          onPressed: () async {
-                                            _widgetPopUpAlias();
-                                          },
-                                          icon: Icon(Icons.edit),
-                                        )
-                                      ],
-                                    ),
-                                    Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceAround,
-                                      children: [
-                                        Text('Ip: '),
-                                        Text(DatosEstaticos
-                                                .listadoDatosEquipoSeleccionado[
-                                            0]['f_ip']),
-                                      ],
-                                    ),
-                                    Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceAround,
-                                      children: [
-                                        Text('Serial: '),
-                                        Text(DatosEstaticos
-                                                .listadoDatosEquipoSeleccionado[
-                                            0]['f_serial']),
-                                      ],
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              Align(
-                                alignment: Alignment.bottomCenter,
-                                heightFactor: 4.0,
-                                child: RaisedButton(
-                                  onPressed: () async {
-                                    String dir =
-                                        (await getTemporaryDirectory()).path;
-                                    File temporal =
-                                        new File('$dir/img_temp_creada.png');
-                                    Navigator.pushNamed(
-                                        context, '/seleccionar_layout');
-                                  },
-                                  child: Text('Modificar Layout'),
-                                ),
-                              ),
-                            ],
-                          );
-                        }
-                      } else {
-                        return CircularProgressIndicator();
-                      }
-                    },
-                  ),
+                  child: widgetContenido,
                 ),
               ),
             ],

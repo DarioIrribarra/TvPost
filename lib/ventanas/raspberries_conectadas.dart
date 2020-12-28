@@ -12,7 +12,8 @@ import 'package:liquid_pull_to_refresh/liquid_pull_to_refresh.dart';
 import 'package:fswitch/fswitch.dart';
 
 int cantidad;
-bool valorToogle = false;
+bool valorSwitchTodos;
+bool valorSwitchUno;
 
 class RaspberriesConectadas extends StatefulWidget {
   @override
@@ -29,6 +30,9 @@ class _RaspberriesConectadasState extends State<RaspberriesConectadas> {
   void initState() {
     //Comprueba cantidad de equipos
     listarEquipos();
+    //Comprueba si todos los equipos están desactivados
+    valorSwitchTodos = TodosEquiposDesactivados();
+    //print(dato);
     super.initState();
   }
 
@@ -143,7 +147,16 @@ class _RaspberriesConectadasState extends State<RaspberriesConectadas> {
                                                 flex: 1,
                                                 child: GestureDetector(
                                                     onTap: () {
-                                                      AlertaDesactivar(index);
+                                                      //AlertaDesactivar(index: index);
+                                                      //Libera los widgets y datos creados
+                                                      LimpiarDatosEstaticos();
+                                                      DatosEstaticos.indexSeleccionado =
+                                                          index;
+                                                      return Navigator.pushNamed(
+                                                          context, '/detalle_equipo',
+                                                          arguments: {
+                                                            "indexEquipoGrid": index,
+                                                          });
                                                     },
                                                     child: Center(
                                                       child: CircleAvatar(
@@ -191,7 +204,15 @@ class _RaspberriesConectadasState extends State<RaspberriesConectadas> {
                                   children: [
                                     GestureDetector(
                                       onTap: () {
-                                        MensajeActivarEquipo(index);
+                                        //MensajeActivarEquipo(index);
+                                        LimpiarDatosEstaticos();
+                                        DatosEstaticos.indexSeleccionado =
+                                            index;
+                                        return Navigator.pushNamed(
+                                            context, '/detalle_equipo',
+                                            arguments: {
+                                              "indexEquipoGrid": index,
+                                            });
                                       },
                                       child: Column(
                                         mainAxisAlignment:
@@ -218,8 +239,10 @@ class _RaspberriesConectadasState extends State<RaspberriesConectadas> {
                                                 flex: 1,
                                                 child: GestureDetector(
                                                     onTap: () {
-                                                      MensajeActivarEquipo(
-                                                          index);
+                                                      /*MensajeActivarEquipo(
+                                                          index);*/
+                                                      //Libera los widgets y datos creados
+
                                                     },
                                                     child: Center(
                                                       child: Icon(
@@ -232,7 +255,18 @@ class _RaspberriesConectadasState extends State<RaspberriesConectadas> {
                                                 flex: 1,
                                                 child: GestureDetector(
                                                     onTap: () {
-                                                      AlertaActivar(index);
+                                                      //AlertaActivar(index: index);
+                                                      /*MensajeActivarEquipo(
+                                                          index);*/
+                                                      //Libera los widgets y datos creados
+                                                      LimpiarDatosEstaticos();
+                                                      DatosEstaticos.indexSeleccionado =
+                                                          index;
+                                                      return Navigator.pushNamed(
+                                                          context, '/detalle_equipo',
+                                                          arguments: {
+                                                            "indexEquipoGrid": index,
+                                                          });
                                                     },
                                                     child: Center(
                                                       child: CircleAvatar(
@@ -379,7 +413,15 @@ class _RaspberriesConectadasState extends State<RaspberriesConectadas> {
             ),
           ),
           FSwitch(
-            onChanged: (v) {},
+            open: valorSwitchTodos,
+            onChanged: (bool) {
+              var dato = ObtieneDatos.listadoEquipos;
+              if (valorSwitchTodos == false){
+                AlertaDesactivar(listadoEquipos: dato, valorSwitch: valorSwitchTodos);
+              } else {
+                AlertaActivar(listadoEquipos: dato, valorSwitch: valorSwitchTodos);
+              }
+            },
             sliderColor: Colors.white,
             closeChild: CircleAvatar(
               radius: 17,
@@ -537,6 +579,12 @@ class _RaspberriesConectadasState extends State<RaspberriesConectadas> {
 
   VistaPreviaReproduccion(int index) async {
     String ip = ObtieneDatos.listadoEquipos[index]['f_ip'].toString();
+    String valorActivo = ObtieneDatos.listadoEquipos[index]['f_equipoActivo'].toString();
+    if (valorActivo == '1'){
+      valorSwitchUno = false;
+    } else {
+      valorSwitchUno = true;
+    }
 
     showGeneralDialog(
       context: context,
@@ -603,7 +651,14 @@ class _RaspberriesConectadasState extends State<RaspberriesConectadas> {
                   height: 20,
                 ),
                 FSwitch(
-                  onChanged: (v) {},
+                  open: valorSwitchUno,
+                  onChanged: (bool) {
+                    if (valorSwitchUno == false){
+                      AlertaDesactivar(index: index, valorSwitch: valorSwitchUno);
+                    } else {
+                      AlertaActivar(index: index, valorSwitch: valorSwitchUno);
+                    }
+                  },
                   sliderColor: Colors.white,
                   closeChild: CircleAvatar(
                     radius: 17,
@@ -670,18 +725,21 @@ class _RaspberriesConectadasState extends State<RaspberriesConectadas> {
     }
   }
 
-  void AlertaDesactivar(int index) async {
+  void AlertaDesactivar({
+    int index = 0,
+    List<dynamic> listadoEquipos,
+    bool valorSwitch = true}) async {
     String ip = ObtieneDatos.listadoEquipos[index]['f_ip'].toString();
     String serial = ObtieneDatos.listadoEquipos[index]['f_serial'].toString();
     String alias = ObtieneDatos.listadoEquipos[index]['f_alias'].toString();
     ObtieneDatos actualizarEstado = ObtieneDatos();
 
-    await showDialog<String>(
-      context: context,
-      barrierDismissible: true,
-      child: new AlertDialog(
+    Widget contenido;
+
+    if (listadoEquipos == null){
+      contenido = new AlertDialog(
         title: Text(
-          'Desactivar Equipo',
+          'Deshabilitar Equipo',
           textAlign: TextAlign.center,
         ),
         content: Column(
@@ -712,17 +770,100 @@ class _RaspberriesConectadasState extends State<RaspberriesConectadas> {
                         textScaleFactor: 1.3,
                       ),
                       onPressed: () async {
-                        PopUps.popUpCargando(context, 'Actualizando estado...');
+                        PopUps.popUpCargando(context, 'Deshabilitando equipo...');
                         var resultado = await actualizarEstado
                             .updateEstadoEquipo(serial: serial, estado: "0");
                         if (resultado == 1) {
                           setState(() {
                             Navigator.pop(context);
                             Navigator.pop(context);
+                            valorSwitchUno = true;
                             Widget contenidoPopUp = Column(
                               mainAxisSize: MainAxisSize.min,
                               children: [
-                                Text('Equipo $alias desactivado'),
+                                Text('Equipo $alias deshabilitado'),
+                                SizedBox(
+                                  width: 10,
+                                ),
+                                RaisedButton(
+                                  child: Text(
+                                    'Aceptar',
+                                    textScaleFactor: 1.3,
+                                  ),
+                                  onPressed: () {
+                                    Navigator.pop(context);
+                                    Navigator.pop(context);
+                                  },
+                                ),
+                              ],
+                            );
+                            PopUps.PopUpConWidget(context, contenidoPopUp);
+                          });
+                        }
+                      },
+                    )),
+                SizedBox(
+                  width: 10,
+                ),
+                Expanded(
+                    flex: 1,
+                    child: RaisedButton(
+                      child: Text(
+                        'Cancelar',
+                        textScaleFactor: 1.3,
+                      ),
+                      onPressed: () {
+                        Navigator.pop(context);
+                        setState(() {
+                          Navigator.pop(context);
+                          valorSwitchUno = valorSwitch;
+                        });
+                      },
+                    )),
+              ],
+            ),
+          ],
+        ),
+      );
+    } else {
+      contenido = new AlertDialog(
+        title: Text(
+          'Deshabilitar Equipos',
+          textAlign: TextAlign.center,
+        ),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text(
+              '¿Desea deshabilitar todos los equipos?',
+              textAlign: TextAlign.center,
+            ),
+            SizedBox(
+              height: 10,
+            ),
+            Row(
+              children: [
+                Expanded(
+                    flex: 1,
+                    child: RaisedButton(
+                      child: Text(
+                        'Aceptar',
+                        textScaleFactor: 1.3,
+                      ),
+                      onPressed: () async {
+                        PopUps.popUpCargando(context, 'Deshabilitando equipos...');
+                        var resultado = await actualizarEstado
+                            .updateEstadoEquipo(serial: "-1", estado: "0",
+                            listadoEquipos: listadoEquipos);
+                        if (resultado == 1) {
+                          setState(() {
+                            Navigator.pop(context);
+                            Navigator.pop(context);
+                            valorSwitchTodos = true;
+                            Widget contenidoPopUp = Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Text('Todos los equipos deshabilitados'),
                                 SizedBox(
                                   width: 10,
                                 ),
@@ -754,28 +895,40 @@ class _RaspberriesConectadasState extends State<RaspberriesConectadas> {
                       ),
                       onPressed: () {
                         Navigator.pop(context);
+                        setState(() {
+                          valorSwitchTodos = valorSwitch;
+                        });
                       },
                     )),
               ],
             ),
           ],
         ),
-      ),
+      );
+    }
+
+    await showDialog<String>(
+      context: context,
+      barrierDismissible: true,
+      child: contenido,
     );
   }
 
-  void AlertaActivar(int index) async {
+  void AlertaActivar({
+    int index = 0,
+    List<dynamic> listadoEquipos,
+    bool valorSwitch = true}) async {
     String ip = ObtieneDatos.listadoEquipos[index]['f_ip'].toString();
     String serial = ObtieneDatos.listadoEquipos[index]['f_serial'].toString();
     String alias = ObtieneDatos.listadoEquipos[index]['f_alias'].toString();
     ObtieneDatos actualizarEstado = ObtieneDatos();
 
-    await showDialog<String>(
-      context: context,
-      barrierDismissible: true,
-      child: new AlertDialog(
+    Widget contenido;
+
+    if (listadoEquipos == null){
+      contenido = new AlertDialog(
         title: Text(
-          'Activar Equipo',
+          'Habilitar Equipo',
           textAlign: TextAlign.center,
         ),
         content: Column(
@@ -806,17 +959,100 @@ class _RaspberriesConectadasState extends State<RaspberriesConectadas> {
                         textScaleFactor: 1.3,
                       ),
                       onPressed: () async {
-                        PopUps.popUpCargando(context, 'Actualizando estado...');
+                        PopUps.popUpCargando(context, 'Habilitando equipo...');
                         var resultado = await actualizarEstado
                             .updateEstadoEquipo(serial: serial, estado: "1");
                         if (resultado == 1) {
                           setState(() {
                             Navigator.pop(context);
                             Navigator.pop(context);
+                            valorSwitchUno = false;
                             Widget contenidoPopUp = Column(
                               mainAxisSize: MainAxisSize.min,
                               children: [
-                                Text('Equipo $alias activado'),
+                                Text('Equipo $alias habilitado'),
+                                SizedBox(
+                                  width: 10,
+                                ),
+                                RaisedButton(
+                                  child: Text(
+                                    'Aceptar',
+                                    textScaleFactor: 1.3,
+                                  ),
+                                  onPressed: () {
+                                    Navigator.pop(context);
+                                    Navigator.pop(context);
+                                  },
+                                ),
+                              ],
+                            );
+                            PopUps.PopUpConWidget(context, contenidoPopUp);
+                          });
+                        }
+                      },
+                    )),
+                SizedBox(
+                  width: 10,
+                ),
+                Expanded(
+                    flex: 1,
+                    child: RaisedButton(
+                      child: Text(
+                        'Cancelar',
+                        textScaleFactor: 1.3,
+                      ),
+                      onPressed: () {
+                        Navigator.pop(context);
+                        setState(() {
+                          Navigator.pop(context);
+                          valorSwitchUno = valorSwitch;
+                        });
+                      },
+                    )),
+              ],
+            ),
+          ],
+        ),
+      );
+    } else {
+      contenido = new AlertDialog(
+        title: Text(
+          'Habilitar Equipos',
+          textAlign: TextAlign.center,
+        ),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text(
+              '¿Desea habilitar todos los equipos?',
+              textAlign: TextAlign.center,
+            ),
+            SizedBox(
+              height: 10,
+            ),
+            Row(
+              children: [
+                Expanded(
+                    flex: 1,
+                    child: RaisedButton(
+                      child: Text(
+                        'Aceptar',
+                        textScaleFactor: 1.3,
+                      ),
+                      onPressed: () async {
+                        PopUps.popUpCargando(context, 'Habilitando equipos...');
+                        var resultado = await actualizarEstado
+                            .updateEstadoEquipo(serial: "-1", estado: "1",
+                            listadoEquipos: listadoEquipos);
+                        if (resultado == 1) {
+                          setState(() {
+                            Navigator.pop(context);
+                            Navigator.pop(context);
+                            valorSwitchTodos = false;
+                            Widget contenidoPopUp = Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Text('Todos los equipos habilitados'),
                                 SizedBox(
                                   width: 10,
                                 ),
@@ -848,13 +1084,22 @@ class _RaspberriesConectadasState extends State<RaspberriesConectadas> {
                       ),
                       onPressed: () {
                         Navigator.pop(context);
+                        setState(() {
+                          valorSwitchTodos = valorSwitch;
+                        });
                       },
                     )),
               ],
             ),
           ],
         ),
-      ),
+      );
+    }
+
+    await showDialog<String>(
+      context: context,
+      barrierDismissible: true,
+      child: contenido,
     );
   }
 
@@ -991,4 +1236,21 @@ class _RaspberriesConectadasState extends State<RaspberriesConectadas> {
     return _layoutSeleccionado;
   }
 */
+}
+
+bool TodosEquiposDesactivados() {
+  bool todosDesactivados;
+  int cantidadDesactivados = 0;
+  var listado = ObtieneDatos.listadoEquipos;
+  listado.forEach((element) {
+    if (element['f_equipoActivo'].toString() == '0'){
+      cantidadDesactivados += 1;
+    }
+  });
+  if (cantidadDesactivados >= listado.length){
+    todosDesactivados = true;
+  } else {
+    todosDesactivados = false;
+  }
+  return todosDesactivados;
 }
