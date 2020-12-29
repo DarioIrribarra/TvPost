@@ -111,38 +111,54 @@ class CustomAppBar extends PreferredSize {
 
   @override
   Widget build(BuildContext context) {
-    return AppBar(
-      actions: [
-        Container(
+    return SafeArea(
+      child: AppBar(
+        flexibleSpace: Container(
           decoration: new BoxDecoration(
               gradient: LinearGradient(
                   colors: [HexColor("#0683ff"), HexColor("#3edb9b")],
-                  stops: [0.5, 1],
+                  stops: [0.1, 0.6],
                   begin: Alignment.centerLeft,
                   end: FractionalOffset.centerRight)),
-          child: Row(
-            children: [
-              Container(
-                padding: EdgeInsets.all(10.0),
-                margin: EdgeInsets.only(right: 30.0),
-                child: Image.asset(
-                  'imagenes/logohorizontal.png',
-                  height: 125,
-                  width: 125,
-                ),
+          child: Padding(
+            padding: EdgeInsets.only(left: MediaQuery.of(context).size.width/5.5),
+            child: Container(
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  Expanded(
+                    flex: 3,
+                    child: Container(
+                      padding: EdgeInsets.all(12.0),
+                      child: Image.asset(
+                        'imagenes/logohorizontal.png',
+                      ),
+                    ),
+                  ),
+                  Expanded(
+                    flex: 1,
+                    child: IconButton(
+                      iconSize: 40,
+                      padding: const EdgeInsets.only(right: 20),
+                      icon: Icon(
+                        Icons.menu,
+                        color: Colors.white,
+                      ),
+                      onPressed: () {
+                        PopUps.PopUpConWidget(
+                            context, Text('Menú en creación',
+                          textAlign: TextAlign.center,)
+                        );
+                      },
+                    ),
+                  ),
+                ],
               ),
-              IconButton(
-                iconSize: 40,
-                padding: const EdgeInsets.only(right: 20),
-                icon: Icon(
-                  Icons.menu,
-                ),
-                onPressed: () {},
-              ),
-            ],
+            ),
           ),
         ),
-      ],
+      ),
     );
   }
 }

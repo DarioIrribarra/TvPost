@@ -50,6 +50,7 @@ class ObtieneDatos {
 
     try {
       listadoEquipos = jsonDecode(responseEquipos.body);
+      return 1;
     } catch (e) {
       return;
     }

@@ -220,18 +220,20 @@ class _DetalleEquipoState extends State<DetalleEquipo> {
                   MainAxisAlignment.spaceEvenly,
                   children: [
                     FloatingActionButton(
+                      backgroundColor: Colors.white,
                       heroTag: null,
-                      child: Icon(Icons.refresh),
+                      child: Icon(Icons.refresh, color: Colors.red),
                       onPressed: () {
                         setState(() {});
                       },
                     ),
                     FloatingActionButton(
+                      backgroundColor: Colors.white,
                       heroTag: null,
                       child:
-                      Icon(Icons.screen_search_desktop),
+                      Icon(Icons.screen_search_desktop, color: Colors.red,),
                       onPressed: () {
-                        _vncRaspberryWeb();
+                        //_vncRaspberryWeb();
                       },
                     )
                   ],
