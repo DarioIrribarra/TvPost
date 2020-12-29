@@ -52,6 +52,7 @@ dependencies:
   hexcolor: ^1.0.6
   flutter_social_content_share: ^0.0.3
   fswitch: ^1.1.2
+  lite_rolling_switch: ^0.1.1
 
 
 dev_dependencies:

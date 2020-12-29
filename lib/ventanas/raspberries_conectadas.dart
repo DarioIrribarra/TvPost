@@ -10,10 +10,17 @@ import 'package:tvpost_flutter/utilidades/obtiene_datos_webservice.dart';
 import 'package:tvpost_flutter/utilidades/custom_widgets.dart';
 import 'package:liquid_pull_to_refresh/liquid_pull_to_refresh.dart';
 import 'package:fswitch/fswitch.dart';
+import 'package:lite_rolling_switch/lite_rolling_switch.dart';
 
 int cantidad;
 bool valorSwitchTodos;
 bool valorSwitchUno;
+bool estadoToogle;
+Text onOff = Text("ON");
+Color b = Colors.white;
+Color t = Colors.transparent;
+Color b2 = Colors.white;
+Color t2 = Colors.transparent;
 
 class RaspberriesConectadas extends StatefulWidget {
   @override
@@ -150,12 +157,15 @@ class _RaspberriesConectadasState extends State<RaspberriesConectadas> {
                                                       //AlertaDesactivar(index: index);
                                                       //Libera los widgets y datos creados
                                                       LimpiarDatosEstaticos();
-                                                      DatosEstaticos.indexSeleccionado =
+                                                      DatosEstaticos
+                                                              .indexSeleccionado =
                                                           index;
-                                                      return Navigator.pushNamed(
-                                                          context, '/detalle_equipo',
-                                                          arguments: {
-                                                            "indexEquipoGrid": index,
+                                                      return Navigator
+                                                          .pushNamed(context,
+                                                              '/detalle_equipo',
+                                                              arguments: {
+                                                            "indexEquipoGrid":
+                                                                index,
                                                           });
                                                     },
                                                     child: Center(
@@ -235,14 +245,13 @@ class _RaspberriesConectadasState extends State<RaspberriesConectadas> {
                                               6.5,
                                           child: Row(
                                             children: [
-                                              Expanded(
+                                              /* Expanded(
                                                 flex: 1,
                                                 child: GestureDetector(
                                                     onTap: () {
                                                       /*MensajeActivarEquipo(
                                                           index);*/
                                                       //Libera los widgets y datos creados
-
                                                     },
                                                     child: Center(
                                                       child: Icon(
@@ -250,7 +259,7 @@ class _RaspberriesConectadasState extends State<RaspberriesConectadas> {
                                                         color: Colors.red,
                                                       ),
                                                     )),
-                                              ),
+                                              ),*/
                                               Expanded(
                                                 flex: 1,
                                                 child: GestureDetector(
@@ -260,18 +269,21 @@ class _RaspberriesConectadasState extends State<RaspberriesConectadas> {
                                                           index);*/
                                                       //Libera los widgets y datos creados
                                                       LimpiarDatosEstaticos();
-                                                      DatosEstaticos.indexSeleccionado =
+                                                      DatosEstaticos
+                                                              .indexSeleccionado =
                                                           index;
-                                                      return Navigator.pushNamed(
-                                                          context, '/detalle_equipo',
-                                                          arguments: {
-                                                            "indexEquipoGrid": index,
+                                                      return Navigator
+                                                          .pushNamed(context,
+                                                              '/detalle_equipo',
+                                                              arguments: {
+                                                            "indexEquipoGrid":
+                                                                index,
                                                           });
                                                     },
                                                     child: Center(
                                                       child: CircleAvatar(
                                                         backgroundColor:
-                                                            Colors.blueAccent,
+                                                            HexColor('#FC4C8B'),
                                                         radius: 10,
                                                         child: Icon(
                                                           Icons.edit,
@@ -412,38 +424,47 @@ class _RaspberriesConectadasState extends State<RaspberriesConectadas> {
               ),
             ),
           ),
-          FSwitch(
-            open: valorSwitchTodos,
-            onChanged: (bool) {
-              var dato = ObtieneDatos.listadoEquipos;
-              if (valorSwitchTodos == false){
-                AlertaDesactivar(listadoEquipos: dato, valorSwitch: valorSwitchTodos);
-              } else {
-                AlertaActivar(listadoEquipos: dato, valorSwitch: valorSwitchTodos);
-              }
-            },
-            sliderColor: Colors.white,
-            closeChild: CircleAvatar(
-              radius: 17,
-              backgroundColor: Colors.white,
-              child: Icon(
-                Icons.close,
-                color: Colors.red,
+          Stack(children: [
+            Positioned(
+              child: Container(
+                decoration: new BoxDecoration(
+                    borderRadius: BorderRadius.circular(20),
+                    gradient: LinearGradient(
+                        colors: [HexColor("#3edb9b"), HexColor("#0683ff")],
+                        stops: [0.5, 1],
+                        begin: Alignment.topLeft,
+                        end: FractionalOffset.bottomRight)),
+                child: FSwitch(
+                  open: valorSwitchTodos,
+                  onChanged: (bool v) {
+                    var dato = ObtieneDatos.listadoEquipos;
+                    if (valorSwitchTodos == false) {
+                      AlertaDesactivar(
+                          listadoEquipos: dato, valorSwitch: valorSwitchTodos);
+                    } else {
+                      AlertaActivar(
+                          listadoEquipos: dato, valorSwitch: valorSwitchTodos);
+                    }
+                  },
+                  sliderColor: Colors.white,
+                  color: Colors.transparent,
+                  openColor: Colors.transparent,
+                  width: 200,
+                  height: 40,
+                ),
               ),
             ),
-            openChild: CircleAvatar(
-              radius: 17,
-              child: Icon(
-                Icons.check,
-                size: 25,
-                color: Colors.white,
-              ),
+            Positioned(
+              bottom: 13,
+              left: 11,
+              child: Text("ON"),
             ),
-            color: Colors.red,
-            openColor: Colors.green,
-            width: 200,
-            height: 40,
-          )
+            Positioned(
+              bottom: 13,
+              left: 168,
+              child: Text("OFF"),
+            )
+          ]),
         ],
       ),
     );
@@ -579,8 +600,9 @@ class _RaspberriesConectadasState extends State<RaspberriesConectadas> {
 
   VistaPreviaReproduccion(int index) async {
     String ip = ObtieneDatos.listadoEquipos[index]['f_ip'].toString();
-    String valorActivo = ObtieneDatos.listadoEquipos[index]['f_equipoActivo'].toString();
-    if (valorActivo == '1'){
+    String valorActivo =
+        ObtieneDatos.listadoEquipos[index]['f_equipoActivo'].toString();
+    if (valorActivo == '1') {
       valorSwitchUno = false;
     } else {
       valorSwitchUno = true;
@@ -595,94 +617,175 @@ class _RaspberriesConectadasState extends State<RaspberriesConectadas> {
           Duration(milliseconds: 400), //Cuanto demora en desaparecer
       pageBuilder: (_, __, ___) {
         //widgets
-        return Center(
-          child: Container(
-            height: MediaQuery.of(context).size.height / 2.5,
-            width: MediaQuery.of(context).size.width - 50,
-            padding: EdgeInsets.only(top: 20),
-            decoration: new BoxDecoration(
-                borderRadius: BorderRadius.circular(50),
-                color: HexColor('#3EDB9B')
-                /*gradient: LinearGradient(
-                    colors: [HexColor("#3edb9b"), HexColor("#0683ff")],
-                    stops: [0.5, 1],
-                    begin: Alignment.topLeft,
-                    end: FractionalOffset.bottomRight)*/
+        return Scaffold(
+          appBar: CustomAppBar(),
+          body: Container(
+            color: Colors.white,
+            height: MediaQuery.of(context).size.height,
+            width: MediaQuery.of(context).size.width,
+            child: Stack(children: [
+              Positioned(
+                top: 28,
+                right: 90,
+                left: 90,
+                child: Text(
+                  "MIS PANTALLAS",
+                  style: TextStyle(fontSize: 20),
                 ),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Container(
+              ),
+              Positioned(
+                top: 70,
+                right: 20,
+                left: 20,
+                child: Container(
+                  //Vista previa completa
+                  height: MediaQuery.of(context).size.height / 3.2,
+                  width: MediaQuery.of(context).size.width - 50,
+                  padding: EdgeInsets.all(20),
+                  decoration: new BoxDecoration(
+                      borderRadius: BorderRadius.circular(50),
+                      color: HexColor('#3EDB9B')
+                      /*gradient: LinearGradient(
+                                    colors: [HexColor("#3edb9b"), HexColor("#0683ff")],
+                                    stops: [0.5, 1],
+                                    begin: Alignment.topLeft,
+                                    end: FractionalOffset.bottomRight)*/
+                      ),
+                  child: Center(
+                    child: Container(
+                      //marco blanco de vista previa
+                      decoration: new BoxDecoration(
+                          borderRadius: BorderRadius.circular(20),
+                          color: Colors.white),
+                      /*width: MediaQuery.of(context).size.width / 1.2,
+                      height: MediaQuery.of(context).size.height / 3.8,*/
+                      padding: EdgeInsets.all(10),
+                      //margin: EdgeInsets.only(right: 35, left: 35),
+                      child: FutureBuilder(
+                        future: _getScreenShot(ip),
+                        builder: (context, snapshot) {
+                          Widget widgetError = Column(
+                            children: [
+                              _screenshotProcesada,
+                            ],
+                          );
+                          if (snapshot.connectionState ==
+                              ConnectionState.done) {
+                            if (snapshot.data == null) {
+                              return widgetError;
+                            } else {
+                              //Retorna el widget con la imagen de screenshot
+                              var tipoimage = _screenshotProcesada
+                                  .image.runtimeType
+                                  .toString();
+                              if (tipoimage == "AssetImage") {
+                                return widgetError;
+                              }
+                              return Container(
+                                  child: Center(child: _screenshotProcesada));
+                            }
+                          } else {
+                            return Center(child: CircularProgressIndicator());
+                          }
+                        },
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+              Positioned(
+                  top: 60,
+                  right: 18,
+                  child: CircleAvatar(
+                    radius: 13,
+                    backgroundColor: HexColor('#FC4C8B'),
+                  )
+                  /* Icon(
+                  Icons.circle,
+                  color: Colors.red,
+                  size: 20,
+                ),*/
+                  ),
+              Positioned(
+                  top: 49,
+                  right: 7,
+                  child: IconButton(
+                      icon: Icon(
+                        Icons.close,
+                        color: Colors.white,
+                        size: 20,
+                      ),
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      })),
+              Positioned(
+                  bottom: 50,
+                  right: 80,
+                  left: 80,
+                  child: Container(
+                    decoration: new BoxDecoration(
+                        borderRadius: BorderRadius.circular(20),
+                        gradient: LinearGradient(
+                            colors: [HexColor("#3edb9b"), HexColor("#0683ff")],
+                            stops: [0.5, 1],
+                            begin: Alignment.topLeft,
+                            end: FractionalOffset.bottomRight)),
+                    child: FSwitch(
+                      open: valorSwitchUno,
+                      onChanged: (bool v) {
+                        if (valorSwitchUno == false) {
+                          AlertaDesactivar(
+                              index: index, valorSwitch: valorSwitchUno);
+                        } else {
+                          AlertaActivar(
+                              index: index, valorSwitch: valorSwitchUno);
+                        }
+                      },
+                      sliderColor: Colors.white,
+                      color: Colors.transparent,
+                      openColor: Colors.transparent,
+                      width: 200,
+                      height: 40,
+                    ),
+                  ) /*AnimatedContainer(
+                  duration: Duration(milliseconds: 1000),
+                  height: 40,
+                  width: 100,
                   decoration: new BoxDecoration(
                       borderRadius: BorderRadius.circular(20),
-                      color: Colors.white),
-                  width: MediaQuery.of(context).size.width / 1.2,
-                  height: MediaQuery.of(context).size.height / 3.8,
-                  padding: EdgeInsets.all(10),
-                  //margin: EdgeInsets.only(right: 35, left: 35),
-                  child: FutureBuilder(
-                    future: _getScreenShot(ip),
-                    builder: (context, snapshot) {
-                      Widget widgetError = Column(
-                        children: [
-                          _screenshotProcesada,
-                        ],
-                      );
-                      if (snapshot.connectionState == ConnectionState.done) {
-                        if (snapshot.data == null) {
-                          return widgetError;
-                        } else {
-                          //Retorna el widget con la imagen de screenshot
-                          var tipoimage =
-                              _screenshotProcesada.image.runtimeType.toString();
-                          if (tipoimage == "AssetImage") {
-                            return widgetError;
-                          }
-                          return Container(
-                              child: Center(child: _screenshotProcesada));
-                        }
-                      } else {
-                        return Center(child: CircularProgressIndicator());
-                      }
-                    },
+                      gradient: LinearGradient(
+                          colors: [HexColor("#3edb9b"), HexColor("#0683ff")],
+                          stops: [0.5, 1],
+                          begin: Alignment.topLeft,
+                          end: FractionalOffset.bottomRight)),
+                  child: Stack(
+                    children: [
+                      AnimatedPositioned(
+                        child: InkWell(
+                          onTap: toggleButton,
+                        ),
+                        duration: Duration(milliseconds: 1000),
+                        curve: Curves.easeIn,
+                        top: 3.0,
+                        left: estadoToogle ? 60.0 : 0.0,
+                        right: estadoToogle ? 0.0 : 60.0,
+
+                      )
+                    ],
                   ),
-                ),
-                SizedBox(
-                  height: 20,
-                ),
-                FSwitch(
-                  open: valorSwitchUno,
-                  onChanged: (bool) {
-                    if (valorSwitchUno == false){
-                      AlertaDesactivar(index: index, valorSwitch: valorSwitchUno);
-                    } else {
-                      AlertaActivar(index: index, valorSwitch: valorSwitchUno);
-                    }
-                  },
-                  sliderColor: Colors.white,
-                  closeChild: CircleAvatar(
-                    radius: 17,
-                    backgroundColor: Colors.white,
-                    child: Icon(
-                      Icons.close,
-                      color: Colors.red,
-                    ),
+                ),*/
                   ),
-                  openChild: CircleAvatar(
-                    radius: 17,
-                    child: Icon(
-                      Icons.check,
-                      size: 25,
-                      color: Colors.white,
-                    ),
-                  ),
-                  color: Colors.red,
-                  openColor: Colors.green,
-                  width: 200,
-                  height: 40,
-                )
-              ],
-            ),
+              Positioned(
+                bottom: 63,
+                left: 90,
+                child: Text("ON"),
+              ),
+              Positioned(
+                bottom: 63,
+                left: 247,
+                child: Text("OFF"),
+              )
+            ]),
           ),
         );
       },
@@ -725,10 +828,10 @@ class _RaspberriesConectadasState extends State<RaspberriesConectadas> {
     }
   }
 
-  void AlertaDesactivar({
-    int index = 0,
-    List<dynamic> listadoEquipos,
-    bool valorSwitch = true}) async {
+  void AlertaDesactivar(
+      {int index = 0,
+      List<dynamic> listadoEquipos,
+      bool valorSwitch = true}) async {
     String ip = ObtieneDatos.listadoEquipos[index]['f_ip'].toString();
     String serial = ObtieneDatos.listadoEquipos[index]['f_serial'].toString();
     String alias = ObtieneDatos.listadoEquipos[index]['f_alias'].toString();
@@ -736,7 +839,7 @@ class _RaspberriesConectadasState extends State<RaspberriesConectadas> {
 
     Widget contenido;
 
-    if (listadoEquipos == null){
+    if (listadoEquipos == null) {
       contenido = new AlertDialog(
         title: Text(
           'Deshabilitar Equipo',
@@ -770,7 +873,8 @@ class _RaspberriesConectadasState extends State<RaspberriesConectadas> {
                         textScaleFactor: 1.3,
                       ),
                       onPressed: () async {
-                        PopUps.popUpCargando(context, 'Deshabilitando equipo...');
+                        PopUps.popUpCargando(
+                            context, 'Deshabilitando equipo...');
                         var resultado = await actualizarEstado
                             .updateEstadoEquipo(serial: serial, estado: "0");
                         if (resultado == 1) {
@@ -851,10 +955,13 @@ class _RaspberriesConectadasState extends State<RaspberriesConectadas> {
                         textScaleFactor: 1.3,
                       ),
                       onPressed: () async {
-                        PopUps.popUpCargando(context, 'Deshabilitando equipos...');
-                        var resultado = await actualizarEstado
-                            .updateEstadoEquipo(serial: "-1", estado: "0",
-                            listadoEquipos: listadoEquipos);
+                        PopUps.popUpCargando(
+                            context, 'Deshabilitando equipos...');
+                        var resultado =
+                            await actualizarEstado.updateEstadoEquipo(
+                                serial: "-1",
+                                estado: "0",
+                                listadoEquipos: listadoEquipos);
                         if (resultado == 1) {
                           setState(() {
                             Navigator.pop(context);
@@ -914,10 +1021,20 @@ class _RaspberriesConectadasState extends State<RaspberriesConectadas> {
     );
   }
 
-  void AlertaActivar({
-    int index = 0,
-    List<dynamic> listadoEquipos,
-    bool valorSwitch = true}) async {
+  void CambiarTexto(bool estado) {
+    setState(() {
+      if (estado = true) {
+        onOff = Text("GG");
+      } else {
+        onOff = Text("qq");
+      }
+    });
+  }
+
+  void AlertaActivar(
+      {int index = 0,
+      List<dynamic> listadoEquipos,
+      bool valorSwitch = true}) async {
     String ip = ObtieneDatos.listadoEquipos[index]['f_ip'].toString();
     String serial = ObtieneDatos.listadoEquipos[index]['f_serial'].toString();
     String alias = ObtieneDatos.listadoEquipos[index]['f_alias'].toString();
@@ -925,7 +1042,7 @@ class _RaspberriesConectadasState extends State<RaspberriesConectadas> {
 
     Widget contenido;
 
-    if (listadoEquipos == null){
+    if (listadoEquipos == null) {
       contenido = new AlertDialog(
         title: Text(
           'Habilitar Equipo',
@@ -1041,9 +1158,11 @@ class _RaspberriesConectadasState extends State<RaspberriesConectadas> {
                       ),
                       onPressed: () async {
                         PopUps.popUpCargando(context, 'Habilitando equipos...');
-                        var resultado = await actualizarEstado
-                            .updateEstadoEquipo(serial: "-1", estado: "1",
-                            listadoEquipos: listadoEquipos);
+                        var resultado =
+                            await actualizarEstado.updateEstadoEquipo(
+                                serial: "-1",
+                                estado: "1",
+                                listadoEquipos: listadoEquipos);
                         if (resultado == 1) {
                           setState(() {
                             Navigator.pop(context);
@@ -1243,11 +1362,11 @@ bool TodosEquiposDesactivados() {
   int cantidadDesactivados = 0;
   var listado = ObtieneDatos.listadoEquipos;
   listado.forEach((element) {
-    if (element['f_equipoActivo'].toString() == '0'){
+    if (element['f_equipoActivo'].toString() == '0') {
       cantidadDesactivados += 1;
     }
   });
-  if (cantidadDesactivados >= listado.length){
+  if (cantidadDesactivados >= listado.length) {
     todosDesactivados = true;
   } else {
     todosDesactivados = false;
