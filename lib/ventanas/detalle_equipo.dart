@@ -10,7 +10,7 @@ import 'package:tvpost_flutter/utilidades/custom_widgets.dart';
 import 'package:tvpost_flutter/ventanas/raspberries_conectadas.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:liquid_pull_to_refresh/liquid_pull_to_refresh.dart';
-import 'package:path_provider/path_provider.dart';
+//import 'package:path_provider/path_provider.dart';
 import 'package:fswitch/fswitch.dart';
 
 class DetalleEquipo extends StatefulWidget {
@@ -32,6 +32,8 @@ class _DetalleEquipoState extends State<DetalleEquipo> {
   TextEditingController _controladorTexto = TextEditingController(text: "");
   //Guarda el estado del context para usarlo con el snackbar
   final _scaffoldKey = GlobalKey<ScaffoldState>();
+  bool valorSwitch;
+
   //Utilizar el memoizer hace que la función de Future (getScreenShot())
   // solo ocurra una vez. De lo contrario se llama con cada acción del build
   //final AsyncMemoizer _memoizer = AsyncMemoizer();
@@ -62,12 +64,14 @@ class _DetalleEquipoState extends State<DetalleEquipo> {
     DatosEstaticos.ipSeleccionada =
         DatosEstaticos.listadoDatosEquipoSeleccionado[0]['f_ip'];
 
-    String equipoActivo = ObtieneDatos.listadoEquipos[indexEquipoGrid]
-            ['f_equipoActivo']
-        .toString();
-
     Widget widgetContenido;
+
+    String equipoActivo = ObtieneDatos.listadoEquipos[indexEquipoGrid]
+    ['f_equipoActivo'].toString();
+
+    //Cuando el equipo está deshabilitado muestra imagen de pantallazo
     if (equipoActivo == '1') {
+      valorSwitch = false;
       widgetContenido = FutureBuilder(
         future: _getScreenShot(),
         builder: (context, snapshot) {
@@ -82,12 +86,12 @@ class _DetalleEquipoState extends State<DetalleEquipo> {
               ),
               Center(
                   child: Padding(
-                padding: const EdgeInsets.only(bottom: 10),
-                child: Text(
-                  "¡Ups, algo ha salido mal!",
-                  textScaleFactor: 1.2,
-                ),
-              )),
+                    padding: const EdgeInsets.only(bottom: 10),
+                    child: Text(
+                      "¡Ups, algo ha salido mal!",
+                      textScaleFactor: 1.2,
+                    ),
+                  )),
               Text(
                 "Deslice hacia abajo para recargar imagen",
                 textScaleFactor: 1.2,
@@ -118,7 +122,7 @@ class _DetalleEquipoState extends State<DetalleEquipo> {
                             width: MediaQuery.of(context).size.width,
                             height: MediaQuery.of(context).size.height / 3,
                             child: _screenshotProcesada),
-                        /* Row(
+                        Row(
                           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                           children: [
                             FloatingActionButton(
@@ -136,7 +140,7 @@ class _DetalleEquipoState extends State<DetalleEquipo> {
                               },
                             )
                           ],
-                        ),*/
+                        ),
                         Container(
                           height: MediaQuery.of(context).size.height / 10,
                           width: MediaQuery.of(context).size.width,
@@ -148,7 +152,7 @@ class _DetalleEquipoState extends State<DetalleEquipo> {
                                   children: [
                                     Column(
                                         crossAxisAlignment:
-                                            CrossAxisAlignment.start,
+                                        CrossAxisAlignment.start,
                                         children: [
                                           SizedBox(
                                             height: 4,
@@ -165,7 +169,7 @@ class _DetalleEquipoState extends State<DetalleEquipo> {
                                         ]),
                                     Column(
                                         crossAxisAlignment:
-                                            CrossAxisAlignment.start,
+                                        CrossAxisAlignment.start,
                                         children: [
                                           SizedBox(
                                             height: 4,
@@ -188,8 +192,8 @@ class _DetalleEquipoState extends State<DetalleEquipo> {
                                 children: [
                                   Text(
                                     DatosEstaticos
-                                            .listadoDatosEquipoSeleccionado[0]
-                                        ['f_alias'],
+                                        .listadoDatosEquipoSeleccionado[0]
+                                    ['f_alias'].toString().toUpperCase(),
                                     style: TextStyle(
                                       fontFamily: 'textoMont',
                                       fontSize: 13.5,
@@ -200,8 +204,8 @@ class _DetalleEquipoState extends State<DetalleEquipo> {
                                   ),
                                   Text(
                                     DatosEstaticos
-                                            .listadoDatosEquipoSeleccionado[0]
-                                        ['f_serial'],
+                                        .listadoDatosEquipoSeleccionado[0]
+                                    ['f_serial'].toString().toUpperCase(),
                                     style: TextStyle(
                                       fontFamily: 'textoMont',
                                       fontSize: 13.5,
@@ -212,8 +216,8 @@ class _DetalleEquipoState extends State<DetalleEquipo> {
                                   ),
                                   Text(
                                     DatosEstaticos
-                                            .listadoDatosEquipoSeleccionado[0]
-                                        ['f_ip'],
+                                        .listadoDatosEquipoSeleccionado[0]
+                                    ['f_ip'],
                                     style: TextStyle(
                                       fontFamily: 'textoMont',
                                       fontSize: 13.5,
@@ -267,8 +271,8 @@ class _DetalleEquipoState extends State<DetalleEquipo> {
                       child: FlatButton(
                         color: Colors.transparent,
                         onPressed: () async {
-                          String dir = (await getTemporaryDirectory()).path;
-                          File temporal = new File('$dir/img_temp_creada.png');
+                          //String dir = (await getTemporaryDirectory()).path;
+                          //File temporal = new File('$dir/img_temp_creada.png');
                           Navigator.pushNamed(context, '/seleccionar_layout');
                         },
                         child: Text(
@@ -282,46 +286,52 @@ class _DetalleEquipoState extends State<DetalleEquipo> {
                   Align(
                     alignment: Alignment.bottomCenter,
                     heightFactor: 1.5,
-                    child: Stack(children: [
-                      Positioned(
-                        child: Container(
-                          decoration: new BoxDecoration(
-                              borderRadius: BorderRadius.circular(20),
-                              gradient: LinearGradient(
-                                  colors: [
-                                    HexColor("#3edb9b"),
-                                    HexColor("#0683ff")
-                                  ],
-                                  stops: [
-                                    0.5,
-                                    1
-                                  ],
-                                  begin: Alignment.topLeft,
-                                  end: FractionalOffset.bottomRight)),
-                          child: IgnorePointer(
-                            child: FSwitch(
-                              open: valorSwitchTodos,
-                              onChanged: (bool v) {},
-                              sliderColor: Colors.white,
-                              color: Colors.transparent,
-                              openColor: Colors.transparent,
-                              width: 200,
-                              height: 40,
+                    child: GestureDetector(
+                      onTap: () {
+                        AlertaDeshabilitar(index: indexEquipoGrid);
+                      },
+                      child: Stack(children: [
+                        Positioned(
+                          child: Container(
+                            decoration: new BoxDecoration(
+                                borderRadius: BorderRadius.circular(20),
+                                gradient: LinearGradient(
+                                    colors: [
+                                      HexColor("#3edb9b"),
+                                      HexColor("#0683ff")
+                                    ],
+                                    stops: [
+                                      0.5,
+                                      1
+                                    ],
+                                    begin: Alignment.topLeft,
+                                    end: FractionalOffset.bottomRight)),
+                            child: IgnorePointer(
+                              child: FSwitch(
+                                offset: 10,
+                                open: valorSwitchTodos,
+                                onChanged: (bool v) {},
+                                sliderColor: Colors.white,
+                                color: Colors.transparent,
+                                openColor: Colors.transparent,
+                                width: 200,
+                                height: 40,
+                              ),
                             ),
                           ),
                         ),
-                      ),
-                      Positioned(
-                        bottom: 13,
-                        left: 11,
-                        child: Text("ON"),
-                      ),
-                      Positioned(
-                        bottom: 13,
-                        left: 168,
-                        child: Text("OFF"),
-                      )
-                    ]),
+                        Positioned(
+                          bottom: 13,
+                          left: 17,
+                          child: Text("ON"),
+                        ),
+                        Positioned(
+                          bottom: 13,
+                          left: 160,
+                          child: Text("OFF"),
+                        )
+                      ]),
+                    ),
                   ),
                 ],
               );
@@ -331,7 +341,10 @@ class _DetalleEquipoState extends State<DetalleEquipo> {
           }
         },
       );
-    } else {
+    }
+    //Si el equipo esta deshabilitado muestra imagen local
+    else {
+      valorSwitch = true;
       widgetContenido = Column(
         mainAxisSize: MainAxisSize.min,
         children: [
@@ -343,6 +356,7 @@ class _DetalleEquipoState extends State<DetalleEquipo> {
                     width: MediaQuery.of(context).size.width,
                     height: MediaQuery.of(context).size.height / 3,
                     child: _equipoNoActivado),
+                /*
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
@@ -367,12 +381,14 @@ class _DetalleEquipoState extends State<DetalleEquipo> {
                     )
                   ],
                 ),
+
+
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Text('Alias: '),
                     Text(DatosEstaticos.listadoDatosEquipoSeleccionado[0]
-                        ['f_alias']),
+                    ['f_alias']),
                     IconButton(
                       onPressed: () async {
                         _widgetPopUpAlias();
@@ -386,7 +402,7 @@ class _DetalleEquipoState extends State<DetalleEquipo> {
                   children: [
                     Text('Ip: '),
                     Text(DatosEstaticos.listadoDatosEquipoSeleccionado[0]
-                        ['f_ip']),
+                    ['f_ip']),
                   ],
                 ),
                 Row(
@@ -394,8 +410,205 @@ class _DetalleEquipoState extends State<DetalleEquipo> {
                   children: [
                     Text('Serial: '),
                     Text(DatosEstaticos.listadoDatosEquipoSeleccionado[0]
-                        ['f_serial']),
+                    ['f_serial']),
                   ],
+                ),
+                */
+                Container(
+                  height: MediaQuery.of(context).size.height / 10,
+                  width: MediaQuery.of(context).size.width,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      Column(children: [
+                        Row(
+                          children: [
+                            Column(
+                                crossAxisAlignment:
+                                CrossAxisAlignment.start,
+                                children: [
+                                  SizedBox(
+                                    height: 4,
+                                  ),
+                                  Text('NOMBRE'),
+                                  SizedBox(
+                                    height: 10,
+                                  ),
+                                  Text('SERIAL'),
+                                  SizedBox(
+                                    height: 10,
+                                  ),
+                                  Text('IP'),
+                                ]),
+                            Column(
+                                crossAxisAlignment:
+                                CrossAxisAlignment.start,
+                                children: [
+                                  SizedBox(
+                                    height: 4,
+                                  ),
+                                  Text('  : '),
+                                  SizedBox(
+                                    height: 10,
+                                  ),
+                                  Text('  : '),
+                                  SizedBox(
+                                    height: 10,
+                                  ),
+                                  Text('  : ')
+                                ]),
+                          ],
+                        )
+                      ]),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Text(
+                            DatosEstaticos
+                                .listadoDatosEquipoSeleccionado[0]
+                            ['f_alias'].toString().toUpperCase(),
+                            style: TextStyle(
+                              fontFamily: 'textoMont',
+                              fontSize: 13.5,
+                            ),
+                          ),
+                          SizedBox(
+                            height: 7,
+                          ),
+                          Text(
+                            DatosEstaticos
+                                .listadoDatosEquipoSeleccionado[0]
+                            ['f_serial'].toString().toUpperCase(),
+                            style: TextStyle(
+                              fontFamily: 'textoMont',
+                              fontSize: 13.5,
+                            ),
+                          ),
+                          SizedBox(
+                            height: 7,
+                          ),
+                          Text(
+                            DatosEstaticos
+                                .listadoDatosEquipoSeleccionado[0]
+                            ['f_ip'],
+                            style: TextStyle(
+                              fontFamily: 'textoMont',
+                              fontSize: 13.5,
+                            ),
+                          ),
+                        ],
+                      ),
+                      Column(
+                        children: [
+                          CircleAvatar(
+                              backgroundColor: Colors.blueAccent,
+                              radius: 8,
+                              child: IconButton(
+                                onPressed: () async {
+                                  _widgetPopUpAlias();
+                                },
+                                icon: Icon(
+                                  Icons.edit,
+                                  size: 10,
+                                ),
+                              )),
+                          Text(""),
+                          Text("")
+                        ],
+                      )
+                    ],
+                  ),
+                ),
+                Align(
+                  alignment: Alignment.bottomCenter,
+                  heightFactor: 3.0,
+                  child: Visibility(
+                    visible: false,
+                    maintainSize: true,
+                    maintainAnimation: true,
+                    maintainState: true,
+                    child: Container(
+                      height: 40,
+                      width: 200,
+                      decoration: new BoxDecoration(
+                          borderRadius: BorderRadius.circular(20),
+                          gradient: LinearGradient(
+                              colors: [
+                                HexColor("#0683ff"),
+                                HexColor("#3edb9b")
+                              ],
+                              stops: [
+                                0.1,
+                                0.6
+                              ],
+                              begin: Alignment.topLeft,
+                              end: FractionalOffset.bottomRight)),
+                      child: FlatButton(
+
+                        color: Colors.transparent,
+                        onPressed: () async {
+                          //String dir = (await getTemporaryDirectory()).path;
+                          //File temporal = new File('$dir/img_temp_creada.png');
+                          Navigator.pushNamed(context, '/seleccionar_layout');
+                        },
+                        child: Text(
+                          'EDITAR CONTENIDO',
+                          style: TextStyle(color: Colors.white),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+//aca
+                Align(
+                  alignment: Alignment.bottomCenter,
+                  heightFactor: 1.5,
+                  child: GestureDetector(
+                    onTap: () {
+                      AlertaHabilitar(index: indexEquipoGrid);
+                    },
+                    child: Stack(children: [
+                      Positioned(
+                        child: Container(
+                          decoration: new BoxDecoration(
+                              borderRadius: BorderRadius.circular(20),
+                              gradient: LinearGradient(
+                                  colors: [
+                                    HexColor("#3edb9b"),
+                                    HexColor("#0683ff")
+                                  ],
+                                  stops: [
+                                    0.5,
+                                    1
+                                  ],
+                                  begin: Alignment.topLeft,
+                                  end: FractionalOffset.bottomRight)),
+                          child: IgnorePointer(
+                            child: FSwitch(
+                              offset: 10,
+                              open: valorSwitchTodos,
+                              onChanged: (bool v) {},
+                              sliderColor: Colors.white,
+                              color: Colors.transparent,
+                              openColor: Colors.transparent,
+                              width: 200,
+                              height: 40,
+                            ),
+                          ),
+                        ),
+                      ),
+                      Positioned(
+                        bottom: 13,
+                        left: 17,
+                        child: Text("ON"),
+                      ),
+                      Positioned(
+                        bottom: 13,
+                        left: 160,
+                        child: Text("OFF"),
+                      )
+                    ]),
+                  ),
                 ),
               ],
             ),
@@ -418,6 +631,8 @@ class _DetalleEquipoState extends State<DetalleEquipo> {
         ],
       );
     }
+
+
 
     return WillPopScope(
       //Cierra todas las ventanas anteriores existentes y llega a
@@ -445,8 +660,9 @@ class _DetalleEquipoState extends State<DetalleEquipo> {
                 width: MediaQuery.of(context).size.width,
                 child: Center(
                   child: Text(
-                    "CAJA 1",
-                    style: TextStyle(fontSize: 16.5),
+                      ObtieneDatos.listadoEquipos[indexEquipoGrid]
+                      ['f_alias'].toString().toUpperCase(),
+                    style: TextStyle(fontSize: 16.5,),
                   ),
                 ),
               ),
@@ -538,7 +754,7 @@ class _DetalleEquipoState extends State<DetalleEquipo> {
                     },
                   ),
                   RaisedButton(
-                    child: Text('Cambiar Alias'),
+                    child: Text('Cambiar Nombre'),
                     onPressed: () async {
                       if (_keyValidador.currentState.validate()) {
                         PopUps.popUpCargando(context, 'Actualizando alias...');
@@ -668,5 +884,232 @@ class _DetalleEquipoState extends State<DetalleEquipo> {
       DatosEstaticos.alto_pantalla_seleccionada =
           int.parse(datosRecibidos['altoPantalla'].toString());
     } catch (e) {}
+  }
+
+  void AlertaDeshabilitar({int index = 0,}) async {
+    String ip = ObtieneDatos.listadoEquipos[index]['f_ip'].toString();
+    String serial = ObtieneDatos.listadoEquipos[index]['f_serial'].toString();
+    String alias = ObtieneDatos.listadoEquipos[index]['f_alias'].toString();
+    ObtieneDatos actualizarEstado = ObtieneDatos();
+
+    Widget contenido;
+
+    contenido = new AlertDialog(
+      title: Text(
+        'Deshabilitar Equipo',
+        textAlign: TextAlign.center,
+      ),
+      content: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Text(
+            'Alias: ${alias}',
+            textAlign: TextAlign.center,
+          ),
+          Text(
+            'Serial: ${serial}',
+            textAlign: TextAlign.center,
+          ),
+          Text(
+            'Ip: ${ip}',
+            textAlign: TextAlign.center,
+          ),
+          SizedBox(
+            height: 10,
+          ),
+          Row(
+            children: [
+              Expanded(
+                  flex: 1,
+                  child: RaisedButton(
+                    child: Text(
+                      'Aceptar',
+                      textScaleFactor: 1.3,
+                    ),
+                    onPressed: () async {
+                      PopUps.popUpCargando(
+                          context, 'Deshabilitando equipo...');
+                      var resultado = await actualizarEstado
+                          .updateEstadoEquipo(serial: serial, estado: "0");
+                      await actualizarEstado.getDatosEquipos();
+                      if (resultado == 1) {
+                        setState(() {
+                          Navigator.pop(context);
+                          Navigator.pop(context);
+                          //valorSwitchUno = true;
+                          Widget contenidoPopUp = Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Text('Equipo $alias deshabilitado'),
+                              SizedBox(
+                                width: 10,
+                              ),
+                              RaisedButton(
+                                child: Text(
+                                  'Aceptar',
+                                  textScaleFactor: 1.3,
+                                ),
+                                onPressed: () {
+                                  //Navigator.pop(context);
+                                  Navigator.pop(context);
+                                  //Libera los widgets y datos creados
+                                  //LimpiarDatosEstaticos();
+                                  /*DatosEstaticos.indexSeleccionado = index;
+                                  return Navigator.pushNamed(
+                                      context, '/detalle_equipo',
+                                      arguments: {
+                                        "indexEquipoGrid": index,
+                                      });*/
+                                },
+                              ),
+                            ],
+                          );
+                          PopUps.PopUpConWidget(context, contenidoPopUp);
+                        });
+                      }
+                    },
+                  )),
+              SizedBox(
+                width: 10,
+              ),
+              Expanded(
+                  flex: 1,
+                  child: RaisedButton(
+                    child: Text(
+                      'Cancelar',
+                      textScaleFactor: 1.3,
+                    ),
+                    onPressed: () {
+                      Navigator.pop(context);
+                      /*setState(() {
+                          Navigator.pop(context);
+                          valorSwitchUno = valorSwitch;
+                        });*/
+                    },
+                  )),
+            ],
+          ),
+        ],
+      ),
+    );
+
+    await showDialog<String>(
+      context: context,
+      barrierDismissible: true,
+      child: contenido,
+    );
+  }
+
+  void AlertaHabilitar({int index = 0,}) async {
+    String ip = ObtieneDatos.listadoEquipos[index]['f_ip'].toString();
+    String serial = ObtieneDatos.listadoEquipos[index]['f_serial'].toString();
+    String alias = ObtieneDatos.listadoEquipos[index]['f_alias'].toString();
+    ObtieneDatos actualizarEstado = ObtieneDatos();
+
+    Widget contenido;
+
+    contenido = new AlertDialog(
+      title: Text(
+        'Habilitar Equipo',
+        textAlign: TextAlign.center,
+      ),
+      content: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Text(
+            'Alias: ${alias}',
+            textAlign: TextAlign.center,
+          ),
+          Text(
+            'Serial: ${serial}',
+            textAlign: TextAlign.center,
+          ),
+          Text(
+            'Ip: ${ip}',
+            textAlign: TextAlign.center,
+          ),
+          SizedBox(
+            height: 10,
+          ),
+          Row(
+            children: [
+              Expanded(
+                  flex: 1,
+                  child: RaisedButton(
+                    child: Text(
+                      'Aceptar',
+                      textScaleFactor: 1.3,
+                    ),
+                    onPressed: () async {
+                      PopUps.popUpCargando(context, 'Habilitando equipo...');
+                      var resultado = await actualizarEstado
+                          .updateEstadoEquipo(serial: serial, estado: "1");
+                      await actualizarEstado.getDatosEquipos();
+                      if (resultado == 1) {
+                        setState(() {
+                          Navigator.pop(context);
+                          Navigator.pop(context);
+                          //valorSwitchUno = false;
+                          Widget contenidoPopUp = Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Text('Equipo $alias habilitado'),
+                              SizedBox(
+                                width: 10,
+                              ),
+                              RaisedButton(
+                                child: Text(
+                                  'Aceptar',
+                                  textScaleFactor: 1.3,
+                                ),
+                                onPressed: () {
+                                  //Navigator.pop(context);
+                                  Navigator.pop(context);
+                                  //Libera los widgets y datos creados
+                                  //LimpiarDatosEstaticos();
+                                  //DatosEstaticos.indexSeleccionado = index;
+                                  /*return Navigator.pushNamed(
+                                      context, '/detalle_equipo',
+                                      arguments: {
+                                        "indexEquipoGrid": index,
+                                      });*/
+                                },
+                              ),
+                            ],
+                          );
+                          PopUps.PopUpConWidget(context, contenidoPopUp);
+                        });
+                      }
+                    },
+                  )),
+              SizedBox(
+                width: 10,
+              ),
+              Expanded(
+                  flex: 1,
+                  child: RaisedButton(
+                    child: Text(
+                      'Cancelar',
+                      textScaleFactor: 1.3,
+                    ),
+                    onPressed: () {
+                      Navigator.pop(context);
+                      /*setState(() {
+                          Navigator.pop(context);
+                          valorSwitchUno = valorSwitch;
+                        });*/
+                    },
+                  )),
+            ],
+          ),
+        ],
+      ),
+    );
+
+    await showDialog<String>(
+      context: context,
+      barrierDismissible: true,
+      child: contenido,
+    );
   }
 }
