@@ -94,11 +94,11 @@ class _LoginState extends State<Login> {
                                 flex: 3,
                                 child: Container(
                                   padding: EdgeInsets.only(
-                                      bottom: 9, left: 15, right: 15),
+                                      bottom: 9.8, left: 15, right: 15),
                                   child: new TextFormField(
                                     style: TextStyle(
                                       fontFamily: 'textoMont',
-                                      fontSize: 11.5,
+                                      fontSize: 13.5,
                                     ),
                                     textAlign: TextAlign.center,
                                     initialValue: rutEmpresa,
@@ -147,11 +147,11 @@ class _LoginState extends State<Login> {
                               flex: 3,
                               child: Container(
                                 padding: EdgeInsets.only(
-                                    bottom: 9, left: 15, right: 15),
+                                    bottom: 9.8, left: 15, right: 15),
                                 child: TextFormField(
                                   style: TextStyle(
                                       fontFamily: 'textoMont',
-                                      fontSize: 11.5,
+                                      fontSize: 13.5,
                                       color: Colors.black),
                                   textAlign: TextAlign.center,
                                   decoration: InputDecoration(
@@ -198,11 +198,11 @@ class _LoginState extends State<Login> {
                               flex: 3,
                               child: Container(
                                 padding: EdgeInsets.only(
-                                    bottom: 9, left: 15, right: 15),
+                                    bottom: 9.8, left: 15, right: 15),
                                 child: TextFormField(
                                   style: TextStyle(
                                       fontFamily: 'textoMont',
-                                      fontSize: 11.5,
+                                      fontSize: 13.5,
                                       color: Colors.black),
                                   textAlign: TextAlign.center,
                                   obscureText: true,

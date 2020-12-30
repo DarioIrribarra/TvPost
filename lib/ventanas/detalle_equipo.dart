@@ -62,10 +62,12 @@ class _DetalleEquipoState extends State<DetalleEquipo> {
     DatosEstaticos.ipSeleccionada =
         DatosEstaticos.listadoDatosEquipoSeleccionado[0]['f_ip'];
 
-    String equipoActivo = ObtieneDatos.listadoEquipos[indexEquipoGrid]['f_equipoActivo'].toString();
+    String equipoActivo = ObtieneDatos.listadoEquipos[indexEquipoGrid]
+            ['f_equipoActivo']
+        .toString();
 
     Widget widgetContenido;
-    if(equipoActivo == '1'){
+    if (equipoActivo == '1') {
       widgetContenido = FutureBuilder(
         future: _getScreenShot(),
         builder: (context, snapshot) {
@@ -80,12 +82,12 @@ class _DetalleEquipoState extends State<DetalleEquipo> {
               ),
               Center(
                   child: Padding(
-                    padding: const EdgeInsets.only(bottom: 10),
-                    child: Text(
-                      "¡Ups, algo ha salido mal!",
-                      textScaleFactor: 1.2,
-                    ),
-                  )),
+                padding: const EdgeInsets.only(bottom: 10),
+                child: Text(
+                  "¡Ups, algo ha salido mal!",
+                  textScaleFactor: 1.2,
+                ),
+              )),
               Text(
                 "Deslice hacia abajo para recargar imagen",
                 textScaleFactor: 1.2,
@@ -97,8 +99,7 @@ class _DetalleEquipoState extends State<DetalleEquipo> {
               return widgetError;
             } else {
               //Retorna el widget con la imagen de screenshot
-              var tipoimage =
-              _screenshotProcesada.image.runtimeType.toString();
+              var tipoimage = _screenshotProcesada.image.runtimeType.toString();
               if (tipoimage == "AssetImage") {
                 return widgetError;
               }
@@ -114,15 +115,11 @@ class _DetalleEquipoState extends State<DetalleEquipo> {
                       children: [
                         Container(
                             margin: EdgeInsets.only(bottom: 5),
-                            width:
-                            MediaQuery.of(context).size.width,
-                            height:
-                            MediaQuery.of(context).size.height /
-                                3,
+                            width: MediaQuery.of(context).size.width,
+                            height: MediaQuery.of(context).size.height / 3,
                             child: _screenshotProcesada),
-                        Row(
-                          mainAxisAlignment:
-                          MainAxisAlignment.spaceEvenly,
+                        /* Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                           children: [
                             FloatingActionButton(
                               heroTag: null,
@@ -133,67 +130,198 @@ class _DetalleEquipoState extends State<DetalleEquipo> {
                             ),
                             FloatingActionButton(
                               heroTag: null,
-                              child:
-                              Icon(Icons.screen_search_desktop),
+                              child: Icon(Icons.screen_search_desktop),
                               onPressed: () {
                                 _vncRaspberryWeb();
                               },
                             )
                           ],
-                        ),
-                        Row(
-                          mainAxisAlignment:
-                          MainAxisAlignment.center,
-                          children: [
-                            Text('Alias: '),
-                            Text(DatosEstaticos
-                                .listadoDatosEquipoSeleccionado[
-                            0]['f_alias']),
-                            IconButton(
-                              onPressed: () async {
-                                _widgetPopUpAlias();
-                              },
-                              icon: Icon(Icons.edit),
-                            )
-                          ],
-                        ),
-                        Row(
-                          mainAxisAlignment:
-                          MainAxisAlignment.spaceAround,
-                          children: [
-                            Text('Ip: '),
-                            Text(DatosEstaticos
-                                .listadoDatosEquipoSeleccionado[
-                            0]['f_ip']),
-                          ],
-                        ),
-                        Row(
-                          mainAxisAlignment:
-                          MainAxisAlignment.spaceAround,
-                          children: [
-                            Text('Serial: '),
-                            Text(DatosEstaticos
-                                .listadoDatosEquipoSeleccionado[
-                            0]['f_serial']),
-                          ],
+                        ),*/
+                        Container(
+                          height: MediaQuery.of(context).size.height / 10,
+                          width: MediaQuery.of(context).size.width,
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            children: [
+                              Column(children: [
+                                Row(
+                                  children: [
+                                    Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          SizedBox(
+                                            height: 4,
+                                          ),
+                                          Text('NOMBRE'),
+                                          SizedBox(
+                                            height: 10,
+                                          ),
+                                          Text('SERIAL'),
+                                          SizedBox(
+                                            height: 10,
+                                          ),
+                                          Text('IP'),
+                                        ]),
+                                    Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          SizedBox(
+                                            height: 4,
+                                          ),
+                                          Text('  : '),
+                                          SizedBox(
+                                            height: 10,
+                                          ),
+                                          Text('  : '),
+                                          SizedBox(
+                                            height: 10,
+                                          ),
+                                          Text('  : ')
+                                        ]),
+                                  ],
+                                )
+                              ]),
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  Text(
+                                    DatosEstaticos
+                                            .listadoDatosEquipoSeleccionado[0]
+                                        ['f_alias'],
+                                    style: TextStyle(
+                                      fontFamily: 'textoMont',
+                                      fontSize: 13.5,
+                                    ),
+                                  ),
+                                  SizedBox(
+                                    height: 7,
+                                  ),
+                                  Text(
+                                    DatosEstaticos
+                                            .listadoDatosEquipoSeleccionado[0]
+                                        ['f_serial'],
+                                    style: TextStyle(
+                                      fontFamily: 'textoMont',
+                                      fontSize: 13.5,
+                                    ),
+                                  ),
+                                  SizedBox(
+                                    height: 7,
+                                  ),
+                                  Text(
+                                    DatosEstaticos
+                                            .listadoDatosEquipoSeleccionado[0]
+                                        ['f_ip'],
+                                    style: TextStyle(
+                                      fontFamily: 'textoMont',
+                                      fontSize: 13.5,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              Column(
+                                children: [
+                                  CircleAvatar(
+                                      backgroundColor: Colors.blueAccent,
+                                      radius: 8,
+                                      child: IconButton(
+                                        onPressed: () async {
+                                          _widgetPopUpAlias();
+                                        },
+                                        icon: Icon(
+                                          Icons.edit,
+                                          size: 10,
+                                        ),
+                                      )),
+                                  Text(""),
+                                  Text("")
+                                ],
+                              )
+                            ],
+                          ),
                         ),
                       ],
                     ),
                   ),
                   Align(
                     alignment: Alignment.bottomCenter,
-                    heightFactor: 4.0,
-                    child: RaisedButton(
-                      onPressed: () async {
-                        String dir =
-                            (await getTemporaryDirectory()).path;
-                        File temporal =
-                        new File('$dir/img_temp_creada.png');
-                        Navigator.pushNamed(
-                            context, '/seleccionar_layout');
-                      },
-                      child: Text('Modificar Layout'),
+                    heightFactor: 3.0,
+                    child: Container(
+                      height: 40,
+                      width: 200,
+                      decoration: new BoxDecoration(
+                          borderRadius: BorderRadius.circular(20),
+                          gradient: LinearGradient(
+                              colors: [
+                                HexColor("#0683ff"),
+                                HexColor("#3edb9b")
+                              ],
+                              stops: [
+                                0.1,
+                                0.6
+                              ],
+                              begin: Alignment.topLeft,
+                              end: FractionalOffset.bottomRight)),
+                      child: FlatButton(
+                        color: Colors.transparent,
+                        onPressed: () async {
+                          String dir = (await getTemporaryDirectory()).path;
+                          File temporal = new File('$dir/img_temp_creada.png');
+                          Navigator.pushNamed(context, '/seleccionar_layout');
+                        },
+                        child: Text(
+                          'EDITAR CONTENIDO',
+                          style: TextStyle(color: Colors.white),
+                        ),
+                      ),
                     ),
+                  ),
+//aca
+                  Align(
+                    alignment: Alignment.bottomCenter,
+                    heightFactor: 1.5,
+                    child: Stack(children: [
+                      Positioned(
+                        child: Container(
+                          decoration: new BoxDecoration(
+                              borderRadius: BorderRadius.circular(20),
+                              gradient: LinearGradient(
+                                  colors: [
+                                    HexColor("#3edb9b"),
+                                    HexColor("#0683ff")
+                                  ],
+                                  stops: [
+                                    0.5,
+                                    1
+                                  ],
+                                  begin: Alignment.topLeft,
+                                  end: FractionalOffset.bottomRight)),
+                          child: IgnorePointer(
+                            child: FSwitch(
+                              open: valorSwitchTodos,
+                              onChanged: (bool v) {},
+                              sliderColor: Colors.white,
+                              color: Colors.transparent,
+                              openColor: Colors.transparent,
+                              width: 200,
+                              height: 40,
+                            ),
+                          ),
+                        ),
+                      ),
+                      Positioned(
+                        bottom: 13,
+                        left: 11,
+                        child: Text("ON"),
+                      ),
+                      Positioned(
+                        bottom: 13,
+                        left: 168,
+                        child: Text("OFF"),
+                      )
+                    ]),
                   ),
                 ],
               );
@@ -213,11 +341,10 @@ class _DetalleEquipoState extends State<DetalleEquipo> {
                 Container(
                     margin: EdgeInsets.only(bottom: 5),
                     width: MediaQuery.of(context).size.width,
-                    height: MediaQuery.of(context).size.height /3,
+                    height: MediaQuery.of(context).size.height / 3,
                     child: _equipoNoActivado),
                 Row(
-                  mainAxisAlignment:
-                  MainAxisAlignment.spaceEvenly,
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
                     FloatingActionButton(
                       backgroundColor: Colors.white,
@@ -230,8 +357,10 @@ class _DetalleEquipoState extends State<DetalleEquipo> {
                     FloatingActionButton(
                       backgroundColor: Colors.white,
                       heroTag: null,
-                      child:
-                      Icon(Icons.screen_search_desktop, color: Colors.red,),
+                      child: Icon(
+                        Icons.screen_search_desktop,
+                        color: Colors.red,
+                      ),
                       onPressed: () {
                         //_vncRaspberryWeb();
                       },
@@ -239,13 +368,11 @@ class _DetalleEquipoState extends State<DetalleEquipo> {
                   ],
                 ),
                 Row(
-                  mainAxisAlignment:
-                  MainAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Text('Alias: '),
-                    Text(DatosEstaticos
-                        .listadoDatosEquipoSeleccionado[
-                    0]['f_alias']),
+                    Text(DatosEstaticos.listadoDatosEquipoSeleccionado[0]
+                        ['f_alias']),
                     IconButton(
                       onPressed: () async {
                         _widgetPopUpAlias();
@@ -255,23 +382,19 @@ class _DetalleEquipoState extends State<DetalleEquipo> {
                   ],
                 ),
                 Row(
-                  mainAxisAlignment:
-                  MainAxisAlignment.spaceAround,
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
                     Text('Ip: '),
-                    Text(DatosEstaticos
-                        .listadoDatosEquipoSeleccionado[
-                    0]['f_ip']),
+                    Text(DatosEstaticos.listadoDatosEquipoSeleccionado[0]
+                        ['f_ip']),
                   ],
                 ),
                 Row(
-                  mainAxisAlignment:
-                  MainAxisAlignment.spaceAround,
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
                     Text('Serial: '),
-                    Text(DatosEstaticos
-                        .listadoDatosEquipoSeleccionado[
-                    0]['f_serial']),
+                    Text(DatosEstaticos.listadoDatosEquipoSeleccionado[0]
+                        ['f_serial']),
                   ],
                 ),
               ],
@@ -296,8 +419,6 @@ class _DetalleEquipoState extends State<DetalleEquipo> {
       );
     }
 
-
-
     return WillPopScope(
       //Cierra todas las ventanas anteriores existentes y llega a
       // la ruta entregada
@@ -320,7 +441,18 @@ class _DetalleEquipoState extends State<DetalleEquipo> {
           child: ListView(
             children: [
               Container(
-                margin: EdgeInsets.all(20.0),
+                margin: EdgeInsets.only(top: 30),
+                width: MediaQuery.of(context).size.width,
+                child: Center(
+                  child: Text(
+                    "CAJA 1",
+                    style: TextStyle(fontSize: 16.5),
+                  ),
+                ),
+              ),
+              Container(
+                margin:
+                    EdgeInsets.only(top: 10, bottom: 20, left: 20, right: 20),
                 child: Center(
                   child: widgetContenido,
                 ),
