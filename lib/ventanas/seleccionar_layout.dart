@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:ffi';
 import 'dart:io';
 import 'dart:typed_data';
 import 'package:flutter/cupertino.dart';
@@ -7,6 +8,7 @@ import 'package:tvpost_flutter/utilidades/custom_widgets.dart';
 import 'package:tvpost_flutter/utilidades/datos_estaticos.dart';
 import 'package:tvpost_flutter/utilidades/obtiene_datos_webservice.dart';
 import 'package:tvpost_flutter/ventanas/seleccionar_video.dart';
+import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 
 class SeleccionarLayout extends StatefulWidget {
   @override
@@ -19,9 +21,12 @@ class _SeleccionarLayoutState extends State<SeleccionarLayout> {
   BoxDecoration _decorationLayoutSeleccionado1;
   BoxDecoration _decorationLayoutSeleccionado2;
   BoxDecoration _decorationLayoutSeleccionado3;
-  Text ls1;
-  Text ls2;
-  Text ls3;
+  Color colorActivo1;
+  Color colorActivo2;
+  Color colorActivo3;
+  Color colorSubrayado1;
+  Color colorSubrayado2;
+  Color colorSubrayado3;
 
   @override
   void initState() {
@@ -54,7 +59,7 @@ class _SeleccionarLayoutState extends State<SeleccionarLayout> {
                           textAlign: TextAlign.center,
                         ),
                         Padding(
-                          padding: const EdgeInsets.only(bottom: 20.0, top: 10),
+                          padding: const EdgeInsets.only(top: 20, bottom: 3),
                           child: Container(
                             decoration: _decorationLayoutSeleccionado1,
                             child: FlatButton(
@@ -67,8 +72,27 @@ class _SeleccionarLayoutState extends State<SeleccionarLayout> {
                             ),
                           ),
                         ),
+                        Container(
+                          margin: EdgeInsets.symmetric(horizontal: 110),
+                          decoration: BoxDecoration(
+                              border: Border(
+                                  bottom: BorderSide(
+                                      color: colorSubrayado1, width: 1))),
+                          child: Center(
+                            child: Text(
+                              "LAYOUT ACTIVO",
+                              style: TextStyle(
+                                fontFamily: 'textoMont',
+                                fontSize: 13.5,
+                                color: colorActivo1,
+                                /*decoration: TextDecoration.underline,
+                                  decorationColor: colorSubrayado1*/
+                              ),
+                            ),
+                          ),
+                        ),
                         Padding(
-                          padding: const EdgeInsets.only(bottom: 20.0),
+                          padding: const EdgeInsets.only(top: 20.0, bottom: 3),
                           child: Container(
                             decoration: _decorationLayoutSeleccionado2,
                             child: Column(
@@ -86,8 +110,27 @@ class _SeleccionarLayoutState extends State<SeleccionarLayout> {
                             ),
                           ),
                         ),
+                        Container(
+                          margin: EdgeInsets.symmetric(horizontal: 110),
+                          decoration: BoxDecoration(
+                              border: Border(
+                                  bottom: BorderSide(
+                                      color: colorSubrayado2, width: 1))),
+                          child: Center(
+                            child: Text(
+                              "LAYOUT ACTIVO",
+                              style: TextStyle(
+                                fontFamily: 'textoMont',
+                                fontSize: 13.5,
+                                color: colorActivo2,
+                                /*decoration: TextDecoration.underline,
+                                  decorationColor: colorSubrayado1*/
+                              ),
+                            ),
+                          ),
+                        ),
                         Padding(
-                          padding: const EdgeInsets.only(bottom: 10.0),
+                          padding: const EdgeInsets.only(top: 20.0, bottom: 3),
                           child: Container(
                             decoration: _decorationLayoutSeleccionado3,
                             child: FlatButton(
@@ -95,15 +138,38 @@ class _SeleccionarLayoutState extends State<SeleccionarLayout> {
                               onPressed: () {
                                 //Se asigna layout seleccionado a 3
                                 DatosEstaticos.layoutSeleccionado = 3;
-                                Navigator.pushNamed(context, '/crear_layout3');
+                                _reloj_estado(context);
+                                //Navigator.pushNamed(context, '/crear_layout3');
                               },
                             ),
                           ),
                         ),
-                        Center(
-                          child: Text(
-                            "SELECCIONA LAYOUT",
-                            style: TextStyle(fontSize: 14),
+                        Container(
+                          margin: EdgeInsets.symmetric(horizontal: 110),
+                          decoration: BoxDecoration(
+                              border: Border(
+                                  bottom: BorderSide(
+                                      color: colorSubrayado3, width: 1))),
+                          child: Center(
+                            child: Text(
+                              "LAYOUT ACTIVO",
+                              style: TextStyle(
+                                fontFamily: 'textoMont',
+                                fontSize: 13.5,
+                                color: colorActivo3,
+                                /*decoration: TextDecoration.underline,
+                                  decorationColor: colorSubrayado1*/
+                              ),
+                            ),
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.only(top: 20),
+                          child: Center(
+                            child: Text(
+                              "SELECCIONA LAYOUT",
+                              style: TextStyle(fontSize: 14),
+                            ),
                           ),
                         ),
                       ],
@@ -117,6 +183,171 @@ class _SeleccionarLayoutState extends State<SeleccionarLayout> {
             )),
       ),
     );
+  }
+
+  Future<void> _reloj_estado(BuildContext context) {
+    return showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          contentPadding:
+              EdgeInsets.only(bottom: 20, top: 20, left: 5, right: 5),
+          backgroundColor: Colors.grey.withOpacity(0.0),
+          /*
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.all(Radius.circular(10.0)),
+          ),
+          backgroundColor: HexColor('#f4f4f4'),*/
+          content: Container(
+            decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(40),
+                color: HexColor('#f4f4f4')),
+            height: 150,
+            width: 250,
+            child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  Text(
+                    "¿DESEA ACTIVAR RELOJ?",
+                    style: TextStyle(fontSize: 11),
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: <Widget>[
+                      GestureDetector(
+                        child: Icon(
+                          Icons.check_circle,
+                          color: HexColor('#3EDB9B'),
+                        ),
+                        onTap: () {
+                          PopUps.PopUpConWidgetYEventos(context, EditarReloj());
+                          // _layout3_reloj(context);
+                        },
+                      ),
+                      GestureDetector(
+                        child: Icon(
+                          Icons.cancel,
+                          color: HexColor('#FC4C8B'),
+                        ),
+                        onTap: () {
+                          Navigator.pushNamed(context, '/crear_layout3');
+                          //_layout3_solito(context);
+                        },
+                      ),
+                    ],
+                  ),
+                ]),
+          ),
+        );
+      },
+    );
+  }
+
+  StatefulBuilder EditarReloj() {
+    // Valores para color de fonddo y texto
+    Color pickerColorFondo = HexColor(DatosEstaticos.color_fondo_reloj);
+    Color pickerColorTexto = HexColor(DatosEstaticos.color_texto_reloj);
+
+    //Funciones que cambian y devuelven color
+    void changeColorFondo(Color color) {
+      setState(() {
+        pickerColorFondo = color;
+        //El valor viene en int, así que para pasarlo al reloj en la pantalla
+        //se debe transformar a hex.
+        var hex =
+            '#${color.value.toRadixString(16).padLeft(6, '0').toUpperCase()}';
+        DatosEstaticos.color_fondo_reloj = hex;
+      });
+    }
+
+    //Funciones que cambian y devuelven color
+    void changeColorLetras(Color color) {
+      setState(() {
+        pickerColorTexto = color;
+        //El valor viene en int, así que para pasarlo al reloj en la pantalla
+        //se debe transformar a hex.
+        var hex =
+            '#${color.value.toRadixString(16).padLeft(6, '0').toUpperCase()}';
+        DatosEstaticos.color_texto_reloj = hex;
+      });
+    }
+
+    return StatefulBuilder(builder: (context, setState) {
+      return Center(
+        child: SingleChildScrollView(
+          child: AlertDialog(
+            title: Text(
+              "Vista Previa Reloj",
+              textAlign: TextAlign.center,
+            ),
+            content: Column(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 15.0),
+                  child: DecoratedBox(
+                    decoration: BoxDecoration(
+                      color: pickerColorFondo,
+                    ),
+                    child: Text(
+                      '12:00:00',
+                      textScaleFactor: 2.0,
+                      textAlign: TextAlign.center,
+                      style: TextStyle(color: pickerColorTexto),
+                    ),
+                  ),
+                ),
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    Text(
+                      "Fondo",
+                      textScaleFactor: 1.5,
+                      style: TextStyle(
+                          color: Colors.black, fontWeight: FontWeight.bold),
+                    ),
+                    ColorPicker(
+                      pickerColor: pickerColorFondo,
+                      showLabel: false,
+                      enableAlpha: false,
+                      displayThumbColor: true,
+                      pickerAreaHeightPercent: 0.25,
+                      onColorChanged: (color) {
+                        changeColorFondo(color);
+                        setState(() {});
+                      },
+                    ),
+                    Text(
+                      "Hora",
+                      textScaleFactor: 1.5,
+                      style: TextStyle(
+                          color: Colors.black, fontWeight: FontWeight.bold),
+                    ),
+                    ColorPicker(
+                      pickerColor: pickerColorTexto,
+                      showLabel: false,
+                      enableAlpha: false,
+                      displayThumbColor: true,
+                      pickerAreaHeightPercent: 0.25,
+                      onColorChanged: (color) {
+                        changeColorLetras(color);
+                        setState(() {});
+                      },
+                    ),
+                    RaisedButton(
+                      child: Text("Guardar"),
+                      onPressed: () =>
+                          //Navigator.of(context, rootNavigator: true).pop()
+
+                          Navigator.pushNamed(context, '/layoutreloj'),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        ),
+      );
+    });
   }
 
   recargarListadoEquipos() async {
@@ -260,40 +491,65 @@ class _SeleccionarLayoutState extends State<SeleccionarLayout> {
     return _direccionCompleta;
   }
 
+//Aca se activan los colores del texto y subrayado, del layout seleccionado
   void PorcionSeleccionada(int seleccionada) {
     switch (seleccionada) {
       case 0:
-        _decorationLayoutSeleccionado1 = BoxDecoration(
+        //aca se comentan los bordes rojos de seleccionar layout
+        /*_decorationLayoutSeleccionado1 = BoxDecoration(
             border: Border.all(color: Colors.transparent, width: 10));
         _decorationLayoutSeleccionado2 = BoxDecoration(
             border: Border.all(color: Colors.transparent, width: 10));
         _decorationLayoutSeleccionado3 = BoxDecoration(
-            border: Border.all(color: Colors.transparent, width: 10));
+            border: Border.all(color: Colors.transparent, width: 10));*/
+        colorActivo1 = Colors.transparent;
+        colorActivo2 = Colors.transparent;
+        colorActivo3 = Colors.transparent;
+        colorSubrayado1 = Colors.transparent;
+        colorSubrayado2 = Colors.transparent;
+        colorSubrayado3 = Colors.transparent;
         break;
       case 1:
-        _decorationLayoutSeleccionado1 =
+        /*_decorationLayoutSeleccionado1 =
             BoxDecoration(border: Border.all(color: Colors.red, width: 10));
         _decorationLayoutSeleccionado2 = BoxDecoration(
             border: Border.all(color: Colors.transparent, width: 10));
         _decorationLayoutSeleccionado3 = BoxDecoration(
-            border: Border.all(color: Colors.transparent, width: 10));
-
+            border: Border.all(color: Colors.transparent, width: 10));*/
+        colorActivo1 = HexColor('#bdbdbd');
+        colorActivo2 = Colors.transparent;
+        colorActivo3 = Colors.transparent;
+        colorSubrayado1 = HexColor('#0683FF');
+        colorSubrayado2 = Colors.transparent;
+        colorSubrayado3 = Colors.transparent;
         break;
       case 2:
-        _decorationLayoutSeleccionado1 = BoxDecoration(
+        /* _decorationLayoutSeleccionado1 = BoxDecoration(
             border: Border.all(color: Colors.transparent, width: 10));
         _decorationLayoutSeleccionado2 =
             BoxDecoration(border: Border.all(color: Colors.red, width: 10));
         _decorationLayoutSeleccionado3 = BoxDecoration(
-            border: Border.all(color: Colors.transparent, width: 10));
+            border: Border.all(color: Colors.transparent, width: 10));*/
+        colorActivo1 = Colors.transparent;
+        colorActivo2 = HexColor('#bdbdbd');
+        colorActivo3 = Colors.transparent;
+        colorSubrayado1 = Colors.transparent;
+        colorSubrayado2 = HexColor('#0683FF');
+        colorSubrayado3 = Colors.transparent;
         break;
       case 3:
-        _decorationLayoutSeleccionado1 = BoxDecoration(
+        /*_decorationLayoutSeleccionado1 = BoxDecoration(
             border: Border.all(color: Colors.transparent, width: 10));
         _decorationLayoutSeleccionado2 = BoxDecoration(
             border: Border.all(color: Colors.transparent, width: 10));
         _decorationLayoutSeleccionado3 =
-            BoxDecoration(border: Border.all(color: Colors.red, width: 10));
+            BoxDecoration(border: Border.all(color: Colors.red, width: 10));*/
+        colorActivo1 = Colors.transparent;
+        colorActivo2 = Colors.transparent;
+        colorActivo3 = HexColor('#bdbdbd');
+        colorSubrayado1 = Colors.transparent;
+        colorSubrayado2 = Colors.transparent;
+        colorSubrayado3 = HexColor('#0683FF');
         break;
     }
   }

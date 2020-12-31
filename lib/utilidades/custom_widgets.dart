@@ -5,6 +5,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:tvpost_flutter/utilidades/datos_estaticos.dart';
 import 'package:tvpost_flutter/utilidades/obtiene_datos_webservice.dart';
+import 'package:tvpost_flutter/ventanas/crear_layout3.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:tvpost_flutter/utilidades/comunicacion_raspberry.dart';
@@ -26,6 +27,65 @@ class PopUps {
       context: context,
       builder: (BuildContext context) {
         return alert;
+      },
+    );
+  }
+
+  static _reloj_estado(BuildContext context) {
+    return showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text("¿DESEA ACTIVAR RELOJ?"),
+          content: Row(
+            children: <Widget>[
+              GestureDetector(
+                child: Icon(Icons.check_circle),
+                onTap: () {
+                  // _layout3_reloj(context);
+                },
+              ),
+              GestureDetector(
+                child: Icon(
+                  Icons.cancel,
+                ),
+                onTap: () {
+                  //_layout3_solito(context);
+                },
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  //Crear un popup con cualquier widget de contenido
+  static SeleccionarReloj(BuildContext context) {
+    return showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text("¿DESEA ACTIVAR RELOJ?"),
+          content: Row(
+            children: <Widget>[
+              GestureDetector(
+                child: Icon(Icons.check_box_outline_blank_rounded),
+                onTap: () {
+                  // _layout3_reloj(context);
+                },
+              ),
+              GestureDetector(
+                child: Icon(
+                  Icons.cancel,
+                ),
+                onTap: () {
+                  //_layout3_solito(context);
+                },
+              ),
+            ],
+          ),
+        );
       },
     );
   }
@@ -121,7 +181,8 @@ class CustomAppBar extends PreferredSize {
                   begin: Alignment.centerLeft,
                   end: FractionalOffset.centerRight)),
           child: Padding(
-            padding: EdgeInsets.only(left: MediaQuery.of(context).size.width/5.5),
+            padding:
+                EdgeInsets.only(left: MediaQuery.of(context).size.width / 5.5),
             child: Container(
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -147,9 +208,11 @@ class CustomAppBar extends PreferredSize {
                       ),
                       onPressed: () {
                         PopUps.PopUpConWidget(
-                            context, Text('Menú en creación',
-                          textAlign: TextAlign.center,)
-                        );
+                            context,
+                            Text(
+                              'Menú en creación',
+                              textAlign: TextAlign.center,
+                            ));
                       },
                     ),
                   ),
