@@ -1,5 +1,5 @@
 import 'dart:convert';
-import 'dart:ffi';
+//import 'dart:ffi';
 import 'dart:io';
 import 'dart:typed_data';
 import 'package:flutter/cupertino.dart';
@@ -27,6 +27,7 @@ class _SeleccionarLayoutState extends State<SeleccionarLayout> {
   Color colorSubrayado1;
   Color colorSubrayado2;
   Color colorSubrayado3;
+  //ObtieneDatos nombreEquipo = ObtieneDatos();
 
   @override
   void initState() {
@@ -54,7 +55,9 @@ class _SeleccionarLayoutState extends State<SeleccionarLayout> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Text(
-                          'CAJA 1',
+                          ObtieneDatos.listadoEquipos
+                          [DatosEstaticos.indexSeleccionado]
+                          ['f_alias'].toString(),
                           style: TextStyle(fontSize: 16.5),
                           textAlign: TextAlign.center,
                         ),
