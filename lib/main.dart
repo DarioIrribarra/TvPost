@@ -6,6 +6,7 @@ import 'package:tvpost_flutter/ventanas/crear_layout3.dart';
 import 'package:tvpost_flutter/ventanas/login.dart';
 import 'package:tvpost_flutter/ventanas/raspberries_conectadas.dart';
 import 'package:tvpost_flutter/ventanas/detalle_equipo.dart';
+import 'package:tvpost_flutter/ventanas/reloj.dart';
 import 'package:tvpost_flutter/ventanas/seleccionar_imagen.dart';
 import 'package:tvpost_flutter/ventanas/seleccionar_layout.dart';
 import 'package:tvpost_flutter/ventanas/seleccionar_video.dart';
@@ -37,6 +38,7 @@ Future<void> main() async {
       '/seleccionar_imagen': (context) => SeleccionarImagen(),
       '/seleccionar_video': (context) => SeleccionarVideo(),
       '/crear_contenido': (context) => CrearContenido(),
+      '/reloj':(context) => EditarReloj(),
     },
   ));
 }

@@ -7,8 +7,9 @@ import 'package:flutter/material.dart';
 import 'package:tvpost_flutter/utilidades/custom_widgets.dart';
 import 'package:tvpost_flutter/utilidades/datos_estaticos.dart';
 import 'package:tvpost_flutter/utilidades/obtiene_datos_webservice.dart';
+import 'package:tvpost_flutter/ventanas/reloj.dart';
 import 'package:tvpost_flutter/ventanas/seleccionar_video.dart';
-import 'package:flutter_colorpicker/flutter_colorpicker.dart';
+//import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 
 class SeleccionarLayout extends StatefulWidget {
   @override
@@ -223,7 +224,17 @@ class _SeleccionarLayoutState extends State<SeleccionarLayout> {
                           color: HexColor('#3EDB9B'),
                         ),
                         onTap: () {
-                          PopUps.PopUpConWidgetYEventos(context, EditarReloj());
+                          //PopUps.PopUpConWidgetYEventos(context, EditarReloj);
+                          //Se crea una clase para el reloj que maneja actualización
+                          //de estados propia. Sigue la explicación de como manejar
+                          //los 2 widget con y sin reloj en la línea: 115 del archivo
+                          // 'reloj.dart'
+                          Navigator.push(context,
+                              PageRouteBuilder(
+                                barrierDismissible: false,
+                                opaque: false,
+                                pageBuilder: (_, __, ___) => EditarReloj(),)
+                          );
                           // _layout3_reloj(context);
                         },
                       ),
@@ -233,6 +244,7 @@ class _SeleccionarLayoutState extends State<SeleccionarLayout> {
                           color: HexColor('#FC4C8B'),
                         ),
                         onTap: () {
+                          DatosEstaticos.relojEnPantalla = false;
                           Navigator.pushNamed(context, '/crear_layout3');
                           //_layout3_solito(context);
                         },
@@ -246,112 +258,7 @@ class _SeleccionarLayoutState extends State<SeleccionarLayout> {
     );
   }
 
-  StatefulBuilder EditarReloj() {
-    // Valores para color de fonddo y texto
-    Color pickerColorFondo = HexColor(DatosEstaticos.color_fondo_reloj);
-    Color pickerColorTexto = HexColor(DatosEstaticos.color_texto_reloj);
 
-    //Funciones que cambian y devuelven color
-    void changeColorFondo(Color color) {
-      setState(() {
-        pickerColorFondo = color;
-        //El valor viene en int, así que para pasarlo al reloj en la pantalla
-        //se debe transformar a hex.
-        var hex =
-            '#${color.value.toRadixString(16).padLeft(6, '0').toUpperCase()}';
-        DatosEstaticos.color_fondo_reloj = hex;
-      });
-    }
-
-    //Funciones que cambian y devuelven color
-    void changeColorLetras(Color color) {
-      setState(() {
-        pickerColorTexto = color;
-        //El valor viene en int, así que para pasarlo al reloj en la pantalla
-        //se debe transformar a hex.
-        var hex =
-            '#${color.value.toRadixString(16).padLeft(6, '0').toUpperCase()}';
-        DatosEstaticos.color_texto_reloj = hex;
-      });
-    }
-
-    return StatefulBuilder(builder: (context, setState) {
-      return Center(
-        child: SingleChildScrollView(
-          child: AlertDialog(
-            title: Text(
-              "Vista Previa Reloj",
-              textAlign: TextAlign.center,
-            ),
-            content: Column(
-              children: [
-                Padding(
-                  padding: const EdgeInsets.only(bottom: 15.0),
-                  child: DecoratedBox(
-                    decoration: BoxDecoration(
-                      color: pickerColorFondo,
-                    ),
-                    child: Text(
-                      '12:00:00',
-                      textScaleFactor: 2.0,
-                      textAlign: TextAlign.center,
-                      style: TextStyle(color: pickerColorTexto),
-                    ),
-                  ),
-                ),
-                Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    Text(
-                      "Fondo",
-                      textScaleFactor: 1.5,
-                      style: TextStyle(
-                          color: Colors.black, fontWeight: FontWeight.bold),
-                    ),
-                    ColorPicker(
-                      pickerColor: pickerColorFondo,
-                      showLabel: false,
-                      enableAlpha: false,
-                      displayThumbColor: true,
-                      pickerAreaHeightPercent: 0.25,
-                      onColorChanged: (color) {
-                        changeColorFondo(color);
-                        setState(() {});
-                      },
-                    ),
-                    Text(
-                      "Hora",
-                      textScaleFactor: 1.5,
-                      style: TextStyle(
-                          color: Colors.black, fontWeight: FontWeight.bold),
-                    ),
-                    ColorPicker(
-                      pickerColor: pickerColorTexto,
-                      showLabel: false,
-                      enableAlpha: false,
-                      displayThumbColor: true,
-                      pickerAreaHeightPercent: 0.25,
-                      onColorChanged: (color) {
-                        changeColorLetras(color);
-                        setState(() {});
-                      },
-                    ),
-                    RaisedButton(
-                      child: Text("Guardar"),
-                      onPressed: () =>
-                          //Navigator.of(context, rootNavigator: true).pop()
-
-                          Navigator.pushNamed(context, '/layoutreloj'),
-                    ),
-                  ],
-                ),
-              ],
-            ),
-          ),
-        ),
-      );
-    });
-  }
 
   recargarListadoEquipos() async {
     //Se actualizan los datos de equipo cada vez que se selecciona

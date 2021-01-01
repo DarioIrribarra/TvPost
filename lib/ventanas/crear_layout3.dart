@@ -138,6 +138,48 @@ class _CrearLayout3State extends State<CrearLayout3> {
       DatosEstaticos.primeraVezCargaVideo = false;
     });
 
+    //Diego. Acá verifica si el valor del reloj en pantalla es true. Si es así,
+    //muestras el layout distinto, sino, muestras el antiguo. T odo lo que quieras
+    //mostrar, será el widget "contenidoLayout20" porquie al final solo cambia la porcion
+    //del 20%
+
+    Widget contenidoLayout20;
+    //Si es true, es decir presionaron guardar...
+    if (DatosEstaticos.relojEnPantalla){
+      contenidoLayout20 = Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Expanded(
+            flex: 1,
+            child: Container(
+              color: HexColor(DatosEstaticos.color_fondo_reloj),
+              child: Align(
+                alignment: Alignment.center,
+                child: Text(
+                  "00:00",
+                  style: TextStyle(
+                      color: HexColor(DatosEstaticos.color_texto_reloj
+                      )
+                  ),
+                  textScaleFactor: 1.0,
+                  textAlign: TextAlign.center,
+                ),
+              ),
+            ),
+          ),
+          Expanded(
+            flex: 4,
+            child: widget2),
+        ],
+      );
+    } else {
+      contenidoLayout20 = widget2;
+    }
+    //Diego, ahora mira la línea 236 de este archivo. Ahí es donde se carga
+    //una porción de layout o la otra. Sugiero eliminar la creación del nuevo
+    //archivo layout que hiciste porque por cada cambio que hagamos acá, se va a
+    //tener que duplicar en ese.
+
     return Scaffold(
       //Appbar viene de archivo custom_widgets.dart
       appBar: CustomAppBar(),
@@ -194,7 +236,7 @@ class _CrearLayout3State extends State<CrearLayout3> {
                                     divisionLayout = '3-2';
                                   });
                                 },
-                                child: ignorarInteraccionesElemento(widget2),
+                                child: ignorarInteraccionesElemento(contenidoLayout20),
                             ),
                           ),
                         ),
