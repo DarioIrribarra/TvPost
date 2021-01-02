@@ -44,7 +44,7 @@ class _SeleccionarLayoutState extends State<SeleccionarLayout> {
       appBar: CustomAppBar(),
       body: SingleChildScrollView(
         child: Container(
-            margin: EdgeInsets.fromLTRB(20.0, 30.0, 20.0, 10),
+            margin: EdgeInsets.fromLTRB(20.0, 20.0, 20.0, 10),
             child: FutureBuilder(
               future: recargarListadoEquipos(),
               builder: (context, snapshot) {
@@ -56,14 +56,15 @@ class _SeleccionarLayoutState extends State<SeleccionarLayout> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Text(
-                          ObtieneDatos.listadoEquipos
-                          [DatosEstaticos.indexSeleccionado]
-                          ['f_alias'].toString(),
+                          ObtieneDatos
+                              .listadoEquipos[DatosEstaticos.indexSeleccionado]
+                                  ['f_alias']
+                              .toString(),
                           style: TextStyle(fontSize: 16.5),
                           textAlign: TextAlign.center,
                         ),
                         Padding(
-                          padding: const EdgeInsets.only(top: 20, bottom: 3),
+                          padding: const EdgeInsets.only(top: 15, bottom: 3),
                           child: Container(
                             decoration: _decorationLayoutSeleccionado1,
                             child: FlatButton(
@@ -87,7 +88,7 @@ class _SeleccionarLayoutState extends State<SeleccionarLayout> {
                               "LAYOUT ACTIVO",
                               style: TextStyle(
                                 fontFamily: 'textoMont',
-                                fontSize: 13.5,
+                                fontSize: 12,
                                 color: colorActivo1,
                                 /*decoration: TextDecoration.underline,
                                   decorationColor: colorSubrayado1*/
@@ -96,7 +97,7 @@ class _SeleccionarLayoutState extends State<SeleccionarLayout> {
                           ),
                         ),
                         Padding(
-                          padding: const EdgeInsets.only(top: 20.0, bottom: 3),
+                          padding: const EdgeInsets.only(top: 10.0, bottom: 3),
                           child: Container(
                             decoration: _decorationLayoutSeleccionado2,
                             child: Column(
@@ -125,7 +126,7 @@ class _SeleccionarLayoutState extends State<SeleccionarLayout> {
                               "LAYOUT ACTIVO",
                               style: TextStyle(
                                 fontFamily: 'textoMont',
-                                fontSize: 13.5,
+                                fontSize: 12,
                                 color: colorActivo2,
                                 /*decoration: TextDecoration.underline,
                                   decorationColor: colorSubrayado1*/
@@ -134,7 +135,7 @@ class _SeleccionarLayoutState extends State<SeleccionarLayout> {
                           ),
                         ),
                         Padding(
-                          padding: const EdgeInsets.only(top: 20.0, bottom: 3),
+                          padding: const EdgeInsets.only(top: 10.0, bottom: 3),
                           child: Container(
                             decoration: _decorationLayoutSeleccionado3,
                             child: FlatButton(
@@ -159,7 +160,7 @@ class _SeleccionarLayoutState extends State<SeleccionarLayout> {
                               "LAYOUT ACTIVO",
                               style: TextStyle(
                                 fontFamily: 'textoMont',
-                                fontSize: 13.5,
+                                fontSize: 12,
                                 color: colorActivo3,
                                 /*decoration: TextDecoration.underline,
                                   decorationColor: colorSubrayado1*/
@@ -172,7 +173,6 @@ class _SeleccionarLayoutState extends State<SeleccionarLayout> {
                           child: Center(
                             child: Text(
                               "SELECCIONA LAYOUT",
-                              style: TextStyle(fontSize: 14),
                             ),
                           ),
                         ),
@@ -213,7 +213,6 @@ class _SeleccionarLayoutState extends State<SeleccionarLayout> {
                 children: [
                   Text(
                     "¿DESEA ACTIVAR RELOJ?",
-                    style: TextStyle(fontSize: 11),
                   ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -222,6 +221,7 @@ class _SeleccionarLayoutState extends State<SeleccionarLayout> {
                         child: Icon(
                           Icons.check_circle,
                           color: HexColor('#3EDB9B'),
+                          size: 30,
                         ),
                         onTap: () {
                           //PopUps.PopUpConWidgetYEventos(context, EditarReloj);
@@ -229,12 +229,13 @@ class _SeleccionarLayoutState extends State<SeleccionarLayout> {
                           //de estados propia. Sigue la explicación de como manejar
                           //los 2 widget con y sin reloj en la línea: 115 del archivo
                           // 'reloj.dart'
-                          Navigator.push(context,
+                          Navigator.push(
+                              context,
                               PageRouteBuilder(
                                 barrierDismissible: false,
                                 opaque: false,
-                                pageBuilder: (_, __, ___) => EditarReloj(),)
-                          );
+                                pageBuilder: (_, __, ___) => EditarReloj(),
+                              ));
                           // _layout3_reloj(context);
                         },
                       ),
@@ -242,6 +243,7 @@ class _SeleccionarLayoutState extends State<SeleccionarLayout> {
                         child: Icon(
                           Icons.cancel,
                           color: HexColor('#FC4C8B'),
+                          size: 30,
                         ),
                         onTap: () {
                           DatosEstaticos.relojEnPantalla = false;
@@ -257,8 +259,6 @@ class _SeleccionarLayoutState extends State<SeleccionarLayout> {
       },
     );
   }
-
-
 
   recargarListadoEquipos() async {
     //Se actualizan los datos de equipo cada vez que se selecciona

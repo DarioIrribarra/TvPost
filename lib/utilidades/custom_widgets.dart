@@ -262,83 +262,96 @@ class _OpcionesSeleccionMediaState extends State<OpcionesSeleccionMedia> {
   Widget build(BuildContext context) {
     return Visibility(
       visible: widget.visible,
-      child: Container(
-        width: 176.1,
-        decoration: new BoxDecoration(
-            borderRadius: BorderRadius.circular(20),
-            gradient: LinearGradient(
-                colors: [Colors.blue, Colors.green],
-                stops: [0.3, 0.7],
-                begin: Alignment.topLeft,
-                end: FractionalOffset.bottomRight)),
-        margin: EdgeInsets.symmetric(
-          horizontal: 92,
-        ),
-        padding: EdgeInsets.symmetric(horizontal: 0),
-        child: Column(
-          //crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Row(
+      child: Column(
+        children: [
+          SizedBox(
+            height: 30,
+          ),
+          Text("¿QUÉ QUIERES PUBLICAR?"),
+          SizedBox(
+            height: 15,
+          ),
+          Container(
+            width: 176.1,
+            decoration: new BoxDecoration(
+                borderRadius: BorderRadius.circular(20),
+                gradient: LinearGradient(
+                    colors: [Colors.blue, Colors.green],
+                    stops: [0.3, 0.7],
+                    begin: Alignment.topLeft,
+                    end: FractionalOffset.bottomRight)),
+            margin: EdgeInsets.symmetric(
+              horizontal: 92,
+            ),
+            padding: EdgeInsets.symmetric(horizontal: 0),
+            child: Column(
               //crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                FlatButton(
-                  color: Colors.transparent,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(18.0),
-                  ),
-                  onPressed: () {
-                    //Va a la otra ventana esperando respuesta
-                    navegarYEsperarRespuesta('/seleccionar_imagen');
-                  },
-                  child: Text(
-                    'Imagen',
-                    style: TextStyle(color: Colors.white),
-                  ),
+                Row(
+                  //crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    FlatButton(
+                      color: Colors.transparent,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(18.0),
+                      ),
+                      onPressed: () {
+                        //Va a la otra ventana esperando respuesta
+                        navegarYEsperarRespuesta('/seleccionar_imagen');
+                      },
+                      child: Text(
+                        'Imagen',
+                        style: TextStyle(color: Colors.white),
+                      ),
+                    ),
+                    FlatButton(
+                      color: Colors.transparent,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(18.0),
+                      ),
+                      onPressed: () {
+                        //Va a la otra ventana esperando respuesta
+                        navegarYEsperarRespuesta('/seleccionar_video');
+                      },
+                      child:
+                          Text('Video', style: TextStyle(color: Colors.white)),
+                    ),
+                  ],
                 ),
-                FlatButton(
-                  color: Colors.transparent,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(18.0),
-                  ),
-                  onPressed: () {
-                    //Va a la otra ventana esperando respuesta
-                    navegarYEsperarRespuesta('/seleccionar_video');
-                  },
-                  child: Text('Video', style: TextStyle(color: Colors.white)),
+                Row(
+                  // crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    FlatButton(
+                      color: Colors.transparent,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(18.0),
+                      ),
+                      onPressed: () {
+                        //Aparece popup de ingresar link
+                        contenidoPopUpSeleccionUrl();
+                        /*PopUps.PopUpConWidget(w
+                          context, contenidoPopUpSeleccionUrl());*/
+                      },
+                      child: Text('Url', style: TextStyle(color: Colors.white)),
+                    ),
+                    FlatButton(
+                      color: Colors.transparent,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(18.0),
+                      ),
+                      onPressed: () {
+                        //Va a la otra ventana esperando respuesta
+                        navegarYEsperarRespuesta('/crear_contenido');
+                      },
+                      child:
+                          Text('Crear', style: TextStyle(color: Colors.white)),
+                    ),
+                  ],
                 ),
               ],
             ),
-            Row(
-              // crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                FlatButton(
-                  color: Colors.transparent,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(18.0),
-                  ),
-                  onPressed: () {
-                    //Aparece popup de ingresar link
-                    contenidoPopUpSeleccionUrl();
-                    /*PopUps.PopUpConWidget(w
-                        context, contenidoPopUpSeleccionUrl());*/
-                  },
-                  child: Text('Url', style: TextStyle(color: Colors.white)),
-                ),
-                FlatButton(
-                  color: Colors.transparent,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(18.0),
-                  ),
-                  onPressed: () {
-                    //Va a la otra ventana esperando respuesta
-                    navegarYEsperarRespuesta('/crear_contenido');
-                  },
-                  child: Text('Crear', style: TextStyle(color: Colors.white)),
-                ),
-              ],
-            ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }

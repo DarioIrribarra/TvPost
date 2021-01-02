@@ -539,6 +539,8 @@ class _CrearContenidoState extends State<CrearContenido> {
             child: ListBody(
               children: <Widget>[
                 TextField(
+                  keyboardType: TextInputType.multiline,
+                  maxLines: null,
                   decoration: InputDecoration(
                     border: OutlineInputBorder(),
                     labelText: 'Ingrese texto',

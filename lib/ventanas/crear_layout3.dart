@@ -37,38 +37,39 @@ class _CrearLayout3State extends State<CrearLayout3> {
 
   @override
   Widget build(BuildContext context) {
-
     //Si ya se seleccionó un archivo de media se crea un nuevo layout
     if (DatosEstaticos.widget1 != null) {
-      if (DatosEstaticos.widget1.runtimeType.toString() == 'WebView'){
+      if (DatosEstaticos.widget1.runtimeType.toString() == 'WebView') {
         WebView widgetWebView = DatosEstaticos.widget1;
         String url = widgetWebView.initialUrl;
         DatosEstaticos.webViewControllerWidget1?.loadUrl(url);
         widget1 = DatosEstaticos.widget1;
-
-      }else {
+      } else {
         widget1 = DatosEstaticos.widget1;
       }
     } else {
-      Widget _imageSeleccionLayout = Image.asset('imagenes/layout1a.png', fit: BoxFit.fill,);
+      Widget _imageSeleccionLayout =
+          Container(); /*Image.asset('imagenes/layout1a.png', fit: BoxFit.fill,);*/
       widget1 = _imageSeleccionLayout;
     }
 
     //Si ya se seleccionó un archivo de media se crea un nuevo layout
     if (DatosEstaticos.widget2 != null) {
-
-      switch(DatosEstaticos.widget2.runtimeType.toString()){
-      //Cambio de tamaño para reproductor en esta porción
+      switch (DatosEstaticos.widget2.runtimeType.toString()) {
+        //Cambio de tamaño para reproductor en esta porción
         case 'ReproductorVideos':
-          if (DatosEstaticos.primeraVezCargaVideo == false){
+          if (DatosEstaticos.primeraVezCargaVideo == false) {
             ReproductorVideos antiguo = DatosEstaticos.widget2;
             String dato = antiguo.url;
             VideoPlayerController controladorantiguo = antiguo.controller;
             //Se liberan los recursos del controlador antiguo
-            if (controladorantiguo!=null){
+            if (controladorantiguo != null) {
               controladorantiguo.dispose();
             }
-            ReproductorVideos videoResized = ReproductorVideos(divisionLayout: '3-2', url: dato,);
+            ReproductorVideos videoResized = ReproductorVideos(
+              divisionLayout: '3-2',
+              url: dato,
+            );
             widget2 = videoResized;
             DatosEstaticos.widget2 = widget2;
             videoPorcion2Reemplazado = false;
@@ -93,26 +94,30 @@ class _CrearLayout3State extends State<CrearLayout3> {
 
       if (DatosEstaticos.widget2.runtimeType.toString() == 'WebView'){
 
-        *//*try{
+        */ /*try{
           DatosEstaticos.webViewControllerWidget1?.loadUrl(url);
           widget1 = DatosEstaticos.wiget1;
           //DatosEstaticos.webViewControllerWidget1 = null;
         } catch (e) {
           widget1 = DatosEstaticos.wiget1;
           print("Error al loadurl: " + e.toString());
-        }*//*
+        }*/ /*
 
       }else {
         widget2 = DatosEstaticos.widget2;
       }*/
     } else {
-      Widget _imageSeleccionLayout = Image.asset('imagenes/layout1a.png', fit: BoxFit.fitHeight,);
+      Widget _imageSeleccionLayout = Container();
+      /*Image.asset(
+        'imagenes/layout1a.png',
+        fit: BoxFit.fitHeight,
+      );*/
       widget2 = _imageSeleccionLayout;
     }
 
     //Si ya se seleccionó un archivo de media se crea un nuevo layout
     if (DatosEstaticos.widget3 != null) {
-      if (DatosEstaticos.widget3.runtimeType.toString() == 'WebView'){
+      if (DatosEstaticos.widget3.runtimeType.toString() == 'WebView') {
         WebView widgetWebView = DatosEstaticos.widget3;
         String url = widgetWebView.initialUrl;
         DatosEstaticos.webViewControllerWidget3?.loadUrl(url);
@@ -126,11 +131,15 @@ class _CrearLayout3State extends State<CrearLayout3> {
           print("Error al loadurl: " + e.toString());
         }*/
 
-      }else {
+      } else {
         widget3 = DatosEstaticos.widget3;
       }
     } else {
-      Widget _imageSeleccionLayout = Image.asset('imagenes/layout1a.png', fit: BoxFit.fitWidth,);
+      Widget _imageSeleccionLayout = Container();
+      /*Image.asset(
+        'imagenes/layout1a.png',
+        fit: BoxFit.fitWidth,
+      );*/
       widget3 = _imageSeleccionLayout;
     }
 
@@ -145,7 +154,7 @@ class _CrearLayout3State extends State<CrearLayout3> {
 
     Widget contenidoLayout20;
     //Si es true, es decir presionaron guardar...
-    if (DatosEstaticos.relojEnPantalla){
+    if (DatosEstaticos.relojEnPantalla) {
       contenidoLayout20 = Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
@@ -158,18 +167,14 @@ class _CrearLayout3State extends State<CrearLayout3> {
                 child: Text(
                   "00:00",
                   style: TextStyle(
-                      color: HexColor(DatosEstaticos.color_texto_reloj
-                      )
-                  ),
+                      color: HexColor(DatosEstaticos.color_texto_reloj)),
                   textScaleFactor: 1.0,
                   textAlign: TextAlign.center,
                 ),
               ),
             ),
           ),
-          Expanded(
-            flex: 4,
-            child: widget2),
+          Expanded(flex: 4, child: widget2),
         ],
       );
     } else {
@@ -188,9 +193,10 @@ class _CrearLayout3State extends State<CrearLayout3> {
           children: [
             Container(
               width: MediaQuery.of(context).size.width,
-              height: MediaQuery.of(context).size.height/3,
+              height: MediaQuery.of(context).size.height / 3,
               margin: EdgeInsets.all(5),
-              decoration: BoxDecoration(border: Border.all(color: Colors.black, width: 5)),
+              decoration: BoxDecoration(
+                  border: Border.all(color: Colors.black, width: 5)),
               child: Column(
                 children: [
                   Expanded(
@@ -198,23 +204,23 @@ class _CrearLayout3State extends State<CrearLayout3> {
                     child: Row(
                       children: [
                         Expanded(
-                          flex:4,
+                          flex: 4,
                           child: Container(
                             /*width: MediaQuery.of(context).size.width - (MediaQuery.of(context).size.width * 0.169),
                             height:MediaQuery.of(context).size.height - (MediaQuery.of(context).size.height * 0.779),*/
                             decoration: _decorationPorcion1,
                             child: InkWell(
-                                enableFeedback: true,
-                                onTap: () {
-                                  setState(() {
-                                    PorcionSeleccionada(1);
-                                    if (!_visible) {
-                                      _visible = true;
-                                    }
-                                    divisionLayout = '3-1';
-                                  });
-                                },
-                                child: ignorarInteraccionesElemento(widget1),
+                              enableFeedback: true,
+                              onTap: () {
+                                setState(() {
+                                  PorcionSeleccionada(1);
+                                  if (!_visible) {
+                                    _visible = true;
+                                  }
+                                  divisionLayout = '3-1';
+                                });
+                              },
+                              child: ignorarInteraccionesElemento(widget1),
                             ),
                           ),
                         ),
@@ -226,17 +232,18 @@ class _CrearLayout3State extends State<CrearLayout3> {
                             height:MediaQuery.of(context).size.height - (MediaQuery.of(context).size.height * 0.779),*/
                             decoration: _decorationPorcion2,
                             child: InkWell(
-                                enableFeedback: true,
-                                onTap: () {
-                                  setState(() {
-                                    PorcionSeleccionada(2);
-                                    if (!_visible) {
-                                      _visible = true;
-                                    }
-                                    divisionLayout = '3-2';
-                                  });
-                                },
-                                child: ignorarInteraccionesElemento(contenidoLayout20),
+                              enableFeedback: true,
+                              onTap: () {
+                                setState(() {
+                                  PorcionSeleccionada(2);
+                                  if (!_visible) {
+                                    _visible = true;
+                                  }
+                                  divisionLayout = '3-2';
+                                });
+                              },
+                              child: ignorarInteraccionesElemento(
+                                  contenidoLayout20),
                             ),
                           ),
                         ),
@@ -244,24 +251,24 @@ class _CrearLayout3State extends State<CrearLayout3> {
                     ),
                   ),
                   Expanded(
-                    flex:1,
+                    flex: 1,
                     child: Container(
                       width: MediaQuery.of(context).size.width,
                       /*width: MediaQuery.of(context).size.width,
                       height: MediaQuery.of(context).size.height - (MediaQuery.of(context).size.height * 0.91),*/
                       decoration: _decorationPorcion3,
                       child: InkWell(
-                          enableFeedback: true,
-                          onTap: () {
-                            setState(() {
-                              PorcionSeleccionada(3);
-                              if (!_visible) {
-                                _visible = true;
-                              }
-                              divisionLayout = '3-3';
-                            });
-                          },
-                          child: ignorarInteraccionesElemento(widget3),
+                        enableFeedback: true,
+                        onTap: () {
+                          setState(() {
+                            PorcionSeleccionada(3);
+                            if (!_visible) {
+                              _visible = true;
+                            }
+                            divisionLayout = '3-3';
+                          });
+                        },
+                        child: ignorarInteraccionesElemento(widget3),
                       ),
                     ),
                   ),
@@ -270,7 +277,7 @@ class _CrearLayout3State extends State<CrearLayout3> {
             ),
 
             //Publicacion
-            Row(
+            /* Row(
               mainAxisSize: MainAxisSize.min,
               children: [
                 Expanded(
@@ -280,17 +287,22 @@ class _CrearLayout3State extends State<CrearLayout3> {
                     secondary: Icon(Icons.share),
                     controlAffinity: ListTileControlAffinity.trailing,
                     value: publicar_redes_sociales,
-                    onChanged: (bool value){
+                    onChanged: (bool value) {
                       setState(() {
-                        if (value){
-                          if (DatosEstaticos.widget1 != null ){
-                            if (DatosEstaticos.widget1.runtimeType.toString() != 'Image'){
+                        if (value) {
+                          if (DatosEstaticos.widget1 != null) {
+                            if (DatosEstaticos.widget1.runtimeType.toString() !=
+                                'Image') {
                               Column cont = Column(
                                 mainAxisSize: MainAxisSize.min,
                                 children: [
                                   Text('Solo se pueden publicar imágenes'),
-                                  RaisedButton(onPressed: () => Navigator.of(context, rootNavigator: true).pop(),
-                                    child: Text('Aceptar'),),
+                                  RaisedButton(
+                                    onPressed: () => Navigator.of(context,
+                                            rootNavigator: true)
+                                        .pop(),
+                                    child: Text('Aceptar'),
+                                  ),
                                 ],
                               );
                               PopUps.PopUpConWidget(context, cont);
@@ -303,18 +315,21 @@ class _CrearLayout3State extends State<CrearLayout3> {
                               mainAxisSize: MainAxisSize.min,
                               children: [
                                 Text('La imagen no puede estar vacía'),
-                                RaisedButton(onPressed: () => Navigator.of(context, rootNavigator: true).pop(),
-                                  child: Text('Aceptar'),),
+                                RaisedButton(
+                                  onPressed: () =>
+                                      Navigator.of(context, rootNavigator: true)
+                                          .pop(),
+                                  child: Text('Aceptar'),
+                                ),
                               ],
                             );
                             PopUps.PopUpConWidget(context, cont);
                             publicar_redes_sociales = false;
                           }
-                        }  else {
+                        } else {
                           publicar_redes_sociales = false;
                         }
                       });
-
                     },
                   ),
                 ),
@@ -332,9 +347,9 @@ class _CrearLayout3State extends State<CrearLayout3> {
                     secondary: Icon(Icons.more_time_rounded),
                     controlAffinity: ListTileControlAffinity.trailing,
                     value: DatosEstaticos.relojEnPantalla,
-                    onChanged: (bool value){
+                    onChanged: (bool value) {
                       setState(() {
-                        if (value){
+                        if (value) {
                           PopUps.PopUpConWidgetYEventos(context, EditarReloj());
                         }
                         DatosEstaticos.relojEnPantalla = value;
@@ -342,7 +357,6 @@ class _CrearLayout3State extends State<CrearLayout3> {
                     },
                   ),
                 ),
-
                 Expanded(
                   flex: 1,
                   child: BotonEnviarAEquipo(
@@ -353,7 +367,7 @@ class _CrearLayout3State extends State<CrearLayout3> {
                   ),
                 )
               ],
-            ),
+            ),*/
 
             //Acá va el widget de los botones
             OpcionesSeleccionMedia(
@@ -367,17 +381,18 @@ class _CrearLayout3State extends State<CrearLayout3> {
                 });
               },
             ),
-            BotonEnviarAEquipo(visible: _visible,
+            BotonEnviarAEquipo(
+              visible: _visible,
               publicar_rrss: publicar_redes_sociales,
-              publicar_porcion: 1,),
+              publicar_porcion: 1,
+            ),
           ],
         ),
       ),
     );
   }
 
-  StatefulBuilder EditarReloj (){
-
+  StatefulBuilder EditarReloj() {
     // Valores para color de fonddo y texto
     Color pickerColorFondo = HexColor(DatosEstaticos.color_fondo_reloj);
     Color pickerColorTexto = HexColor(DatosEstaticos.color_texto_reloj);
@@ -388,7 +403,8 @@ class _CrearLayout3State extends State<CrearLayout3> {
         pickerColorFondo = color;
         //El valor viene en int, así que para pasarlo al reloj en la pantalla
         //se debe transformar a hex.
-        var hex = '#${color.value.toRadixString(16).padLeft(6, '0').toUpperCase()}';
+        var hex =
+            '#${color.value.toRadixString(16).padLeft(6, '0').toUpperCase()}';
         DatosEstaticos.color_fondo_reloj = hex;
       });
     }
@@ -399,119 +415,145 @@ class _CrearLayout3State extends State<CrearLayout3> {
         pickerColorTexto = color;
         //El valor viene en int, así que para pasarlo al reloj en la pantalla
         //se debe transformar a hex.
-        var hex = '#${color.value.toRadixString(16).padLeft(6, '0').toUpperCase()}';
+        var hex =
+            '#${color.value.toRadixString(16).padLeft(6, '0').toUpperCase()}';
         DatosEstaticos.color_texto_reloj = hex;
       });
     }
 
-    return StatefulBuilder(
-        builder: (context, setState){
-          return Center(
-            child: SingleChildScrollView(
-              child: AlertDialog(
-                title: Text("Vista Previa Reloj", textAlign: TextAlign.center,),
-                content: Column(
+    return StatefulBuilder(builder: (context, setState) {
+      return Center(
+        child: SingleChildScrollView(
+          child: AlertDialog(
+            title: Text(
+              "Vista Previa Reloj",
+              textAlign: TextAlign.center,
+            ),
+            content: Column(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 15.0),
+                  child: DecoratedBox(
+                    decoration: BoxDecoration(
+                      color: pickerColorFondo,
+                    ),
+                    child: Text(
+                      '12:00:00',
+                      textScaleFactor: 2.0,
+                      textAlign: TextAlign.center,
+                      style: TextStyle(color: pickerColorTexto),
+                    ),
+                  ),
+                ),
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
-                    Padding(
-                      padding: const EdgeInsets.only(bottom: 15.0),
-                      child: DecoratedBox(
-                        decoration: BoxDecoration(
-                          color: pickerColorFondo,
-                        ),
-                        child: Text('12:00:00', textScaleFactor: 2.0,
-                          textAlign: TextAlign.center, style: TextStyle(color: pickerColorTexto),),
-                      ),
+                    Text(
+                      "Fondo",
+                      textScaleFactor: 1.5,
+                      style: TextStyle(
+                          color: Colors.black, fontWeight: FontWeight.bold),
                     ),
-                    Column(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        Text("Fondo", textScaleFactor: 1.5, style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),),
-                        ColorPicker(
-                          pickerColor: pickerColorFondo,
-                          showLabel: false,
-                          enableAlpha: false,
-                          displayThumbColor: true,
-                          pickerAreaHeightPercent: 0.25,
-                          onColorChanged: (color){
-                            changeColorFondo(color);
-                            setState((){});
-                          },
-                        ),
-                        Text("Hora", textScaleFactor: 1.5, style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),),
-                        ColorPicker(
-                          pickerColor: pickerColorTexto,
-                          showLabel: false,
-                          enableAlpha: false,
-                          displayThumbColor: true,
-                          pickerAreaHeightPercent: 0.25,
-                          onColorChanged: (color){
-                            changeColorLetras(color);
-                            setState((){});
-                          },
-                        ),
-                        RaisedButton(
-                          child: Text("Guardar"),
-                          onPressed: () => Navigator.of(context, rootNavigator: true).pop()
-                        ),
-                      ],
+                    ColorPicker(
+                      pickerColor: pickerColorFondo,
+                      showLabel: false,
+                      enableAlpha: false,
+                      displayThumbColor: true,
+                      pickerAreaHeightPercent: 0.25,
+                      onColorChanged: (color) {
+                        changeColorFondo(color);
+                        setState(() {});
+                      },
                     ),
-
+                    Text(
+                      "Hora",
+                      textScaleFactor: 1.5,
+                      style: TextStyle(
+                          color: Colors.black, fontWeight: FontWeight.bold),
+                    ),
+                    ColorPicker(
+                      pickerColor: pickerColorTexto,
+                      showLabel: false,
+                      enableAlpha: false,
+                      displayThumbColor: true,
+                      pickerAreaHeightPercent: 0.25,
+                      onColorChanged: (color) {
+                        changeColorLetras(color);
+                        setState(() {});
+                      },
+                    ),
+                    RaisedButton(
+                        child: Text("Guardar"),
+                        onPressed: () =>
+                            Navigator.of(context, rootNavigator: true).pop()),
                   ],
                 ),
-              ),
+              ],
             ),
-          );
-        }
-    );
+          ),
+        ),
+      );
+    });
   }
 
-
-
-
-  void PorcionSeleccionada (int seleccionada){
-    switch(seleccionada){
+  void PorcionSeleccionada(int seleccionada) {
+    switch (seleccionada) {
       case 0:
         _decorationPorcion1 = BoxDecoration(
-            border: Border.all(color: Colors.transparent, width: 10));
+            //borderRadius: BorderRadius.circular(50),
+            color: HexColor('#3EDB9B').withOpacity(0.2));
         _decorationPorcion2 = BoxDecoration(
-            border: Border.all(color: Colors.transparent, width: 10));
+            //borderRadius: BorderRadius.circular(50),
+            color: HexColor('#0683FF').withOpacity(0.2));
         _decorationPorcion3 = BoxDecoration(
-            border: Border.all(color: Colors.transparent, width: 10));
+            //borderRadius: BorderRadius.circular(50),
+            color: HexColor('#FC4C8B').withOpacity(0.2));
         break;
       case 1:
         _decorationPorcion1 = BoxDecoration(
-            border: Border.all(color: Colors.red, width: 10));
+            //borderRadius: BorderRadius.circular(50),
+            color: HexColor('#3EDB9B'));
         _decorationPorcion2 = BoxDecoration(
-            border: Border.all(color: Colors.transparent, width: 10));
+            //borderRadius: BorderRadius.circular(50),
+            color: HexColor('#0683FF').withOpacity(0.2));
         _decorationPorcion3 = BoxDecoration(
-            border: Border.all(color: Colors.transparent, width: 10));
+            //borderRadius: BorderRadius.circular(50),
+            color: HexColor('#FC4C8B').withOpacity(0.2));
         break;
       case 2:
         _decorationPorcion1 = BoxDecoration(
-            border: Border.all(color: Colors.transparent, width: 10));
+            //borderRadius: BorderRadius.circular(50),
+            color: HexColor('#3EDB9B').withOpacity(0.2));
         _decorationPorcion2 = BoxDecoration(
-            border: Border.all(color: Colors.red, width: 10));
+            //borderRadius: BorderRadius.circular(50),
+            color: HexColor('#0683FF'));
         _decorationPorcion3 = BoxDecoration(
-            border: Border.all(color: Colors.transparent, width: 10));
+            //borderRadius: BorderRadius.circular(50),
+            color: HexColor('#FC4C8B').withOpacity(0.2));
         break;
       case 3:
         _decorationPorcion1 = BoxDecoration(
-            border: Border.all(color: Colors.transparent, width: 10));
+            //borderRadius: BorderRadius.circular(50),
+            color: HexColor('#3EDB9B').withOpacity(0.2));
         _decorationPorcion2 = BoxDecoration(
-            border: Border.all(color: Colors.transparent, width: 10));
+            //borderRadius: BorderRadius.circular(50),
+            color: HexColor('#0683FF').withOpacity(0.2));
         _decorationPorcion3 = BoxDecoration(
-            border: Border.all(color: Colors.red, width: 10));
+            //borderRadius: BorderRadius.circular(50),
+            color: HexColor('#FC4C8B'));
         break;
     }
   }
 
   //Ignora los controles del webview para que no intervenga con el onTap de
   // seleccionar medio
-  Widget ignorarInteraccionesElemento(Widget widget){
+  Widget ignorarInteraccionesElemento(Widget widget) {
     if (widget.runtimeType.toString() == 'WebView' ||
-        widget.runtimeType.toString() == 'WebViewPropio'){
-      return IgnorePointer(child: widget,);
-    }else{
+        widget.runtimeType.toString() == 'WebViewPropio') {
+      return IgnorePointer(
+        child: widget,
+      );
+    } else {
       return widget;
     }
   }

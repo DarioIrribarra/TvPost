@@ -68,7 +68,8 @@ class _DetalleEquipoState extends State<DetalleEquipo> {
     Widget widgetContenido;
 
     String equipoActivo = ObtieneDatos.listadoEquipos[indexEquipoGrid]
-    ['f_equipoActivo'].toString();
+            ['f_equipoActivo']
+        .toString();
 
     //Cuando el equipo está habilitado muestra imagen de pantallazo
     if (equipoActivo == '1') {
@@ -87,12 +88,12 @@ class _DetalleEquipoState extends State<DetalleEquipo> {
               ),
               Center(
                   child: Padding(
-                    padding: const EdgeInsets.only(bottom: 10),
-                    child: Text(
-                      "¡Ups, algo ha salido mal!",
-                      textScaleFactor: 1.2,
-                    ),
-                  )),
+                padding: const EdgeInsets.only(bottom: 10),
+                child: Text(
+                  "¡Ups, algo ha salido mal!",
+                  textScaleFactor: 1.2,
+                ),
+              )),
               Text(
                 "Deslice hacia abajo para recargar imagen",
                 textScaleFactor: 1.2,
@@ -111,7 +112,6 @@ class _DetalleEquipoState extends State<DetalleEquipo> {
 
               //Acá obtengo las dimensiones base exactas de la pantalla
               ObtenerSizePixelesPantalla();
-
 
               return Column(
                 children: [
@@ -134,33 +134,33 @@ class _DetalleEquipoState extends State<DetalleEquipo> {
                                 Expanded(
                                   flex: 1,
                                   child: FlatButton(
-                                    child: Row(
-                                      mainAxisAlignment: MainAxisAlignment.center,
-                                      children: [
-                                        Icon(
-                                          Icons.screen_share_outlined,
-                                          color: Colors.white,
-                                          size: 20,
-                                        ),
-                                        SizedBox(width: 15,),
-                                        Text(
-                                          'CONTROL REMOTO',
-                                          style: TextStyle(
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          Icon(
+                                            Icons.screen_share_outlined,
                                             color: Colors.white,
-                                            fontSize: 14
+                                            size: 20,
                                           ),
-                                        ),
-                                      ],
-                                    ),
-                                    color: Colors.transparent,
-                                    onPressed: (){
-                                      _vncRaspberryWeb();
-                                    }
-                                  ),
+                                          SizedBox(
+                                            width: 15,
+                                          ),
+                                          Text(
+                                            'CONTROL REMOTO',
+                                            style: TextStyle(
+                                                color: Colors.white,
+                                                fontSize: 14),
+                                          ),
+                                        ],
+                                      ),
+                                      color: Colors.transparent,
+                                      onPressed: () {
+                                        _vncRaspberryWeb();
+                                      }),
                                 ),
                               ],
                             ),
-
                           ),
                           Text(
                             'Deslizar hacia abajo para actualizar imagen',
@@ -168,7 +168,7 @@ class _DetalleEquipoState extends State<DetalleEquipo> {
                               color: HexColor('#757575'),
                               letterSpacing: 2.0,
                               fontFamily: 'textoMont',
-                              fontSize: 13.5,
+                              fontSize: 12,
                             ),
                             textScaleFactor: 1.1,
                           ),
@@ -208,7 +208,7 @@ class _DetalleEquipoState extends State<DetalleEquipo> {
                                 children: [
                                   Column(
                                       crossAxisAlignment:
-                                      CrossAxisAlignment.start,
+                                          CrossAxisAlignment.start,
                                       children: [
                                         SizedBox(
                                           height: 4,
@@ -225,7 +225,7 @@ class _DetalleEquipoState extends State<DetalleEquipo> {
                                       ]),
                                   Column(
                                       crossAxisAlignment:
-                                      CrossAxisAlignment.start,
+                                          CrossAxisAlignment.start,
                                       children: [
                                         SizedBox(
                                           height: 4,
@@ -249,10 +249,12 @@ class _DetalleEquipoState extends State<DetalleEquipo> {
                                 Text(
                                   DatosEstaticos
                                       .listadoDatosEquipoSeleccionado[0]
-                                  ['f_alias'].toString().toUpperCase(),
+                                          ['f_alias']
+                                      .toString()
+                                      .toUpperCase(),
                                   style: TextStyle(
                                     fontFamily: 'textoMont',
-                                    fontSize: 13.5,
+                                    fontSize: 12,
                                   ),
                                 ),
                                 SizedBox(
@@ -261,10 +263,12 @@ class _DetalleEquipoState extends State<DetalleEquipo> {
                                 Text(
                                   DatosEstaticos
                                       .listadoDatosEquipoSeleccionado[0]
-                                  ['f_serial'].toString().toUpperCase(),
+                                          ['f_serial']
+                                      .toString()
+                                      .toUpperCase(),
                                   style: TextStyle(
                                     fontFamily: 'textoMont',
-                                    fontSize: 13.5,
+                                    fontSize: 12,
                                   ),
                                 ),
                                 SizedBox(
@@ -272,11 +276,11 @@ class _DetalleEquipoState extends State<DetalleEquipo> {
                                 ),
                                 Text(
                                   DatosEstaticos
-                                      .listadoDatosEquipoSeleccionado[0]
-                                  ['f_ip'],
+                                          .listadoDatosEquipoSeleccionado[0]
+                                      ['f_ip'],
                                   style: TextStyle(
                                     fontFamily: 'textoMont',
-                                    fontSize: 13.5,
+                                    fontSize: 12,
                                   ),
                                 ),
                               ],
@@ -414,7 +418,7 @@ class _DetalleEquipoState extends State<DetalleEquipo> {
 
                 Container(
                   width: MediaQuery.of(context).size.width,
-                  height: MediaQuery.of(context).size.height/3,
+                  height: MediaQuery.of(context).size.height / 3,
                   child: Stack(
                     children: [
                       Positioned(
@@ -429,12 +433,12 @@ class _DetalleEquipoState extends State<DetalleEquipo> {
                           decoration: new BoxDecoration(
                               borderRadius: BorderRadius.circular(50),
                               color: HexColor('#3EDB9B')
-                            /*gradient: LinearGradient(
+                              /*gradient: LinearGradient(
                                       colors: [HexColor("#3edb9b"), HexColor("#0683ff")],
                                       stops: [0.5, 1],
                                       begin: Alignment.topLeft,
                                       end: FractionalOffset.bottomRight)*/
-                          ),
+                              ),
                           child: Center(
                             child: Container(
                               //marco blanco de vista previa
@@ -455,10 +459,9 @@ class _DetalleEquipoState extends State<DetalleEquipo> {
                           child: CircleAvatar(
                             radius: 13,
                             backgroundColor: HexColor('#FC4C8B'),
-                          )
-                      ),
+                          )),
                       Positioned(
-                        top:-10,
+                          top: -10,
                           right: -4,
                           child: IconButton(
                               icon: Icon(
@@ -484,8 +487,7 @@ class _DetalleEquipoState extends State<DetalleEquipo> {
                         Row(
                           children: [
                             Column(
-                                crossAxisAlignment:
-                                CrossAxisAlignment.start,
+                                crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   SizedBox(
                                     height: 4,
@@ -501,8 +503,7 @@ class _DetalleEquipoState extends State<DetalleEquipo> {
                                   Text('IP'),
                                 ]),
                             Column(
-                                crossAxisAlignment:
-                                CrossAxisAlignment.start,
+                                crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   SizedBox(
                                     height: 4,
@@ -524,36 +525,37 @@ class _DetalleEquipoState extends State<DetalleEquipo> {
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
                           Text(
-                            DatosEstaticos
-                                .listadoDatosEquipoSeleccionado[0]
-                            ['f_alias'].toString().toUpperCase(),
+                            DatosEstaticos.listadoDatosEquipoSeleccionado[0]
+                                    ['f_alias']
+                                .toString()
+                                .toUpperCase(),
                             style: TextStyle(
                               fontFamily: 'textoMont',
-                              fontSize: 13.5,
+                              fontSize: 12,
                             ),
                           ),
                           SizedBox(
                             height: 7,
                           ),
                           Text(
-                            DatosEstaticos
-                                .listadoDatosEquipoSeleccionado[0]
-                            ['f_serial'].toString().toUpperCase(),
+                            DatosEstaticos.listadoDatosEquipoSeleccionado[0]
+                                    ['f_serial']
+                                .toString()
+                                .toUpperCase(),
                             style: TextStyle(
                               fontFamily: 'textoMont',
-                              fontSize: 13.5,
+                              fontSize: 12,
                             ),
                           ),
                           SizedBox(
                             height: 7,
                           ),
                           Text(
-                            DatosEstaticos
-                                .listadoDatosEquipoSeleccionado[0]
-                            ['f_ip'],
+                            DatosEstaticos.listadoDatosEquipoSeleccionado[0]
+                                ['f_ip'],
                             style: TextStyle(
                               fontFamily: 'textoMont',
-                              fontSize: 13.5,
+                              fontSize: 12,
                             ),
                           ),
                         ],
@@ -604,7 +606,6 @@ class _DetalleEquipoState extends State<DetalleEquipo> {
                               begin: Alignment.topLeft,
                               end: FractionalOffset.bottomRight)),
                       child: FlatButton(
-
                         color: Colors.transparent,
                         onPressed: () async {
                           //String dir = (await getTemporaryDirectory()).path;
@@ -692,8 +693,6 @@ class _DetalleEquipoState extends State<DetalleEquipo> {
       );
     }
 
-
-
     return WillPopScope(
       //Cierra todas las ventanas anteriores existentes y llega a
       // la ruta entregada
@@ -720,9 +719,12 @@ class _DetalleEquipoState extends State<DetalleEquipo> {
                 width: MediaQuery.of(context).size.width,
                 child: Center(
                   child: Text(
-                      ObtieneDatos.listadoEquipos[indexEquipoGrid]
-                      ['f_alias'].toString().toUpperCase(),
-                    style: TextStyle(fontSize: 16.5,),
+                    ObtieneDatos.listadoEquipos[indexEquipoGrid]['f_alias']
+                        .toString()
+                        .toUpperCase(),
+                    style: TextStyle(
+                      fontSize: 16.5,
+                    ),
                   ),
                 ),
               ),
@@ -779,7 +781,10 @@ class _DetalleEquipoState extends State<DetalleEquipo> {
         if (_respuesta.isEmpty) {
           _screenshotProcesada = Image.asset('imagenes/logohorizontal.png');
         } else {
-          _screenshotProcesada = Image.memory(_respuesta, fit: BoxFit.fill,);
+          _screenshotProcesada = Image.memory(
+            _respuesta,
+            fit: BoxFit.fill,
+          );
         }
         //print(listadoRespuestas.length);
       });
@@ -946,7 +951,9 @@ class _DetalleEquipoState extends State<DetalleEquipo> {
     } catch (e) {}
   }
 
-  void AlertaDeshabilitar({int index = 0,}) async {
+  void AlertaDeshabilitar({
+    int index = 0,
+  }) async {
     String ip = ObtieneDatos.listadoEquipos[index]['f_ip'].toString();
     String serial = ObtieneDatos.listadoEquipos[index]['f_serial'].toString();
     String alias = ObtieneDatos.listadoEquipos[index]['f_alias'].toString();
@@ -987,10 +994,9 @@ class _DetalleEquipoState extends State<DetalleEquipo> {
                       textScaleFactor: 1.3,
                     ),
                     onPressed: () async {
-                      PopUps.popUpCargando(
-                          context, 'Deshabilitando equipo...');
-                      var resultado = await actualizarEstado
-                          .updateEstadoEquipo(serial: serial, estado: "0");
+                      PopUps.popUpCargando(context, 'Deshabilitando equipo...');
+                      var resultado = await actualizarEstado.updateEstadoEquipo(
+                          serial: serial, estado: "0");
                       await actualizarEstado.getDatosEquipos();
                       if (resultado == 1) {
                         setState(() {
@@ -1060,7 +1066,9 @@ class _DetalleEquipoState extends State<DetalleEquipo> {
     );
   }
 
-  void AlertaHabilitar({int index = 0,}) async {
+  void AlertaHabilitar({
+    int index = 0,
+  }) async {
     String ip = ObtieneDatos.listadoEquipos[index]['f_ip'].toString();
     String serial = ObtieneDatos.listadoEquipos[index]['f_serial'].toString();
     String alias = ObtieneDatos.listadoEquipos[index]['f_alias'].toString();
@@ -1102,8 +1110,8 @@ class _DetalleEquipoState extends State<DetalleEquipo> {
                     ),
                     onPressed: () async {
                       PopUps.popUpCargando(context, 'Habilitando equipo...');
-                      var resultado = await actualizarEstado
-                          .updateEstadoEquipo(serial: serial, estado: "1");
+                      var resultado = await actualizarEstado.updateEstadoEquipo(
+                          serial: serial, estado: "1");
                       await actualizarEstado.getDatosEquipos();
                       if (resultado == 1) {
                         setState(() {
