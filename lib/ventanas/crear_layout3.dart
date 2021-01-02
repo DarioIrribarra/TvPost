@@ -147,6 +147,42 @@ class _CrearLayout3State extends State<CrearLayout3> {
       DatosEstaticos.primeraVezCargaVideo = false;
     });
 
+    Widget contenidoLayout10;
+
+    //Si es true, es decir presionaron guardar...
+    if (DatosEstaticos.relojEnPantalla){
+      contenidoLayout10 = Row(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Expanded(
+              flex: 4,
+              child: widget3),
+          Expanded(
+            flex: 1,
+            child: Container(
+              color: HexColor(DatosEstaticos.color_fondo_reloj),
+              child: Align(
+                alignment: Alignment.center,
+                child: Text(
+                  "00:00",
+                  style: TextStyle(
+                      color: HexColor(DatosEstaticos.color_texto_reloj
+                      )
+                  ),
+                  textScaleFactor: 1.0,
+                  textAlign: TextAlign.center,
+                ),
+              ),
+            ),
+          ),
+
+        ],
+      );
+    } else {
+      contenidoLayout10 = widget3;
+    }
+
+    /*
     //Diego. Acá verifica si el valor del reloj en pantalla es true. Si es así,
     //muestras el layout distinto, sino, muestras el antiguo. T odo lo que quieras
     //mostrar, será el widget "contenidoLayout20" porquie al final solo cambia la porcion
@@ -184,6 +220,8 @@ class _CrearLayout3State extends State<CrearLayout3> {
     //una porción de layout o la otra. Sugiero eliminar la creación del nuevo
     //archivo layout que hiciste porque por cada cambio que hagamos acá, se va a
     //tener que duplicar en ese.
+
+     */
 
     return Scaffold(
       //Appbar viene de archivo custom_widgets.dart
@@ -243,7 +281,7 @@ class _CrearLayout3State extends State<CrearLayout3> {
                                 });
                               },
                               child: ignorarInteraccionesElemento(
-                                  contenidoLayout20),
+                                  widget2),
                             ),
                           ),
                         ),
@@ -268,7 +306,7 @@ class _CrearLayout3State extends State<CrearLayout3> {
                             divisionLayout = '3-3';
                           });
                         },
-                        child: ignorarInteraccionesElemento(widget3),
+                        child: ignorarInteraccionesElemento(contenidoLayout10),
                       ),
                     ),
                   ),
