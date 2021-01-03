@@ -166,7 +166,7 @@ class _DetalleEquipoState extends State<DetalleEquipo> {
                             'Deslizar hacia abajo para actualizar imagen',
                             style: TextStyle(
                               color: HexColor('#757575'),
-                              letterSpacing: 2.0,
+                              letterSpacing: 1.5,
                               fontFamily: 'textoMont',
                               fontSize: 12,
                             ),

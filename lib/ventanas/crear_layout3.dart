@@ -6,6 +6,7 @@ import 'package:webview_flutter/webview_flutter.dart';
 import 'package:tvpost_flutter/ventanas/seleccionar_video.dart';
 import 'package:video_player/video_player.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
+import 'package:tvpost_flutter/utilidades/obtiene_datos_webservice.dart';
 
 class CrearLayout3 extends StatefulWidget {
   @override
@@ -150,13 +151,11 @@ class _CrearLayout3State extends State<CrearLayout3> {
     Widget contenidoLayout10;
 
     //Si es true, es decir presionaron guardar...
-    if (DatosEstaticos.relojEnPantalla){
+    if (DatosEstaticos.relojEnPantalla) {
       contenidoLayout10 = Row(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          Expanded(
-              flex: 4,
-              child: widget3),
+          Expanded(flex: 4, child: widget3),
           Expanded(
             flex: 1,
             child: Container(
@@ -166,16 +165,13 @@ class _CrearLayout3State extends State<CrearLayout3> {
                 child: Text(
                   "00:00",
                   style: TextStyle(
-                      color: HexColor(DatosEstaticos.color_texto_reloj
-                      )
-                  ),
+                      color: HexColor(DatosEstaticos.color_texto_reloj)),
                   textScaleFactor: 1.0,
                   textAlign: TextAlign.center,
                 ),
               ),
             ),
           ),
-
         ],
       );
     } else {
@@ -230,11 +226,21 @@ class _CrearLayout3State extends State<CrearLayout3> {
         child: Column(
           children: [
             Container(
+              padding: EdgeInsets.only(top: 20),
+              child: Text(
+                ObtieneDatos.listadoEquipos[DatosEstaticos.indexSeleccionado]
+                        ['f_alias']
+                    .toString(),
+                style: TextStyle(fontSize: 16.5),
+                textAlign: TextAlign.center,
+              ),
+            ),
+            Container(
               width: MediaQuery.of(context).size.width,
               height: MediaQuery.of(context).size.height / 3,
-              margin: EdgeInsets.all(5),
-              decoration: BoxDecoration(
-                  border: Border.all(color: Colors.black, width: 5)),
+              margin: EdgeInsets.only(top: 15, bottom: 20, left: 20, right: 20),
+              /*decoration: BoxDecoration(
+                  border: Border.all(color: Colors.black, width: 5)),*/
               child: Column(
                 children: [
                   Expanded(
@@ -280,8 +286,7 @@ class _CrearLayout3State extends State<CrearLayout3> {
                                   divisionLayout = '3-2';
                                 });
                               },
-                              child: ignorarInteraccionesElemento(
-                                  widget2),
+                              child: ignorarInteraccionesElemento(widget2),
                             ),
                           ),
                         ),

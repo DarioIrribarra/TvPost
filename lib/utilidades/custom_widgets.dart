@@ -276,10 +276,10 @@ class _OpcionesSeleccionMediaState extends State<OpcionesSeleccionMedia> {
             decoration: new BoxDecoration(
                 borderRadius: BorderRadius.circular(20),
                 gradient: LinearGradient(
-                    colors: [Colors.blue, Colors.green],
-                    stops: [0.3, 0.7],
-                    begin: Alignment.topLeft,
-                    end: FractionalOffset.bottomRight)),
+                    colors: [HexColor("#3edb9b"), HexColor("#0683ff")],
+                    stops: [0.4, 1],
+                    begin: Alignment.centerLeft,
+                    end: FractionalOffset.centerRight)),
             margin: EdgeInsets.symmetric(
               horizontal: 92,
             ),
@@ -300,7 +300,7 @@ class _OpcionesSeleccionMediaState extends State<OpcionesSeleccionMedia> {
                         navegarYEsperarRespuesta('/seleccionar_imagen');
                       },
                       child: Text(
-                        'Imagen',
+                        'IMAGEN',
                         style: TextStyle(color: Colors.white),
                       ),
                     ),
@@ -314,7 +314,7 @@ class _OpcionesSeleccionMediaState extends State<OpcionesSeleccionMedia> {
                         navegarYEsperarRespuesta('/seleccionar_video');
                       },
                       child:
-                          Text('Video', style: TextStyle(color: Colors.white)),
+                          Text('VIDEO', style: TextStyle(color: Colors.white)),
                     ),
                   ],
                 ),
@@ -332,7 +332,7 @@ class _OpcionesSeleccionMediaState extends State<OpcionesSeleccionMedia> {
                         /*PopUps.PopUpConWidget(w
                           context, contenidoPopUpSeleccionUrl());*/
                       },
-                      child: Text('Url', style: TextStyle(color: Colors.white)),
+                      child: Text('URL', style: TextStyle(color: Colors.white)),
                     ),
                     FlatButton(
                       color: Colors.transparent,
@@ -344,7 +344,7 @@ class _OpcionesSeleccionMediaState extends State<OpcionesSeleccionMedia> {
                         navegarYEsperarRespuesta('/crear_contenido');
                       },
                       child:
-                          Text('Crear', style: TextStyle(color: Colors.white)),
+                          Text('CREAR', style: TextStyle(color: Colors.white)),
                     ),
                   ],
                 ),
@@ -517,24 +517,40 @@ class BotonEnviarAEquipo extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (this.mensaje_boton == null) {
-      mensaje_boton = "Modificar pantalla";
+      mensaje_boton = "PROYECTAR EN TV";
     }
 
-    return Visibility(
-      visible: this.visible,
-      child: RaisedButton(
-        onPressed: () async {
-          if (DatosEstaticos.nombreArchivoWidget1 != "" ||
-              DatosEstaticos.nombreArchivoWidget2 != "" ||
-              DatosEstaticos.nombreArchivoWidget3 != "") {
-            //Envio instruccion a raspberry. Esto debería tener un await para la respuesta
-            PopUps.PopUpConWidget(context, EsperarRespuestaProyeccion());
-          } else {
-            PopUps.PopUpConWidget(
-                context, Text('Error: Contenido no seleccionado'));
-          }
-        },
-        child: Text(mensaje_boton),
+    return Align(
+      alignment: Alignment.bottomCenter,
+      heightFactor: 2.8,
+      child: Visibility(
+        visible: this.visible,
+        child: Container(
+          height: 40,
+          width: 200,
+          decoration: new BoxDecoration(
+              borderRadius: BorderRadius.circular(20),
+              gradient: LinearGradient(
+                  colors: [HexColor("#3edb9b"), HexColor("#0683ff")],
+                  stops: [0.4, 1],
+                  begin: Alignment.topLeft,
+                  end: FractionalOffset.bottomRight)),
+          child: FlatButton(
+            color: Colors.transparent,
+            onPressed: () async {
+              if (DatosEstaticos.nombreArchivoWidget1 != "" ||
+                  DatosEstaticos.nombreArchivoWidget2 != "" ||
+                  DatosEstaticos.nombreArchivoWidget3 != "") {
+                //Envio instruccion a raspberry. Esto debería tener un await para la respuesta
+                PopUps.PopUpConWidget(context, EsperarRespuestaProyeccion());
+              } else {
+                PopUps.PopUpConWidget(
+                    context, Text('Error: Contenido no seleccionado'));
+              }
+            },
+            child: Text(mensaje_boton, style: TextStyle(color: Colors.white)),
+          ),
+        ),
       ),
     );
   }

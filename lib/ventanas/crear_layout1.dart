@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:tvpost_flutter/utilidades/custom_widgets.dart';
 import 'package:tvpost_flutter/utilidades/datos_estaticos.dart';
 import 'package:webview_flutter/webview_flutter.dart';
+import 'package:tvpost_flutter/utilidades/obtiene_datos_webservice.dart';
 
 class CrearLayout1 extends StatefulWidget {
   @override
@@ -59,6 +60,16 @@ class _CrearLayout1State extends State<CrearLayout1> {
       body: SingleChildScrollView(
         child: Column(
           children: [
+            Container(
+              padding: EdgeInsets.only(top: 20),
+              child: Text(
+                ObtieneDatos.listadoEquipos[DatosEstaticos.indexSeleccionado]
+                        ['f_alias']
+                    .toString(),
+                style: TextStyle(fontSize: 16.5),
+                textAlign: TextAlign.center,
+              ),
+            ),
             //Ink well para poder tener feedback como botón de cualquier widget
             Container(
               width: MediaQuery.of(context).size.width,
@@ -67,7 +78,8 @@ class _CrearLayout1State extends State<CrearLayout1> {
               /*decoration: BoxDecoration(
                   border: Border.all(color: Colors.black, width: 5)),*/
               child: Container(
-                margin: EdgeInsets.all(20),
+                margin:
+                    EdgeInsets.only(top: 10, bottom: 20, left: 20, right: 20),
                 decoration: _decorationPorcion1,
                 child: InkWell(
                   enableFeedback: true,
@@ -86,7 +98,7 @@ class _CrearLayout1State extends State<CrearLayout1> {
             ),
 
             //Publicacion
-            Row(
+            /*Row(
               mainAxisSize: MainAxisSize.min,
               children: [
                 Expanded(
@@ -143,7 +155,7 @@ class _CrearLayout1State extends State<CrearLayout1> {
                   ),
                 ),
               ],
-            ),
+            ),*/
 
             //Acá va el widget de los botones
             OpcionesSeleccionMedia(

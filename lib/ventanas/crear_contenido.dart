@@ -159,8 +159,8 @@ class _CrearContenidoState extends State<CrearContenido> {
                   height: 60,
                   child: Row(
                     children: [
-                      botonJPG(),
                       botonColorFondo(),
+                      botonJPG(),
                       botonPNG(),
                       botonTexto(),
                       botonEmoji(),
@@ -169,17 +169,61 @@ class _CrearContenidoState extends State<CrearContenido> {
                   ),
                 ),
               ),
+              //asdfasdfasdfsdafsdfasfd
+
+              Align(
+                alignment: Alignment.bottomCenter,
+                heightFactor: 2.8,
+                child: Visibility(
+                  visible: false,
+                  maintainSize: true,
+                  maintainAnimation: true,
+                  maintainState: true,
+                  child: Container(
+                    height: 40,
+                    width: 200,
+                    decoration: new BoxDecoration(
+                        borderRadius: BorderRadius.circular(20),
+                        gradient: LinearGradient(
+                            colors: [HexColor("#0683ff"), HexColor("#3edb9b")],
+                            stops: [0.1, 0.6],
+                            begin: Alignment.topLeft,
+                            end: FractionalOffset.bottomRight)),
+                    child: FlatButton(
+                      color: Colors.transparent,
+                      onPressed: () async {
+                        //String dir = (await getTemporaryDirectory()).path;
+                        //File temporal = new File('$dir/img_temp_creada.png');
+                        Navigator.pushNamed(context, '/seleccionar_layout');
+                      },
+                      child: Text(
+                        'EDITAR CONTENIDO',
+                        style: TextStyle(color: Colors.white),
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+
+              //asdfqwerasdfqwerrr
               Container(
                 margin: EdgeInsets.symmetric(horizontal: 100),
                 width: 150.0,
                 height: 30.0,
-                child: RaisedButton(
-                  color: Colors.lightBlue,
+                decoration: new BoxDecoration(
+                    borderRadius: BorderRadius.circular(20),
+                    gradient: LinearGradient(
+                        colors: [HexColor("#0683ff"), HexColor("#3edb9b")],
+                        stops: [0.1, 0.6],
+                        begin: Alignment.topLeft,
+                        end: FractionalOffset.bottomRight)),
+                child: FlatButton(
+                  color: Colors.transparent,
                   shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(20),
                       side: BorderSide(color: Color.fromARGB(30, 0, 0, 0))),
                   child: Text(
-                    'Guardar Imagen',
+                    'CARGAR',
                     style: TextStyle(color: Colors.white),
                   ),
                   onPressed: () async {
