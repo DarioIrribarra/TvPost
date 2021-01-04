@@ -39,152 +39,162 @@ class _SeleccionarLayoutState extends State<SeleccionarLayout> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      //Appbar viene de archivo custom_widgets.dart
-      appBar: CustomAppBar(),
-      body: SingleChildScrollView(
-        child: Container(
-            margin: EdgeInsets.fromLTRB(20.0, 20.0, 20.0, 10),
-            child: FutureBuilder(
-              future: recargarListadoEquipos(),
-              builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.done) {
-                  if (snapshot.data != null) {
-                    PorcionSeleccionada(snapshot.data);
-                    return Column(
-                      crossAxisAlignment: CrossAxisAlignment.stretch,
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text(
-                          ObtieneDatos
-                              .listadoEquipos[DatosEstaticos.indexSeleccionado]
-                                  ['f_alias']
-                              .toString(),
-                          style: TextStyle(fontSize: 16.5),
-                          textAlign: TextAlign.center,
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.only(top: 15, bottom: 3),
-                          child: Container(
-                            decoration: _decorationLayoutSeleccionado1,
-                            child: FlatButton(
-                              child: Image.asset('imagenes/layout1a.png'),
-                              onPressed: () {
-                                //Se asigna layout seleccionado a 1
-                                DatosEstaticos.layoutSeleccionado = 1;
-                                Navigator.pushNamed(context, '/crear_layout1');
-                              },
-                            ),
+    return WillPopScope(
+      onWillPop: (){
+        Navigator.popAndPushNamed(
+            context, '/detalle_equipo',
+            arguments: {
+              "indexEquipoGrid": DatosEstaticos.indexSeleccionado,
+            });
+        return;
+      },
+      child: Scaffold(
+        //Appbar viene de archivo custom_widgets.dart
+        appBar: CustomAppBar(),
+        body: SingleChildScrollView(
+          child: Container(
+              margin: EdgeInsets.fromLTRB(20.0, 20.0, 20.0, 10),
+              child: FutureBuilder(
+                future: recargarListadoEquipos(),
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.done) {
+                    if (snapshot.data != null) {
+                      PorcionSeleccionada(snapshot.data);
+                      return Column(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            ObtieneDatos
+                                .listadoEquipos[DatosEstaticos.indexSeleccionado]
+                                    ['f_alias']
+                                .toString(),
+                            style: TextStyle(fontSize: 16.5),
+                            textAlign: TextAlign.center,
                           ),
-                        ),
-                        Container(
-                          margin: EdgeInsets.symmetric(horizontal: 110),
-                          decoration: BoxDecoration(
-                              border: Border(
-                                  bottom: BorderSide(
-                                      color: colorSubrayado1, width: 1))),
-                          child: Center(
-                            child: Text(
-                              "LAYOUT ACTIVO",
-                              style: TextStyle(
-                                fontFamily: 'textoMont',
-                                fontSize: 12,
-                                color: colorActivo1,
-                                /*decoration: TextDecoration.underline,
-                                  decorationColor: colorSubrayado1*/
+                          Padding(
+                            padding: const EdgeInsets.only(top: 15, bottom: 3),
+                            child: Container(
+                              decoration: _decorationLayoutSeleccionado1,
+                              child: FlatButton(
+                                child: Image.asset('imagenes/layout1a.png'),
+                                onPressed: () {
+                                  //Se asigna layout seleccionado a 1
+                                  DatosEstaticos.layoutSeleccionado = 1;
+                                  Navigator.popAndPushNamed(context, '/crear_layout1');
+                                },
                               ),
                             ),
                           ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.only(top: 10.0, bottom: 3),
-                          child: Container(
-                            decoration: _decorationLayoutSeleccionado2,
-                            child: Column(
-                              children: [
-                                FlatButton(
-                                  child: Image.asset('imagenes/layout2b.png'),
-                                  onPressed: () {
-                                    //Se asigna layout seleccionado a 2
-                                    DatosEstaticos.layoutSeleccionado = 2;
-                                    Navigator.pushNamed(
-                                        context, '/crear_layout2');
-                                  },
+                          Container(
+                            margin: EdgeInsets.symmetric(horizontal: 110),
+                            decoration: BoxDecoration(
+                                border: Border(
+                                    bottom: BorderSide(
+                                        color: colorSubrayado1, width: 1))),
+                            child: Center(
+                              child: Text(
+                                "LAYOUT ACTIVO",
+                                style: TextStyle(
+                                  fontFamily: 'textoMont',
+                                  fontSize: 12,
+                                  color: colorActivo1,
+                                  /*decoration: TextDecoration.underline,
+                                    decorationColor: colorSubrayado1*/
                                 ),
-                              ],
-                            ),
-                          ),
-                        ),
-                        Container(
-                          margin: EdgeInsets.symmetric(horizontal: 110),
-                          decoration: BoxDecoration(
-                              border: Border(
-                                  bottom: BorderSide(
-                                      color: colorSubrayado2, width: 1))),
-                          child: Center(
-                            child: Text(
-                              "LAYOUT ACTIVO",
-                              style: TextStyle(
-                                fontFamily: 'textoMont',
-                                fontSize: 12,
-                                color: colorActivo2,
-                                /*decoration: TextDecoration.underline,
-                                  decorationColor: colorSubrayado1*/
                               ),
                             ),
                           ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.only(top: 10.0, bottom: 3),
-                          child: Container(
-                            decoration: _decorationLayoutSeleccionado3,
-                            child: FlatButton(
-                              child: Image.asset('imagenes/layout3c.png'),
-                              onPressed: () {
-                                //Se asigna layout seleccionado a 3
-                                DatosEstaticos.layoutSeleccionado = 3;
-                                _reloj_estado(context);
-                                //Navigator.pushNamed(context, '/crear_layout3');
-                              },
-                            ),
-                          ),
-                        ),
-                        Container(
-                          margin: EdgeInsets.symmetric(horizontal: 110),
-                          decoration: BoxDecoration(
-                              border: Border(
-                                  bottom: BorderSide(
-                                      color: colorSubrayado3, width: 1))),
-                          child: Center(
-                            child: Text(
-                              "LAYOUT ACTIVO",
-                              style: TextStyle(
-                                fontFamily: 'textoMont',
-                                fontSize: 12,
-                                color: colorActivo3,
-                                /*decoration: TextDecoration.underline,
-                                  decorationColor: colorSubrayado1*/
+                          Padding(
+                            padding: const EdgeInsets.only(top: 10.0, bottom: 3),
+                            child: Container(
+                              decoration: _decorationLayoutSeleccionado2,
+                              child: Column(
+                                children: [
+                                  FlatButton(
+                                    child: Image.asset('imagenes/layout2b.png'),
+                                    onPressed: () {
+                                      //Se asigna layout seleccionado a 2
+                                      DatosEstaticos.layoutSeleccionado = 2;
+                                      Navigator.popAndPushNamed(
+                                          context, '/crear_layout2');
+                                    },
+                                  ),
+                                ],
                               ),
                             ),
                           ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.only(top: 20),
-                          child: Center(
-                            child: Text(
-                              "SELECCIONA LAYOUT",
+                          Container(
+                            margin: EdgeInsets.symmetric(horizontal: 110),
+                            decoration: BoxDecoration(
+                                border: Border(
+                                    bottom: BorderSide(
+                                        color: colorSubrayado2, width: 1))),
+                            child: Center(
+                              child: Text(
+                                "LAYOUT ACTIVO",
+                                style: TextStyle(
+                                  fontFamily: 'textoMont',
+                                  fontSize: 12,
+                                  color: colorActivo2,
+                                  /*decoration: TextDecoration.underline,
+                                    decorationColor: colorSubrayado1*/
+                                ),
+                              ),
                             ),
                           ),
-                        ),
-                      ],
-                    );
+                          Padding(
+                            padding: const EdgeInsets.only(top: 10.0, bottom: 3),
+                            child: Container(
+                              decoration: _decorationLayoutSeleccionado3,
+                              child: FlatButton(
+                                child: Image.asset('imagenes/layout3c.png'),
+                                onPressed: () {
+                                  //Se asigna layout seleccionado a 3
+                                  DatosEstaticos.layoutSeleccionado = 3;
+                                  _reloj_estado(context);
+                                  //Navigator.pushNamed(context, '/crear_layout3');
+                                },
+                              ),
+                            ),
+                          ),
+                          Container(
+                            margin: EdgeInsets.symmetric(horizontal: 110),
+                            decoration: BoxDecoration(
+                                border: Border(
+                                    bottom: BorderSide(
+                                        color: colorSubrayado3, width: 1))),
+                            child: Center(
+                              child: Text(
+                                "LAYOUT ACTIVO",
+                                style: TextStyle(
+                                  fontFamily: 'textoMont',
+                                  fontSize: 12,
+                                  color: colorActivo3,
+                                  /*decoration: TextDecoration.underline,
+                                    decorationColor: colorSubrayado1*/
+                                ),
+                              ),
+                            ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.only(top: 20),
+                            child: Center(
+                              child: Text(
+                                "SELECCIONA LAYOUT",
+                              ),
+                            ),
+                          ),
+                        ],
+                      );
+                    }
                   }
-                }
-                return Center(
-                  child: CircularProgressIndicator(),
-                );
-              },
-            )),
+                  return Center(
+                    child: CircularProgressIndicator(),
+                  );
+                },
+              )),
+        ),
       ),
     );
   }
@@ -229,9 +239,12 @@ class _SeleccionarLayoutState extends State<SeleccionarLayout> {
                           //de estados propia. Sigue la explicación de como manejar
                           //los 2 widget con y sin reloj en la línea: 115 del archivo
                           // 'reloj.dart'
+                          Navigator.pop(context);
+
                           Navigator.push(
                               context,
                               PageRouteBuilder(
+                                barrierColor: Colors.black.withOpacity(0.5),
                                 barrierDismissible: false,
                                 opaque: false,
                                 pageBuilder: (_, __, ___) => EditarReloj(),
@@ -247,7 +260,7 @@ class _SeleccionarLayoutState extends State<SeleccionarLayout> {
                         ),
                         onTap: () {
                           DatosEstaticos.relojEnPantalla = false;
-                          Navigator.pushNamed(context, '/crear_layout3');
+                          Navigator.popAndPushNamed(context, '/crear_layout3');
                           //_layout3_solito(context);
                         },
                       ),

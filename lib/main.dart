@@ -11,6 +11,7 @@ import 'package:tvpost_flutter/ventanas/seleccionar_imagen.dart';
 import 'package:tvpost_flutter/ventanas/seleccionar_layout.dart';
 import 'package:tvpost_flutter/ventanas/seleccionar_video.dart';
 import 'package:tvpost_flutter/ventanas/crear_contenido.dart';
+import 'package:tvpost_flutter/ventanas/ventanaEnFondo.dart';
 
 Future<void> main() async {
   //Se ejecuta el método de carga de shared preferences antes de que
@@ -28,7 +29,8 @@ Future<void> main() async {
 
     //Rutas para navegar en las páginas
     routes: {
-      '/': (context) => Login(),
+      '/': (context) => VentanaFondo(),
+      '/login': (context) => Login(),
       '/raspberries_conectadas': (context) => RaspberriesConectadas(),
       '/detalle_equipo': (context) => DetalleEquipo(),
       '/seleccionar_layout': (context) => SeleccionarLayout(),

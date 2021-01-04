@@ -219,217 +219,225 @@ class _CrearLayout3State extends State<CrearLayout3> {
 
      */
 
-    return Scaffold(
-      //Appbar viene de archivo custom_widgets.dart
-      appBar: CustomAppBar(),
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            Container(
-              padding: EdgeInsets.only(top: 20),
-              child: Text(
-                ObtieneDatos.listadoEquipos[DatosEstaticos.indexSeleccionado]
-                        ['f_alias']
-                    .toString(),
-                style: TextStyle(fontSize: 16.5),
-                textAlign: TextAlign.center,
+    return WillPopScope(
+      onWillPop: (){
+        Navigator.popAndPushNamed(
+            context, '/seleccionar_layout',
+        );
+        return;
+      },
+      child: Scaffold(
+        //Appbar viene de archivo custom_widgets.dart
+        appBar: CustomAppBar(),
+        body: SingleChildScrollView(
+          child: Column(
+            children: [
+              Container(
+                padding: EdgeInsets.only(top: 20),
+                child: Text(
+                  ObtieneDatos.listadoEquipos[DatosEstaticos.indexSeleccionado]
+                          ['f_alias']
+                      .toString(),
+                  style: TextStyle(fontSize: 16.5),
+                  textAlign: TextAlign.center,
+                ),
               ),
-            ),
-            Container(
-              width: MediaQuery.of(context).size.width,
-              height: MediaQuery.of(context).size.height / 3,
-              margin: EdgeInsets.only(top: 15, bottom: 20, left: 20, right: 20),
-              /*decoration: BoxDecoration(
-                  border: Border.all(color: Colors.black, width: 5)),*/
-              child: Column(
-                children: [
-                  Expanded(
-                    flex: 3,
-                    child: Row(
-                      children: [
-                        Expanded(
-                          flex: 4,
-                          child: Container(
-                            /*width: MediaQuery.of(context).size.width - (MediaQuery.of(context).size.width * 0.169),
-                            height:MediaQuery.of(context).size.height - (MediaQuery.of(context).size.height * 0.779),*/
-                            decoration: _decorationPorcion1,
-                            child: InkWell(
-                              enableFeedback: true,
-                              onTap: () {
-                                setState(() {
-                                  PorcionSeleccionada(1);
-                                  if (!_visible) {
-                                    _visible = true;
-                                  }
-                                  divisionLayout = '3-1';
-                                });
-                              },
-                              child: ignorarInteraccionesElemento(widget1),
+              Container(
+                width: MediaQuery.of(context).size.width,
+                height: MediaQuery.of(context).size.height / 3,
+                margin: EdgeInsets.only(top: 15, bottom: 20, left: 20, right: 20),
+                /*decoration: BoxDecoration(
+                    border: Border.all(color: Colors.black, width: 5)),*/
+                child: Column(
+                  children: [
+                    Expanded(
+                      flex: 3,
+                      child: Row(
+                        children: [
+                          Expanded(
+                            flex: 4,
+                            child: Container(
+                              /*width: MediaQuery.of(context).size.width - (MediaQuery.of(context).size.width * 0.169),
+                              height:MediaQuery.of(context).size.height - (MediaQuery.of(context).size.height * 0.779),*/
+                              decoration: _decorationPorcion1,
+                              child: InkWell(
+                                enableFeedback: true,
+                                onTap: () {
+                                  setState(() {
+                                    PorcionSeleccionada(1);
+                                    if (!_visible) {
+                                      _visible = true;
+                                    }
+                                    divisionLayout = '3-1';
+                                  });
+                                },
+                                child: ignorarInteraccionesElemento(widget1),
+                              ),
                             ),
                           ),
-                        ),
-                        Expanded(
-                          flex: 1,
-                          child: Container(
-                            height: MediaQuery.of(context).size.height,
-                            /*width: MediaQuery.of(context).size.width - (MediaQuery.of(context).size.width * 0.88),
-                            height:MediaQuery.of(context).size.height - (MediaQuery.of(context).size.height * 0.779),*/
-                            decoration: _decorationPorcion2,
-                            child: InkWell(
-                              enableFeedback: true,
-                              onTap: () {
-                                setState(() {
-                                  PorcionSeleccionada(2);
-                                  if (!_visible) {
-                                    _visible = true;
-                                  }
-                                  divisionLayout = '3-2';
-                                });
-                              },
-                              child: ignorarInteraccionesElemento(widget2),
+                          Expanded(
+                            flex: 1,
+                            child: Container(
+                              height: MediaQuery.of(context).size.height,
+                              /*width: MediaQuery.of(context).size.width - (MediaQuery.of(context).size.width * 0.88),
+                              height:MediaQuery.of(context).size.height - (MediaQuery.of(context).size.height * 0.779),*/
+                              decoration: _decorationPorcion2,
+                              child: InkWell(
+                                enableFeedback: true,
+                                onTap: () {
+                                  setState(() {
+                                    PorcionSeleccionada(2);
+                                    if (!_visible) {
+                                      _visible = true;
+                                    }
+                                    divisionLayout = '3-2';
+                                  });
+                                },
+                                child: ignorarInteraccionesElemento(widget2),
+                              ),
                             ),
                           ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  Expanded(
-                    flex: 1,
-                    child: Container(
-                      width: MediaQuery.of(context).size.width,
-                      /*width: MediaQuery.of(context).size.width,
-                      height: MediaQuery.of(context).size.height - (MediaQuery.of(context).size.height * 0.91),*/
-                      decoration: _decorationPorcion3,
-                      child: InkWell(
-                        enableFeedback: true,
-                        onTap: () {
-                          setState(() {
-                            PorcionSeleccionada(3);
-                            if (!_visible) {
-                              _visible = true;
-                            }
-                            divisionLayout = '3-3';
-                          });
-                        },
-                        child: ignorarInteraccionesElemento(contenidoLayout10),
+                        ],
                       ),
                     ),
-                  ),
-                ],
+                    Expanded(
+                      flex: 1,
+                      child: Container(
+                        width: MediaQuery.of(context).size.width,
+                        /*width: MediaQuery.of(context).size.width,
+                        height: MediaQuery.of(context).size.height - (MediaQuery.of(context).size.height * 0.91),*/
+                        decoration: _decorationPorcion3,
+                        child: InkWell(
+                          enableFeedback: true,
+                          onTap: () {
+                            setState(() {
+                              PorcionSeleccionada(3);
+                              if (!_visible) {
+                                _visible = true;
+                              }
+                              divisionLayout = '3-3';
+                            });
+                          },
+                          child: ignorarInteraccionesElemento(contenidoLayout10),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
               ),
-            ),
 
-            //Publicacion
-            /* Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Expanded(
-                  flex: 2,
-                  child: CheckboxListTile(
-                    title: Text('¿Porción izquierda en redes sociales?'),
-                    secondary: Icon(Icons.share),
-                    controlAffinity: ListTileControlAffinity.trailing,
-                    value: publicar_redes_sociales,
-                    onChanged: (bool value) {
-                      setState(() {
-                        if (value) {
-                          if (DatosEstaticos.widget1 != null) {
-                            if (DatosEstaticos.widget1.runtimeType.toString() !=
-                                'Image') {
+              //Publicacion
+              /* Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Expanded(
+                    flex: 2,
+                    child: CheckboxListTile(
+                      title: Text('¿Porción izquierda en redes sociales?'),
+                      secondary: Icon(Icons.share),
+                      controlAffinity: ListTileControlAffinity.trailing,
+                      value: publicar_redes_sociales,
+                      onChanged: (bool value) {
+                        setState(() {
+                          if (value) {
+                            if (DatosEstaticos.widget1 != null) {
+                              if (DatosEstaticos.widget1.runtimeType.toString() !=
+                                  'Image') {
+                                Column cont = Column(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    Text('Solo se pueden publicar imágenes'),
+                                    RaisedButton(
+                                      onPressed: () => Navigator.of(context,
+                                              rootNavigator: true)
+                                          .pop(),
+                                      child: Text('Aceptar'),
+                                    ),
+                                  ],
+                                );
+                                PopUps.PopUpConWidget(context, cont);
+                                publicar_redes_sociales = false;
+                              } else {
+                                publicar_redes_sociales = true;
+                              }
+                            } else {
                               Column cont = Column(
                                 mainAxisSize: MainAxisSize.min,
                                 children: [
-                                  Text('Solo se pueden publicar imágenes'),
+                                  Text('La imagen no puede estar vacía'),
                                   RaisedButton(
-                                    onPressed: () => Navigator.of(context,
-                                            rootNavigator: true)
-                                        .pop(),
+                                    onPressed: () =>
+                                        Navigator.of(context, rootNavigator: true)
+                                            .pop(),
                                     child: Text('Aceptar'),
                                   ),
                                 ],
                               );
                               PopUps.PopUpConWidget(context, cont);
                               publicar_redes_sociales = false;
-                            } else {
-                              publicar_redes_sociales = true;
                             }
                           } else {
-                            Column cont = Column(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                Text('La imagen no puede estar vacía'),
-                                RaisedButton(
-                                  onPressed: () =>
-                                      Navigator.of(context, rootNavigator: true)
-                                          .pop(),
-                                  child: Text('Aceptar'),
-                                ),
-                              ],
-                            );
-                            PopUps.PopUpConWidget(context, cont);
                             publicar_redes_sociales = false;
                           }
-                        } else {
-                          publicar_redes_sociales = false;
-                        }
-                      });
-                    },
+                        });
+                      },
+                    ),
                   ),
-                ),
-              ],
-            ),
+                ],
+              ),
 
-            //Manejo reloj
-            Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Expanded(
-                  flex: 2,
-                  child: CheckboxListTile(
-                    title: Text('¿Activar reloj?'),
-                    secondary: Icon(Icons.more_time_rounded),
-                    controlAffinity: ListTileControlAffinity.trailing,
-                    value: DatosEstaticos.relojEnPantalla,
-                    onChanged: (bool value) {
-                      setState(() {
-                        if (value) {
-                          PopUps.PopUpConWidgetYEventos(context, EditarReloj());
-                        }
-                        DatosEstaticos.relojEnPantalla = value;
-                      });
-                    },
+              //Manejo reloj
+              Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Expanded(
+                    flex: 2,
+                    child: CheckboxListTile(
+                      title: Text('¿Activar reloj?'),
+                      secondary: Icon(Icons.more_time_rounded),
+                      controlAffinity: ListTileControlAffinity.trailing,
+                      value: DatosEstaticos.relojEnPantalla,
+                      onChanged: (bool value) {
+                        setState(() {
+                          if (value) {
+                            PopUps.PopUpConWidgetYEventos(context, EditarReloj());
+                          }
+                          DatosEstaticos.relojEnPantalla = value;
+                        });
+                      },
+                    ),
                   ),
-                ),
-                Expanded(
-                  flex: 1,
-                  child: BotonEnviarAEquipo(
-                    publicar_rrss: publicar_redes_sociales,
-                    publicar_porcion: 1,
-                    visible: true,
-                    mensaje_boton: "Enviar Solo reloj",
-                  ),
-                )
-              ],
-            ),*/
+                  Expanded(
+                    flex: 1,
+                    child: BotonEnviarAEquipo(
+                      publicar_rrss: publicar_redes_sociales,
+                      publicar_porcion: 1,
+                      visible: true,
+                      mensaje_boton: "Enviar Solo reloj",
+                    ),
+                  )
+                ],
+              ),*/
 
-            //Acá va el widget de los botones
-            OpcionesSeleccionMedia(
-              visible: _visible,
-              divisionLayout: divisionLayout,
-              //Función que al ser ejecutada desde la ventana siguiente
-              //actualiza el state (puede hacer cualquier cosa)
-              actualizaEstado: () {
-                setState(() {
-                  videoPorcion2Reemplazado = true;
-                });
-              },
-            ),
-            BotonEnviarAEquipo(
-              visible: _visible,
-              publicar_rrss: publicar_redes_sociales,
-              publicar_porcion: 1,
-            ),
-          ],
+              //Acá va el widget de los botones
+              OpcionesSeleccionMedia(
+                visible: _visible,
+                divisionLayout: divisionLayout,
+                //Función que al ser ejecutada desde la ventana siguiente
+                //actualiza el state (puede hacer cualquier cosa)
+                actualizaEstado: () {
+                  setState(() {
+                    videoPorcion2Reemplazado = true;
+                  });
+                },
+              ),
+              BotonEnviarAEquipo(
+                visible: _visible,
+                publicar_rrss: publicar_redes_sociales,
+                publicar_porcion: 1,
+              ),
+            ],
+          ),
         ),
       ),
     );

@@ -53,129 +53,137 @@ class _CrearLayout1State extends State<CrearLayout1> {
 
       widget1 = _imageSeleccionLayout;
     }
-    return Scaffold(
-      //key: webViewKey,
-      //Appbar viene de archivo custom_widgets.dart
-      appBar: CustomAppBar(),
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            Container(
-              padding: EdgeInsets.only(top: 20),
-              child: Text(
-                ObtieneDatos.listadoEquipos[DatosEstaticos.indexSeleccionado]
-                        ['f_alias']
-                    .toString(),
-                style: TextStyle(fontSize: 16.5),
-                textAlign: TextAlign.center,
-              ),
-            ),
-            //Ink well para poder tener feedback como botón de cualquier widget
-            Container(
-              width: MediaQuery.of(context).size.width,
-              height: MediaQuery.of(context).size.height / 3,
-              margin: EdgeInsets.all(5),
-              /*decoration: BoxDecoration(
-                  border: Border.all(color: Colors.black, width: 5)),*/
-              child: Container(
-                margin:
-                    EdgeInsets.only(top: 10, bottom: 20, left: 20, right: 20),
-                decoration: _decorationPorcion1,
-                child: InkWell(
-                  enableFeedback: true,
-                  onTap: () {
-                    setState(() {
-                      PorcionSeleccionada(1);
-                      if (!_visible) {
-                        _visible = true;
-                      }
-                      divisionLayout = '1-1';
-                    });
-                  },
-                  child: ignorarInteraccionesElemento(widget1),
+    return WillPopScope(
+      onWillPop: (){
+        Navigator.popAndPushNamed(
+            context, '/seleccionar_layout'
+        );
+        return;
+      },
+      child: Scaffold(
+        //key: webViewKey,
+        //Appbar viene de archivo custom_widgets.dart
+        appBar: CustomAppBar(),
+        body: SingleChildScrollView(
+          child: Column(
+            children: [
+              Container(
+                padding: EdgeInsets.only(top: 20),
+                child: Text(
+                  ObtieneDatos.listadoEquipos[DatosEstaticos.indexSeleccionado]
+                          ['f_alias']
+                      .toString(),
+                  style: TextStyle(fontSize: 16.5),
+                  textAlign: TextAlign.center,
                 ),
               ),
-            ),
-
-            //Publicacion
-            /*Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Expanded(
-                  flex: 2,
-                  child: CheckboxListTile(
-                    title: Text('¿Porción central en redes sociales?'),
-                    secondary: Icon(Icons.share),
-                    controlAffinity: ListTileControlAffinity.trailing,
-                    value: publicar_redes_sociales,
-                    onChanged: (bool value) {
+              //Ink well para poder tener feedback como botón de cualquier widget
+              Container(
+                width: MediaQuery.of(context).size.width,
+                height: MediaQuery.of(context).size.height / 3,
+                margin: EdgeInsets.all(5),
+                /*decoration: BoxDecoration(
+                    border: Border.all(color: Colors.black, width: 5)),*/
+                child: Container(
+                  margin:
+                      EdgeInsets.only(top: 10, bottom: 20, left: 20, right: 20),
+                  decoration: _decorationPorcion1,
+                  child: InkWell(
+                    enableFeedback: true,
+                    onTap: () {
                       setState(() {
-                        if (value) {
-                          if (DatosEstaticos.widget1 != null) {
-                            if (DatosEstaticos.widget1.runtimeType.toString() !=
-                                'Image') {
+                        PorcionSeleccionada(1);
+                        if (!_visible) {
+                          _visible = true;
+                        }
+                        divisionLayout = '1-1';
+                      });
+                    },
+                    child: ignorarInteraccionesElemento(widget1),
+                  ),
+                ),
+              ),
+
+              //Publicacion
+              /*Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Expanded(
+                    flex: 2,
+                    child: CheckboxListTile(
+                      title: Text('¿Porción central en redes sociales?'),
+                      secondary: Icon(Icons.share),
+                      controlAffinity: ListTileControlAffinity.trailing,
+                      value: publicar_redes_sociales,
+                      onChanged: (bool value) {
+                        setState(() {
+                          if (value) {
+                            if (DatosEstaticos.widget1 != null) {
+                              if (DatosEstaticos.widget1.runtimeType.toString() !=
+                                  'Image') {
+                                Column cont = Column(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    Text('Solo se pueden publicar imágenes'),
+                                    RaisedButton(
+                                      onPressed: () => Navigator.of(context,
+                                              rootNavigator: true)
+                                          .pop(),
+                                      child: Text('Aceptar'),
+                                    ),
+                                  ],
+                                );
+                                PopUps.PopUpConWidget(context, cont);
+                                publicar_redes_sociales = false;
+                              } else {
+                                publicar_redes_sociales = true;
+                              }
+                            } else {
                               Column cont = Column(
                                 mainAxisSize: MainAxisSize.min,
                                 children: [
-                                  Text('Solo se pueden publicar imágenes'),
+                                  Text('La imagen no puede estar vacía'),
                                   RaisedButton(
-                                    onPressed: () => Navigator.of(context,
-                                            rootNavigator: true)
-                                        .pop(),
+                                    onPressed: () =>
+                                        Navigator.of(context, rootNavigator: true)
+                                            .pop(),
                                     child: Text('Aceptar'),
                                   ),
                                 ],
                               );
                               PopUps.PopUpConWidget(context, cont);
                               publicar_redes_sociales = false;
-                            } else {
-                              publicar_redes_sociales = true;
                             }
                           } else {
-                            Column cont = Column(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                Text('La imagen no puede estar vacía'),
-                                RaisedButton(
-                                  onPressed: () =>
-                                      Navigator.of(context, rootNavigator: true)
-                                          .pop(),
-                                  child: Text('Aceptar'),
-                                ),
-                              ],
-                            );
-                            PopUps.PopUpConWidget(context, cont);
                             publicar_redes_sociales = false;
                           }
-                        } else {
-                          publicar_redes_sociales = false;
-                        }
-                      });
-                    },
+                        });
+                      },
+                    ),
                   ),
-                ),
-              ],
-            ),*/
+                ],
+              ),*/
 
-            //Acá va el widget de los botones
-            OpcionesSeleccionMedia(
-              //keywebview: webViewKey,
-              visible: _visible,
-              divisionLayout: divisionLayout,
-              //Función que al ser ejecutada desde la ventana siguiente
-              //actualiza el state (puede hacer cualquier cosa)
-              actualizaEstado: () {
-                setState(() {
-                  widget1 = DatosEstaticos.widget1;
-                });
-              },
-            ),
-            BotonEnviarAEquipo(
-              visible: _visible,
-              publicar_rrss: publicar_redes_sociales,
-              publicar_porcion: 1,
-            ),
-          ],
+              //Acá va el widget de los botones
+              OpcionesSeleccionMedia(
+                //keywebview: webViewKey,
+                visible: _visible,
+                divisionLayout: divisionLayout,
+                //Función que al ser ejecutada desde la ventana siguiente
+                //actualiza el state (puede hacer cualquier cosa)
+                actualizaEstado: () {
+                  setState(() {
+                    widget1 = DatosEstaticos.widget1;
+                  });
+                },
+              ),
+              BotonEnviarAEquipo(
+                visible: _visible,
+                publicar_rrss: publicar_redes_sociales,
+                publicar_porcion: 1,
+              ),
+            ],
+          ),
         ),
       ),
     );

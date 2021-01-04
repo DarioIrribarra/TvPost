@@ -121,7 +121,7 @@ class _EditarRelojState extends State<EditarReloj> {
                                   //hacer.
                                   //mira la línea 141 en crear_layout3
                                   DatosEstaticos.relojEnPantalla = true;
-                                  Navigator.pushNamed(context, '/crear_layout3');
+                                  Navigator.popAndPushNamed(context, '/crear_layout3');
                                 }
                             ),
                           ),
