@@ -5,6 +5,7 @@ import 'dart:typed_data';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:flutter/services.dart';
 import 'package:tvpost_flutter/utilidades/datos_estaticos.dart';
 import 'package:tvpost_flutter/utilidades/obtiene_datos_webservice.dart';
 import 'package:tvpost_flutter/utilidades/custom_widgets.dart';
@@ -38,16 +39,45 @@ class _RaspberriesConectadasState extends State<RaspberriesConectadas> {
 
     return WillPopScope(
       onWillPop: (){
-        Navigator.popAndPushNamed(
-            context, '/login',
-            arguments: {
-              "indexEquipoGrid": DatosEstaticos.indexSeleccionado,
-            });
+        Widget contenidoPopUp = Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text('¿Desea salir de TvPost?', textAlign: TextAlign.center,),
+            SizedBox(height: 10,),
+            Row(
+              children: [
+                Expanded(
+                  flex: 1,
+                  child: RaisedButton(
+                    onPressed: (){
+                      if (Platform.isAndroid){
+                        SystemNavigator.pop();
+                        return;
+                      } else {
+                        exit(0);
+                      }
+                    },
+                    child: Text('Aceptar', textAlign: TextAlign.center,),
+                  ),
+                ),
+                SizedBox(width: 10,),
+                Expanded(
+                  flex: 1,
+                  child: RaisedButton(
+                    onPressed: () => Navigator.pop(context),
+                    child: Text('Cancelar', textAlign: TextAlign.center,),
+                  ),
+                ),
+              ],
+            )
+          ],
+        );
+        PopUps.PopUpConWidget(context, contenidoPopUp);
         return;
       },
       child: Scaffold(
         //Appbar viene de archivo custom_widgets.dart
-        appBar: CustomAppBar(),
+        appBar: CustomAppBarSinFlechaBack(),
         body: FutureBuilder(
             future: datos.getDatosEquipos(),
             builder: (context, snapshot) {
@@ -96,9 +126,14 @@ class _RaspberriesConectadasState extends State<RaspberriesConectadas> {
                                     //Cuando ya se cargó la data, se crea el widget
                                     else {
                                       //Si tiene conexión o está activo se puede hacer click
-                                      //Y se le pasa la ip
+                                      //Y se le pasa el index a un listado de equipos conectados
                                       if (snapshot.data[2] == true &&
                                           snapshot.data[3] == true) {
+                                        //Se añade el index a los equipos conectados
+                                          if (DatosEstaticos.listadoIndexEquiposConectados.contains(index) == false){
+                                            DatosEstaticos.listadoIndexEquiposConectados.add(index);
+                                          }
+                                        //print(DatosEstaticos.listadoIndexEquiposConectados.length);
                                         return Column(
                                             mainAxisAlignment:
                                                 MainAxisAlignment.spaceEvenly,
@@ -107,8 +142,8 @@ class _RaspberriesConectadasState extends State<RaspberriesConectadas> {
                                                 onTap: () {
                                                   //Libera los widgets y datos creados
                                                   LimpiarDatosEstaticos();
-                                                  DatosEstaticos
-                                                      .indexSeleccionado = index;
+                                                  DatosEstaticos.indexSeleccionado = index;
+                                                  DatosEstaticos.ipSeleccionada = ObtieneDatos.listadoEquipos[index]['f_ip'].toString();
                                                   /*return Navigator.push(
                                                       context,
                                                       PageRouteBuilder(
@@ -186,6 +221,7 @@ class _RaspberriesConectadasState extends State<RaspberriesConectadas> {
                                                                       DatosEstaticos
                                                                               .indexSeleccionado =
                                                                           index;
+                                                                      DatosEstaticos.ipSeleccionada = ObtieneDatos.listadoEquipos[index]['f_ip'].toString();
                                                                       return Navigator.popAndPushNamed(
                                                                           context,
                                                                           '/detalle_equipo',
@@ -241,6 +277,10 @@ class _RaspberriesConectadasState extends State<RaspberriesConectadas> {
                                       //Equipo conectado pero desactivado por el usuario
                                       else if (snapshot.data[2] == true &&
                                           snapshot.data[3] == false) {
+                                        //Se añade el index a los equipos conectados
+                                        if (DatosEstaticos.listadoIndexEquiposConectados.contains(index) == false){
+                                          DatosEstaticos.listadoIndexEquiposConectados.add(index);
+                                        }
                                         return Column(
                                             mainAxisAlignment:
                                                 MainAxisAlignment.spaceEvenly,
@@ -251,6 +291,7 @@ class _RaspberriesConectadasState extends State<RaspberriesConectadas> {
                                                   LimpiarDatosEstaticos();
                                                   DatosEstaticos
                                                       .indexSeleccionado = index;
+                                                  DatosEstaticos.ipSeleccionada = ObtieneDatos.listadoEquipos[index]['f_ip'].toString();
                                                   return Navigator.popAndPushNamed(
                                                       context, '/detalle_equipo',
                                                       arguments: {
@@ -315,6 +356,7 @@ class _RaspberriesConectadasState extends State<RaspberriesConectadas> {
                                                                       DatosEstaticos
                                                                               .indexSeleccionado =
                                                                           index;
+                                                                      DatosEstaticos.ipSeleccionada = ObtieneDatos.listadoEquipos[index]['f_ip'].toString();
                                                                       return Navigator.popAndPushNamed(
                                                                           context,
                                                                           '/detalle_equipo',
@@ -367,6 +409,10 @@ class _RaspberriesConectadasState extends State<RaspberriesConectadas> {
                                               ),
                                             ]);
                                       } else {
+                                        //Se remueve el index a los equipos conectados
+                                        if (DatosEstaticos.listadoIndexEquiposConectados.contains(index) == false){
+                                          DatosEstaticos.listadoIndexEquiposConectados.remove(index);
+                                        }
                                         return Column(
                                           mainAxisAlignment:
                                               MainAxisAlignment.spaceEvenly,
@@ -466,6 +512,10 @@ class _RaspberriesConectadasState extends State<RaspberriesConectadas> {
                                       }
                                     }
                                   } else if (snapshot.hasError) {
+                                    //Se remueve el index a los equipos conectados
+                                    if (DatosEstaticos.listadoIndexEquiposConectados.contains(index) == false){
+                                      DatosEstaticos.listadoIndexEquiposConectados.remove(index);
+                                    }
                                     return Center(
                                       child: Text(
                                         'ERROR: ${snapshot.error.toString()}',
@@ -705,7 +755,10 @@ class _RaspberriesConectadasState extends State<RaspberriesConectadas> {
   }
 
   Future<void> _recargarGrid() async {
-    setState(() {});
+    setState(() {
+      LimpiarDatosEstaticos();
+      DatosEstaticos.listadoIndexEquiposConectados = [];
+    });
   }
 
   void LimpiarDatosEstaticos() {
@@ -1072,6 +1125,7 @@ class _RaspberriesConectadasState extends State<RaspberriesConectadas> {
                                     //Libera los widgets y datos creados
                                     LimpiarDatosEstaticos();
                                     DatosEstaticos.indexSeleccionado = index;
+                                    DatosEstaticos.ipSeleccionada = ObtieneDatos.listadoEquipos[index]['f_ip'].toString();
                                     return Navigator.popAndPushNamed(
                                         context, '/detalle_equipo',
                                         arguments: {
@@ -1282,6 +1336,7 @@ class _RaspberriesConectadasState extends State<RaspberriesConectadas> {
                                     //Libera los widgets y datos creados
                                     LimpiarDatosEstaticos();
                                     DatosEstaticos.indexSeleccionado = index;
+                                    DatosEstaticos.ipSeleccionada = ObtieneDatos.listadoEquipos[index]['f_ip'].toString();
                                     return Navigator.popAndPushNamed(
                                         context, '/detalle_equipo',
                                         arguments: {

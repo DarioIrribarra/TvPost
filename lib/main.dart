@@ -29,6 +29,7 @@ Future<void> main() async {
 
     //Rutas para navegar en las páginas
     routes: {
+      //Ventana fantasma que se mantiene vacía
       '/': (context) => VentanaFondo(),
       '/login': (context) => Login(),
       '/raspberries_conectadas': (context) => RaspberriesConectadas(),

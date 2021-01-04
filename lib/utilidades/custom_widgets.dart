@@ -5,7 +5,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:tvpost_flutter/utilidades/datos_estaticos.dart';
 import 'package:tvpost_flutter/utilidades/obtiene_datos_webservice.dart';
-import 'package:tvpost_flutter/ventanas/crear_layout3.dart';
+//import 'package:tvpost_flutter/ventanas/crear_layout3.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:tvpost_flutter/utilidades/comunicacion_raspberry.dart';
@@ -30,7 +30,7 @@ class PopUps {
       },
     );
   }
-
+/*
   static _reloj_estado(BuildContext context) {
     return showDialog(
       context: context,
@@ -59,6 +59,8 @@ class PopUps {
       },
     );
   }
+
+ */
 
   //Crear un popup con cualquier widget de contenido
   static SeleccionarReloj(BuildContext context) {
@@ -159,6 +161,227 @@ class PopUps {
   }
 }
 
+class MenuAppBar {
+  static String administrarImagenes = "Imagenes";
+  static String administrarVideos = "Videos";
+
+  static List<String> itemsMenu = <String>[
+    administrarImagenes,
+    administrarVideos,
+  ];
+
+  static Validacion({
+    List<int> listadoEquipos,
+    BuildContext context,
+    String rutaVentana,
+    String rutaProveniente}){
+    //print(ModalRoute.of(context).settings.name);
+    if (listadoEquipos.length>0){
+      if(DatosEstaticos.ipSeleccionada != null){
+        //Navigator.pop(context);
+        Navigator.popAndPushNamed(context, rutaVentana, arguments: {
+          'division_layout': '0',
+          'ruta_proveniente': rutaProveniente,
+        });
+        //Muestro listado de equipos a elegir
+      } else {
+        double altura = 30.0  + (30 * listadoEquipos.length);
+        if (altura >= MediaQuery.of(context).size.height){
+          altura = MediaQuery.of(context).size.height;
+
+        }
+        List<Widget> listadoHabilitados = [];
+        listadoEquipos.forEach((element) {
+          //print(element);
+          Container item = Container(
+            margin: EdgeInsets.only(left: 10),
+              child:ListTile(
+                contentPadding: EdgeInsets.all(0),
+                leading: Icon(Icons.screen_share),
+                title: Text(ObtieneDatos.listadoEquipos
+                [element]['f_alias'].toString().toUpperCase()
+                ),
+                onTap: () {
+                  DatosEstaticos.ipSeleccionada = ObtieneDatos.listadoEquipos
+                  [element]['f_ip'].toString();
+                  Navigator.pop(context);
+                  //Navigator.pop(context);
+                  Navigator.popAndPushNamed(context, rutaVentana, arguments: {
+                    'division_layout': '0',
+                    'ruta_proveniente': rutaProveniente,
+                  });
+                },
+              ),
+          );
+          listadoHabilitados.add(item);
+        });
+        PopUps.PopUpConWidget(
+          context,
+          Container(
+            width: MediaQuery.of(context).size.width/2,
+            height: altura,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Container(
+                  height: 20,
+                  child: Text(
+                    'Equipos conectados', textAlign: TextAlign.center,
+                  ),
+                ),
+                Container(
+                  height: altura - 20,
+                  child: ListView(
+                    children: listadoHabilitados,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
+      }
+    }else {
+      PopUps.PopUpConWidget(
+          context,
+          Text('Usted no posee equipos conectados')
+      );
+    }
+
+  }
+
+  static void SeleccionMenu(String itemSeleccionado, BuildContext context) {
+    //Listado de equipos que tienen conexión
+    if(itemSeleccionado == MenuAppBar.administrarImagenes){
+
+      Validacion(
+          listadoEquipos: DatosEstaticos.listadoIndexEquiposConectados,
+          context: context,
+          rutaVentana: "/seleccionar_imagen",
+          rutaProveniente: ModalRoute.of(context).settings.name);
+
+    }
+    if(itemSeleccionado == MenuAppBar.administrarVideos){
+      PopUps.PopUpConWidget(context, Text('En construcción...'));
+    }
+  }
+
+  static PopupMenuButton botonMenu(BuildContext context){
+    return PopupMenuButton<String>(
+      icon: Icon(
+        Icons.menu,
+        color: Colors.white,
+      ),
+      itemBuilder: (context){
+        return MenuAppBar.itemsMenu.map((e){
+          if (e == MenuAppBar.administrarImagenes){
+            return PopupMenuItem(
+              value: e,
+              child: Row(
+                children: [
+                  Icon(Icons.image),
+                  Text(e),
+                ],
+              ),
+            );
+          }
+          if (e == MenuAppBar.administrarVideos){
+            return PopupMenuItem(
+              value: e,
+              child: Row(
+                children: [
+                  Icon(Icons.video_library_outlined),
+                  Text(e),
+                ],
+              ),
+            );
+          }
+
+        }).toList();
+      },
+      onSelected: (selected){
+        MenuAppBar.SeleccionMenu(selected, context);
+      },
+    );
+  }
+}
+
+
+
+class CustomAppBarSinFlechaBack extends PreferredSize {
+  final double height;
+
+  CustomAppBarSinFlechaBack({
+    this.height = kToolbarHeight,
+  });
+
+  @override
+  Size get preferredSize => Size.fromHeight(height);
+
+  @override
+  Widget build(BuildContext context) {
+    return SafeArea(
+      child: AppBar(
+
+        leading: Container(
+          color: Colors.transparent,
+        ),
+        flexibleSpace: Container(
+          decoration: new BoxDecoration(
+              gradient: LinearGradient(
+                  colors: [HexColor("#0683ff"), HexColor("#3edb9b")],
+                  stops: [0.1, 0.6],
+                  begin: Alignment.centerLeft,
+                  end: FractionalOffset.centerRight)),
+          child: Padding(
+            padding:
+            EdgeInsets.only(left: MediaQuery.of(context).size.width / 5.5),
+            child: Container(
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  Expanded(
+                    flex: 3,
+                    child: Container(
+                      padding: EdgeInsets.all(12.0),
+                      child: Image.asset(
+                        'imagenes/logohorizontal.png',
+                      ),
+                    ),
+                  ),
+                  Expanded(
+                    flex: 1,
+                    child: MenuAppBar.botonMenu(context),
+                    /*
+                    child: IconButton(
+                      iconSize: 40,
+                      padding: const EdgeInsets.only(right: 20),
+                      icon: Icon(
+                        Icons.menu,
+                        color: Colors.white,
+                      ),
+                      onPressed: () {
+                        PopUps.PopUpConWidget(
+                            context,
+                            Text(
+                              'Menú en creación',
+                              textAlign: TextAlign.center,
+                            ));
+                      },
+                    ),
+
+                     */
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
 class CustomAppBar extends PreferredSize {
   final double height;
 
@@ -199,6 +422,8 @@ class CustomAppBar extends PreferredSize {
                   ),
                   Expanded(
                     flex: 1,
+                    child: MenuAppBar.botonMenu(context),
+                    /*
                     child: IconButton(
                       iconSize: 40,
                       padding: const EdgeInsets.only(right: 20),
@@ -215,6 +440,8 @@ class CustomAppBar extends PreferredSize {
                             ));
                       },
                     ),
+
+                     */
                   ),
                 ],
               ),
@@ -225,6 +452,8 @@ class CustomAppBar extends PreferredSize {
     );
   }
 }
+
+
 
 class OpcionesSeleccionMedia extends StatefulWidget {
   OpcionesSeleccionMedia({

@@ -7,6 +7,7 @@ class DatosEstaticos {
   static String ipSeleccionada;
   static List<String> listadoNombresImagenes;
   static List<String> listadoNombresVideos;
+  static List<int> listadoIndexEquiposConectados = [];
   static List<dynamic> listadoDatosEquipoSeleccionado;
   static Map<String,dynamic> mapaDatosReproduccionEquipoSeleccionado;
   static Widget widget1;

@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:io';
+import 'dart:ui';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:tvpost_flutter/utilidades/custom_widgets.dart';
@@ -17,6 +18,7 @@ class _SeleccionarImagenState extends State<SeleccionarImagen> {
   //Datos que se envía completo desde la ventana de selección de media
   Map datosDesdeVentanaAnterior = {};
   String divisionLayout;
+  String rutaDeDondeViene;
   Future<List<dynamic>> _listadoNombresImagenes;
   int itemsVisiblesGrid = 0;
   FilePickerResult imagenSeleccionadaGaleria;
@@ -41,136 +43,277 @@ class _SeleccionarImagenState extends State<SeleccionarImagen> {
     datosDesdeVentanaAnterior = ModalRoute.of(context).settings.arguments;
     if (datosDesdeVentanaAnterior != null) {
       divisionLayout = datosDesdeVentanaAnterior['division_layout'];
+      rutaDeDondeViene = datosDesdeVentanaAnterior['ruta_proveniente'];
     }
 
-    return Scaffold(
-      appBar: CustomAppBar(),
-      body: SafeArea(
-        child: Column(
-          children: <Widget>[
-            Container(
-              margin: EdgeInsets.only(bottom: 10),
-              padding: EdgeInsets.only(bottom: 5),
-              decoration: BoxDecoration(
-                  border: Border(
-                bottom: BorderSide(width: 5, color: Colors.green),
-              )),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  Stack(
-                    alignment: Alignment.center,
-                    children: [
-                      Align(
-                        alignment: Alignment.center,
-                        child: Text(
-                          'Seleccione una imagen',
-                          textScaleFactor: 1.3,
-                        ),
-                      ),
-                      Align(
-                        alignment: Alignment.centerRight,
-                        child: FloatingActionButton(
-                            child: Icon(Icons.add),
-                            heroTag: null,
-                            onPressed: () {
-                              abrirGaleria(context);
-                            }),
-                      )
-                    ],
-                  ),
-                ],
-              ),
-            ),
-            Expanded(
-              //Acá hacer un future builder para nombres de imágenes
-              child: FutureBuilder(
-                future: _listadoNombresImagenes,
-                builder: (context, snapshot) {
-                  if (snapshot.connectionState == ConnectionState.done) {
-                    if (snapshot.data == null) {
-                      return Center(
-                        child: Text(
-                          'Error de conexión',
-                          textScaleFactor: 1.3,
-                        ),
-                      );
-                    } else {
-                      if (snapshot.data[0] == "") {
-                        return Column(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Image.asset(
-                              'imagenes/arrow.png',
-                              width: MediaQuery.of(context).size.width / 1.5,
-                            ),
-                            Padding(
-                              padding: EdgeInsets.only(top: 5),
-                              child: Text(
-                                "Presione el ícono para agregar imágenes",
-                                textScaleFactor: 1.3,
-                              ),
-                            ),
-                          ],
-                        );
-                      }
+    Widget WidgetFutureGrilla;
 
-                      //Future Builder para el gridview de imágenes
-                      return GridView.builder(
-                          //Toma el total de imágenes desde la carpeta del
-                          // webserver
-                          itemCount:
-                              DatosEstaticos.listadoNombresImagenes.length,
-                          gridDelegate:
-                              SliverGridDelegateWithFixedCrossAxisCount(
-                                  crossAxisCount: 2),
-                          itemBuilder: (context, index) {
-                            //Por cada imagen, busca su imagen.
-                            // El nombre lo toma del listado estático
-                            return GestureDetector(
-                              onTap: () {
-                                Fluttertoast.showToast(
-                                  msg:
-                                      "Presione dos veces para seleccionar imagen",
-                                  toastLength: Toast.LENGTH_LONG,
-                                  webBgColor: "#e74c3c",
-                                  timeInSecForIosWeb: 10,
-                                );
-                              },
-                              onDoubleTap: () {
-                                Widget imagen = Image.network('http://'
-                                    '${DatosEstaticos.ipSeleccionada}'
-                                    '/ImagenesPostTv/'
-                                    '${DatosEstaticos.listadoNombresImagenes[index]}');
-                                String nombre = DatosEstaticos
-                                    .listadoNombresImagenes[index];
-                                RedireccionarCrearLayout(
-                                    imagen,
-                                    "/var/www/html/ImagenesPostTv/$nombre",
-                                    false);
-                                return;
-                              },
+    if(rutaDeDondeViene!=null){
+      WidgetFutureGrilla = FutureBuilder(
+        future: _listadoNombresImagenes,
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.done) {
+            if (snapshot.data == null) {
+              return Center(
+                child: Text(
+                  'Error de conexión',
+                  textScaleFactor: 1.3,
+                ),
+              );
+            } else {
+              if (snapshot.data[0] == "") {
+                return Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Image.asset(
+                      'imagenes/arrow.png',
+                      width: MediaQuery.of(context).size.width / 1.5,
+                    ),
+                    Padding(
+                      padding: EdgeInsets.only(top: 5),
+                      child: Text(
+                        "Presione el ícono para agregar imágenes",
+                        textScaleFactor: 1.3,
+                      ),
+                    ),
+                  ],
+                );
+              }
+
+              //Future Builder para el gridview de imágenes
+              return GridView.builder(
+                //Toma el total de imágenes desde la carpeta del
+                // webserver
+                  itemCount:
+                  DatosEstaticos.listadoNombresImagenes.length,
+                  gridDelegate:
+                  SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: 3),
+                  itemBuilder: (context, index) {
+                    //Por cada imagen, busca su imagen.
+                    // El nombre lo toma del listado estático
+                    String nombre = DatosEstaticos
+                        .listadoNombresImagenes[index].toString();
+                    return GestureDetector(
+                      onTap: () {
+                        Fluttertoast.showToast(
+                          msg:
+                          "Presione dos veces para seleccionar imagen",
+                          toastLength: Toast.LENGTH_LONG,
+                          webBgColor: "#e74c3c",
+                          timeInSecForIosWeb: 10,
+                        );
+                      },
+                      /*onDoubleTap: () {
+                        Widget imagen = Image.network('http://'
+                            '${DatosEstaticos.ipSeleccionada}'
+                            '/ImagenesPostTv/'
+                            '${DatosEstaticos.listadoNombresImagenes[index]}');
+
+                        RedireccionarCrearLayout(
+                            imagen,
+                            "/var/www/html/ImagenesPostTv/$nombre",
+                            false);
+                        return;
+                      },*/
+                      //Container de cada imagen
+                      child: Container(
+                        decoration: BoxDecoration(
+                            image: DecorationImage(image: NetworkImage('http://'
+                                '${DatosEstaticos.ipSeleccionada}'
+                                '/ImagenesPostTv/'
+                                '${DatosEstaticos.listadoNombresImagenes[index]}'),
+                                fit: BoxFit.fitHeight)
+                        ),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Expanded(
+                              flex: 5,
+                              /*
                               child: Image.network('http://'
                                   '${DatosEstaticos.ipSeleccionada}'
                                   '/ImagenesPostTv/'
-                                  '${DatosEstaticos.listadoNombresImagenes[index]}'),
-                            );
-                          });
-                    }
-                  }
-                  if (snapshot.connectionState == ConnectionState.waiting) {
-                    return Center(
-                      child: CircularProgressIndicator(),
+                                  '${DatosEstaticos.listadoNombresImagenes[index]}',
+                                fit: BoxFit.fill,),
+
+                               */
+                              child: BackdropFilter(
+                                filter: ImageFilter.blur(sigmaX: 0.3, sigmaY: 0.3),
+                                child: Container(
+                                  decoration: BoxDecoration(color: Colors.transparent.withOpacity(0.0)),
+                                ),
+                              ),
+                            ),
+                            Expanded(
+                              flex:1,
+                              child: Text(nombre)
+                            ),
+                          ],
+                        ),
+                      ),
                     );
-                  } else {
-                    return Center(
-                      child: CircularProgressIndicator(),
+                  });
+            }
+          }
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return Center(
+              child: CircularProgressIndicator(),
+            );
+          } else {
+            return Center(
+              child: CircularProgressIndicator(),
+            );
+          }
+        },
+      );
+    } else {
+      ///MODIFICA ESTE WIDGET PARA EL DISEÑO DE LAS IMAGENES
+      ///EL OTRO ES EL DEL MENÚ QUE TODAVÍA NO TERMINO
+      WidgetFutureGrilla = FutureBuilder(
+        future: _listadoNombresImagenes,
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.done) {
+            if (snapshot.data == null) {
+              return Center(
+                child: Text(
+                  'Error de conexión',
+                  textScaleFactor: 1.3,
+                ),
+              );
+            } else {
+              if (snapshot.data[0] == "") {
+                return Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Image.asset(
+                      'imagenes/arrow.png',
+                      width: MediaQuery.of(context).size.width / 1.5,
+                    ),
+                    Padding(
+                      padding: EdgeInsets.only(top: 5),
+                      child: Text(
+                        "Presione el ícono para agregar imágenes",
+                        textScaleFactor: 1.3,
+                      ),
+                    ),
+                  ],
+                );
+              }
+
+              //Future Builder para el gridview de imágenes
+              return GridView.builder(
+                //Toma el total de imágenes desde la carpeta del
+                // webserver
+                  itemCount:
+                  DatosEstaticos.listadoNombresImagenes.length,
+                  gridDelegate:
+                  SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: 2),
+                  itemBuilder: (context, index) {
+                    //Por cada imagen, busca su imagen.
+                    // El nombre lo toma del listado estático
+                    return GestureDetector(
+                      onTap: () {
+                        Fluttertoast.showToast(
+                          msg:
+                          "Presione dos veces para seleccionar imagen",
+                          toastLength: Toast.LENGTH_LONG,
+                          webBgColor: "#e74c3c",
+                          timeInSecForIosWeb: 10,
+                        );
+                      },
+                      onDoubleTap: () {
+                        Widget imagen = Image.network('http://'
+                            '${DatosEstaticos.ipSeleccionada}'
+                            '/ImagenesPostTv/'
+                            '${DatosEstaticos.listadoNombresImagenes[index]}');
+                        String nombre = DatosEstaticos
+                            .listadoNombresImagenes[index];
+                        RedireccionarCrearLayout(
+                            imagen,
+                            "/var/www/html/ImagenesPostTv/$nombre",
+                            false);
+                        return;
+                      },
+                      child: Image.network('http://'
+                          '${DatosEstaticos.ipSeleccionada}'
+                          '/ImagenesPostTv/'
+                          '${DatosEstaticos.listadoNombresImagenes[index]}'),
                     );
-                  }
-                },
+                  });
+            }
+          }
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return Center(
+              child: CircularProgressIndicator(),
+            );
+          } else {
+            return Center(
+              child: CircularProgressIndicator(),
+            );
+          }
+        },
+      );
+    }
+
+    return WillPopScope(
+      onWillPop: (){
+        if (rutaDeDondeViene!=null){
+          Navigator.popAndPushNamed(context, rutaDeDondeViene,
+              arguments: {
+                "indexEquipoGrid" : DatosEstaticos.indexSeleccionado,
+              } );
+        }else{
+          Navigator.pop(context);
+        }
+        return;
+      },
+      child: Scaffold(
+        appBar: CustomAppBar(),
+        body: SafeArea(
+          child: Column(
+            children: <Widget>[
+              Container(
+                margin: EdgeInsets.only(bottom: 10),
+                padding: EdgeInsets.only(bottom: 5),
+                decoration: BoxDecoration(
+                    border: Border(
+                      bottom: BorderSide(width: 5, color: Colors.green),
+                    )),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    Stack(
+                      alignment: Alignment.center,
+                      children: [
+                        Align(
+                          alignment: Alignment.center,
+                          child: Text(
+                            'Seleccione una imagen',
+                            textScaleFactor: 1.3,
+                          ),
+                        ),
+                        Align(
+                          alignment: Alignment.centerRight,
+                          child: FloatingActionButton(
+                              child: Icon(Icons.add),
+                              heroTag: null,
+                              onPressed: () {
+                                abrirGaleria(context);
+                              }),
+                        )
+                      ],
+                    ),
+                  ],
+                ),
               ),
-            ),
-          ],
+              Expanded(
+                //Acá hacer un future builder para nombres de imágenes
+                child: WidgetFutureGrilla,
+              ),
+            ],
+          ),
         ),
       ),
     );
