@@ -180,7 +180,7 @@ class MenuAppBar {
       if(DatosEstaticos.ipSeleccionada != null){
         //Navigator.pop(context);
         Navigator.popAndPushNamed(context, rutaVentana, arguments: {
-          'division_layout': '0',
+          'division_layout': DatosEstaticos.divisionLayout,
           'ruta_proveniente': rutaProveniente,
         });
         //Muestro listado de equipos a elegir
@@ -252,6 +252,11 @@ class MenuAppBar {
   static void SeleccionMenu(String itemSeleccionado, BuildContext context) {
     //Listado de equipos que tienen conexión
     if(itemSeleccionado == MenuAppBar.administrarImagenes){
+
+      String rutaProveniente= ModalRoute.of(context).settings.name;
+      if (rutaProveniente == "/seleccionar_imagen"){
+        return;
+      }
 
       Validacion(
           listadoEquipos: DatosEstaticos.listadoIndexEquiposConectados,

@@ -22,6 +22,7 @@ class DatosEstaticos {
   static bool reproducirVideo = false;
   static bool primeraVezCargaVideo = true;
   static int layoutSeleccionado;
+  static String divisionLayout;
   //Valor para tomar screenshots del index correspondiente a la raspberry
   //en la pantalla raspberries conectadas
   static int indexSeleccionado;

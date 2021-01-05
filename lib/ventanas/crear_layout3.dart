@@ -14,9 +14,7 @@ class CrearLayout3 extends StatefulWidget {
 }
 
 class _CrearLayout3State extends State<CrearLayout3> {
-  //dato que indica que parte del layout se quiere modificar y se envia a la
-  // selección de contenido correspondiente
-  String divisionLayout;
+
   //Widget dentro del mapa de datos de ventana anterior
   Widget widget1;
   Widget widget2;
@@ -268,7 +266,7 @@ class _CrearLayout3State extends State<CrearLayout3> {
                                     if (!_visible) {
                                       _visible = true;
                                     }
-                                    divisionLayout = '3-1';
+                                    DatosEstaticos.divisionLayout = '3-1';
                                   });
                                 },
                                 child: ignorarInteraccionesElemento(widget1),
@@ -290,7 +288,7 @@ class _CrearLayout3State extends State<CrearLayout3> {
                                     if (!_visible) {
                                       _visible = true;
                                     }
-                                    divisionLayout = '3-2';
+                                    DatosEstaticos.divisionLayout = '3-2';
                                   });
                                 },
                                 child: ignorarInteraccionesElemento(widget2),
@@ -315,7 +313,7 @@ class _CrearLayout3State extends State<CrearLayout3> {
                               if (!_visible) {
                                 _visible = true;
                               }
-                              divisionLayout = '3-3';
+                              DatosEstaticos.divisionLayout = '3-3';
                             });
                           },
                           child: ignorarInteraccionesElemento(contenidoLayout10),
@@ -422,7 +420,7 @@ class _CrearLayout3State extends State<CrearLayout3> {
               //Acá va el widget de los botones
               OpcionesSeleccionMedia(
                 visible: _visible,
-                divisionLayout: divisionLayout,
+                divisionLayout: DatosEstaticos.divisionLayout,
                 //Función que al ser ejecutada desde la ventana siguiente
                 //actualiza el state (puede hacer cualquier cosa)
                 actualizaEstado: () {

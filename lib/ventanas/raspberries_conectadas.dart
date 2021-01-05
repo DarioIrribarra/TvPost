@@ -34,6 +34,12 @@ class _RaspberriesConectadasState extends State<RaspberriesConectadas> {
   );
 
   @override
+  void initState() {
+    super.initState();
+    LimpiarDatosEstaticos();
+  }
+
+  @override
   Widget build(BuildContext context) {
     ObtieneDatos datos = ObtieneDatos();
 
@@ -771,6 +777,7 @@ class _RaspberriesConectadasState extends State<RaspberriesConectadas> {
     DatosEstaticos.color_fondo_reloj = "#FFFFFD";
     DatosEstaticos.color_texto_reloj = "#010000";
     DatosEstaticos.ipSeleccionada = null;
+    DatosEstaticos.divisionLayout = null;
   }
 
   void listarEquipos() async {

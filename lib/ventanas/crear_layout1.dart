@@ -11,9 +11,6 @@ class CrearLayout1 extends StatefulWidget {
 }
 
 class _CrearLayout1State extends State<CrearLayout1> {
-  //dato que indica que parte del layout se quiere modificar y se envia a la
-  // selección de contenido correspondiente
-  String divisionLayout;
 
   //Widget dentro del mapa de datos de ventana anterior
   Widget widget1;
@@ -96,7 +93,7 @@ class _CrearLayout1State extends State<CrearLayout1> {
                         if (!_visible) {
                           _visible = true;
                         }
-                        divisionLayout = '1-1';
+                        DatosEstaticos.divisionLayout = '1-1';
                       });
                     },
                     child: ignorarInteraccionesElemento(widget1),
@@ -168,7 +165,7 @@ class _CrearLayout1State extends State<CrearLayout1> {
               OpcionesSeleccionMedia(
                 //keywebview: webViewKey,
                 visible: _visible,
-                divisionLayout: divisionLayout,
+                divisionLayout: DatosEstaticos.divisionLayout,
                 //Función que al ser ejecutada desde la ventana siguiente
                 //actualiza el state (puede hacer cualquier cosa)
                 actualizaEstado: () {

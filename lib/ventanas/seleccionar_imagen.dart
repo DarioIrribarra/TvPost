@@ -1,8 +1,12 @@
 import 'dart:async';
+//import 'dart:ffi';
 import 'dart:io';
 import 'dart:ui';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
+import 'package:flutter/widgets.dart';
+import 'package:tvpost_flutter/utilidades/comunicacion_raspberry.dart';
 import 'package:tvpost_flutter/utilidades/custom_widgets.dart';
 import 'package:tvpost_flutter/utilidades/datos_estaticos.dart';
 import 'package:path/path.dart' as p;
@@ -23,6 +27,7 @@ class _SeleccionarImagenState extends State<SeleccionarImagen> {
   int itemsVisiblesGrid = 0;
   FilePickerResult imagenSeleccionadaGaleria;
   TextEditingController _controladorTexto = TextEditingController();
+  List<String> imagenesSeleccionadas = [];
 
   @override
   void initState() {
@@ -40,6 +45,8 @@ class _SeleccionarImagenState extends State<SeleccionarImagen> {
 
   @override
   Widget build(BuildContext context) {
+    //Se le da el context a la ventana para los popups
+    CambiosSeleccion.context = context;
     datosDesdeVentanaAnterior = ModalRoute.of(context).settings.arguments;
     if (datosDesdeVentanaAnterior != null) {
       divisionLayout = datosDesdeVentanaAnterior['division_layout'];
@@ -49,6 +56,7 @@ class _SeleccionarImagenState extends State<SeleccionarImagen> {
     Widget WidgetFutureGrilla;
 
     if(rutaDeDondeViene!=null){
+      CambiosSeleccion.rutaPadre = rutaDeDondeViene;
       WidgetFutureGrilla = FutureBuilder(
         future: _listadoNombresImagenes,
         builder: (context, snapshot) {
@@ -81,79 +89,95 @@ class _SeleccionarImagenState extends State<SeleccionarImagen> {
               }
 
               //Future Builder para el gridview de imágenes
-              return GridView.builder(
-                //Toma el total de imágenes desde la carpeta del
-                // webserver
-                  itemCount:
-                  DatosEstaticos.listadoNombresImagenes.length,
-                  gridDelegate:
-                  SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: 3),
-                  itemBuilder: (context, index) {
-                    //Por cada imagen, busca su imagen.
-                    // El nombre lo toma del listado estático
-                    String nombre = DatosEstaticos
-                        .listadoNombresImagenes[index].toString();
-                    return GestureDetector(
-                      onTap: () {
-                        Fluttertoast.showToast(
-                          msg:
-                          "Presione dos veces para seleccionar imagen",
-                          toastLength: Toast.LENGTH_LONG,
-                          webBgColor: "#e74c3c",
-                          timeInSecForIosWeb: 10,
-                        );
-                      },
-                      /*onDoubleTap: () {
-                        Widget imagen = Image.network('http://'
-                            '${DatosEstaticos.ipSeleccionada}'
-                            '/ImagenesPostTv/'
-                            '${DatosEstaticos.listadoNombresImagenes[index]}');
-
-                        RedireccionarCrearLayout(
-                            imagen,
-                            "/var/www/html/ImagenesPostTv/$nombre",
-                            false);
-                        return;
-                      },*/
-                      //Container de cada imagen
-                      child: Container(
-                        decoration: BoxDecoration(
-                            image: DecorationImage(image: NetworkImage('http://'
-                                '${DatosEstaticos.ipSeleccionada}'
-                                '/ImagenesPostTv/'
-                                '${DatosEstaticos.listadoNombresImagenes[index]}'),
-                                fit: BoxFit.fitHeight)
-                        ),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            Expanded(
-                              flex: 5,
-                              /*
-                              child: Image.network('http://'
-                                  '${DatosEstaticos.ipSeleccionada}'
-                                  '/ImagenesPostTv/'
-                                  '${DatosEstaticos.listadoNombresImagenes[index]}',
-                                fit: BoxFit.fill,),
-
-                               */
-                              child: BackdropFilter(
-                                filter: ImageFilter.blur(sigmaX: 0.3, sigmaY: 0.3),
-                                child: Container(
-                                  decoration: BoxDecoration(color: Colors.transparent.withOpacity(0.0)),
-                                ),
+              return Column(
+                children: [
+                  Expanded(
+                      child:GridView.builder(
+                        //Toma el total de imágenes desde la carpeta del
+                        // webserver
+                          itemCount:
+                          DatosEstaticos.listadoNombresImagenes.length,
+                          gridDelegate:
+                          SliverGridDelegateWithFixedCrossAxisCount(
+                              crossAxisCount: 3),
+                          itemBuilder: (context, index) {
+                            //Por cada imagen, busca su imagen.
+                            // El nombre lo toma del listado estático
+                            String nombre = DatosEstaticos
+                                .listadoNombresImagenes[index].toString();
+                            //BoxDecoration borderSelec;
+                            return GestureDetector(
+                              onTap: () {
+                                setState(() {
+                                  if (imagenesSeleccionadas.contains(nombre) == false){
+                                    imagenesSeleccionadas.add(nombre);
+                                  } else {
+                                    imagenesSeleccionadas.remove(nombre);
+                                  }
+                                  CambiosSeleccion.listadoSeleccionadas = imagenesSeleccionadas;
+                                  //print(imagenesSeleccionadas);
+                                });
+                              },
+                              //Container de cada imagen
+                              child: Stack(
+                                alignment: Alignment.center,
+                                children: [
+                                  Container(
+                                    //Si se encuentra en el listado de seleccionadas se cambia el borde
+                                    decoration: imagenesSeleccionadas.contains(nombre) ? CambiosSeleccion.bordeSeleccionado: null,
+                                    child: Column(
+                                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                                      children: [
+                                        Expanded(
+                                          flex: 5,
+                                          child: Image.network('http://'
+                                              '${DatosEstaticos.ipSeleccionada}'
+                                              '/ImagenesPostTv/'
+                                              '${DatosEstaticos.listadoNombresImagenes[index]}',
+                                            fit: BoxFit.scaleDown,),
+                                        ),
+                                        Expanded(
+                                            flex:1,
+                                            child: Padding(
+                                              padding: EdgeInsets.only(top:3),
+                                              child: Text(
+                                                nombre.substring(0, nombre.lastIndexOf('.')),
+                                                textAlign: TextAlign.center,
+                                              ),
+                                            ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                  Positioned(
+                                    bottom: 30,
+                                    right: 10,
+                                    //Se aplica el ícono verde al seleccionar
+                                    child: imagenesSeleccionadas.contains(nombre) ? CambiosSeleccion.iconoSeleccionado: Container(),
+                                  ),
+                                ],
                               ),
-                            ),
-                            Expanded(
-                              flex:1,
-                              child: Text(nombre)
-                            ),
-                          ],
-                        ),
+                            );
+                          }),
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Container(
+                        margin: EdgeInsets.only(top:10, bottom: 10),
+                        //Si la lista tiene algún seleccionado se cambia el botón
+                        child: imagenesSeleccionadas.length == 1 ? CambiosSeleccion.btnEditarHabilitado : CambiosSeleccion.btnEditarDeshabilitado,
                       ),
-                    );
-                  });
+                      SizedBox(width: 10,),
+                      Container(
+                        margin: EdgeInsets.only(top:10, bottom: 10),
+                        //Si la lista tiene algún seleccionado se cambia el botón
+                        child: imagenesSeleccionadas.length > 0 ? CambiosSeleccion.btnEliminarHabilitado : CambiosSeleccion.btnEliminarDeshabilitado,
+                      ),
+                    ],
+                  ),
+                ],
+              );
             }
           }
           if (snapshot.connectionState == ConnectionState.waiting) {
@@ -263,6 +287,7 @@ class _SeleccionarImagenState extends State<SeleccionarImagen> {
           Navigator.popAndPushNamed(context, rutaDeDondeViene,
               arguments: {
                 "indexEquipoGrid" : DatosEstaticos.indexSeleccionado,
+                "division_layout" : DatosEstaticos.divisionLayout,
               } );
         }else{
           Navigator.pop(context);
@@ -319,97 +344,180 @@ class _SeleccionarImagenState extends State<SeleccionarImagen> {
     );
   }
 
+  refresh() {
+    setState(() {});
+  }
+
   abrirGaleria(BuildContext context) async {
     GlobalKey<FormState> _keyValidador = GlobalKey<FormState>();
-    String nombreNuevaImagen = "";
-    //Se toma el archivo desde FilePicker
-    imagenSeleccionadaGaleria =
-        await FilePicker.platform.pickFiles(type: FileType.image);
+    if (rutaDeDondeViene!=null){
+      //Se toman multiples archivos desde FilePicker
+      imagenSeleccionadaGaleria =
+      await FilePicker.platform.pickFiles(allowMultiple: true,type: FileType.image);
+    }else{
+      //Se toma el archivo desde FilePicker
+      imagenSeleccionadaGaleria =
+      await FilePicker.platform.pickFiles(type: FileType.image);
+    }
     if (imagenSeleccionadaGaleria != null) {
-      //Acá tomo la extensión para saber si es png o jpg
-      String extension = p.extension(imagenSeleccionadaGaleria.paths[0]);
-      //Acá obtengo el archivo desde la  ruta
-      File imagenFinal = File(imagenSeleccionadaGaleria.paths[0]);
-      await showDialog<String>(
-        context: context,
-        child: AnimacionPadding(
-          child: new AlertDialog(
-            content: SingleChildScrollView(
-              child: Card(
-                child: Form(
-                  key: _keyValidador,
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Image.file(
-                        imagenFinal,
-                        width: MediaQuery.of(context).size.width / 2,
-                        height: MediaQuery.of(context).size.height / 4,
-                      ),
-                      Center(
-                        child: TextFormField(
-                          textAlign: TextAlign.center,
-                          controller: _controladorTexto,
-                          validator: (textoEscrito) {
-                            if (textoEscrito.isEmpty) {
-                              return "Error: Nombre de imagen vacío";
-                            }
-                            if (textoEscrito.trim().length <= 0) {
-                              return "Error: Nombre de imagen vacío";
-                            } else {
-                              nombreNuevaImagen =
-                                  textoEscrito.trim().toString() + extension;
-                              //Chequear si el valor ya existe
-                              if (DatosEstaticos.listadoNombresImagenes
-                                  .contains(nombreNuevaImagen)) {
-                                return "Error: Nombre de imagen ya existe";
+      if (imagenSeleccionadaGaleria.files.length == 1){
+        String nombreNuevaImagen = "";
+        //Acá tomo la extensión para saber si es png o jpg
+        String extension = p.extension(imagenSeleccionadaGaleria.paths[0]);
+        //Acá obtengo el archivo desde la  ruta
+        File imagenFinal = File(imagenSeleccionadaGaleria.paths[0]);
+        await showDialog<String>(
+          context: context,
+          child: AnimacionPadding(
+            child: new AlertDialog(
+              content: SingleChildScrollView(
+                child: Card(
+                  child: Form(
+                    key: _keyValidador,
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Image.file(
+                          imagenFinal,
+                          width: MediaQuery.of(context).size.width / 2,
+                          height: MediaQuery.of(context).size.height / 4,
+                        ),
+                        Center(
+                          child: TextFormField(
+                            textAlign: TextAlign.center,
+                            controller: _controladorTexto,
+                            validator: (textoEscrito) {
+                              if (textoEscrito.isEmpty) {
+                                return "Error: Nombre de imagen vacío";
+                              }
+                              if (textoEscrito.trim().length <= 0) {
+                                return "Error: Nombre de imagen vacío";
                               } else {
-                                return null;
+                                nombreNuevaImagen =
+                                    textoEscrito.trim().toString() + extension;
+                                //Chequear si el valor ya existe
+                                if (DatosEstaticos.listadoNombresImagenes
+                                    .contains(nombreNuevaImagen)) {
+                                  return "Error: Nombre de imagen ya existe";
+                                } else {
+                                  return null;
+                                }
+                              }
+                            },
+                          ),
+                        ),
+                        RaisedButton(
+                          child: Text('Añadir'),
+                          autofocus: true,
+                          onPressed: () async {
+                            if (_keyValidador.currentState.validate()) {
+                              //Se abre el popup de cargando
+                              PopUps.popUpCargando(
+                                  context, 'Añadiendo imagen...');
+                              //Obtengo el resultado del envio
+                              var resultado = await PopUps.enviarImagen(
+                                  nombreNuevaImagen, imagenFinal)
+                                  .then((value) => value);
+
+                              if (resultado) {
+                                //Si el envío es correcto, se redirecciona
+                                Image imagen = Image.file(
+                                  imagenFinal,
+                                );
+                                RedireccionarCrearLayout(
+                                    imagen,
+                                    "/var/www/html/ImagenesPostTv/$nombreNuevaImagen",
+                                    true);
+                              } else {
+                                //Cierra popup cargando
+                                Navigator.of(context, rootNavigator: true).pop();
+
+                                PopUps.PopUpConWidget(
+                                    context, Text('Error al enviar imagen'));
                               }
                             }
                           },
                         ),
-                      ),
-                      RaisedButton(
-                        child: Text('Añadir'),
-                        autofocus: true,
-                        onPressed: () async {
-                          if (_keyValidador.currentState.validate()) {
-                            //Se abre el popup de cargando
-                            PopUps.popUpCargando(
-                                context, 'Añadiendo imagen...');
-                            //Obtengo el resultado del envio
-                            var resultado = await PopUps.enviarImagen(
-                                    nombreNuevaImagen, imagenFinal)
-                                .then((value) => value);
-
-                            if (resultado) {
-                              //Si el envío es correcto, se redirecciona
-                              Image imagen = Image.file(
-                                imagenFinal,
-                              );
-                              RedireccionarCrearLayout(
-                                  imagen,
-                                  "/var/www/html/ImagenesPostTv/$nombreNuevaImagen",
-                                  true);
-                            } else {
-                              //Cierra popup cargando
-                              Navigator.of(context, rootNavigator: true).pop();
-
-                              PopUps.PopUpConWidget(
-                                  context, Text('Error al enviar imagen'));
-                            }
-                          }
-                        },
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
                 ),
               ),
             ),
           ),
-        ),
-      );
+        );
+      } else {
+        String nombreNuevaImagen = "";
+        String extension;
+        File imagenFinal;
+        Widget contenidoPopUp = Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text(
+              '¿Agregar ${imagenSeleccionadaGaleria.files.length} imagenes?',
+              textAlign: TextAlign.center,
+            ),
+            Row(
+              children: [
+                Expanded(
+                  flex: 1,
+                  child: FlatButton(
+                    child: Text('Aceptar', textAlign: TextAlign.center,),
+                    onPressed: () async{
+                      PopUps.popUpCargando(context, 'Agregando imagenes...');
+
+                      for(int i=0; i <=imagenSeleccionadaGaleria.files.length - 1;i++){
+                        PlatformFile element = imagenSeleccionadaGaleria.files[i];
+                        extension = p.extension(element.path);
+                        imagenFinal = File(element.path);
+                        //Se le da el nombre de la hora actual + su posición
+                        // //en el listado
+                        DateTime now = DateTime.now();
+                        nombreNuevaImagen = '${now.year}${now.month}${now.day}'
+                            '${now.hour}${now.minute}${now.second}'
+                            '_$i$extension';
+
+                        //Obtengo el resultado del envio
+                        var resultado = await PopUps.enviarImagen(
+                            nombreNuevaImagen, imagenFinal)
+                            .then((value) => value);
+                        if (resultado == false){
+                          showDialog(
+                              context: null,
+                              child: Text('Error al agregar imágenes'),
+                          );
+                          break;
+                        }
+                      }
+                      Navigator.pop(context);
+                      Navigator.pop(context);
+                      Navigator.popAndPushNamed(context, "/seleccionar_imagen", arguments: {
+                        'division_layout': '0',
+                        'ruta_proveniente': rutaDeDondeViene,
+                      });
+                      Fluttertoast.showToast(
+                        msg:
+                        "Imagenes agregadas",
+                        toastLength: Toast.LENGTH_SHORT,
+                        webBgColor: "#e74c3c",
+                        timeInSecForIosWeb: 5,);
+                    },
+                  ),
+                ),
+                SizedBox(width: 10,),
+                Expanded(
+                  flex: 1,
+                  child: FlatButton(
+                    child: Text('Cancelar', textAlign: TextAlign.center,),
+                    onPressed: () => Navigator.pop(context),
+                  ),
+                ),
+              ],
+            ),
+          ],
+        );
+        PopUps.PopUpConWidget(context, contenidoPopUp);
+      }
     }
   }
 
@@ -443,6 +551,18 @@ class _SeleccionarImagenState extends State<SeleccionarImagen> {
 
     //Se asigna además que porcion del layout se reemplazará
     switch (divisionLayout) {
+      case '0':
+        Navigator.popAndPushNamed(context, "/seleccionar_imagen", arguments: {
+          'division_layout': '0',
+          'ruta_proveniente': rutaDeDondeViene,
+        });
+        Fluttertoast.showToast(
+          msg:
+          "Imagenes agregadas",
+          toastLength: Toast.LENGTH_SHORT,
+          webBgColor: "#e74c3c",
+          timeInSecForIosWeb: 5,);
+        break;
       case '1-1':
         {
           DatosEstaticos.widget1 = imagen;
@@ -494,5 +614,267 @@ class _SeleccionarImagenState extends State<SeleccionarImagen> {
         }
         break;
     }
+  }
+}
+
+class  CambiosSeleccion {
+  static String rutaPadre;
+  static BuildContext context;
+  static List<String>listadoSeleccionadas;
+
+  static BoxDecoration bordeSeleccionado = BoxDecoration(
+    border: Border.all(
+        color: Colors.blueAccent,
+        width: 4.0),
+
+  );
+
+  static Widget iconoSeleccionado = Container(
+    decoration: BoxDecoration(
+        color: Colors.green,
+        shape: BoxShape.circle
+    ),
+    child: Icon(
+      Icons.check,
+      color: Colors.white,
+    ),
+  );
+
+  static Widget btnEliminarHabilitado = FlatButton(
+    color: Colors.red,
+    shape: RoundedRectangleBorder(
+      borderRadius: BorderRadius.circular(18.0),
+    ),
+    onPressed: eliminarImagenesSeleccionadas,
+    child: Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Icon(Icons.delete_forever, color: Colors.white,),
+        Text('Eliminar', style: TextStyle(color: Colors.white),),
+      ],
+    ),
+  );
+
+  static Widget btnEliminarDeshabilitado = FlatButton(
+    color: Colors.grey,
+    shape: RoundedRectangleBorder(
+      borderRadius: BorderRadius.circular(18.0),
+    ),
+    onPressed: (){},
+    child: Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Icon(Icons.delete_forever, color: Colors.white,),
+        Text('Eliminar', style: TextStyle(color: Colors.white),),
+      ],
+    ),
+  );
+
+  static Widget btnEditarHabilitado = FlatButton(
+    color: Colors.blueAccent,
+    shape: RoundedRectangleBorder(
+      borderRadius: BorderRadius.circular(18.0),
+    ),
+    onPressed: editarImagenesSeleccionadas,
+    child: Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Icon(Icons.edit, color: Colors.white,),
+        Text('Editar', style: TextStyle(color: Colors.white),),
+      ],
+    ),
+  );
+
+  static Widget btnEditarDeshabilitado = FlatButton(
+    color: Colors.grey,
+    shape: RoundedRectangleBorder(
+      borderRadius: BorderRadius.circular(18.0),
+    ),
+    onPressed: (){},
+    child: Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Icon(Icons.edit, color: Colors.white,),
+        Text('Editar', style: TextStyle(color: Colors.white),),
+      ],
+    ),
+  );
+
+  static eliminarImagenesSeleccionadas(){
+    Text textoPopUp;
+    Widget contenidoPopUp;
+    String nombre;
+    if (listadoSeleccionadas.length == 1){
+      nombre = listadoSeleccionadas[0];
+      textoPopUp =Text('¿Eliminar ${nombre.substring(0, nombre.lastIndexOf('.'))}?');
+    } else {
+      textoPopUp =Text('¿Eliminar ${listadoSeleccionadas.length} imagenes?');
+    }
+    contenidoPopUp = Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        textoPopUp,
+        Row(
+          children: [
+            Expanded(
+              flex: 1,
+              child: FlatButton(
+                child: Text('Aceptar'),
+                //Eliminar
+                onPressed: () async{
+                  Navigator.pop(context);
+                  PopUps.popUpCargando(context, 'Eliminando imagenes...');
+                  var resultadoEliminar = await ComunicacionRaspberry.EliminarContenido(
+                      tipoContenido: 'imagenes',
+                      nombresAEliminar: listadoSeleccionadas);
+                  if (resultadoEliminar!=null){
+                    Navigator.pop(context);
+                    Navigator.popAndPushNamed(context, "/seleccionar_imagen", arguments: {
+                      'division_layout': '0',
+                      'ruta_proveniente': rutaPadre,
+                    });
+                    Fluttertoast.showToast(
+                      msg:
+                      "Imagenes eliminadas",
+                      toastLength: Toast.LENGTH_SHORT,
+                      webBgColor: "#e74c3c",
+                      timeInSecForIosWeb: 5,);
+
+                  } else {
+                    Navigator.pop(context);
+                    Fluttertoast.showToast(
+                      msg:
+                      "Error al eliminar, intente nuevamente",
+                      toastLength: Toast.LENGTH_SHORT,
+                      webBgColor: "#e74c3c",
+                      timeInSecForIosWeb: 5,
+                    );
+                  }
+                },
+              ),
+            ),
+            SizedBox(width: 10,),
+            Expanded(
+              flex: 1,
+              child: FlatButton(
+                child: Text('Cancelar'),
+                onPressed: () => Navigator.pop(context),
+              ),
+            ),
+          ],
+        ),
+      ],
+    );
+
+    PopUps.PopUpConWidget(context, contenidoPopUp);
+  }
+
+  static editarImagenesSeleccionadas(){
+    GlobalKey<FormState> _keyValidador2 = GlobalKey<FormState>();
+    String nombreNuevaImagen;
+    Text textoPopUp;
+    Widget contenidoPopUp;
+    String extension;
+    String nombre;
+    nombre = listadoSeleccionadas[0];
+    extension = nombre.substring(nombre.lastIndexOf('.'));
+    List<String> listadoNombres = [];
+    textoPopUp =Text('Editando ${nombre.substring(0, nombre.lastIndexOf('.'))}');
+    contenidoPopUp = Form(
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          textoPopUp,
+          TextFormField(
+            textAlign: TextAlign.center,
+            validator: (textoEscrito) {
+              if (textoEscrito == null) {
+                return "Error: Nombre de imagen vacío";
+              }
+              if (textoEscrito.isEmpty) {
+                return "Error: Nombre de imagen vacío";
+              }
+              if (textoEscrito.trim().length <= 0) {
+                return "Error: Nombre de imagen vacío";
+              } else {
+                nombreNuevaImagen =
+                    textoEscrito.trim().toString() + extension;
+                //Chequear si el valor ya existe
+                if (DatosEstaticos.listadoNombresImagenes
+                    .contains(nombreNuevaImagen)) {
+                  return "Error: Nombre de imagen ya existe";
+                } else {
+                  return null;
+                }
+              }
+            },
+          ),
+          Row(
+            children: [
+              Expanded(
+                flex: 1,
+                child: FlatButton(
+                  child: Text('Añadir'),
+                  autofocus: true,
+                  onPressed: () async {
+                    if (_keyValidador2.currentState.validate()) {
+                      nombre = nombre.replaceAll(RegExp(' +'), '<!-!>');
+                      nombreNuevaImagen = nombreNuevaImagen.replaceAll(RegExp(' +'), '<!-!>');
+                      listadoNombres.add(nombre);
+                      listadoNombres.add(nombreNuevaImagen);
+                      print(listadoNombres);
+                      //Se abre el popup de cargando
+                      PopUps.popUpCargando(
+                          context, 'Editando imagen...');
+                      //Obtengo el resultado del envio
+                      var resultado = await ComunicacionRaspberry.EditarContenido(
+                        tipoContenido: 'imagenes',
+                        nombresAEliminar: listadoNombres,
+                      );
+                      if (resultado!=null){
+                        Navigator.pop(context);
+                        Navigator.pop(context);
+                        Navigator.popAndPushNamed(context, "/seleccionar_imagen", arguments: {
+                          'division_layout': '0',
+                          'ruta_proveniente': rutaPadre,
+                        });
+                        Fluttertoast.showToast(
+                          msg:
+                          "Imagen editada",
+                          toastLength: Toast.LENGTH_LONG,
+                          webBgColor: "#e74c3c",
+                          timeInSecForIosWeb: 10,
+                        );
+                      } else {
+                        Navigator.pop(context);
+                        Navigator.pop(context);
+                        Fluttertoast.showToast(
+                          msg:
+                          "Error al eliminar, intente nuevamente",
+                          toastLength: Toast.LENGTH_SHORT,
+                          webBgColor: "#e74c3c",
+                          timeInSecForIosWeb: 5,
+                        );
+                      }
+                    }
+                  },
+                ),
+              ),
+              SizedBox(width: 10,),
+              Expanded(
+                flex: 1,
+                child: FlatButton(
+                  child: Text('Cancelar'),
+                  onPressed: () => Navigator.pop(context),
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
+      key: _keyValidador2,
+    );
+
+    PopUps.PopUpConWidget(context, contenidoPopUp);
   }
 }

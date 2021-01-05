@@ -700,11 +700,7 @@ class _DetalleEquipoState extends State<DetalleEquipo> {
       // la ruta entregada
       onWillPop: () {
         //Navigator.popUntil(context, ModalRoute.withName('/raspberries_conectadas'));
-        Navigator.of(context).pushAndRemoveUntil(
-          MaterialPageRoute(
-              builder: (BuildContext context) => RaspberriesConectadas()),
-          ModalRoute.withName('/'),
-        );
+        Navigator.of(context).popAndPushNamed("/raspberries_conectadas");
         return;
       },
       child: Scaffold(
