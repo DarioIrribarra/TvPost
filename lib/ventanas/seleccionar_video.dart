@@ -126,7 +126,7 @@ class _SeleccionarVideoState extends State<SeleccionarVideo> {
                       return GridView.count(
                         crossAxisSpacing: 5,
                         shrinkWrap: true,
-                        crossAxisCount: 2,
+                        crossAxisCount: 3,
                         children: List.generate(
                             DatosEstaticos.listadoNombresVideos.length,
                             (index) {

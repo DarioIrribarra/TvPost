@@ -333,8 +333,7 @@ class _DetalleEquipoState extends State<DetalleEquipo> {
                           //String dir = (await getTemporaryDirectory()).path;
                           //File temporal = new File('$dir/img_temp_creada.png');
                           Navigator.popAndPushNamed(
-                              context, '/seleccionar_layout'
-                          );
+                              context, '/seleccionar_layout');
                         },
                         child: Text(
                           'EDITAR CONTENIDO',
@@ -389,7 +388,10 @@ class _DetalleEquipoState extends State<DetalleEquipo> {
                         Positioned(
                           bottom: 13,
                           left: 160,
-                          child: Text("OFF", style: TextStyle(color: Colors.white),),
+                          child: Text(
+                            "OFF",
+                            style: TextStyle(color: Colors.white),
+                          ),
                         )
                       ]),
                     ),
@@ -612,7 +614,8 @@ class _DetalleEquipoState extends State<DetalleEquipo> {
                         onPressed: () async {
                           //String dir = (await getTemporaryDirectory()).path;
                           //File temporal = new File('$dir/img_temp_creada.png');
-                          Navigator.popAndPushNamed(context, '/seleccionar_layout');
+                          Navigator.popAndPushNamed(
+                              context, '/seleccionar_layout');
                         },
                         child: Text(
                           'EDITAR CONTENIDO',
@@ -663,7 +666,10 @@ class _DetalleEquipoState extends State<DetalleEquipo> {
                       Positioned(
                         bottom: 13,
                         left: 17,
-                        child: Text("ON", style: TextStyle(color: Colors.white),),
+                        child: Text(
+                          "ON",
+                          style: TextStyle(color: Colors.white),
+                        ),
                       ),
                       Positioned(
                         bottom: 13,

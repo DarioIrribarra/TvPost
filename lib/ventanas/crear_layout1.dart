@@ -11,7 +11,6 @@ class CrearLayout1 extends StatefulWidget {
 }
 
 class _CrearLayout1State extends State<CrearLayout1> {
-
   //Widget dentro del mapa de datos de ventana anterior
   Widget widget1;
   bool _visible = false;
@@ -51,10 +50,8 @@ class _CrearLayout1State extends State<CrearLayout1> {
       widget1 = _imageSeleccionLayout;
     }
     return WillPopScope(
-      onWillPop: (){
-        Navigator.popAndPushNamed(
-            context, '/seleccionar_layout'
-        );
+      onWillPop: () {
+        Navigator.popAndPushNamed(context, '/seleccionar_layout');
         return;
       },
       child: Scaffold(

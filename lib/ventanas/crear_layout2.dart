@@ -13,11 +13,12 @@ class CrearLayout2 extends StatefulWidget {
 }
 
 class _CrearLayout2State extends State<CrearLayout2> {
-
   //Widget dentro del mapa de datos de ventana anterior
   Widget widget1;
   Widget widget2;
   bool _visible = false;
+  bool op = false;
+  bool op1 = false;
   BoxDecoration _decorationPorcion1;
   BoxDecoration _decorationPorcion2;
   bool publicar_redes_sociales = false;
@@ -126,10 +127,8 @@ class _CrearLayout2State extends State<CrearLayout2> {
     });
 
     return WillPopScope(
-      onWillPop: (){
-        Navigator.popAndPushNamed(
-            context, '/seleccionar_layout'
-        );
+      onWillPop: () {
+        Navigator.popAndPushNamed(context, '/seleccionar_layout');
         return;
       },
       child: Scaffold(
@@ -150,7 +149,8 @@ class _CrearLayout2State extends State<CrearLayout2> {
               ),
               Container(
                 height: MediaQuery.of(context).size.height / 3,
-                margin: EdgeInsets.only(top: 15, bottom: 20, left: 20, right: 20),
+                margin:
+                    EdgeInsets.only(top: 15, bottom: 20, left: 20, right: 20),
                 /*decoration: BoxDecoration(
                     border: Border.all(color: Colors.black, width: 5)),*/
                 child: Row(
@@ -171,7 +171,9 @@ class _CrearLayout2State extends State<CrearLayout2> {
                               DatosEstaticos.divisionLayout = '2-1';
                             });
                           },
-                          child: ignorarInteraccionesElemento(widget1),
+                          child: Opacity(
+                              opacity: op ? 1.0 : 0.1,
+                              child: ignorarInteraccionesElemento(widget1)),
                         ),
                       ),
                     ),
@@ -190,7 +192,9 @@ class _CrearLayout2State extends State<CrearLayout2> {
                               DatosEstaticos.divisionLayout = '2-2';
                             });
                           },
-                          child: ignorarInteraccionesElemento(widget2),
+                          child: Opacity(
+                              opacity: op1 ? 1.0 : 0.1,
+                              child: ignorarInteraccionesElemento(widget2)),
                         ),
                       ),
                     ),
@@ -369,6 +373,8 @@ class _CrearLayout2State extends State<CrearLayout2> {
             color: HexColor('#0683FF').withOpacity(0.2));
         break;
       case 1:
+        op = true;
+        op1 = false;
         _decorationPorcion1 = BoxDecoration(
             //borderRadius: BorderRadius.circular(50),
             color: HexColor('#3EDB9B'));
@@ -377,6 +383,8 @@ class _CrearLayout2State extends State<CrearLayout2> {
             color: HexColor('#0683FF').withOpacity(0.2));
         break;
       case 2:
+        op = false;
+        op1 = true;
         _decorationPorcion1 = BoxDecoration(
             //borderRadius: BorderRadius.circular(50),
             color: HexColor('#3EDB9B').withOpacity(0.2));

@@ -28,12 +28,14 @@ class _SeleccionarImagenState extends State<SeleccionarImagen> {
   FilePickerResult imagenSeleccionadaGaleria;
   TextEditingController _controladorTexto = TextEditingController();
   List<String> imagenesSeleccionadas = [];
-
+  bool activarBoton = false;
+  bool _visible = false;
   @override
   void initState() {
     super.initState();
     //Acá se hace el llamado al listado de nombres de imágenes
     _listadoNombresImagenes = PopUps.getNombresImagenes();
+    activarBoton = true;
   }
 
   @override
@@ -55,7 +57,7 @@ class _SeleccionarImagenState extends State<SeleccionarImagen> {
 
     Widget WidgetFutureGrilla;
 
-    if(rutaDeDondeViene!=null){
+    if (rutaDeDondeViene != null) {
       CambiosSeleccion.rutaPadre = rutaDeDondeViene;
       WidgetFutureGrilla = FutureBuilder(
         future: _listadoNombresImagenes,
@@ -92,59 +94,74 @@ class _SeleccionarImagenState extends State<SeleccionarImagen> {
               return Column(
                 children: [
                   Expanded(
-                      child:GridView.builder(
+                    child: GridView.builder(
                         //Toma el total de imágenes desde la carpeta del
                         // webserver
-                          itemCount:
-                          DatosEstaticos.listadoNombresImagenes.length,
-                          gridDelegate:
-                          SliverGridDelegateWithFixedCrossAxisCount(
-                              crossAxisCount: 3),
-                          itemBuilder: (context, index) {
-                            //Por cada imagen, busca su imagen.
-                            // El nombre lo toma del listado estático
-                            String nombre = DatosEstaticos
-                                .listadoNombresImagenes[index].toString();
-                            //BoxDecoration borderSelec;
-                            return GestureDetector(
-                              onTap: () {
-                                setState(() {
-                                  if (imagenesSeleccionadas.contains(nombre) == false){
-                                    imagenesSeleccionadas.add(nombre);
-                                  } else {
-                                    imagenesSeleccionadas.remove(nombre);
-                                  }
-                                  CambiosSeleccion.listadoSeleccionadas = imagenesSeleccionadas;
-                                  //print(imagenesSeleccionadas);
-                                });
-                              },
-                              //Container de cada imagen
+                        itemCount: DatosEstaticos.listadoNombresImagenes.length,
+                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                            crossAxisCount: 3),
+                        itemBuilder: (context, index) {
+                          bool luffy = false;
+
+                          //Por cada imagen, busca su imagen.
+                          // El nombre lo toma del listado estático
+                          String nombre = DatosEstaticos
+                              .listadoNombresImagenes[index]
+                              .toString();
+                          //BoxDecoration borderSelec;
+                          return GestureDetector(
+                            onTap: () {
+                              setState(() {
+                                if (imagenesSeleccionadas.contains(nombre) ==
+                                    false) {
+                                  imagenesSeleccionadas.add(nombre);
+                                } else {
+                                  imagenesSeleccionadas.remove(nombre);
+                                }
+                                CambiosSeleccion.listadoSeleccionadas =
+                                    imagenesSeleccionadas;
+                                //print(imagenesSeleccionadas);
+                              });
+                            },
+                            //Container de cada imagen
+                            child: Opacity(
+                              opacity: resultado(nombre),
+                              /* imagenesSeleccionadas.contains(nombre)
+                                  ? 1.0
+                                  : 0.1,*/
                               child: Stack(
                                 alignment: Alignment.center,
                                 children: [
                                   Container(
                                     //Si se encuentra en el listado de seleccionadas se cambia el borde
-                                    decoration: imagenesSeleccionadas.contains(nombre) ? CambiosSeleccion.bordeSeleccionado: null,
+                                    decoration:
+                                        imagenesSeleccionadas.contains(nombre)
+                                            ? CambiosSeleccion.bordeSeleccionado
+                                            : null,
                                     child: Column(
-                                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.stretch,
                                       children: [
                                         Expanded(
                                           flex: 5,
-                                          child: Image.network('http://'
-                                              '${DatosEstaticos.ipSeleccionada}'
-                                              '/ImagenesPostTv/'
-                                              '${DatosEstaticos.listadoNombresImagenes[index]}',
-                                            fit: BoxFit.scaleDown,),
+                                          child: Image.network(
+                                            'http://'
+                                            '${DatosEstaticos.ipSeleccionada}'
+                                            '/ImagenesPostTv/'
+                                            '${DatosEstaticos.listadoNombresImagenes[index]}',
+                                            fit: BoxFit.scaleDown,
+                                          ),
                                         ),
                                         Expanded(
-                                            flex:1,
-                                            child: Padding(
-                                              padding: EdgeInsets.only(top:3),
-                                              child: Text(
-                                                nombre.substring(0, nombre.lastIndexOf('.')),
-                                                textAlign: TextAlign.center,
-                                              ),
+                                          flex: 1,
+                                          child: Padding(
+                                            padding: EdgeInsets.only(top: 3),
+                                            child: Text(
+                                              nombre.substring(
+                                                  0, nombre.lastIndexOf('.')),
+                                              textAlign: TextAlign.center,
                                             ),
+                                          ),
                                         ),
                                       ],
                                     ),
@@ -153,28 +170,41 @@ class _SeleccionarImagenState extends State<SeleccionarImagen> {
                                     bottom: 30,
                                     right: 10,
                                     //Se aplica el ícono verde al seleccionar
-                                    child: imagenesSeleccionadas.contains(nombre) ? CambiosSeleccion.iconoSeleccionado: Container(),
+                                    child:
+                                        imagenesSeleccionadas.contains(nombre)
+                                            ? CambiosSeleccion.iconoSeleccionado
+                                            : Container(),
                                   ),
                                 ],
                               ),
-                            );
-                          }),
+                            ),
+                          );
+                        }),
                   ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Container(
-                        margin: EdgeInsets.only(top:10, bottom: 10),
+                        margin: EdgeInsets.only(top: 10, bottom: 10),
                         //Si la lista tiene algún seleccionado se cambia el botón
-                        child: imagenesSeleccionadas.length == 1 ? CambiosSeleccion.btnEditarHabilitado : CambiosSeleccion.btnEditarDeshabilitado,
+                        child: imagenesSeleccionadas.length == 1
+                            ? CambiosSeleccion.btnEditarHabilitado
+                            : CambiosSeleccion.btnEditarDeshabilitado,
                       ),
-                      SizedBox(width: 10,),
+                      SizedBox(
+                        width: 10,
+                      ),
                       Container(
-                        margin: EdgeInsets.only(top:10, bottom: 10),
+                        margin: EdgeInsets.only(top: 10, bottom: 10),
                         //Si la lista tiene algún seleccionado se cambia el botón
-                        child: imagenesSeleccionadas.length > 0 ? CambiosSeleccion.btnEliminarHabilitado : CambiosSeleccion.btnEliminarDeshabilitado,
+                        child: imagenesSeleccionadas.length > 0
+                            ? CambiosSeleccion.btnEliminarHabilitado
+                            : CambiosSeleccion.btnEliminarDeshabilitado,
                       ),
                     ],
+                  ),
+                  OpcionCargarContenido(
+                    visible: _visible,
                   ),
                 ],
               );
@@ -227,21 +257,18 @@ class _SeleccionarImagenState extends State<SeleccionarImagen> {
 
               //Future Builder para el gridview de imágenes
               return GridView.builder(
-                //Toma el total de imágenes desde la carpeta del
-                // webserver
-                  itemCount:
-                  DatosEstaticos.listadoNombresImagenes.length,
-                  gridDelegate:
-                  SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: 2),
+                  //Toma el total de imágenes desde la carpeta del
+                  // webserver
+                  itemCount: DatosEstaticos.listadoNombresImagenes.length,
+                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: 3),
                   itemBuilder: (context, index) {
                     //Por cada imagen, busca su imagen.
                     // El nombre lo toma del listado estático
                     return GestureDetector(
                       onTap: () {
                         Fluttertoast.showToast(
-                          msg:
-                          "Presione dos veces para seleccionar imagen",
+                          msg: "Presione dos veces para seleccionar imagen",
                           toastLength: Toast.LENGTH_LONG,
                           webBgColor: "#e74c3c",
                           timeInSecForIosWeb: 10,
@@ -252,12 +279,10 @@ class _SeleccionarImagenState extends State<SeleccionarImagen> {
                             '${DatosEstaticos.ipSeleccionada}'
                             '/ImagenesPostTv/'
                             '${DatosEstaticos.listadoNombresImagenes[index]}');
-                        String nombre = DatosEstaticos
-                            .listadoNombresImagenes[index];
-                        RedireccionarCrearLayout(
-                            imagen,
-                            "/var/www/html/ImagenesPostTv/$nombre",
-                            false);
+                        String nombre =
+                            DatosEstaticos.listadoNombresImagenes[index];
+                        RedireccionarCrearLayout(imagen,
+                            "/var/www/html/ImagenesPostTv/$nombre", false);
                         return;
                       },
                       child: Image.network('http://'
@@ -282,14 +307,13 @@ class _SeleccionarImagenState extends State<SeleccionarImagen> {
     }
 
     return WillPopScope(
-      onWillPop: (){
-        if (rutaDeDondeViene!=null){
-          Navigator.popAndPushNamed(context, rutaDeDondeViene,
-              arguments: {
-                "indexEquipoGrid" : DatosEstaticos.indexSeleccionado,
-                "division_layout" : DatosEstaticos.divisionLayout,
-              } );
-        }else{
+      onWillPop: () {
+        if (rutaDeDondeViene != null) {
+          Navigator.popAndPushNamed(context, rutaDeDondeViene, arguments: {
+            "indexEquipoGrid": DatosEstaticos.indexSeleccionado,
+            "division_layout": DatosEstaticos.divisionLayout,
+          });
+        } else {
           Navigator.pop(context);
         }
         return;
@@ -304,8 +328,8 @@ class _SeleccionarImagenState extends State<SeleccionarImagen> {
                 padding: EdgeInsets.only(bottom: 5),
                 decoration: BoxDecoration(
                     border: Border(
-                      bottom: BorderSide(width: 5, color: Colors.green),
-                    )),
+                  bottom: BorderSide(width: 5, color: Colors.green),
+                )),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
@@ -344,23 +368,35 @@ class _SeleccionarImagenState extends State<SeleccionarImagen> {
     );
   }
 
+  double resultado(String nombre) {
+    if (imagenesSeleccionadas.length > 0) {
+      if (imagenesSeleccionadas.contains(nombre) != true) {
+        return 0.1;
+      } else {
+        return 1.0;
+      }
+    } else {
+      return 1.0;
+    }
+  }
+
   refresh() {
     setState(() {});
   }
 
   abrirGaleria(BuildContext context) async {
     GlobalKey<FormState> _keyValidador = GlobalKey<FormState>();
-    if (rutaDeDondeViene!=null){
+    if (rutaDeDondeViene != null) {
       //Se toman multiples archivos desde FilePicker
-      imagenSeleccionadaGaleria =
-      await FilePicker.platform.pickFiles(allowMultiple: true,type: FileType.image);
-    }else{
+      imagenSeleccionadaGaleria = await FilePicker.platform
+          .pickFiles(allowMultiple: true, type: FileType.image);
+    } else {
       //Se toma el archivo desde FilePicker
       imagenSeleccionadaGaleria =
-      await FilePicker.platform.pickFiles(type: FileType.image);
+          await FilePicker.platform.pickFiles(type: FileType.image);
     }
     if (imagenSeleccionadaGaleria != null) {
-      if (imagenSeleccionadaGaleria.files.length == 1){
+      if (imagenSeleccionadaGaleria.files.length == 1) {
         String nombreNuevaImagen = "";
         //Acá tomo la extensión para saber si es png o jpg
         String extension = p.extension(imagenSeleccionadaGaleria.paths[0]);
@@ -416,7 +452,7 @@ class _SeleccionarImagenState extends State<SeleccionarImagen> {
                                   context, 'Añadiendo imagen...');
                               //Obtengo el resultado del envio
                               var resultado = await PopUps.enviarImagen(
-                                  nombreNuevaImagen, imagenFinal)
+                                      nombreNuevaImagen, imagenFinal)
                                   .then((value) => value);
 
                               if (resultado) {
@@ -430,7 +466,8 @@ class _SeleccionarImagenState extends State<SeleccionarImagen> {
                                     true);
                               } else {
                                 //Cierra popup cargando
-                                Navigator.of(context, rootNavigator: true).pop();
+                                Navigator.of(context, rootNavigator: true)
+                                    .pop();
 
                                 PopUps.PopUpConWidget(
                                     context, Text('Error al enviar imagen'));
@@ -462,12 +499,18 @@ class _SeleccionarImagenState extends State<SeleccionarImagen> {
                 Expanded(
                   flex: 1,
                   child: FlatButton(
-                    child: Text('Aceptar', textAlign: TextAlign.center,),
-                    onPressed: () async{
+                    child: Text(
+                      'Aceptar',
+                      textAlign: TextAlign.center,
+                    ),
+                    onPressed: () async {
                       PopUps.popUpCargando(context, 'Agregando imagenes...');
 
-                      for(int i=0; i <=imagenSeleccionadaGaleria.files.length - 1;i++){
-                        PlatformFile element = imagenSeleccionadaGaleria.files[i];
+                      for (int i = 0;
+                          i <= imagenSeleccionadaGaleria.files.length - 1;
+                          i++) {
+                        PlatformFile element =
+                            imagenSeleccionadaGaleria.files[i];
                         extension = p.extension(element.path);
                         imagenFinal = File(element.path);
                         //Se le da el nombre de la hora actual + su posición
@@ -479,36 +522,42 @@ class _SeleccionarImagenState extends State<SeleccionarImagen> {
 
                         //Obtengo el resultado del envio
                         var resultado = await PopUps.enviarImagen(
-                            nombreNuevaImagen, imagenFinal)
+                                nombreNuevaImagen, imagenFinal)
                             .then((value) => value);
-                        if (resultado == false){
+                        if (resultado == false) {
                           showDialog(
-                              context: null,
-                              child: Text('Error al agregar imágenes'),
+                            context: null,
+                            child: Text('Error al agregar imágenes'),
                           );
                           break;
                         }
                       }
                       Navigator.pop(context);
                       Navigator.pop(context);
-                      Navigator.popAndPushNamed(context, "/seleccionar_imagen", arguments: {
-                        'division_layout': '0',
-                        'ruta_proveniente': rutaDeDondeViene,
-                      });
+                      Navigator.popAndPushNamed(context, "/seleccionar_imagen",
+                          arguments: {
+                            'division_layout': '0',
+                            'ruta_proveniente': rutaDeDondeViene,
+                          });
                       Fluttertoast.showToast(
-                        msg:
-                        "Imagenes agregadas",
+                        msg: "Imagenes agregadas",
                         toastLength: Toast.LENGTH_SHORT,
                         webBgColor: "#e74c3c",
-                        timeInSecForIosWeb: 5,);
+                        timeInSecForIosWeb: 5,
+                      );
                     },
                   ),
                 ),
-                SizedBox(width: 10,),
+                SizedBox(
+                  width: 10,
+                ),
                 Expanded(
                   flex: 1,
                   child: FlatButton(
-                    child: Text('Cancelar', textAlign: TextAlign.center,),
+                    child: Text(
+                      'Cancelar',
+                      textAlign: TextAlign.center,
+                    ),
                     onPressed: () => Navigator.pop(context),
                   ),
                 ),
@@ -557,11 +606,11 @@ class _SeleccionarImagenState extends State<SeleccionarImagen> {
           'ruta_proveniente': rutaDeDondeViene,
         });
         Fluttertoast.showToast(
-          msg:
-          "Imagenes agregadas",
+          msg: "Imagenes agregadas",
           toastLength: Toast.LENGTH_SHORT,
           webBgColor: "#e74c3c",
-          timeInSecForIosWeb: 5,);
+          timeInSecForIosWeb: 5,
+        );
         break;
       case '1-1':
         {
@@ -617,23 +666,17 @@ class _SeleccionarImagenState extends State<SeleccionarImagen> {
   }
 }
 
-class  CambiosSeleccion {
+class CambiosSeleccion {
   static String rutaPadre;
   static BuildContext context;
-  static List<String>listadoSeleccionadas;
+  static List<String> listadoSeleccionadas;
 
   static BoxDecoration bordeSeleccionado = BoxDecoration(
-    border: Border.all(
-        color: Colors.blueAccent,
-        width: 4.0),
-
+    border: Border.all(color: Colors.blueAccent, width: 4.0),
   );
 
   static Widget iconoSeleccionado = Container(
-    decoration: BoxDecoration(
-        color: Colors.green,
-        shape: BoxShape.circle
-    ),
+    decoration: BoxDecoration(color: Colors.green, shape: BoxShape.circle),
     child: Icon(
       Icons.check,
       color: Colors.white,
@@ -649,8 +692,14 @@ class  CambiosSeleccion {
     child: Row(
       mainAxisSize: MainAxisSize.min,
       children: [
-        Icon(Icons.delete_forever, color: Colors.white,),
-        Text('Eliminar', style: TextStyle(color: Colors.white),),
+        Icon(
+          Icons.delete_forever,
+          color: Colors.white,
+        ),
+        Text(
+          'Eliminar',
+          style: TextStyle(color: Colors.white),
+        ),
       ],
     ),
   );
@@ -660,12 +709,18 @@ class  CambiosSeleccion {
     shape: RoundedRectangleBorder(
       borderRadius: BorderRadius.circular(18.0),
     ),
-    onPressed: (){},
+    onPressed: () {},
     child: Row(
       mainAxisSize: MainAxisSize.min,
       children: [
-        Icon(Icons.delete_forever, color: Colors.white,),
-        Text('Eliminar', style: TextStyle(color: Colors.white),),
+        Icon(
+          Icons.delete_forever,
+          color: Colors.white,
+        ),
+        Text(
+          'Eliminar',
+          style: TextStyle(color: Colors.white),
+        ),
       ],
     ),
   );
@@ -679,8 +734,14 @@ class  CambiosSeleccion {
     child: Row(
       mainAxisSize: MainAxisSize.min,
       children: [
-        Icon(Icons.edit, color: Colors.white,),
-        Text('Editar', style: TextStyle(color: Colors.white),),
+        Icon(
+          Icons.edit,
+          color: Colors.white,
+        ),
+        Text(
+          'Editar',
+          style: TextStyle(color: Colors.white),
+        ),
       ],
     ),
   );
@@ -690,25 +751,32 @@ class  CambiosSeleccion {
     shape: RoundedRectangleBorder(
       borderRadius: BorderRadius.circular(18.0),
     ),
-    onPressed: (){},
+    onPressed: () {},
     child: Row(
       mainAxisSize: MainAxisSize.min,
       children: [
-        Icon(Icons.edit, color: Colors.white,),
-        Text('Editar', style: TextStyle(color: Colors.white),),
+        Icon(
+          Icons.edit,
+          color: Colors.white,
+        ),
+        Text(
+          'Editar',
+          style: TextStyle(color: Colors.white),
+        ),
       ],
     ),
   );
 
-  static eliminarImagenesSeleccionadas(){
+  static eliminarImagenesSeleccionadas() {
     Text textoPopUp;
     Widget contenidoPopUp;
     String nombre;
-    if (listadoSeleccionadas.length == 1){
+    if (listadoSeleccionadas.length == 1) {
       nombre = listadoSeleccionadas[0];
-      textoPopUp =Text('¿Eliminar ${nombre.substring(0, nombre.lastIndexOf('.'))}?');
+      textoPopUp =
+          Text('¿Eliminar ${nombre.substring(0, nombre.lastIndexOf('.'))}?');
     } else {
-      textoPopUp =Text('¿Eliminar ${listadoSeleccionadas.length} imagenes?');
+      textoPopUp = Text('¿Eliminar ${listadoSeleccionadas.length} imagenes?');
     }
     contenidoPopUp = Column(
       mainAxisSize: MainAxisSize.min,
@@ -721,30 +789,30 @@ class  CambiosSeleccion {
               child: FlatButton(
                 child: Text('Aceptar'),
                 //Eliminar
-                onPressed: () async{
+                onPressed: () async {
                   Navigator.pop(context);
                   PopUps.popUpCargando(context, 'Eliminando imagenes...');
-                  var resultadoEliminar = await ComunicacionRaspberry.EliminarContenido(
-                      tipoContenido: 'imagenes',
-                      nombresAEliminar: listadoSeleccionadas);
-                  if (resultadoEliminar!=null){
+                  var resultadoEliminar =
+                      await ComunicacionRaspberry.EliminarContenido(
+                          tipoContenido: 'imagenes',
+                          nombresAEliminar: listadoSeleccionadas);
+                  if (resultadoEliminar != null) {
                     Navigator.pop(context);
-                    Navigator.popAndPushNamed(context, "/seleccionar_imagen", arguments: {
-                      'division_layout': '0',
-                      'ruta_proveniente': rutaPadre,
-                    });
+                    Navigator.popAndPushNamed(context, "/seleccionar_imagen",
+                        arguments: {
+                          'division_layout': '0',
+                          'ruta_proveniente': rutaPadre,
+                        });
                     Fluttertoast.showToast(
-                      msg:
-                      "Imagenes eliminadas",
+                      msg: "Imagenes eliminadas",
                       toastLength: Toast.LENGTH_SHORT,
                       webBgColor: "#e74c3c",
-                      timeInSecForIosWeb: 5,);
-
+                      timeInSecForIosWeb: 5,
+                    );
                   } else {
                     Navigator.pop(context);
                     Fluttertoast.showToast(
-                      msg:
-                      "Error al eliminar, intente nuevamente",
+                      msg: "Error al eliminar, intente nuevamente",
                       toastLength: Toast.LENGTH_SHORT,
                       webBgColor: "#e74c3c",
                       timeInSecForIosWeb: 5,
@@ -753,7 +821,9 @@ class  CambiosSeleccion {
                 },
               ),
             ),
-            SizedBox(width: 10,),
+            SizedBox(
+              width: 10,
+            ),
             Expanded(
               flex: 1,
               child: FlatButton(
@@ -769,7 +839,7 @@ class  CambiosSeleccion {
     PopUps.PopUpConWidget(context, contenidoPopUp);
   }
 
-  static editarImagenesSeleccionadas(){
+  static editarImagenesSeleccionadas() {
     GlobalKey<FormState> _keyValidador2 = GlobalKey<FormState>();
     String nombreNuevaImagen;
     Text textoPopUp;
@@ -779,7 +849,8 @@ class  CambiosSeleccion {
     nombre = listadoSeleccionadas[0];
     extension = nombre.substring(nombre.lastIndexOf('.'));
     List<String> listadoNombres = [];
-    textoPopUp =Text('Editando ${nombre.substring(0, nombre.lastIndexOf('.'))}');
+    textoPopUp =
+        Text('Editando ${nombre.substring(0, nombre.lastIndexOf('.'))}');
     contenidoPopUp = Form(
       child: Column(
         mainAxisSize: MainAxisSize.min,
@@ -797,8 +868,7 @@ class  CambiosSeleccion {
               if (textoEscrito.trim().length <= 0) {
                 return "Error: Nombre de imagen vacío";
               } else {
-                nombreNuevaImagen =
-                    textoEscrito.trim().toString() + extension;
+                nombreNuevaImagen = textoEscrito.trim().toString() + extension;
                 //Chequear si el valor ya existe
                 if (DatosEstaticos.listadoNombresImagenes
                     .contains(nombreNuevaImagen)) {
@@ -819,28 +889,30 @@ class  CambiosSeleccion {
                   onPressed: () async {
                     if (_keyValidador2.currentState.validate()) {
                       nombre = nombre.replaceAll(RegExp(' +'), '<!-!>');
-                      nombreNuevaImagen = nombreNuevaImagen.replaceAll(RegExp(' +'), '<!-!>');
+                      nombreNuevaImagen =
+                          nombreNuevaImagen.replaceAll(RegExp(' +'), '<!-!>');
                       listadoNombres.add(nombre);
                       listadoNombres.add(nombreNuevaImagen);
                       print(listadoNombres);
                       //Se abre el popup de cargando
-                      PopUps.popUpCargando(
-                          context, 'Editando imagen...');
+                      PopUps.popUpCargando(context, 'Editando imagen...');
                       //Obtengo el resultado del envio
-                      var resultado = await ComunicacionRaspberry.EditarContenido(
+                      var resultado =
+                          await ComunicacionRaspberry.EditarContenido(
                         tipoContenido: 'imagenes',
                         nombresAEliminar: listadoNombres,
                       );
-                      if (resultado!=null){
+                      if (resultado != null) {
                         Navigator.pop(context);
                         Navigator.pop(context);
-                        Navigator.popAndPushNamed(context, "/seleccionar_imagen", arguments: {
-                          'division_layout': '0',
-                          'ruta_proveniente': rutaPadre,
-                        });
+                        Navigator.popAndPushNamed(
+                            context, "/seleccionar_imagen",
+                            arguments: {
+                              'division_layout': '0',
+                              'ruta_proveniente': rutaPadre,
+                            });
                         Fluttertoast.showToast(
-                          msg:
-                          "Imagen editada",
+                          msg: "Imagen editada",
                           toastLength: Toast.LENGTH_LONG,
                           webBgColor: "#e74c3c",
                           timeInSecForIosWeb: 10,
@@ -849,8 +921,7 @@ class  CambiosSeleccion {
                         Navigator.pop(context);
                         Navigator.pop(context);
                         Fluttertoast.showToast(
-                          msg:
-                          "Error al eliminar, intente nuevamente",
+                          msg: "Error al eliminar, intente nuevamente",
                           toastLength: Toast.LENGTH_SHORT,
                           webBgColor: "#e74c3c",
                           timeInSecForIosWeb: 5,
@@ -860,7 +931,9 @@ class  CambiosSeleccion {
                   },
                 ),
               ),
-              SizedBox(width: 10,),
+              SizedBox(
+                width: 10,
+              ),
               Expanded(
                 flex: 1,
                 child: FlatButton(

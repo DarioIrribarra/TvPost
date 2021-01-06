@@ -14,11 +14,13 @@ class CrearLayout3 extends StatefulWidget {
 }
 
 class _CrearLayout3State extends State<CrearLayout3> {
-
   //Widget dentro del mapa de datos de ventana anterior
   Widget widget1;
   Widget widget2;
   Widget widget3;
+  bool op = false;
+  bool op2 = false;
+  bool op3 = false;
   bool _visible = false;
   BoxDecoration _decorationPorcion1;
   BoxDecoration _decorationPorcion2;
@@ -218,9 +220,10 @@ class _CrearLayout3State extends State<CrearLayout3> {
      */
 
     return WillPopScope(
-      onWillPop: (){
+      onWillPop: () {
         Navigator.popAndPushNamed(
-            context, '/seleccionar_layout',
+          context,
+          '/seleccionar_layout',
         );
         return;
       },
@@ -243,7 +246,8 @@ class _CrearLayout3State extends State<CrearLayout3> {
               Container(
                 width: MediaQuery.of(context).size.width,
                 height: MediaQuery.of(context).size.height / 3,
-                margin: EdgeInsets.only(top: 15, bottom: 20, left: 20, right: 20),
+                margin:
+                    EdgeInsets.only(top: 15, bottom: 20, left: 20, right: 20),
                 /*decoration: BoxDecoration(
                     border: Border.all(color: Colors.black, width: 5)),*/
                 child: Column(
@@ -269,7 +273,10 @@ class _CrearLayout3State extends State<CrearLayout3> {
                                     DatosEstaticos.divisionLayout = '3-1';
                                   });
                                 },
-                                child: ignorarInteraccionesElemento(widget1),
+                                child: Opacity(
+                                    opacity: op ? 1.0 : 0.1,
+                                    child:
+                                        ignorarInteraccionesElemento(widget1)),
                               ),
                             ),
                           ),
@@ -291,7 +298,10 @@ class _CrearLayout3State extends State<CrearLayout3> {
                                     DatosEstaticos.divisionLayout = '3-2';
                                   });
                                 },
-                                child: ignorarInteraccionesElemento(widget2),
+                                child: Opacity(
+                                    opacity: op2 ? 1.0 : 0.1,
+                                    child:
+                                        ignorarInteraccionesElemento(widget2)),
                               ),
                             ),
                           ),
@@ -316,7 +326,10 @@ class _CrearLayout3State extends State<CrearLayout3> {
                               DatosEstaticos.divisionLayout = '3-3';
                             });
                           },
-                          child: ignorarInteraccionesElemento(contenidoLayout10),
+                          child: Opacity(
+                              opacity: op3 ? 1.0 : 0.1,
+                              child: ignorarInteraccionesElemento(
+                                  contenidoLayout10)),
                         ),
                       ),
                     ),
@@ -559,6 +572,10 @@ class _CrearLayout3State extends State<CrearLayout3> {
             color: HexColor('#FC4C8B').withOpacity(0.2));
         break;
       case 1:
+        op = true;
+        op2 = false;
+        op3 = false;
+
         _decorationPorcion1 = BoxDecoration(
             //borderRadius: BorderRadius.circular(50),
             color: HexColor('#3EDB9B'));
@@ -570,6 +587,9 @@ class _CrearLayout3State extends State<CrearLayout3> {
             color: HexColor('#FC4C8B').withOpacity(0.2));
         break;
       case 2:
+        op = false;
+        op2 = true;
+        op3 = false;
         _decorationPorcion1 = BoxDecoration(
             //borderRadius: BorderRadius.circular(50),
             color: HexColor('#3EDB9B').withOpacity(0.2));
@@ -581,6 +601,9 @@ class _CrearLayout3State extends State<CrearLayout3> {
             color: HexColor('#FC4C8B').withOpacity(0.2));
         break;
       case 3:
+        op = false;
+        op2 = false;
+        op3 = true;
         _decorationPorcion1 = BoxDecoration(
             //borderRadius: BorderRadius.circular(50),
             color: HexColor('#3EDB9B').withOpacity(0.2));

@@ -170,14 +170,14 @@ class MenuAppBar {
     administrarVideos,
   ];
 
-  static Validacion({
-    List<int> listadoEquipos,
-    BuildContext context,
-    String rutaVentana,
-    String rutaProveniente}){
+  static Validacion(
+      {List<int> listadoEquipos,
+      BuildContext context,
+      String rutaVentana,
+      String rutaProveniente}) {
     //print(ModalRoute.of(context).settings.name);
-    if (listadoEquipos.length>0){
-      if(DatosEstaticos.ipSeleccionada != null){
+    if (listadoEquipos.length > 0) {
+      if (DatosEstaticos.ipSeleccionada != null) {
         //Navigator.pop(context);
         Navigator.popAndPushNamed(context, rutaVentana, arguments: {
           'division_layout': DatosEstaticos.divisionLayout,
@@ -185,40 +185,39 @@ class MenuAppBar {
         });
         //Muestro listado de equipos a elegir
       } else {
-        double altura = 30.0  + (30 * listadoEquipos.length);
-        if (altura >= MediaQuery.of(context).size.height){
+        double altura = 30.0 + (30 * listadoEquipos.length);
+        if (altura >= MediaQuery.of(context).size.height) {
           altura = MediaQuery.of(context).size.height;
-
         }
         List<Widget> listadoHabilitados = [];
         listadoEquipos.forEach((element) {
           //print(element);
           Container item = Container(
             margin: EdgeInsets.only(left: 10),
-              child:ListTile(
-                contentPadding: EdgeInsets.all(0),
-                leading: Icon(Icons.screen_share),
-                title: Text(ObtieneDatos.listadoEquipos
-                [element]['f_alias'].toString().toUpperCase()
-                ),
-                onTap: () {
-                  DatosEstaticos.ipSeleccionada = ObtieneDatos.listadoEquipos
-                  [element]['f_ip'].toString();
-                  Navigator.pop(context);
-                  //Navigator.pop(context);
-                  Navigator.popAndPushNamed(context, rutaVentana, arguments: {
-                    'division_layout': '0',
-                    'ruta_proveniente': rutaProveniente,
-                  });
-                },
-              ),
+            child: ListTile(
+              contentPadding: EdgeInsets.all(0),
+              leading: Icon(Icons.screen_share),
+              title: Text(ObtieneDatos.listadoEquipos[element]['f_alias']
+                  .toString()
+                  .toUpperCase()),
+              onTap: () {
+                DatosEstaticos.ipSeleccionada =
+                    ObtieneDatos.listadoEquipos[element]['f_ip'].toString();
+                Navigator.pop(context);
+                //Navigator.pop(context);
+                Navigator.popAndPushNamed(context, rutaVentana, arguments: {
+                  'division_layout': '0',
+                  'ruta_proveniente': rutaProveniente,
+                });
+              },
+            ),
           );
           listadoHabilitados.add(item);
         });
         PopUps.PopUpConWidget(
           context,
           Container(
-            width: MediaQuery.of(context).size.width/2,
+            width: MediaQuery.of(context).size.width / 2,
             height: altura,
             child: Column(
               mainAxisSize: MainAxisSize.min,
@@ -226,7 +225,8 @@ class MenuAppBar {
                 Container(
                   height: 20,
                   child: Text(
-                    'Equipos conectados', textAlign: TextAlign.center,
+                    'Equipos conectados',
+                    textAlign: TextAlign.center,
                   ),
                 ),
                 Container(
@@ -240,21 +240,16 @@ class MenuAppBar {
           ),
         );
       }
-    }else {
-      PopUps.PopUpConWidget(
-          context,
-          Text('Usted no posee equipos conectados')
-      );
+    } else {
+      PopUps.PopUpConWidget(context, Text('Usted no posee equipos conectados'));
     }
-
   }
 
   static void SeleccionMenu(String itemSeleccionado, BuildContext context) {
     //Listado de equipos que tienen conexión
-    if(itemSeleccionado == MenuAppBar.administrarImagenes){
-
-      String rutaProveniente= ModalRoute.of(context).settings.name;
-      if (rutaProveniente == "/seleccionar_imagen"){
+    if (itemSeleccionado == MenuAppBar.administrarImagenes) {
+      String rutaProveniente = ModalRoute.of(context).settings.name;
+      if (rutaProveniente == "/seleccionar_imagen") {
         return;
       }
 
@@ -263,22 +258,21 @@ class MenuAppBar {
           context: context,
           rutaVentana: "/seleccionar_imagen",
           rutaProveniente: ModalRoute.of(context).settings.name);
-
     }
-    if(itemSeleccionado == MenuAppBar.administrarVideos){
+    if (itemSeleccionado == MenuAppBar.administrarVideos) {
       PopUps.PopUpConWidget(context, Text('En construcción...'));
     }
   }
 
-  static PopupMenuButton botonMenu(BuildContext context){
+  static PopupMenuButton botonMenu(BuildContext context) {
     return PopupMenuButton<String>(
       icon: Icon(
         Icons.menu,
         color: Colors.white,
       ),
-      itemBuilder: (context){
-        return MenuAppBar.itemsMenu.map((e){
-          if (e == MenuAppBar.administrarImagenes){
+      itemBuilder: (context) {
+        return MenuAppBar.itemsMenu.map((e) {
+          if (e == MenuAppBar.administrarImagenes) {
             return PopupMenuItem(
               value: e,
               child: Row(
@@ -289,7 +283,7 @@ class MenuAppBar {
               ),
             );
           }
-          if (e == MenuAppBar.administrarVideos){
+          if (e == MenuAppBar.administrarVideos) {
             return PopupMenuItem(
               value: e,
               child: Row(
@@ -300,17 +294,14 @@ class MenuAppBar {
               ),
             );
           }
-
         }).toList();
       },
-      onSelected: (selected){
+      onSelected: (selected) {
         MenuAppBar.SeleccionMenu(selected, context);
       },
     );
   }
 }
-
-
 
 class CustomAppBarSinFlechaBack extends PreferredSize {
   final double height;
@@ -326,7 +317,6 @@ class CustomAppBarSinFlechaBack extends PreferredSize {
   Widget build(BuildContext context) {
     return SafeArea(
       child: AppBar(
-
         leading: Container(
           color: Colors.transparent,
         ),
@@ -339,7 +329,7 @@ class CustomAppBarSinFlechaBack extends PreferredSize {
                   end: FractionalOffset.centerRight)),
           child: Padding(
             padding:
-            EdgeInsets.only(left: MediaQuery.of(context).size.width / 5.5),
+                EdgeInsets.only(left: MediaQuery.of(context).size.width / 5.5),
             child: Container(
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -458,7 +448,68 @@ class CustomAppBar extends PreferredSize {
   }
 }
 
+class OpcionCargarContenido extends StatefulWidget {
+  OpcionCargarContenido({
+    @required this.visible,
+  });
+  final bool visible;
+  @override
+  _OpcionCargarContenidoState createState() => _OpcionCargarContenidoState();
+}
 
+class _OpcionCargarContenidoState extends State<OpcionCargarContenido> {
+  @override
+  Widget build(BuildContext context) {
+    return Visibility(
+      visible: widget.visible,
+      child: Column(
+        children: [
+          Container(
+            height: 40,
+            width: 200,
+            decoration: new BoxDecoration(
+                borderRadius: BorderRadius.circular(20),
+                gradient: LinearGradient(
+                    colors: [HexColor("#0683ff"), HexColor("#3edb9b")],
+                    stops: [0.1, 0.6],
+                    begin: Alignment.topLeft,
+                    end: FractionalOffset.bottomRight)),
+            child: FlatButton(
+              color: Colors.transparent,
+              onPressed: () async {
+                //String dir = (await getTemporaryDirectory()).path;
+                //File temporal = new File('$dir/img_temp_creada.png');
+                Navigator.popAndPushNamed(context, '/seleccionar_layout');
+              },
+              child: Text(
+                'CARGAR',
+                style: TextStyle(color: Colors.white),
+              ),
+            ),
+          ),
+          Container(
+            height: 40,
+            width: 200,
+            decoration: new BoxDecoration(
+                borderRadius: BorderRadius.circular(20),
+                gradient: LinearGradient(
+                    colors: [HexColor("#3edb9b"), HexColor("#0683ff")],
+                    stops: [0.5, 1],
+                    begin: Alignment.topLeft,
+                    end: FractionalOffset.bottomRight)),
+            margin: EdgeInsets.symmetric(
+              horizontal: 92,
+            ),
+            padding: EdgeInsets.symmetric(horizontal: 0),
+            child: Column(
+              children: [],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
 
 class OpcionesSeleccionMedia extends StatefulWidget {
   OpcionesSeleccionMedia({
@@ -555,19 +606,7 @@ class _OpcionesSeleccionMediaState extends State<OpcionesSeleccionMedia> {
                 Row(
                   // crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    FlatButton(
-                      color: Colors.transparent,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(18.0),
-                      ),
-                      onPressed: () {
-                        //Aparece popup de ingresar link
-                        contenidoPopUpSeleccionUrl();
-                        /*PopUps.PopUpConWidget(w
-                          context, contenidoPopUpSeleccionUrl());*/
-                      },
-                      child: Text('URL', style: TextStyle(color: Colors.white)),
-                    ),
+                    activarURL(widget.divisionLayout),
                     FlatButton(
                       color: Colors.transparent,
                       shape: RoundedRectangleBorder(
@@ -588,6 +627,40 @@ class _OpcionesSeleccionMediaState extends State<OpcionesSeleccionMedia> {
         ],
       ),
     );
+  }
+
+  //aca se activa y desactiva el boton url, dependiendo de la porsion seleccionada
+  Widget activarURL(String divisionDellayout) {
+    if (divisionDellayout == "3-2") {
+      return FlatButton(
+        color: Colors.transparent,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(18.0),
+        ),
+        onPressed: () {},
+        child: Text(
+          'URL',
+          style: TextStyle(color: Colors.white.withOpacity(0.4)),
+        ),
+      );
+    } else {
+      return FlatButton(
+        color: Colors.transparent,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(18.0),
+        ),
+        onPressed: () {
+          //Aparece popup de ingresar link
+          contenidoPopUpSeleccionUrl();
+          /*PopUps.PopUpConWidget(w
+                          context, contenidoPopUpSeleccionUrl());*/
+        },
+        child: Text(
+          'URL',
+          style: TextStyle(color: Colors.white),
+        ),
+      );
+    }
   }
 
   contenidoPopUpSeleccionUrl() async {
