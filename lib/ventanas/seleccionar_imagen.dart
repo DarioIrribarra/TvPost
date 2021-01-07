@@ -30,6 +30,10 @@ class _SeleccionarImagenState extends State<SeleccionarImagen> {
   List<String> imagenesSeleccionadas = [];
   bool activarBoton = false;
   bool _visible = false;
+  Container cargaRRSS = Container(
+    height: 200,
+  );
+
   @override
   void initState() {
     super.initState();
@@ -101,8 +105,6 @@ class _SeleccionarImagenState extends State<SeleccionarImagen> {
                         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                             crossAxisCount: 3),
                         itemBuilder: (context, index) {
-                          bool luffy = false;
-
                           //Por cada imagen, busca su imagen.
                           // El nombre lo toma del listado estático
                           String nombre = DatosEstaticos
@@ -203,9 +205,6 @@ class _SeleccionarImagenState extends State<SeleccionarImagen> {
                       ),
                     ],
                   ),
-                  OpcionCargarContenido(
-                    visible: _visible,
-                  ),
                 ],
               );
             }
@@ -256,41 +255,234 @@ class _SeleccionarImagenState extends State<SeleccionarImagen> {
               }
 
               //Future Builder para el gridview de imágenes
-              return GridView.builder(
-                  //Toma el total de imágenes desde la carpeta del
-                  // webserver
-                  itemCount: DatosEstaticos.listadoNombresImagenes.length,
-                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: 3),
-                  itemBuilder: (context, index) {
-                    //Por cada imagen, busca su imagen.
-                    // El nombre lo toma del listado estático
-                    return GestureDetector(
-                      onTap: () {
-                        Fluttertoast.showToast(
-                          msg: "Presione dos veces para seleccionar imagen",
-                          toastLength: Toast.LENGTH_LONG,
-                          webBgColor: "#e74c3c",
-                          timeInSecForIosWeb: 10,
+              return Column(children: [
+                Expanded(
+                  child: GridView.builder(
+                      //Toma el total de imágenes desde la carpeta del
+                      // webserver
+                      itemCount: DatosEstaticos.listadoNombresImagenes.length,
+                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: 3,
+                          crossAxisSpacing: 5,
+                          mainAxisSpacing: 5),
+                      itemBuilder: (context, index) {
+                        //Por cada imagen, busca su imagen.
+                        // El nombre lo toma del listado estático
+                        // El nombre lo toma del listado estático
+                        String nombre = DatosEstaticos
+                            .listadoNombresImagenes[index]
+                            .toString();
+                        return GestureDetector(
+                          onTap: () {
+                            /*Fluttertoast.showToast(
+                              msg: "Presione dos veces para seleccionar imagen",
+                              toastLength: Toast.LENGTH_LONG,
+                              webBgColor: "#e74c3c",
+                              timeInSecForIosWeb: 10,
+                            );*/
+
+                            cargaRRSS = imagenesSeleccionadas.isEmpty ||
+                                    imagenesSeleccionadas.length > 1
+                                ? Container(
+                                    width: MediaQuery.of(context).size.width,
+                                    height:
+                                        MediaQuery.of(context).size.height / 4,
+                                    //color: Colors.pink,
+                                    child: Column(
+                                      children: [
+                                        SizedBox(height: 38),
+                                        Container(
+                                          height: 40,
+                                          width: 200,
+                                          decoration: new BoxDecoration(
+                                              borderRadius:
+                                                  BorderRadius.circular(20),
+                                              gradient: LinearGradient(
+                                                  colors: [
+                                                    HexColor("#0683ff"),
+                                                    HexColor("#3edb9b")
+                                                  ],
+                                                  stops: [
+                                                    0.1,
+                                                    0.6
+                                                  ],
+                                                  begin: Alignment.topLeft,
+                                                  end: FractionalOffset
+                                                      .bottomRight)),
+                                          child: FlatButton(
+                                            color: Colors.transparent,
+                                            onPressed: () async {
+                                              //String dir = (await getTemporaryDirectory()).path;
+                                              //File temporal = new File('$dir/img_temp_creada.png');
+                                              Widget imagen = Image.network(
+                                                  'http://'
+                                                  '${DatosEstaticos.ipSeleccionada}'
+                                                  '/ImagenesPostTv/'
+                                                  '${DatosEstaticos.listadoNombresImagenes[index]}');
+                                              String nombre = DatosEstaticos
+                                                      .listadoNombresImagenes[
+                                                  index];
+                                              RedireccionarCrearLayout(
+                                                  imagen,
+                                                  "/var/www/html/ImagenesPostTv/$nombre",
+                                                  false);
+                                              return;
+                                            },
+                                            child: Text(
+                                              'CARGAR',
+                                              style: TextStyle(
+                                                  color: Colors.white),
+                                            ),
+                                          ),
+                                        ),
+                                        SizedBox(height: 15),
+                                        Container(
+                                          height: 40,
+                                          width: 200,
+                                          decoration: new BoxDecoration(
+                                              borderRadius:
+                                                  BorderRadius.circular(20),
+                                              gradient: LinearGradient(
+                                                  colors: [
+                                                    HexColor("#3edb9b"),
+                                                    HexColor("#0683ff")
+                                                  ],
+                                                  stops: [
+                                                    0.5,
+                                                    1
+                                                  ],
+                                                  begin: Alignment.topLeft,
+                                                  end: FractionalOffset
+                                                      .bottomRight)),
+                                          child: FlatButton(
+                                            color: Colors.transparent,
+                                            onPressed: () async {
+                                              //String dir = (await getTemporaryDirectory()).path;
+                                              //File temporal = new File('$dir/img_temp_creada.png');
+                                              setState(() {
+                                                //ACA SE DEBE AGREGAR FUNCIONALIDAD DE REDES SOCIALES
+                                                /*BotonEnviarAEquipo(
+                                                  visible: _visible,
+                                                  publicar_rrss: true,
+                                                  publicar_porcion: 1,
+                                                );*/
+                                              });
+                                            },
+                                            child: Padding(
+                                              padding:
+                                                  const EdgeInsets.all(6.0),
+                                              child: Column(children: [
+                                                Text(
+                                                  'CARGAR +',
+                                                  style: TextStyle(
+                                                      color: Colors.white),
+                                                ),
+                                                Text(
+                                                  ' COMPARTIR RRSS',
+                                                  style: TextStyle(
+                                                      color: Colors.white),
+                                                ),
+                                              ]),
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  )
+                                : Container(
+                                    width: MediaQuery.of(context).size.width,
+                                    height:
+                                        MediaQuery.of(context).size.height / 4,
+                                  );
+
+                            setState(() {
+                              if (imagenesSeleccionadas.contains(nombre) ==
+                                      false &&
+                                  imagenesSeleccionadas.length < 1) {
+                                imagenesSeleccionadas.add(nombre);
+                              } else {
+                                imagenesSeleccionadas.remove(nombre);
+                              }
+
+                              CambiosSeleccion.listadoSeleccionadas =
+                                  imagenesSeleccionadas;
+                            });
+                          },
+                          //se comenta lo anterior, donde se hacia doble tap para agregar una imagen
+                          /*onDoubleTap: () {
+                            Widget imagen = Image.network('http://'
+                                '${DatosEstaticos.ipSeleccionada}'
+                                '/ImagenesPostTv/'
+                                '${DatosEstaticos.listadoNombresImagenes[index]}');
+                            String nombre =
+                                DatosEstaticos.listadoNombresImagenes[index];
+                            RedireccionarCrearLayout(imagen,
+                                "/var/www/html/ImagenesPostTv/$nombre", false);
+                            return;
+                          },
+                          child: Image.network('http://'
+                              '${DatosEstaticos.ipSeleccionada}'
+                              '/ImagenesPostTv/'
+                              '${DatosEstaticos.listadoNombresImagenes[index]}'),*/
+                          //Container de cada imagen
+                          child: Opacity(
+                            opacity: resultado(nombre),
+                            /* imagenesSeleccionadas.contains(nombre)
+                                      ? 1.0
+                                      : 0.1,*/
+                            child: Stack(
+                              alignment: Alignment.center,
+                              children: [
+                                Container(
+                                  //Si se encuentra en el listado de seleccionadas se cambia el borde
+                                  //aca se encuentra el borde de las imagenes seleccionadas
+                                  /*decoration: imagenesSeleccionadas.contains(nombre)
+                                      ? CambiosSeleccion.bordeSeleccionado
+                                      : null,*/
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.stretch,
+                                    children: [
+                                      Expanded(
+                                        flex: 5,
+                                        child: Image.network(
+                                          'http://'
+                                          '${DatosEstaticos.ipSeleccionada}'
+                                          '/ImagenesPostTv/'
+                                          '${DatosEstaticos.listadoNombresImagenes[index]}',
+                                          fit: BoxFit.scaleDown,
+                                        ),
+                                      ),
+                                      /*  Expanded(
+                                        flex: 1,
+                                        child: Padding(
+                                          padding: EdgeInsets.only(top: 3),
+                                          child: Text(
+                                            nombre.substring(
+                                                0, nombre.lastIndexOf('.')),
+                                            textAlign: TextAlign.center,
+                                          ),
+                                        ),
+                                      ),*/
+                                    ],
+                                  ),
+                                ),
+                                Positioned(
+                                  bottom: 30,
+                                  right: 10,
+                                  //Se aplica el ícono verde al seleccionar
+                                  child: imagenesSeleccionadas.contains(nombre)
+                                      ? CambiosSeleccion.iconoSeleccionado
+                                      : Container(),
+                                ),
+                              ],
+                            ),
+                          ),
                         );
-                      },
-                      onDoubleTap: () {
-                        Widget imagen = Image.network('http://'
-                            '${DatosEstaticos.ipSeleccionada}'
-                            '/ImagenesPostTv/'
-                            '${DatosEstaticos.listadoNombresImagenes[index]}');
-                        String nombre =
-                            DatosEstaticos.listadoNombresImagenes[index];
-                        RedireccionarCrearLayout(imagen,
-                            "/var/www/html/ImagenesPostTv/$nombre", false);
-                        return;
-                      },
-                      child: Image.network('http://'
-                          '${DatosEstaticos.ipSeleccionada}'
-                          '/ImagenesPostTv/'
-                          '${DatosEstaticos.listadoNombresImagenes[index]}'),
-                    );
-                  });
+                      }),
+                ),
+                cargaRRSS
+              ]);
             }
           }
           if (snapshot.connectionState == ConnectionState.waiting) {

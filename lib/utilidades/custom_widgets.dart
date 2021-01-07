@@ -448,69 +448,6 @@ class CustomAppBar extends PreferredSize {
   }
 }
 
-class OpcionCargarContenido extends StatefulWidget {
-  OpcionCargarContenido({
-    @required this.visible,
-  });
-  final bool visible;
-  @override
-  _OpcionCargarContenidoState createState() => _OpcionCargarContenidoState();
-}
-
-class _OpcionCargarContenidoState extends State<OpcionCargarContenido> {
-  @override
-  Widget build(BuildContext context) {
-    return Visibility(
-      visible: widget.visible,
-      child: Column(
-        children: [
-          Container(
-            height: 40,
-            width: 200,
-            decoration: new BoxDecoration(
-                borderRadius: BorderRadius.circular(20),
-                gradient: LinearGradient(
-                    colors: [HexColor("#0683ff"), HexColor("#3edb9b")],
-                    stops: [0.1, 0.6],
-                    begin: Alignment.topLeft,
-                    end: FractionalOffset.bottomRight)),
-            child: FlatButton(
-              color: Colors.transparent,
-              onPressed: () async {
-                //String dir = (await getTemporaryDirectory()).path;
-                //File temporal = new File('$dir/img_temp_creada.png');
-                Navigator.popAndPushNamed(context, '/seleccionar_layout');
-              },
-              child: Text(
-                'CARGAR',
-                style: TextStyle(color: Colors.white),
-              ),
-            ),
-          ),
-          Container(
-            height: 40,
-            width: 200,
-            decoration: new BoxDecoration(
-                borderRadius: BorderRadius.circular(20),
-                gradient: LinearGradient(
-                    colors: [HexColor("#3edb9b"), HexColor("#0683ff")],
-                    stops: [0.5, 1],
-                    begin: Alignment.topLeft,
-                    end: FractionalOffset.bottomRight)),
-            margin: EdgeInsets.symmetric(
-              horizontal: 92,
-            ),
-            padding: EdgeInsets.symmetric(horizontal: 0),
-            child: Column(
-              children: [],
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
 class OpcionesSeleccionMedia extends StatefulWidget {
   OpcionesSeleccionMedia({
     //@required this.keywebview,
