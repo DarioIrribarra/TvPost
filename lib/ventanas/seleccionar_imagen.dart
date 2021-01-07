@@ -136,10 +136,10 @@ class _SeleccionarImagenState extends State<SeleccionarImagen> {
                                 children: [
                                   Container(
                                     //Si se encuentra en el listado de seleccionadas se cambia el borde
-                                    decoration:
+                                    /*decoration:
                                         imagenesSeleccionadas.contains(nombre)
                                             ? CambiosSeleccion.bordeSeleccionado
-                                            : null,
+                                            : null,*/
                                     child: Column(
                                       crossAxisAlignment:
                                           CrossAxisAlignment.stretch,
@@ -222,7 +222,6 @@ class _SeleccionarImagenState extends State<SeleccionarImagen> {
       );
     } else {
       ///MODIFICA ESTE WIDGET PARA EL DISEÑO DE LAS IMAGENES
-      ///EL OTRO ES EL DEL MENÚ QUE TODAVÍA NO TERMINO
       WidgetFutureGrilla = FutureBuilder(
         future: _listadoNombresImagenes,
         builder: (context, snapshot) {
@@ -281,8 +280,31 @@ class _SeleccionarImagenState extends State<SeleccionarImagen> {
                               timeInSecForIosWeb: 10,
                             );*/
 
-                            cargaRRSS = imagenesSeleccionadas.isEmpty ||
-                                    imagenesSeleccionadas.length > 1
+                            //Hice la selección antes de la creación del container
+                            //ahora si la lista ya tiene un item se borra entera
+                            //y luego se agrega la nueva imagen seleccionada
+
+                            if (imagenesSeleccionadas.length >= 1) {
+                              if(imagenesSeleccionadas.contains(nombre)){
+                                imagenesSeleccionadas.remove(nombre);
+                              } else {
+                                imagenesSeleccionadas.clear();
+                                imagenesSeleccionadas.add(nombre);
+                              }
+                            } else {
+                              imagenesSeleccionadas.add(nombre);
+                            }
+                            /*try {
+                              print(imagenesSeleccionadas[0]);
+                            } catch(ex){
+                              print("lista vacía: último item clicado $nombre");
+                            }*/
+
+                            /*cargaRRSS = imagenesSeleccionadas.isEmpty ||
+                                    imagenesSeleccionadas.length > 1*/
+
+                            //Cambié este condicional
+                            cargaRRSS = imagenesSeleccionadas.length == 1
                                 ? Container(
                                     width: MediaQuery.of(context).size.width,
                                     height:
@@ -395,7 +417,7 @@ class _SeleccionarImagenState extends State<SeleccionarImagen> {
                                         MediaQuery.of(context).size.height / 4,
                                   );
 
-                            setState(() {
+                            /*setState(() {
                               if (imagenesSeleccionadas.contains(nombre) ==
                                       false &&
                                   imagenesSeleccionadas.length < 1) {
@@ -406,6 +428,18 @@ class _SeleccionarImagenState extends State<SeleccionarImagen> {
 
                               CambiosSeleccion.listadoSeleccionadas =
                                   imagenesSeleccionadas;
+                            });*/
+
+                            setState(() {
+                              CambiosSeleccion.listadoSeleccionadas =
+                                  imagenesSeleccionadas;
+
+                              /*if (imagenesSeleccionadas.contains(nombre) ==
+                                  false) {
+                                imagenesSeleccionadas.add(nombre);
+                              } else {
+                                imagenesSeleccionadas.remove(nombre);
+                              }*/
                             });
                           },
                           //se comenta lo anterior, donde se hacia doble tap para agregar una imagen
