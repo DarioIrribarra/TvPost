@@ -136,6 +136,23 @@ class PopUps {
     return resultado;
   }
 
+  static Future<bool> enviarVideo(String nombre, File video) async {
+    String videoBytes = base64Encode(video.readAsBytesSync());
+    String rutaSubidaVideos =
+        'http://' + DatosEstaticos.ipSeleccionada + '/upload_one_video.php';
+    bool resultado = await http.post(rutaSubidaVideos, body: {
+      "video": videoBytes,
+      "name": nombre,
+    }).then((result) {
+      if (result.statusCode == 200) {
+        return true;
+      }
+    }).catchError((error) {
+      return false;
+    });
+    return resultado;
+  }
+
   static Future<List> getNombresImagenes() async {
     List<int> listadoValoresBytes = [];
     List datos;
@@ -180,7 +197,7 @@ class MenuAppBar {
       if (DatosEstaticos.ipSeleccionada != null) {
         //Navigator.pop(context);
         Navigator.popAndPushNamed(context, rutaVentana, arguments: {
-          'division_layout': DatosEstaticos.divisionLayout,
+          'division_layout': '0',
           'ruta_proveniente': rutaProveniente,
         });
         //Muestro listado de equipos a elegir
@@ -246,21 +263,55 @@ class MenuAppBar {
   }
 
   static void SeleccionMenu(String itemSeleccionado, BuildContext context) {
+    String rutaProveniente = ModalRoute.of(context).settings.name;
     //Listado de equipos que tienen conexión
     if (itemSeleccionado == MenuAppBar.administrarImagenes) {
-      String rutaProveniente = ModalRoute.of(context).settings.name;
+      //Se limpia listado de videos seleccionados
+      SeleccionaVideo.videosSelecionados.clear();
+
       if (rutaProveniente == "/seleccionar_imagen") {
         return;
       }
 
+      if (rutaProveniente == "/seleccionar_video") {
+        //se utiliza ruta ya almacenada
+        rutaProveniente = RutasRedireccionMenu.RutaDeDondeViene;
+      } else {
+        //Se reasigna la ruta
+        RutasRedireccionMenu.RutaDeDondeViene = rutaProveniente;
+      }
+
+      //print(RutasRedireccionMenu.RutaDeDondeViene);
       Validacion(
           listadoEquipos: DatosEstaticos.listadoIndexEquiposConectados,
           context: context,
           rutaVentana: "/seleccionar_imagen",
-          rutaProveniente: ModalRoute.of(context).settings.name);
+          rutaProveniente: rutaProveniente
+      );
     }
     if (itemSeleccionado == MenuAppBar.administrarVideos) {
-      PopUps.PopUpConWidget(context, Text('En construcción...'));
+      if (rutaProveniente == "/seleccionar_video") {
+        return;
+      }
+
+      if (rutaProveniente == "/seleccionar_imagen") {
+        //se utiliza ruta ya almacenada
+        rutaProveniente = RutasRedireccionMenu.RutaDeDondeViene;
+      } else {
+        //Se limpia listado de videos seleccionados
+        SeleccionaVideo.videosSelecionados.clear();
+        //Se reasigna la ruta
+        RutasRedireccionMenu.RutaDeDondeViene = rutaProveniente;
+      }
+
+      //print(RutasRedireccionMenu.RutaDeDondeViene);
+      Validacion(
+          listadoEquipos: DatosEstaticos.listadoIndexEquiposConectados,
+          context: context,
+          rutaVentana: "/seleccionar_video",
+          rutaProveniente: rutaProveniente
+      );
+
     }
   }
 
@@ -348,7 +399,8 @@ class CustomAppBarSinFlechaBack extends PreferredSize {
                     flex: 1,
                     child: MenuAppBar.botonMenu(context),
                     /*
-                    child: IconButton(
+                    child: IconButt
+      on(
                       iconSize: 40,
                       padding: const EdgeInsets.only(right: 20),
                       icon: Icon(
@@ -532,8 +584,15 @@ class _OpcionesSeleccionMediaState extends State<OpcionesSeleccionMedia> {
                         borderRadius: BorderRadius.circular(18.0),
                       ),
                       onPressed: () {
+                        //Se limpia listado estático de selección de videos
+                        SeleccionaVideo.videosSelecionados.clear();
                         //Va a la otra ventana esperando respuesta
-                        navegarYEsperarRespuesta('/seleccionar_video');
+                        //navegarYEsperarRespuesta('/seleccionar_video');
+                        Navigator.popAndPushNamed(context, "/seleccionar_video",
+                            arguments: {
+                              'division_layout': DatosEstaticos.divisionLayout,
+                              'ruta_proveniente': ModalRoute.of(context).settings.name,
+                            });
                       },
                       child:
                           Text('VIDEO', style: TextStyle(color: Colors.white)),
@@ -1143,4 +1202,8 @@ class AnimacionPadding extends StatelessWidget {
         duration: const Duration(milliseconds: 300),
         child: child);
   }
+}
+
+class RutasRedireccionMenu{
+  static String RutaDeDondeViene = "";
 }

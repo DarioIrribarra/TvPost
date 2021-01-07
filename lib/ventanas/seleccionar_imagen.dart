@@ -29,7 +29,7 @@ class _SeleccionarImagenState extends State<SeleccionarImagen> {
   TextEditingController _controladorTexto = TextEditingController();
   List<String> imagenesSeleccionadas = [];
   bool activarBoton = false;
-  bool _visible = false;
+  //bool _visible = false;
   Container cargaRRSS = Container(
     height: 200,
   );
@@ -221,7 +221,6 @@ class _SeleccionarImagenState extends State<SeleccionarImagen> {
         },
       );
     } else {
-      ///MODIFICA ESTE WIDGET PARA EL DISEÑO DE LAS IMAGENES
       WidgetFutureGrilla = FutureBuilder(
         future: _listadoNombresImagenes,
         builder: (context, snapshot) {
@@ -682,14 +681,25 @@ class _SeleccionarImagenState extends State<SeleccionarImagen> {
                                   .then((value) => value);
 
                               if (resultado) {
-                                //Si el envío es correcto, se redirecciona
-                                Image imagen = Image.file(
-                                  imagenFinal,
-                                );
-                                RedireccionarCrearLayout(
-                                    imagen,
-                                    "/var/www/html/ImagenesPostTv/$nombreNuevaImagen",
-                                    true);
+                                if (rutaDeDondeViene!= null){
+                                  Navigator.pop(context);
+                                  Navigator.pop(context);
+                                  Navigator.popAndPushNamed(context, "/seleccionar_imagen",
+                                      arguments: {
+                                        'division_layout': '0',
+                                        'ruta_proveniente': rutaDeDondeViene,
+                                      });
+                                } else {
+                                  //Si no es del menú redirige al layout
+                                  //Si el envío es correcto, se redirecciona
+                                  Image imagen = Image.file(
+                                    imagenFinal,
+                                  );
+                                  RedireccionarCrearLayout(
+                                      imagen,
+                                      "/var/www/html/ImagenesPostTv/$nombreNuevaImagen",
+                                      true);
+                                }
                               } else {
                                 //Cierra popup cargando
                                 Navigator.of(context, rootNavigator: true)
@@ -709,7 +719,8 @@ class _SeleccionarImagenState extends State<SeleccionarImagen> {
             ),
           ),
         );
-      } else {
+      }
+      else {
         String nombreNuevaImagen = "";
         String extension;
         File imagenFinal;

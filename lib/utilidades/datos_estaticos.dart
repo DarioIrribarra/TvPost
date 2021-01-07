@@ -37,3 +37,7 @@ class DatosEstaticos {
   static int ancho_pantalla_seleccionada = 0;
   static int alto_pantalla_seleccionada = 0;
 }
+
+class SeleccionaVideo{
+  static List<String> videosSelecionados = [];
+}
