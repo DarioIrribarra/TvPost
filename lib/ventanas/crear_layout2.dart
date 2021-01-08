@@ -352,7 +352,7 @@ class _CrearLayout2State extends State<CrearLayout2> {
               ),
               BotonEnviarAEquipo(
                 visible: _visible,
-                publicar_rrss: publicar_redes_sociales,
+                publicar_rrss: DatosEstaticos.PublicarEnRedesSociales,
                 publicar_porcion: porcion_publicar_rrss,
               ),
             ],

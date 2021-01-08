@@ -1032,6 +1032,9 @@ class BotonEnviarAEquipo extends StatelessWidget {
                         );
                         PopUps.PopUpConWidget(context, contenidoPopUp);
                       } else {
+                        //El valor se cambia luego de publicar y proyectar
+                        //en pantallas
+                        DatosEstaticos.PublicarEnRedesSociales = false;
                         VolverADetalleEquipo(context);
                       }
                     } else {

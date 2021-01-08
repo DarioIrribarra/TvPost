@@ -14,7 +14,7 @@ class _CrearLayout1State extends State<CrearLayout1> {
   //Widget dentro del mapa de datos de ventana anterior
   Widget widget1;
   bool _visible = false;
-  bool publicar_redes_sociales = false;
+  //bool publicar_redes_sociales = false;
   //Decoración que permite el poner un borde al seleccionar la porción de
   // pantalla
   BoxDecoration _decorationPorcion1;
@@ -168,12 +168,35 @@ class _CrearLayout1State extends State<CrearLayout1> {
                 actualizaEstado: () {
                   setState(() {
                     widget1 = DatosEstaticos.widget1;
+                    if (DatosEstaticos.PublicarEnRedesSociales){
+                      Widget contenido = Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Text(
+                            'Publicación Redes Sociales',
+                            textAlign: TextAlign.center,
+                            style: TextStyle(fontWeight: FontWeight.bold),
+                          ),
+                          SizedBox(height: 10,),
+                          Text(
+                            'Proyecte en la TV para realizar publciación',
+                            textAlign: TextAlign.center,
+                          ),
+                          SizedBox(height: 10,),
+                          FlatButton(
+                              onPressed: () => Navigator.pop(context),
+                              child: Text('Aceptar'),
+                          ),
+                        ],
+                      );
+                      PopUps.PopUpConWidget(context, contenido);
+                    }
                   });
                 },
               ),
               BotonEnviarAEquipo(
                 visible: _visible,
-                publicar_rrss: publicar_redes_sociales,
+                publicar_rrss: DatosEstaticos.PublicarEnRedesSociales,
                 publicar_porcion: 1,
               ),
             ],

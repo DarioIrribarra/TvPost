@@ -6,7 +6,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
-import 'package:flutter_social_content_share/flutter_social_content_share.dart';
+//import 'package:flutter_social_content_share/flutter_social_content_share.dart';
 import 'package:tvpost_flutter/utilidades/comunicacion_raspberry.dart';
 import 'package:tvpost_flutter/utilidades/custom_widgets.dart';
 import 'package:tvpost_flutter/utilidades/datos_estaticos.dart';
@@ -40,6 +40,7 @@ class _SeleccionarImagenState extends State<SeleccionarImagen> {
     super.initState();
     //Acá se hace el llamado al listado de nombres de imágenes
     _listadoNombresImagenes = PopUps.getNombresImagenes();
+    //DatosEstaticos.PublicarEnRedesSociales = false;
     activarBoton = true;
   }
 
@@ -336,6 +337,8 @@ class _SeleccionarImagenState extends State<SeleccionarImagen> {
                                             onPressed: () async {
                                               //String dir = (await getTemporaryDirectory()).path;
                                               //File temporal = new File('$dir/img_temp_creada.png');
+                                              //Se desactiva la publicación en redes sociales
+                                              DatosEstaticos.PublicarEnRedesSociales = false;
                                               Widget imagen = Image.network(
                                                   'http://'
                                                   '${DatosEstaticos.ipSeleccionada}'
@@ -379,18 +382,17 @@ class _SeleccionarImagenState extends State<SeleccionarImagen> {
                                           child: FlatButton(
                                             color: Colors.transparent,
                                             onPressed: () async {
-                                              //String dir = (await getTemporaryDirectory()).path;
-                                              //File temporal = new File('$dir/img_temp_creada.png');
-
-                                              await FlutterSocialContentShare
+                                              /*await FlutterSocialContentShare
                                                   .share(
                                                       type: ShareType
                                                           .instagramWithImageUrl,
                                                       imageUrl: 'http://'
                                                           '${DatosEstaticos.ipSeleccionada}'
                                                           '/ImagenesPostTv/'
-                                                          '${DatosEstaticos.listadoNombresImagenes[index]}');
-
+                                                          '${DatosEstaticos.listadoNombresImagenes[index]}');*/
+                                              //Valor que activa la publicación en redes sociales
+                                              //Este valor se desactiva luego de proyectar en tv
+                                              DatosEstaticos.PublicarEnRedesSociales = true;
                                               Widget imagen = Image.network(
                                                   'http://'
                                                   '${DatosEstaticos.ipSeleccionada}'

@@ -36,6 +36,7 @@ class DatosEstaticos {
   //Tamaños base de pantalla
   static int ancho_pantalla_seleccionada = 0;
   static int alto_pantalla_seleccionada = 0;
+  static bool PublicarEnRedesSociales = false;
 }
 
 class SeleccionaVideo{
