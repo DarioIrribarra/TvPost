@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_social_content_share/flutter_social_content_share.dart';
 import 'package:tvpost_flutter/utilidades/comunicacion_raspberry.dart';
 import 'package:tvpost_flutter/utilidades/custom_widgets.dart';
 import 'package:tvpost_flutter/utilidades/datos_estaticos.dart';
@@ -55,7 +56,6 @@ class _SeleccionarVideoState extends State<SeleccionarVideo> {
 
   @override
   Widget build(BuildContext context) {
-
     print(SeleccionaVideo.videosSelecionados);
 
     //Se le da el context a la ventana para los popups
@@ -110,73 +110,73 @@ class _SeleccionarVideoState extends State<SeleccionarVideo> {
                       shrinkWrap: true,
                       crossAxisCount: 3,
                       children: List.generate(
-                          DatosEstaticos.listadoNombresVideos.length,
-                              (index) {
-                            String nombre = DatosEstaticos
-                                    .listadoNombresVideos[index]
-                                    .toString();
-                            return GestureDetector(
-                              /*
+                          DatosEstaticos.listadoNombresVideos.length, (index) {
+                        String nombre = DatosEstaticos
+                            .listadoNombresVideos[index]
+                            .toString();
+                        return GestureDetector(
+                          /*
                               child: ReproductorVideos(
                                 url:
                                 'http://${DatosEstaticos.ipSeleccionada}/VideosPostTv/${DatosEstaticos.listadoNombresVideos[index]}',
                               ),
                                */
-                              onTap: () {
-                                if (SeleccionaVideo.videosSelecionados.contains(nombre) ==
-                                    false) {
-                                  SeleccionaVideo.videosSelecionados.add(nombre);
-                                } else {
-                                  SeleccionaVideo.videosSelecionados.remove(nombre);
-                                }
-                                Navigator.popAndPushNamed(context, "/seleccionar_video",
-                                    arguments: {
-                                      'division_layout': '0',
-                                      'ruta_proveniente': rutaDeDondeViene,
-                                    });
-                              },
-
-                              child: Opacity(
-                                opacity: resultado(nombre),
-                                child: Stack(
-                                  alignment: Alignment.center,
+                          onTap: () {
+                            if (SeleccionaVideo.videosSelecionados
+                                    .contains(nombre) ==
+                                false) {
+                              SeleccionaVideo.videosSelecionados.add(nombre);
+                            } else {
+                              SeleccionaVideo.videosSelecionados.remove(nombre);
+                            }
+                            Navigator.popAndPushNamed(
+                                context, "/seleccionar_video",
+                                arguments: {
+                                  'division_layout': '0',
+                                  'ruta_proveniente': rutaDeDondeViene,
+                                });
+                          },
+                          child: Opacity(
+                            opacity: resultado(nombre),
+                            child: Stack(
+                              alignment: Alignment.center,
+                              children: [
+                                Column(
                                   children: [
-                                    Column(
-                                      children: [
-                                        Expanded(
-                                          flex: 5,
-                                          child: ReproductorVideos(
-                                            url:
+                                    Expanded(
+                                      flex: 5,
+                                      child: ReproductorVideos(
+                                        url:
                                             'http://${DatosEstaticos.ipSeleccionada}/VideosPostTv/${DatosEstaticos.listadoNombresVideos[index]}',
-                                          ),
-                                        ),
-                                        Expanded(
-                                          flex: 1,
-                                          child: Padding(
-                                            padding: EdgeInsets.only(top: 3),
-                                            child: Text(
-                                              nombre.substring(
-                                                  0, nombre.lastIndexOf('.')),
-                                              textAlign: TextAlign.center,
-                                            ),
-                                          ),
-                                        ),
-                                      ],
+                                      ),
                                     ),
-                                    Positioned(
-                                      bottom: 30,
-                                      right: 10,
-                                      //Se aplica el ícono verde al seleccionar
-                                      child:
-                                      SeleccionaVideo.videosSelecionados.contains(nombre)
-                                          ? CambiosSeleccion.iconoSeleccionado
-                                          : Container(),
+                                    Expanded(
+                                      flex: 1,
+                                      child: Padding(
+                                        padding: EdgeInsets.only(top: 3),
+                                        child: Text(
+                                          nombre.substring(
+                                              0, nombre.lastIndexOf('.')),
+                                          textAlign: TextAlign.center,
+                                        ),
+                                      ),
                                     ),
                                   ],
                                 ),
-                              ),
+                                Positioned(
+                                  bottom: 30,
+                                  right: 10,
+                                  //Se aplica el ícono verde al seleccionar
+                                  child: SeleccionaVideo.videosSelecionados
+                                          .contains(nombre)
+                                      ? CambiosSeleccion.iconoSeleccionado
+                                      : Container(),
+                                ),
+                              ],
+                            ),
+                          ),
 
-                              /*onDoubleTap: () {
+                          /*onDoubleTap: () {
                                 Widget video = ReproductorVideos(
                                   url:
                                   'http://${DatosEstaticos.ipSeleccionada}/VideosPostTv/${DatosEstaticos.listadoNombresVideos[index]}',
@@ -188,8 +188,8 @@ class _SeleccionarVideoState extends State<SeleccionarVideo> {
                                 RedireccionarCrearLayout(video,
                                     "/var/www/html/VideosPostTv/$nombre", false);
                               },*/
-                            );
-                          }),
+                        );
+                      }),
                     ),
                   ),
                   Row(
@@ -270,71 +270,75 @@ class _SeleccionarVideoState extends State<SeleccionarVideo> {
                       shrinkWrap: true,
                       crossAxisCount: 3,
                       children: List.generate(
-                          DatosEstaticos.listadoNombresVideos.length,
-                              (index) {
-                            String nombre = DatosEstaticos
-                                    .listadoNombresVideos[index]
-                                    .toString();
-                            return GestureDetector(
-                              onTap: () {
-                                if (SeleccionaVideo.videosSelecionados.length >= 1) {
-                                  if(SeleccionaVideo.videosSelecionados.contains(nombre)){
-                                    SeleccionaVideo.videosSelecionados.remove(nombre);
-                                  } else {
-                                    SeleccionaVideo.videosSelecionados.clear();
-                                    SeleccionaVideo.videosSelecionados.add(nombre);
-                                  }
-                                } else {
-                                  SeleccionaVideo.videosSelecionados.add(nombre);
-                                }
-                                //cargaRRSS = ;
+                          DatosEstaticos.listadoNombresVideos.length, (index) {
+                        String nombre = DatosEstaticos
+                            .listadoNombresVideos[index]
+                            .toString();
+                        return GestureDetector(
+                          onTap: () {
+                            if (SeleccionaVideo.videosSelecionados.length >=
+                                1) {
+                              if (SeleccionaVideo.videosSelecionados
+                                  .contains(nombre)) {
+                                SeleccionaVideo.videosSelecionados
+                                    .remove(nombre);
+                              } else {
+                                SeleccionaVideo.videosSelecionados.clear();
+                                SeleccionaVideo.videosSelecionados.add(nombre);
+                              }
+                            } else {
+                              SeleccionaVideo.videosSelecionados.add(nombre);
+                            }
+                            //cargaRRSS = ;
 
-                                Navigator.popAndPushNamed(context, "/seleccionar_video",
-                                    arguments: {
-                                      'division_layout': DatosEstaticos.divisionLayout,
-                                      'ruta_proveniente': rutaDeDondeViene,
-                                    });
-                              },
-                              child: Opacity(
-                                opacity: resultado(nombre),
-                                child: Stack(
-                                  alignment: Alignment.center,
+                            Navigator.popAndPushNamed(
+                                context, "/seleccionar_video",
+                                arguments: {
+                                  'division_layout':
+                                      DatosEstaticos.divisionLayout,
+                                  'ruta_proveniente': rutaDeDondeViene,
+                                });
+                          },
+                          child: Opacity(
+                            opacity: resultado(nombre),
+                            child: Stack(
+                              alignment: Alignment.center,
+                              children: [
+                                Column(
                                   children: [
-                                    Column(
-                                      children: [
-                                        Expanded(
-                                          flex: 5,
-                                          child: ReproductorVideos(
-                                            url:
+                                    Expanded(
+                                      flex: 5,
+                                      child: ReproductorVideos(
+                                        url:
                                             'http://${DatosEstaticos.ipSeleccionada}/VideosPostTv/${DatosEstaticos.listadoNombresVideos[index]}',
-                                          ),
-                                        ),
-                                        Expanded(
-                                          flex: 1,
-                                          child: Padding(
-                                            padding: EdgeInsets.only(top: 3),
-                                            child: Text(
-                                              nombre.substring(
-                                                  0, nombre.lastIndexOf('.')),
-                                              textAlign: TextAlign.center,
-                                            ),
-                                          ),
-                                        ),
-                                      ],
+                                      ),
                                     ),
-                                    Positioned(
-                                      bottom: 30,
-                                      right: 10,
-                                      //Se aplica el ícono verde al seleccionar
-                                      child:
-                                      SeleccionaVideo.videosSelecionados.contains(nombre)
-                                          ? CambiosSeleccion.iconoSeleccionado
-                                          : Container(),
+                                    Expanded(
+                                      flex: 1,
+                                      child: Padding(
+                                        padding: EdgeInsets.only(top: 3),
+                                        child: Text(
+                                          nombre.substring(
+                                              0, nombre.lastIndexOf('.')),
+                                          textAlign: TextAlign.center,
+                                        ),
+                                      ),
                                     ),
                                   ],
                                 ),
-                              ),
-                              /*
+                                Positioned(
+                                  bottom: 30,
+                                  right: 10,
+                                  //Se aplica el ícono verde al seleccionar
+                                  child: SeleccionaVideo.videosSelecionados
+                                          .contains(nombre)
+                                      ? CambiosSeleccion.iconoSeleccionado
+                                      : Container(),
+                                ),
+                              ],
+                            ),
+                          ),
+                          /*
                               onDoubleTap: () {
                                 Widget video = ReproductorVideos(
                                   url:
@@ -349,117 +353,105 @@ class _SeleccionarVideoState extends State<SeleccionarVideo> {
                               },
 
                                */
-                            );
-                          }),
+                        );
+                      }),
                     ),
                   ),
                   SeleccionaVideo.videosSelecionados.length == 1
                       ? Container(
-                    width: MediaQuery.of(context).size.width,
-                    height:
-                    MediaQuery.of(context).size.height / 4,
-                    //color: Colors.pink,
-                    child: Column(
-                      children: [
-                        SizedBox(height: 38),
-                        Container(
-                          height: 40,
-                          width: 200,
-                          decoration: new BoxDecoration(
-                              borderRadius:
-                              BorderRadius.circular(20),
-                              gradient: LinearGradient(
-                                  colors: [
-                                    HexColor("#0683ff"),
-                                    HexColor("#3edb9b")
-                                  ],
-                                  stops: [
-                                    0.1,
-                                    0.6
-                                  ],
-                                  begin: Alignment.topLeft,
-                                  end: FractionalOffset
-                                      .bottomRight)),
-                          child: FlatButton(
-                            color: Colors.transparent,
-                            onPressed: () async {
-                              Widget video = ReproductorVideos(
-                                url:
-                                'http://${DatosEstaticos.ipSeleccionada}/VideosPostTv/${SeleccionaVideo.videosSelecionados[0]}',
-                                divisionLayout: divisionLayout,
-                                seleccionado: true,
-                              );
-                              String nombre =
-                              SeleccionaVideo.videosSelecionados[0];
-                              RedireccionarCrearLayout(video,
-                                  "/var/www/html/VideosPostTv/$nombre", false);
-                            },
-                            child: Text(
-                              'CARGAR',
-                              style: TextStyle(
-                                  color: Colors.white),
-                            ),
-                          ),
-                        ),
-                        SizedBox(height: 15),
-                        Container(
-                          height: 40,
-                          width: 200,
-                          decoration: new BoxDecoration(
-                              borderRadius:
-                              BorderRadius.circular(20),
-                              gradient: LinearGradient(
-                                  colors: [
-                                    HexColor("#3edb9b"),
-                                    HexColor("#0683ff")
-                                  ],
-                                  stops: [
-                                    0.5,
-                                    1
-                                  ],
-                                  begin: Alignment.topLeft,
-                                  end: FractionalOffset
-                                      .bottomRight)),
-                          child: FlatButton(
-                            color: Colors.transparent,
-                            onPressed: () async {
-                              //String dir = (await getTemporaryDirectory()).path;
-                              //File temporal = new File('$dir/img_temp_creada.png');
-                              setState(() {
-                                //ACA SE DEBE AGREGAR FUNCIONALIDAD DE REDES SOCIALES
-                                /*BotonEnviarAEquipo(
-                                                  visible: _visible,
-                                                  publicar_rrss: true,
-                                                  publicar_porcion: 1,
-                                                );*/
-                              });
-                            },
-                            child: Padding(
-                              padding:
-                              const EdgeInsets.all(6.0),
-                              child: Column(children: [
-                                Text(
-                                  'CARGAR +',
-                                  style: TextStyle(
-                                      color: Colors.white),
+                          width: MediaQuery.of(context).size.width,
+                          height: MediaQuery.of(context).size.height / 4,
+                          //color: Colors.pink,
+                          child: Column(
+                            children: [
+                              SizedBox(height: 38),
+                              Container(
+                                height: 40,
+                                width: 200,
+                                decoration: new BoxDecoration(
+                                    borderRadius: BorderRadius.circular(20),
+                                    gradient: LinearGradient(
+                                        colors: [
+                                          HexColor("#0683ff"),
+                                          HexColor("#3edb9b")
+                                        ],
+                                        stops: [
+                                          0.1,
+                                          0.6
+                                        ],
+                                        begin: Alignment.topLeft,
+                                        end: FractionalOffset.bottomRight)),
+                                child: FlatButton(
+                                  color: Colors.transparent,
+                                  onPressed: () async {
+                                    Widget video = ReproductorVideos(
+                                      url:
+                                          'http://${DatosEstaticos.ipSeleccionada}/VideosPostTv/${SeleccionaVideo.videosSelecionados[0]}',
+                                      divisionLayout: divisionLayout,
+                                      seleccionado: true,
+                                    );
+                                    String nombre =
+                                        SeleccionaVideo.videosSelecionados[0];
+                                    RedireccionarCrearLayout(
+                                        video,
+                                        "/var/www/html/VideosPostTv/$nombre",
+                                        false);
+                                  },
+                                  child: Text(
+                                    'CARGAR',
+                                    style: TextStyle(color: Colors.white),
+                                  ),
                                 ),
-                                Text(
-                                  ' COMPARTIR RRSS',
-                                  style: TextStyle(
-                                      color: Colors.white),
+                              ), /*
+                              SizedBox(height: 15),
+                              Container(
+                                height: 40,
+                                width: 200,
+                                decoration: new BoxDecoration(
+                                    borderRadius: BorderRadius.circular(20),
+                                    gradient: LinearGradient(
+                                        colors: [
+                                          HexColor("#3edb9b"),
+                                          HexColor("#0683ff")
+                                        ],
+                                        stops: [
+                                          0.5,
+                                          1
+                                        ],
+                                        begin: Alignment.topLeft,
+                                        end: FractionalOffset.bottomRight)),
+                                child: FlatButton(
+                                  color: Colors.transparent,
+                                  onPressed: () async {
+                                    //String dir = (await getTemporaryDirectory()).path;
+                                    //File temporal = new File('$dir/img_temp_creada.png');
+                                    await FlutterSocialContentShare.share(
+                                        type: ShareType.instagramWithImageUrl,
+                                        imageUrl:
+                                            'http://${DatosEstaticos.ipSeleccionada}/VideosPostTv/${DatosEstaticos.listadoNombresVideos[0]}');
+                                  },
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(6.0),
+                                    child: Column(children: [
+                                      Text(
+                                        'CARGAR +',
+                                        style: TextStyle(color: Colors.white),
+                                      ),
+                                      Text(
+                                        ' COMPARTIR RRSS',
+                                        style: TextStyle(color: Colors.white),
+                                      ),
+                                    ]),
+                                  ),
                                 ),
-                              ]),
-                            ),
+                              ),*/
+                            ],
                           ),
-                        ),
-                      ],
-                    ),
-                  )
+                        )
                       : Container(
-                    width: MediaQuery.of(context).size.width,
-                    height:
-                    MediaQuery.of(context).size.height / 4,
-                  ),
+                          width: MediaQuery.of(context).size.width,
+                          height: MediaQuery.of(context).size.height / 4,
+                        ),
                 ],
               );
             }
@@ -581,15 +573,15 @@ class _SeleccionarVideoState extends State<SeleccionarVideo> {
     GlobalKey<FormState> _keyValidadorvideo = GlobalKey<FormState>();
     String nombreNuevoVideo = "";
     if (rutaDeDondeViene != null) {
-      videoSeleccionadoGaleria =
-      await FilePicker.platform.pickFiles(allowMultiple: true, type: FileType.video);
+      videoSeleccionadoGaleria = await FilePicker.platform
+          .pickFiles(allowMultiple: true, type: FileType.video);
     } else {
       videoSeleccionadoGaleria =
-      await FilePicker.platform.pickFiles(type: FileType.video);
+          await FilePicker.platform.pickFiles(type: FileType.video);
     }
     Widget videoAEnviar;
     if (videoSeleccionadoGaleria != null) {
-      if (videoSeleccionadoGaleria.files.length == 1){
+      if (videoSeleccionadoGaleria.files.length == 1) {
         String extension = p.extension(videoSeleccionadoGaleria.paths[0]);
         //print(extension);
         File videoFinal = File(videoSeleccionadoGaleria.paths[0]);
@@ -625,7 +617,8 @@ class _SeleccionarVideoState extends State<SeleccionarVideo> {
                                   return "Error: Nombre de video vacío";
                                 } else {
                                   nombreNuevoVideo =
-                                      textoEscrito.trim().toString() + extension;
+                                      textoEscrito.trim().toString() +
+                                          extension;
                                   //Chequear si el valor ya existe
                                   if (DatosEstaticos.listadoNombresVideos
                                       .contains(nombreNuevoVideo)) {
@@ -647,17 +640,18 @@ class _SeleccionarVideoState extends State<SeleccionarVideo> {
                                     context, 'Añadiendo video...');
                                 //Obtengo el resultado del envio
                                 var resultado = await PopUps.enviarVideo(
-                                    nombreNuevoVideo, videoFinal)
+                                        nombreNuevoVideo, videoFinal)
                                     .then((value) => value);
 
                                 if (resultado) {
-
-                                  if (rutaDeDondeViene!= null){
+                                  if (rutaDeDondeViene != null) {
                                     Navigator.pop(context);
                                     Navigator.pop(context);
-                                    Navigator.popAndPushNamed(context, "/seleccionar_video",
+                                    Navigator.popAndPushNamed(
+                                        context, "/seleccionar_video",
                                         arguments: {
-                                          'division_layout': DatosEstaticos.divisionLayout,
+                                          'division_layout':
+                                              DatosEstaticos.divisionLayout,
                                           'ruta_proveniente': rutaDeDondeViene,
                                         });
                                   } else {
@@ -665,7 +659,7 @@ class _SeleccionarVideoState extends State<SeleccionarVideo> {
                                     //Si el envío es correcto, se redirecciona
                                     videoAEnviar = ReproductorVideos(
                                       url:
-                                      'http://${DatosEstaticos.ipSeleccionada}/VideosPostTv/$nombreNuevoVideo',
+                                          'http://${DatosEstaticos.ipSeleccionada}/VideosPostTv/$nombreNuevoVideo',
                                       divisionLayout: divisionLayout,
                                       seleccionado: true,
                                     );
@@ -694,8 +688,7 @@ class _SeleccionarVideoState extends State<SeleccionarVideo> {
             );
           }),
         );
-      }
-      else {
+      } else {
         String extension;
         File videoFinal;
         Widget contenidoPopUp = Column(
@@ -718,10 +711,10 @@ class _SeleccionarVideoState extends State<SeleccionarVideo> {
                       PopUps.popUpCargando(context, 'Agregando videos...');
 
                       for (int i = 0;
-                      i <= videoSeleccionadoGaleria.files.length - 1;
-                      i++) {
+                          i <= videoSeleccionadoGaleria.files.length - 1;
+                          i++) {
                         PlatformFile element =
-                        videoSeleccionadoGaleria.files[i];
+                            videoSeleccionadoGaleria.files[i];
                         extension = p.extension(element.path);
                         videoFinal = File(element.path);
                         //Se le da el nombre de la hora actual + su posición
@@ -733,7 +726,7 @@ class _SeleccionarVideoState extends State<SeleccionarVideo> {
 
                         //Obtengo el resultado del envio
                         var resultado = await PopUps.enviarVideo(
-                            nombreNuevoVideo, videoFinal)
+                                nombreNuevoVideo, videoFinal)
                             .then((value) => value);
                         if (resultado == false) {
                           showDialog(
@@ -909,20 +902,14 @@ class _ReproductorVideosState extends State<ReproductorVideos> {
             child: VideoPlayer(widget.controller),
           ),
           Container(
-            width: MediaQuery
-                .of(context)
-                .size
-                .width / 7,
+            width: MediaQuery.of(context).size.width / 7,
             child: RaisedButton(
               shape: CircleBorder(),
               child: Icon(
                 widget.controller.value.isPlaying
                     ? Icons.pause
                     : Icons.play_arrow,
-                size: MediaQuery
-                    .of(context)
-                    .size
-                    .width / 15,
+                size: MediaQuery.of(context).size.width / 15,
               ),
               onPressed: () {
                 accionReproducir();
@@ -931,7 +918,7 @@ class _ReproductorVideosState extends State<ReproductorVideos> {
           ),
         ],
       );
-    }catch(ex){
+    } catch (ex) {
       print('Error al resproducir: ${ex.toString()}');
     }
 
@@ -1048,7 +1035,6 @@ class _ReproductorVideosState extends State<ReproductorVideos> {
   }
 }
 
-
 class CambiosSeleccion {
   static String rutaPadre;
   static BuildContext context;
@@ -1159,7 +1145,8 @@ class CambiosSeleccion {
       textoPopUp =
           Text('¿Eliminar ${nombre.substring(0, nombre.lastIndexOf('.'))}?');
     } else {
-      textoPopUp = Text('¿Eliminar ${SeleccionaVideo.videosSelecionados.length} videos?');
+      textoPopUp = Text(
+          '¿Eliminar ${SeleccionaVideo.videosSelecionados.length} videos?');
     }
     contenidoPopUp = Column(
       mainAxisSize: MainAxisSize.min,
@@ -1176,9 +1163,9 @@ class CambiosSeleccion {
                   Navigator.pop(context);
                   PopUps.popUpCargando(context, 'Eliminando videos...');
                   var resultadoEliminar =
-                  await ComunicacionRaspberry.EliminarContenido(
-                      tipoContenido: 'videos',
-                      nombresAEliminar: SeleccionaVideo.videosSelecionados);
+                      await ComunicacionRaspberry.EliminarContenido(
+                          tipoContenido: 'videos',
+                          nombresAEliminar: SeleccionaVideo.videosSelecionados);
                   if (resultadoEliminar != null) {
                     //Se limpia la lista estática de videos seleccionados
                     SeleccionaVideo.videosSelecionados.clear();
@@ -1283,7 +1270,7 @@ class CambiosSeleccion {
                       PopUps.popUpCargando(context, 'Editando video...');
                       //Obtengo el resultado del envio
                       var resultado =
-                      await ComunicacionRaspberry.EditarContenido(
+                          await ComunicacionRaspberry.EditarContenido(
                         tipoContenido: 'videos',
                         nombresAEliminar: listadoNombres,
                       );
@@ -1292,8 +1279,7 @@ class CambiosSeleccion {
                         SeleccionaVideo.videosSelecionados.clear();
                         Navigator.pop(context);
                         Navigator.pop(context);
-                        Navigator.popAndPushNamed(
-                            context, "/seleccionar_video",
+                        Navigator.popAndPushNamed(context, "/seleccionar_video",
                             arguments: {
                               'division_layout': '0',
                               'ruta_proveniente': rutaPadre,

@@ -70,6 +70,19 @@ flutter:
   # included with your application, so that you can use the icons in
   # the material Icons class.
   uses-material-design: true
+  fonts:
+     - family: tituloAxis
+       fonts:
+         - asset: fonts/axis.ttf
+  #         style: italic
+     - family: textoMont
+       fonts:
+         - asset: fonts/Lato-Light.ttf
+     - family: tvlapiz
+       fonts:
+         - asset: iconos/Tvlapiz.ttf  
+       
+      
 
   # To add assets to your application, add an assets section, like this:
   assets:
@@ -86,14 +99,7 @@ flutter:
   # "family" key with the font family name, and a "fonts" key with a
   # list giving the asset and other descriptors for the font. For
   # example:
-  fonts:
-     - family: tituloAxis
-       fonts:
-         - asset: fonts/axis.ttf
-  #         style: italic
-     - family: textoMont
-       fonts:
-         - asset: fonts/Lato-Light.ttf
+ 
   #       - asset: fonts/TrajanPro_Bold.ttf
   #         weight: 700
   #

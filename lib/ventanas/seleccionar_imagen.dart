@@ -6,6 +6,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_social_content_share/flutter_social_content_share.dart';
 import 'package:tvpost_flutter/utilidades/comunicacion_raspberry.dart';
 import 'package:tvpost_flutter/utilidades/custom_widgets.dart';
 import 'package:tvpost_flutter/utilidades/datos_estaticos.dart';
@@ -284,7 +285,7 @@ class _SeleccionarImagenState extends State<SeleccionarImagen> {
                             //y luego se agrega la nueva imagen seleccionada
 
                             if (imagenesSeleccionadas.length >= 1) {
-                              if(imagenesSeleccionadas.contains(nombre)){
+                              if (imagenesSeleccionadas.contains(nombre)) {
                                 imagenesSeleccionadas.remove(nombre);
                               } else {
                                 imagenesSeleccionadas.clear();
@@ -380,14 +381,28 @@ class _SeleccionarImagenState extends State<SeleccionarImagen> {
                                             onPressed: () async {
                                               //String dir = (await getTemporaryDirectory()).path;
                                               //File temporal = new File('$dir/img_temp_creada.png');
-                                              setState(() {
-                                                //ACA SE DEBE AGREGAR FUNCIONALIDAD DE REDES SOCIALES
-                                                /*BotonEnviarAEquipo(
-                                                  visible: _visible,
-                                                  publicar_rrss: true,
-                                                  publicar_porcion: 1,
-                                                );*/
-                                              });
+
+                                              await FlutterSocialContentShare
+                                                  .share(
+                                                      type: ShareType
+                                                          .instagramWithImageUrl,
+                                                      imageUrl: 'http://'
+                                                          '${DatosEstaticos.ipSeleccionada}'
+                                                          '/ImagenesPostTv/'
+                                                          '${DatosEstaticos.listadoNombresImagenes[index]}');
+
+                                              Widget imagen = Image.network(
+                                                  'http://'
+                                                  '${DatosEstaticos.ipSeleccionada}'
+                                                  '/ImagenesPostTv/'
+                                                  '${DatosEstaticos.listadoNombresImagenes[index]}');
+                                              String nombre = DatosEstaticos
+                                                      .listadoNombresImagenes[
+                                                  index];
+                                              RedireccionarCrearLayout(
+                                                  imagen,
+                                                  "/var/www/html/ImagenesPostTv/$nombre",
+                                                  false);
                                             },
                                             child: Padding(
                                               padding:
@@ -681,10 +696,11 @@ class _SeleccionarImagenState extends State<SeleccionarImagen> {
                                   .then((value) => value);
 
                               if (resultado) {
-                                if (rutaDeDondeViene!= null){
+                                if (rutaDeDondeViene != null) {
                                   Navigator.pop(context);
                                   Navigator.pop(context);
-                                  Navigator.popAndPushNamed(context, "/seleccionar_imagen",
+                                  Navigator.popAndPushNamed(
+                                      context, "/seleccionar_imagen",
                                       arguments: {
                                         'division_layout': '0',
                                         'ruta_proveniente': rutaDeDondeViene,
@@ -719,8 +735,7 @@ class _SeleccionarImagenState extends State<SeleccionarImagen> {
             ),
           ),
         );
-      }
-      else {
+      } else {
         String nombreNuevaImagen = "";
         String extension;
         File imagenFinal;

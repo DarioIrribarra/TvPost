@@ -12,6 +12,7 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:liquid_pull_to_refresh/liquid_pull_to_refresh.dart';
 //import 'package:path_provider/path_provider.dart';
 import 'package:fswitch/fswitch.dart';
+import 'package:tvpost_flutter/tvlapiz_icons.dart';
 
 class DetalleEquipo extends StatefulWidget {
   @override
@@ -294,10 +295,9 @@ class _DetalleEquipoState extends State<DetalleEquipo> {
                                       onPressed: () async {
                                         _widgetPopUpAlias();
                                       },
-                                      icon: Icon(
-                                        Icons.edit,
-                                        size: 10,
-                                      ),
+                                      icon: Icon(Tvlapiz.lapiz
+                                          //size: 10,
+                                          ),
                                     )),
                                 Text(""),
                                 Text("")
