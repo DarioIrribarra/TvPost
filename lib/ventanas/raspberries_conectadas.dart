@@ -45,52 +45,51 @@ class _RaspberriesConectadasState extends State<RaspberriesConectadas> {
 
     return WillPopScope(
       onWillPop: () {
-        Widget contenidoPopUp = Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Text(
-              '¿Desea salir de TvPost?',
-              textAlign: TextAlign.center,
-            ),
-            SizedBox(
-              height: 10,
-            ),
-            Row(
+        Widget contenidoPopUp = Container(
+            decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(40),
+                color: HexColor('#f4f4f4')),
+            height: 150,
+            width: 250,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
-                Expanded(
-                  flex: 1,
-                  child: RaisedButton(
-                    onPressed: () {
-                      if (Platform.isAndroid) {
-                        SystemNavigator.pop();
-                        return;
-                      } else {
-                        exit(0);
-                      }
-                    },
-                    child: Text(
-                      'Aceptar',
-                      textAlign: TextAlign.center,
+                Text(
+                  '¿DESEA CERRAR SESIÓN?',
+                  textAlign: TextAlign.center,
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    GestureDetector(
+                      child: Icon(
+                        Icons.check_circle,
+                        color: HexColor('#3EDB9B'),
+                        size: 30,
+                      ),
+                      onTap: () {
+                        if (Platform.isAndroid) {
+                          SystemNavigator.pop();
+                          return;
+                        } else {
+                          exit(0);
+                        }
+                      },
                     ),
-                  ),
-                ),
-                SizedBox(
-                  width: 10,
-                ),
-                Expanded(
-                  flex: 1,
-                  child: RaisedButton(
-                    onPressed: () => Navigator.pop(context),
-                    child: Text(
-                      'Cancelar',
-                      textAlign: TextAlign.center,
+                    GestureDetector(
+                      child: Icon(
+                        Icons.cancel,
+                        color: HexColor('#FC4C8B'),
+                        size: 30,
+                      ),
+                      onTap: () {
+                        Navigator.pop(context);
+                      },
                     ),
-                  ),
-                ),
+                  ],
+                )
               ],
-            )
-          ],
-        );
+            ));
         PopUps.PopUpConWidget(context, contenidoPopUp);
         return;
       },
@@ -229,27 +228,25 @@ class _RaspberriesConectadasState extends State<RaspberriesConectadas> {
                                                             flex: 1,
                                                             child:
                                                                 GestureDetector(
-                                                                    onTap: () {
-                                                                      VistaPreviaReproduccion(
-                                                                          index);
-                                                                    },
-                                                                    child:
-                                                                    CircleAvatar(
-                                                                      backgroundColor:
-                                                                      Colors.blueAccent,
-                                                                      radius:
-                                                                      10,
-                                                                      child:
-                                                                      Icon(
-                                                                        Icons
-                                                                            .remove_red_eye,
-                                                                        size:
-                                                                        17,
-                                                                        color:
-                                                                        Colors.white,
-                                                                      ),
-                                                                    ),
+                                                              onTap: () {
+                                                                VistaPreviaReproduccion(
+                                                                    index);
+                                                              },
+                                                              child:
+                                                                  CircleAvatar(
+                                                                backgroundColor:
+                                                                    Colors
+                                                                        .blueAccent,
+                                                                radius: 10,
+                                                                child: Icon(
+                                                                  Icons
+                                                                      .remove_red_eye,
+                                                                  size: 17,
+                                                                  color: Colors
+                                                                      .white,
                                                                 ),
+                                                              ),
+                                                            ),
                                                           ),
                                                           Expanded(
                                                             flex: 1,
@@ -1174,36 +1171,44 @@ class _RaspberriesConectadasState extends State<RaspberriesConectadas> {
                             Navigator.pop(context);
                             Navigator.pop(context);
                             valorSwitchUno = true;
-                            Widget contenidoPopUp = Column(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                Text('Equipo $alias deshabilitado'),
-                                SizedBox(
-                                  width: 10,
-                                ),
-                                RaisedButton(
-                                  child: Text(
-                                    'Aceptar',
-                                    textScaleFactor: 1.3,
-                                  ),
-                                  onPressed: () {
-                                    //Navigator.pop(context);
-                                    Navigator.pop(context);
-                                    //Libera los widgets y datos creados
-                                    LimpiarDatosEstaticos();
-                                    DatosEstaticos.indexSeleccionado = index;
-                                    DatosEstaticos.ipSeleccionada = ObtieneDatos
-                                        .listadoEquipos[index]['f_ip']
-                                        .toString();
-                                    return Navigator.popAndPushNamed(
-                                        context, '/detalle_equipo',
-                                        arguments: {
-                                          "indexEquipoGrid": index,
-                                        });
-                                  },
-                                ),
-                              ],
-                            );
+                            Widget contenidoPopUp = Container(
+                                decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(40),
+                                    color: HexColor('#f4f4f4')),
+                                height: 150,
+                                width: 250,
+                                child: Column(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    Text('Equipo $alias deshabilitado'),
+                                    SizedBox(
+                                      width: 10,
+                                    ),
+                                    RaisedButton(
+                                      child: Text(
+                                        'Aceptar',
+                                        textScaleFactor: 1.3,
+                                      ),
+                                      onPressed: () {
+                                        //Navigator.pop(context);
+                                        Navigator.pop(context);
+                                        //Libera los widgets y datos creados
+                                        LimpiarDatosEstaticos();
+                                        DatosEstaticos.indexSeleccionado =
+                                            index;
+                                        DatosEstaticos.ipSeleccionada =
+                                            ObtieneDatos.listadoEquipos[index]
+                                                    ['f_ip']
+                                                .toString();
+                                        return Navigator.popAndPushNamed(
+                                            context, '/detalle_equipo',
+                                            arguments: {
+                                              "indexEquipoGrid": index,
+                                            });
+                                      },
+                                    ),
+                                  ],
+                                ));
                             PopUps.PopUpConWidget(context, contenidoPopUp);
                           });
                         }
@@ -1234,86 +1239,101 @@ class _RaspberriesConectadasState extends State<RaspberriesConectadas> {
       );
     } else {
       contenido = new AlertDialog(
-        title: Text(
-          'Deshabilitar Equipos',
-          textAlign: TextAlign.center,
-        ),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Text(
-              '¿Desea deshabilitar todos los equipos?',
-              textAlign: TextAlign.center,
-            ),
-            SizedBox(
-              height: 10,
-            ),
-            Row(
+        contentPadding: EdgeInsets.only(bottom: 20, top: 20, left: 5, right: 5),
+        backgroundColor: Colors.grey.withOpacity(0.0),
+        content: Container(
+            decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(40),
+                color: HexColor('#f4f4f4')),
+            height: 150,
+            width: 250,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
-                Expanded(
-                    flex: 1,
-                    child: RaisedButton(
-                      child: Text(
-                        'Aceptar',
-                        textScaleFactor: 1.3,
-                      ),
-                      onPressed: () async {
-                        PopUps.popUpCargando(
-                            context, 'Deshabilitando equipos...');
-                        var resultado =
-                            await actualizarEstado.updateEstadoEquipo(
-                                serial: "-1",
-                                estado: "0",
-                                listadoEquipos: listadoEquipos);
-                        if (resultado == 1) {
-                          setState(() {
-                            Navigator.pop(context);
-                            Navigator.pop(context);
-                            valorSwitchTodos = true;
-                            Widget contenidoPopUp = Column(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                Text('Todos los equipos deshabilitados'),
-                                SizedBox(
-                                  width: 10,
-                                ),
-                                RaisedButton(
-                                  child: Text(
-                                    'Aceptar',
-                                    textScaleFactor: 1.3,
-                                  ),
-                                  onPressed: () {
-                                    Navigator.pop(context);
-                                  },
-                                ),
-                              ],
-                            );
-                            PopUps.PopUpConWidget(context, contenidoPopUp);
-                          });
-                        }
-                      },
-                    )),
-                SizedBox(
-                  width: 10,
+                Text(
+                  '¿Desea deshabilitar todos los equipos?',
+                  textAlign: TextAlign.center,
                 ),
-                Expanded(
-                    flex: 1,
-                    child: RaisedButton(
-                      child: Text(
-                        'Cancelar',
-                        textScaleFactor: 1.3,
-                      ),
-                      onPressed: () {
-                        Navigator.pop(context);
-                        /*setState(() {
+                SizedBox(
+                  height: 10,
+                ),
+                Row(
+                  children: [
+                    Expanded(
+                        flex: 1,
+                        child: RaisedButton(
+                          child: Text(
+                            'Aceptar',
+                            textScaleFactor: 1.3,
+                          ),
+                          onPressed: () async {
+                            PopUps.popUpCargando(
+                                context, 'Deshabilitando equipos...');
+                            var resultado =
+                                await actualizarEstado.updateEstadoEquipo(
+                                    serial: "-1",
+                                    estado: "0",
+                                    listadoEquipos: listadoEquipos);
+                            if (resultado == 1) {
+                              setState(() {
+                                Navigator.pop(context);
+                                Navigator.pop(context);
+                                valorSwitchTodos = true;
+                                Widget contenidoPopUp = Container(
+                                    decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(40),
+                                        color: HexColor('#f4f4f4')),
+                                    height: 150,
+                                    width: 250,
+                                    child: Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceEvenly,
+                                      children: [
+                                        Text(
+                                          'Todos los equipos deshabilitados',
+                                          textAlign: TextAlign.center,
+                                        ),
+                                        SizedBox(
+                                          width: 10,
+                                        ),
+                                        RaisedButton(
+                                          child: Text(
+                                            'Aceptar',
+                                            textScaleFactor: 1.3,
+                                          ),
+                                          onPressed: () {
+                                            Navigator.pop(context);
+                                          },
+                                        ),
+                                      ],
+                                    ));
+                                PopUps.PopUpConWidget(context, contenidoPopUp);
+                              });
+                            }
+                          },
+                        )),
+                    SizedBox(
+                      width: 10,
+                    ),
+                    Expanded(
+                        flex: 1,
+                        child: RaisedButton(
+                          child: Text(
+                            'Cancelar',
+                            textScaleFactor: 1.3,
+                          ),
+                          onPressed: () {
+                            Navigator.pop(context);
+                            /*setState(() {
                           valorSwitchTodos = valorSwitch;
                         });*/
-                      },
-                    )),
+                          },
+                        )),
+                  ],
+                ),
               ],
-            ),
-          ],
-        ),
+            )),
       );
     }
 
@@ -1387,36 +1407,44 @@ class _RaspberriesConectadasState extends State<RaspberriesConectadas> {
                             Navigator.pop(context);
                             Navigator.pop(context);
                             valorSwitchUno = false;
-                            Widget contenidoPopUp = Column(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                Text('Equipo $alias habilitado'),
-                                SizedBox(
-                                  width: 10,
-                                ),
-                                RaisedButton(
-                                  child: Text(
-                                    'Aceptar',
-                                    textScaleFactor: 1.3,
-                                  ),
-                                  onPressed: () {
-                                    //Navigator.pop(context);
-                                    Navigator.pop(context);
-                                    //Libera los widgets y datos creados
-                                    LimpiarDatosEstaticos();
-                                    DatosEstaticos.indexSeleccionado = index;
-                                    DatosEstaticos.ipSeleccionada = ObtieneDatos
-                                        .listadoEquipos[index]['f_ip']
-                                        .toString();
-                                    return Navigator.popAndPushNamed(
-                                        context, '/detalle_equipo',
-                                        arguments: {
-                                          "indexEquipoGrid": index,
-                                        });
-                                  },
-                                ),
-                              ],
-                            );
+                            Widget contenidoPopUp = Container(
+                                decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(40),
+                                    color: HexColor('#f4f4f4')),
+                                height: 150,
+                                width: 250,
+                                child: Column(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    Text('Equipo $alias habilitado'),
+                                    SizedBox(
+                                      width: 10,
+                                    ),
+                                    RaisedButton(
+                                      child: Text(
+                                        'Aceptar',
+                                        textScaleFactor: 1.3,
+                                      ),
+                                      onPressed: () {
+                                        //Navigator.pop(context);
+                                        Navigator.pop(context);
+                                        //Libera los widgets y datos creados
+                                        LimpiarDatosEstaticos();
+                                        DatosEstaticos.indexSeleccionado =
+                                            index;
+                                        DatosEstaticos.ipSeleccionada =
+                                            ObtieneDatos.listadoEquipos[index]
+                                                    ['f_ip']
+                                                .toString();
+                                        return Navigator.popAndPushNamed(
+                                            context, '/detalle_equipo',
+                                            arguments: {
+                                              "indexEquipoGrid": index,
+                                            });
+                                      },
+                                    ),
+                                  ],
+                                ));
                             PopUps.PopUpConWidget(context, contenidoPopUp);
                           });
                         }
@@ -1447,84 +1475,97 @@ class _RaspberriesConectadasState extends State<RaspberriesConectadas> {
       );
     } else {
       contenido = new AlertDialog(
-        title: Text(
-          'Habilitar Equipos',
-          textAlign: TextAlign.center,
-        ),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Text(
-              '¿Desea habilitar todos los equipos?',
-              textAlign: TextAlign.center,
-            ),
-            SizedBox(
-              height: 10,
-            ),
-            Row(
-              children: [
-                Expanded(
-                    flex: 1,
-                    child: RaisedButton(
-                      child: Text(
-                        'Aceptar',
-                        textScaleFactor: 1.3,
-                      ),
-                      onPressed: () async {
-                        PopUps.popUpCargando(context, 'Habilitando equipos...');
-                        var resultado =
-                            await actualizarEstado.updateEstadoEquipo(
-                                serial: "-1",
-                                estado: "1",
-                                listadoEquipos: listadoEquipos);
-                        if (resultado == 1) {
-                          setState(() {
-                            Navigator.pop(context);
-                            Navigator.pop(context);
-                            valorSwitchTodos = false;
-                            Widget contenidoPopUp = Column(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                Text('Todos los equipos habilitados'),
-                                SizedBox(
-                                  width: 10,
-                                ),
-                                RaisedButton(
-                                  child: Text(
-                                    'Aceptar',
-                                    textScaleFactor: 1.3,
-                                  ),
-                                  onPressed: () {
-                                    Navigator.pop(context);
-                                  },
-                                ),
-                              ],
-                            );
-                            PopUps.PopUpConWidget(context, contenidoPopUp);
-                          });
-                        }
-                      },
-                    )),
-                SizedBox(
-                  width: 10,
-                ),
-                Expanded(
-                    flex: 1,
-                    child: RaisedButton(
-                      child: Text(
-                        'Cancelar',
-                        textScaleFactor: 1.3,
-                      ),
-                      onPressed: () {
-                        Navigator.pop(context);
-                        /*setState(() {
-                          valorSwitchTodos = valorSwitch;
-                        });*/
-                      },
-                    )),
-              ],
-            ),
-          ],
+        contentPadding: EdgeInsets.only(bottom: 20, top: 20, left: 5, right: 5),
+        backgroundColor: Colors.grey.withOpacity(0.0),
+        content: Container(
+          decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(40),
+              color: HexColor('#f4f4f4')),
+          height: 150,
+          width: 250,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              Text(
+                '¿Desea habilitar todos los equipos?',
+                textAlign: TextAlign.center,
+              ),
+              SizedBox(
+                height: 10,
+              ),
+              Row(
+                children: [
+                  Expanded(
+                      flex: 1,
+                      child: RaisedButton(
+                        child: Text(
+                          'Aceptar',
+                          textScaleFactor: 1.3,
+                        ),
+                        onPressed: () async {
+                          PopUps.popUpCargando(
+                              context, 'Habilitando equipos...');
+                          var resultado =
+                              await actualizarEstado.updateEstadoEquipo(
+                                  serial: "-1",
+                                  estado: "1",
+                                  listadoEquipos: listadoEquipos);
+                          if (resultado == 1) {
+                            setState(() {
+                              Navigator.pop(context);
+                              Navigator.pop(context);
+                              valorSwitchTodos = false;
+                              Widget contenidoPopUp = Container(
+                                  decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(40),
+                                      color: HexColor('#f4f4f4')),
+                                  height: 150,
+                                  width: 250,
+                                  child: Column(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceEvenly,
+                                    children: [
+                                      Text('Todos los equipos habilitados'),
+                                      SizedBox(
+                                        width: 10,
+                                      ),
+                                      RaisedButton(
+                                        child: Text(
+                                          'Aceptar',
+                                          textScaleFactor: 1.3,
+                                        ),
+                                        onPressed: () {
+                                          Navigator.pop(context);
+                                        },
+                                      ),
+                                    ],
+                                  ));
+                              PopUps.PopUpConWidget(context, contenidoPopUp);
+                            });
+                          }
+                        },
+                      )),
+                  SizedBox(
+                    width: 10,
+                  ),
+                  Expanded(
+                      flex: 1,
+                      child: RaisedButton(
+                        child: Text(
+                          'Cancelar',
+                          textScaleFactor: 1.3,
+                        ),
+                        onPressed: () {
+                          Navigator.pop(context);
+                          /*setState(() {
+                            valorSwitchTodos = valorSwitch;
+                          });*/
+                        },
+                      )),
+                ],
+              ),
+            ],
+          ),
         ),
       );
     }
@@ -1540,95 +1581,107 @@ class _RaspberriesConectadasState extends State<RaspberriesConectadas> {
     String ip = ObtieneDatos.listadoEquipos[index]['f_ip'].toString();
     String serial = ObtieneDatos.listadoEquipos[index]['f_serial'].toString();
     String alias = ObtieneDatos.listadoEquipos[index]['f_alias'].toString();
-    Widget contenidoPopUp = Column(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        //Título
-        Text(
-          'Receptor sin comunicación',
-          textAlign: TextAlign.center,
-          textScaleFactor: 1.2,
-          style: TextStyle(fontWeight: FontWeight.bold),
-        ),
-        SizedBox(
-          height: 10,
-        ),
-        Text(
-          'Alias: ${alias}',
-          textAlign: TextAlign.center,
-        ),
-        Text(
-          'Serial: ${serial}',
-          textAlign: TextAlign.center,
-        ),
-        Text(
-          'Ip: ${ip}',
-          textAlign: TextAlign.center,
-        ),
-        SizedBox(
-          height: 10,
-        ),
-        Text(
-          'Compruebe conexión de red y energía',
-          textAlign: TextAlign.center,
-        ),
-        SizedBox(
-          height: 10,
-        ),
-        RaisedButton(
-          child: Text(
-            'Aceptar',
-            textScaleFactor: 1.3,
-          ),
-          onPressed: () {
-            Navigator.pop(context);
-          },
-        ),
-      ],
-    );
+    Widget contenidoPopUp = Container(
+        decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(40),
+            color: HexColor('#f4f4f4')),
+        height: 150,
+        width: 250,
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            //Título
+            Text(
+              'Receptor sin comunicación',
+              textAlign: TextAlign.center,
+              textScaleFactor: 1.2,
+              style: TextStyle(fontWeight: FontWeight.bold),
+            ),
+            SizedBox(
+              height: 10,
+            ),
+            Text(
+              'Alias: ${alias}',
+              textAlign: TextAlign.center,
+            ),
+            Text(
+              'Serial: ${serial}',
+              textAlign: TextAlign.center,
+            ),
+            Text(
+              'Ip: ${ip}',
+              textAlign: TextAlign.center,
+            ),
+            SizedBox(
+              height: 10,
+            ),
+            Text(
+              'Compruebe conexión de red y energía',
+              textAlign: TextAlign.center,
+            ),
+            SizedBox(
+              height: 10,
+            ),
+            RaisedButton(
+              child: Text(
+                'Aceptar',
+                textScaleFactor: 1.3,
+              ),
+              onPressed: () {
+                Navigator.pop(context);
+              },
+            ),
+          ],
+        ));
     PopUps.PopUpConWidget(context, contenidoPopUp);
   }
 
   void MensajeActivarEquipo(int index) {
     String alias = ObtieneDatos.listadoEquipos[index]['f_alias'].toString();
-    Widget contenidoPopUp = Column(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        //Título
-        Text(
-          'Función no permitida',
-          textAlign: TextAlign.center,
-          textScaleFactor: 1.2,
-          style: TextStyle(fontWeight: FontWeight.bold),
-        ),
-        /*SizedBox(height:10,),
+    Widget contenidoPopUp = Container(
+        decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(40),
+            color: HexColor('#f4f4f4')),
+        height: 150,
+        width: 250,
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            //Título
+            Text(
+              'Función no permitida',
+              textAlign: TextAlign.center,
+              textScaleFactor: 1.2,
+              style: TextStyle(fontWeight: FontWeight.bold),
+            ),
+            /*SizedBox(height:10,),
         Text('Alias: ${alias}', textAlign: TextAlign.center,),
         Text('Serial: ${serial}', textAlign: TextAlign.center,),
         Text('Ip: ${ip}', textAlign: TextAlign.center,),
         SizedBox(
           height: 10,
         ),*/
-        SizedBox(
-          height: 10,
-        ),
-        Text(
-          "Active equipo ' $alias ' y vuelva a intentarlo",
-          textAlign: TextAlign.center,
-        ),
-        SizedBox(
-          height: 10,
-        ),
-        RaisedButton(
-          child: Text(
-            'Aceptar',
-            textScaleFactor: 1.3,
-          ),
-          onPressed: () {
-            Navigator.pop(context);
-          },
-        ),
-      ],
-    );
+            SizedBox(
+              height: 10,
+            ),
+            Text(
+              "Active equipo ' $alias ' y vuelva a intentarlo",
+              textAlign: TextAlign.center,
+            ),
+            SizedBox(
+              height: 10,
+            ),
+            RaisedButton(
+              child: Text(
+                'Aceptar',
+                textScaleFactor: 1.3,
+              ),
+              onPressed: () {
+                Navigator.pop(context);
+              },
+            ),
+          ],
+        ));
     PopUps.PopUpConWidget(context, contenidoPopUp);
   }
 

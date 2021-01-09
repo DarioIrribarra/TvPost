@@ -375,26 +375,52 @@ class _CrearContenidoState extends State<CrearContenido> {
             child: Column(
               children: [
                 SizedBox(
-                  height: 15,
+                  height: 40,
                 ),
-                Text("ELEGIR OPCIÓN: "),
+                Text("CARGAR IMÁGENES "),
                 SizedBox(
                   height: 15,
                 ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: <Widget>[
+                  children: [
                     GestureDetector(
-                      child: Text("GALERÍA"),
+                      child: Icon(Icons.camera_alt,
+                          size: 40, color: HexColor('#3EDB9B')),
                       onTap: () {
-                        _abrirGaleria2(context);
+                        _abrirCamara2(context);
                       },
                     ),
                     Padding(padding: EdgeInsets.all(8.0)),
                     GestureDetector(
-                      child: Text("CAMARA"),
+                      child: Icon(Icons.photo_album,
+                          size: 40, color: HexColor('#FC4C8B')),
+                      onTap: () {
+                        _abrirGaleria2(context);
+                      },
+                    ),
+                  ],
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: <Widget>[
+                    GestureDetector(
+                      child: Text(
+                        "CAMARA",
+                        style: TextStyle(fontSize: 10),
+                      ),
                       onTap: () {
                         _abrirCamara2(context);
+                      },
+                    ),
+                    Padding(padding: EdgeInsets.all(8.0)),
+                    GestureDetector(
+                      child: Text(
+                        "GALERÍA",
+                        style: TextStyle(fontSize: 10),
+                      ),
+                      onTap: () {
+                        _abrirGaleria2(context);
                       },
                     ),
                   ],
@@ -455,7 +481,6 @@ class _CrearContenidoState extends State<CrearContenido> {
   }
 
   _ponerOferta(BuildContext context) async {
-
     final bytes2 = await Utils.capture(key2);
     setState(() {
       this.bytes2 = bytes2;
@@ -747,8 +772,7 @@ class _CrearContenidoState extends State<CrearContenido> {
   }
 
   PopUpOferta() {
-
-    if (controladorOferta.text.length >0){
+    if (controladorOferta.text.length > 0) {
       controladorOferta.text = "";
     }
 
@@ -816,7 +840,7 @@ class _CrearContenidoState extends State<CrearContenido> {
                       WidgetToImage(builder: (key) {
                         this.key2 = key;
                         return GestureDetector(
-                          onTap: (){
+                          onTap: () {
                             FocusScope.of(context).requestFocus(nodoTexto);
                             //print(foc);
                           },
@@ -832,8 +856,11 @@ class _CrearContenidoState extends State<CrearContenido> {
                                 ),
                                 child: Column(
                                   children: [
-                                    SizedBox(height: 20,),
-                                    Text('OFERTA',
+                                    SizedBox(
+                                      height: 20,
+                                    ),
+                                    Text(
+                                      'OFERTA',
                                       style: TextStyle(color: pickerColorTexto),
                                     ),
                                     Container(
@@ -846,7 +873,8 @@ class _CrearContenidoState extends State<CrearContenido> {
                                         controller: controladorOferta,
                                         maxLengthEnforced: true,
                                         textAlign: TextAlign.center,
-                                        textAlignVertical: TextAlignVertical.center,
+                                        textAlignVertical:
+                                            TextAlignVertical.center,
                                         maxLength: 3,
                                         maxLines: 1,
                                         onEditingComplete: () {
@@ -864,8 +892,10 @@ class _CrearContenidoState extends State<CrearContenido> {
                                         //Decoración Texto
                                         style: TextStyle(
                                           color: pickerColorTexto,
-                                          fontSize:
-                                          MediaQuery.of(context).size.height / 17,
+                                          fontSize: MediaQuery.of(context)
+                                                  .size
+                                                  .height /
+                                              17,
                                         ),
                                       ),
                                     ),
@@ -873,11 +903,17 @@ class _CrearContenidoState extends State<CrearContenido> {
                                 ),
                               ),
                               Container(
-                                width: (MediaQuery.of(context).size.width / 2) - 10,
-                                height: (MediaQuery.of(context).size.height / 6) -10,
+                                width: (MediaQuery.of(context).size.width / 2) -
+                                    10,
+                                height:
+                                    (MediaQuery.of(context).size.height / 6) -
+                                        10,
                                 decoration: BoxDecoration(
                                   shape: BoxShape.circle,
-                                  border: Border.all(color: pickerColorTexto, width: 2.0, style: BorderStyle.solid),
+                                  border: Border.all(
+                                      color: pickerColorTexto,
+                                      width: 2.0,
+                                      style: BorderStyle.solid),
                                 ),
                               ),
                             ],

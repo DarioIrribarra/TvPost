@@ -95,6 +95,8 @@ class PopUps {
   //Crear un popup con cualquier widget de contenido
   static PopUpConWidget(BuildContext context, Widget contenidoPopUp) {
     AlertDialog alert = AlertDialog(
+      contentPadding: EdgeInsets.only(bottom: 20, top: 20, left: 5, right: 5),
+      backgroundColor: Colors.grey.withOpacity(0.0),
       content: contenidoPopUp,
     );
     showDialog(
@@ -273,7 +275,7 @@ class MenuAppBar {
   static void SeleccionMenu(String itemSeleccionado, BuildContext context) {
     String rutaProveniente = ModalRoute.of(context).settings.name;
     //Listado de equipos que tienen conexión
-    if (itemSeleccionado == MenuAppBar.misPantallas){}
+    if (itemSeleccionado == MenuAppBar.misPantallas) {}
     if (itemSeleccionado == MenuAppBar.administrarImagenes) {
       //Se limpia listado de videos seleccionados
       SeleccionaVideo.videosSelecionados.clear();
@@ -319,18 +321,19 @@ class MenuAppBar {
           rutaVentana: "/seleccionar_video",
           rutaProveniente: rutaProveniente);
     }
-    if (itemSeleccionado == MenuAppBar.soporte){}
-    if (itemSeleccionado == MenuAppBar.miPerfil){}
-    if (itemSeleccionado == MenuAppBar.cerrarSesion){}
+    if (itemSeleccionado == MenuAppBar.soporte) {}
+    if (itemSeleccionado == MenuAppBar.miPerfil) {}
+    if (itemSeleccionado == MenuAppBar.cerrarSesion) {}
   }
 
   static PopupMenuButton botonMenu(BuildContext context) {
-    Widget fila (String e){
+    Widget fila(String e) {
       return Text(
         e,
         textAlign: TextAlign.left,
       );
     }
+
     return PopupMenuButton<String>(
       icon: Icon(
         Icons.menu,
@@ -699,57 +702,102 @@ class _OpcionesSeleccionMediaState extends State<OpcionesSeleccionMedia> {
             contentPadding:
                 const EdgeInsets.only(bottom: 20, top: 20, left: 5, right: 5),
             backgroundColor: Colors.grey.withOpacity(0.0),
-            content: SingleChildScrollView(
-              child: Card(
-                child: Form(
-                  key: _keyValidador,
-                  child: Container(
-                    decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(40),
-                        color: HexColor('#f4f4f4')),
-                    height: 150,
-                    width: 250,
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      crossAxisAlignment: CrossAxisAlignment.center,
+            content: Form(
+              key: _keyValidador,
+              child: Container(
+                decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(40),
+                    color: HexColor('#f4f4f4')),
+                height: 175,
+                width: 250,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    Column(
                       children: [
-                        TextFormField(
-                          controller: controladorTextoUrl,
-                          decoration: InputDecoration(
-                            suffixIcon: IconButton(
-                              icon: Icon(Icons.search),
-                              onPressed: () {
-                                _abrirBuscador();
-                              },
-                            ),
-                          ),
-                          validator: (urlEscrita) {
-                            if (urlEscrita.isEmpty) {
-                              return 'Ingrese un enlace web';
-                            }
-                            if (urlEscrita.trim().length <= 0) {
-                              return 'Ingrese un enlace web';
-                            }
-                            return null;
-                          },
+                        Padding(
+                          padding: const EdgeInsets.only(top: 50.0),
+                          child: Text("INGRESAR URL"),
                         ),
-                        RaisedButton(
-                          child: Text('Ingresar enlace'),
-                          onPressed: () {
-                            if (_keyValidador.currentState.validate()) {
-                              //Crea webvbiew
-                              crearWebView(
-                                  controladorTextoUrl.text.toString().trim());
-                              //Cierra popup cargando
-                              Navigator.of(context, rootNavigator: true).pop();
+                        Row(
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.only(top: 20),
+                              child: CircleAvatar(
+                                backgroundColor: Colors.blueAccent,
+                                radius: 10,
+                                child: FlatButton(
+                                  onPressed: () async {
+                                    if (_keyValidador.currentState.validate()) {
+                                      //Crea webvbiew
+                                      crearWebView(controladorTextoUrl.text
+                                          .toString()
+                                          .trim());
+                                      //Cierra popup cargando
+                                      Navigator.of(context, rootNavigator: true)
+                                          .pop();
 
-                              widget.actualizaEstado();
-                            }
-                          },
+                                      widget.actualizaEstado();
+                                    }
+                                  },
+                                  child: Container(
+                                    transform: Matrix4.translationValues(
+                                        -16.0, 0.0, 0.0),
+                                    child: Icon(
+                                      Icons.search,
+                                      size: 20,
+                                      color: Colors.white,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                            SizedBox(
+                              width: 180,
+                              child: Padding(
+                                padding: const EdgeInsets.only(left: 10),
+                                child: TextFormField(
+                                  controller: controladorTextoUrl,
+                                  /*decoration: InputDecoration(
+                                    suffixIcon: IconButton(
+                                      alignment: Alignment.centerLeft,
+                                      icon: Icon(Icons.search),
+                                      onPressed: () {
+                                        _abrirBuscador();
+                                      },
+                                    ),
+                                  ),*/
+                                  validator: (urlEscrita) {
+                                    if (urlEscrita.isEmpty) {
+                                      return 'Ingrese un enlace web';
+                                    }
+                                    if (urlEscrita.trim().length <= 0) {
+                                      return 'Ingrese un enlace web';
+                                    }
+                                    return null;
+                                  },
+                                ),
+                              ),
+                            ),
+                          ],
                         ),
+                        /*   RaisedButton(
+                        child: Text('Ingresar enlace'),
+                        onPressed: () {
+                          if (_keyValidador.currentState.validate()) {
+                            //Crea webvbiew
+                            crearWebView(
+                                controladorTextoUrl.text.toString().trim());
+                            //Cierra popup cargando
+                            Navigator.of(context, rootNavigator: true).pop();
+
+                            widget.actualizaEstado();
+                          }
+                        },
+                      ),*/
                       ],
                     ),
-                  ),
+                  ],
                 ),
               ),
             ),

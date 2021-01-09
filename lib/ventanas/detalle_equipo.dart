@@ -289,21 +289,22 @@ class _DetalleEquipoState extends State<DetalleEquipo> {
                             Column(
                               children: [
                                 CircleAvatar(
-                                    backgroundColor: Colors.blueAccent,
-                                    radius: 10,
-                                    child: FlatButton(
-                                      onPressed: () async {
-                                        _widgetPopUpAlias();
-                                      },
-                                      child: Container(
-                                        transform: Matrix4.translationValues(-16.0, 0.0, 0.0),
-                                        child: Icon(
-                                          Tvlapiz.lapiz,
-                                          size: 20,
-                                          color: Colors.white,
-                                        ),
+                                  backgroundColor: Colors.blueAccent,
+                                  radius: 10,
+                                  child: FlatButton(
+                                    onPressed: () async {
+                                      _widgetPopUpAlias();
+                                    },
+                                    child: Container(
+                                      transform: Matrix4.translationValues(
+                                          -16.0, 0.0, 0.0),
+                                      child: Icon(
+                                        Tvlapiz.lapiz,
+                                        size: 20,
+                                        color: Colors.white,
                                       ),
                                     ),
+                                  ),
                                 ),
                                 /*Text(""),
                                 Text("")*/
@@ -817,53 +818,121 @@ class _DetalleEquipoState extends State<DetalleEquipo> {
               decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(40),
                   color: HexColor('#f4f4f4')),
-              height: 150,
+              height: 175,
               width: 250,
-              child: new Column(
-                mainAxisSize: MainAxisSize.min,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
-                  TextFormField(
-                    controller: _controladorTexto,
-                    validator: (textoEscrito) {
-                      if (textoEscrito.isEmpty) {
-                        return "Error: Alias vacío";
-                      }
-                      if (textoEscrito.trim().length <= 0) {
-                        return "Error: Alias vacío";
-                      } else {
-                        return null;
-                      }
-                    },
-                  ),
-                  RaisedButton(
-                    child: Text('Cambiar Nombre'),
-                    onPressed: () async {
-                      if (_keyValidador.currentState.validate()) {
-                        PopUps.popUpCargando(context, 'Actualizando alias...');
-                        ObtieneDatos datos = ObtieneDatos();
-                        String serial = DatosEstaticos
-                            .listadoDatosEquipoSeleccionado[0]['f_serial'];
-                        await datos.updateAliasEquipo(
-                            serial, _controladorTexto.text.toString());
-                        //print(resultado);
-                        await datos.getDatosEquipos();
-                        //Cierra popup cargando
-                        Navigator.of(context).pop();
-                        Navigator.of(context).pop();
+                  Column(
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.only(top: 50.0),
+                        child: Text("CAMBIAR NOMBRE"),
+                      ),
+                      Row(
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.only(top: 20),
+                            child: CircleAvatar(
+                              backgroundColor: Colors.blueAccent,
+                              radius: 10,
+                              child: FlatButton(
+                                onPressed: () async {
+                                  if (_keyValidador.currentState.validate()) {
+                                    PopUps.popUpCargando(
+                                        context, 'Actualizando alias...');
+                                    ObtieneDatos datos = ObtieneDatos();
+                                    String serial = DatosEstaticos
+                                            .listadoDatosEquipoSeleccionado[0]
+                                        ['f_serial'];
+                                    await datos.updateAliasEquipo(serial,
+                                        _controladorTexto.text.toString());
+                                    //print(resultado);
+                                    await datos.getDatosEquipos();
+                                    //Cierra popup cargando
+                                    Navigator.of(context).pop();
+                                    Navigator.of(context).pop();
 
-                        //Cierra popup de cambiar Alias
-                        //Realiza el cambio en la ventana raiz
-                        setState(() {});
-                        await Future.delayed(Duration(milliseconds: 400));
-                        SnackBar snackbar = SnackBar(
-                            content: Text(
-                              'Alias cambiado exitosamente',
-                              textAlign: TextAlign.center,
+                                    //Cierra popup de cambiar Alias
+                                    //Realiza el cambio en la ventana raiz
+                                    setState(() {});
+                                    await Future.delayed(
+                                        Duration(milliseconds: 400));
+                                    SnackBar snackbar = SnackBar(
+                                        content: Text(
+                                          'Alias cambiado exitosamente',
+                                          textAlign: TextAlign.center,
+                                        ),
+                                        duration: Duration(seconds: 1));
+                                    _scaffoldKey.currentState
+                                        .showSnackBar(snackbar);
+                                  }
+                                },
+                                child: Container(
+                                  transform: Matrix4.translationValues(
+                                      -16.0, 0.0, 0.0),
+                                  child: Icon(
+                                    Tvlapiz.lapiz,
+                                    size: 20,
+                                    color: Colors.white,
+                                  ),
+                                ),
+                              ),
                             ),
-                            duration: Duration(seconds: 1));
-                        _scaffoldKey.currentState.showSnackBar(snackbar);
-                      }
-                    },
+                          ),
+                          SizedBox(
+                            width: 180,
+                            child: Padding(
+                              padding: const EdgeInsets.only(left: 10),
+                              child: TextFormField(
+                                controller: _controladorTexto,
+                                validator: (textoEscrito) {
+                                  if (textoEscrito.isEmpty) {
+                                    return "Error: Alias vacío";
+                                  }
+                                  if (textoEscrito.trim().length <= 0) {
+                                    return "Error: Alias vacío";
+                                  } else {
+                                    return null;
+                                  }
+                                },
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+
+                      /* RaisedButton(
+                      child: Text('Cambiar Nombre'),
+                      onPressed: () async {
+                        if (_keyValidador.currentState.validate()) {
+                          PopUps.popUpCargando(context, 'Actualizando alias...');
+                          ObtieneDatos datos = ObtieneDatos();
+                          String serial = DatosEstaticos
+                              .listadoDatosEquipoSeleccionado[0]['f_serial'];
+                          await datos.updateAliasEquipo(
+                              serial, _controladorTexto.text.toString());
+                          //print(resultado);
+                          await datos.getDatosEquipos();
+                          //Cierra popup cargando
+                          Navigator.of(context).pop();
+                          Navigator.of(context).pop();
+
+                          //Cierra popup de cambiar Alias
+                          //Realiza el cambio en la ventana raiz
+                          setState(() {});
+                          await Future.delayed(Duration(milliseconds: 400));
+                          SnackBar snackbar = SnackBar(
+                              content: Text(
+                                'Alias cambiado exitosamente',
+                                textAlign: TextAlign.center,
+                              ),
+                              duration: Duration(seconds: 1));
+                          _scaffoldKey.currentState.showSnackBar(snackbar);
+                        }
+                      },
+                    ),*/
+                    ],
                   ),
                 ],
               ),
