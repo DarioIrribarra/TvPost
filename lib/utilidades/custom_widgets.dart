@@ -181,10 +181,18 @@ class PopUps {
 class MenuAppBar {
   static String administrarImagenes = "Imagenes";
   static String administrarVideos = "Videos";
+  static String miPerfil = "Mi Perfil";
+  static String soporte = "Soporte";
+  static String cerrarSesion = "Salir";
+  static String misPantallas = "Mis Pantallas";
 
   static List<String> itemsMenu = <String>[
+    misPantallas,
     administrarImagenes,
     administrarVideos,
+    soporte,
+    miPerfil,
+    cerrarSesion,
   ];
 
   static Validacion(
@@ -265,6 +273,7 @@ class MenuAppBar {
   static void SeleccionMenu(String itemSeleccionado, BuildContext context) {
     String rutaProveniente = ModalRoute.of(context).settings.name;
     //Listado de equipos que tienen conexión
+    if (itemSeleccionado == MenuAppBar.misPantallas){}
     if (itemSeleccionado == MenuAppBar.administrarImagenes) {
       //Se limpia listado de videos seleccionados
       SeleccionaVideo.videosSelecionados.clear();
@@ -310,9 +319,18 @@ class MenuAppBar {
           rutaVentana: "/seleccionar_video",
           rutaProveniente: rutaProveniente);
     }
+    if (itemSeleccionado == MenuAppBar.soporte){}
+    if (itemSeleccionado == MenuAppBar.miPerfil){}
+    if (itemSeleccionado == MenuAppBar.cerrarSesion){}
   }
 
   static PopupMenuButton botonMenu(BuildContext context) {
+    Widget fila (String e){
+      return Text(
+        e,
+        textAlign: TextAlign.left,
+      );
+    }
     return PopupMenuButton<String>(
       icon: Icon(
         Icons.menu,
@@ -320,26 +338,40 @@ class MenuAppBar {
       ),
       itemBuilder: (context) {
         return MenuAppBar.itemsMenu.map((e) {
+          if (e == MenuAppBar.misPantallas) {
+            return PopupMenuItem(
+              value: e,
+              child: fila(e),
+            );
+          }
           if (e == MenuAppBar.administrarImagenes) {
             return PopupMenuItem(
               value: e,
-              child: Row(
-                children: [
-                  Icon(Icons.image),
-                  Text(e),
-                ],
-              ),
+              child: fila(e),
             );
           }
           if (e == MenuAppBar.administrarVideos) {
             return PopupMenuItem(
               value: e,
-              child: Row(
-                children: [
-                  Icon(Icons.video_library_outlined),
-                  Text(e),
-                ],
-              ),
+              child: fila(e),
+            );
+          }
+          if (e == MenuAppBar.soporte) {
+            return PopupMenuItem(
+              value: e,
+              child: fila(e),
+            );
+          }
+          if (e == MenuAppBar.miPerfil) {
+            return PopupMenuItem(
+              value: e,
+              child: fila(e),
+            );
+          }
+          if (e == MenuAppBar.cerrarSesion) {
+            return PopupMenuItem(
+              value: e,
+              child: fila(e),
             );
           }
         }).toList();

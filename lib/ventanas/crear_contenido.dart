@@ -806,45 +806,65 @@ class _CrearContenidoState extends State<CrearContenido> {
                     children: [
                       WidgetToImage(builder: (key) {
                         this.key2 = key;
-                        return Container(
-                          width: MediaQuery.of(context).size.width / 2,
-                          height: MediaQuery.of(context).size.height / 6,
-                          decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            color: pickerColorFondo,
-                          ),
-                          child: Container(
-                            margin: EdgeInsets.only(left: 5.0),
-                            alignment: Alignment.center,
-                            child: TextFormField(
-                              autofocus: true,
-                              controller: controladorOferta,
-                              maxLengthEnforced: true,
-                              textAlign: TextAlign.center,
-                              textAlignVertical: TextAlignVertical.center,
-                              maxLength: 3,
-                              maxLines: 1,
-                              onEditingComplete: () {
-                                Limite(controladorOferta.text.length);
-                              },
-                              //Decoración caja
-                              decoration: InputDecoration(
-                                border: InputBorder.none,
-                                focusedBorder: InputBorder.none,
-                                enabledBorder: InputBorder.none,
-                                errorBorder: InputBorder.none,
-                                disabledBorder: InputBorder.none,
-                                counterText: "",
+                        return Stack(
+                          alignment: Alignment.center,
+                          children: [
+                            Container(
+                              width: MediaQuery.of(context).size.width / 2,
+                              height: MediaQuery.of(context).size.height / 6,
+                              decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                color: pickerColorFondo,
                               ),
-                              //Decoración Texto
-                              style: TextStyle(
-                                color: pickerColorTexto,
-                                fontWeight: FontWeight.bold,
-                                fontSize:
-                                    MediaQuery.of(context).size.height / 25,
+                              child: Column(
+                                children: [
+                                  SizedBox(height: 20,),
+                                  Text('OFERTA',
+                                    style: TextStyle(color: pickerColorTexto),
+                                  ),
+                                  Container(
+                                    margin: EdgeInsets.only(left: 5.0),
+                                    alignment: Alignment.center,
+                                    child: TextFormField(
+                                      autofocus: true,
+                                      controller: controladorOferta,
+                                      maxLengthEnforced: true,
+                                      textAlign: TextAlign.center,
+                                      textAlignVertical: TextAlignVertical.center,
+                                      maxLength: 3,
+                                      maxLines: 1,
+                                      onEditingComplete: () {
+                                        Limite(controladorOferta.text.length);
+                                      },
+                                      //Decoración caja
+                                      decoration: InputDecoration(
+                                        border: InputBorder.none,
+                                        focusedBorder: InputBorder.none,
+                                        enabledBorder: InputBorder.none,
+                                        errorBorder: InputBorder.none,
+                                        disabledBorder: InputBorder.none,
+                                        counterText: "",
+                                      ),
+                                      //Decoración Texto
+                                      style: TextStyle(
+                                        color: pickerColorTexto,
+                                        fontSize:
+                                        MediaQuery.of(context).size.height / 16,
+                                      ),
+                                    ),
+                                  ),
+                                ],
                               ),
                             ),
-                          ),
+                            Container(
+                              width: (MediaQuery.of(context).size.width / 2) - 10,
+                              height: (MediaQuery.of(context).size.height / 6) -10,
+                              decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                border: Border.all(color: pickerColorTexto, width: 2.0, style: BorderStyle.solid),
+                              ),
+                            ),
+                          ],
                         );
                       }),
                       Column(
