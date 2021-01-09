@@ -234,17 +234,22 @@ class _RaspberriesConectadasState extends State<RaspberriesConectadas> {
                                                                           index);
                                                                     },
                                                                     child:
-                                                                        Center(
+                                                                    CircleAvatar(
+                                                                      backgroundColor:
+                                                                      Colors.blueAccent,
+                                                                      radius:
+                                                                      10,
                                                                       child:
-                                                                          Icon(
+                                                                      Icon(
                                                                         Icons
-                                                                            .remove_red_eye_sharp,
-                                                                        color: Colors
-                                                                            .blueAccent,
+                                                                            .remove_red_eye,
                                                                         size:
-                                                                            30,
+                                                                        17,
+                                                                        color:
+                                                                        Colors.white,
                                                                       ),
-                                                                    )),
+                                                                    ),
+                                                                ),
                                                           ),
                                                           Expanded(
                                                             flex: 1,
@@ -862,19 +867,19 @@ class _RaspberriesConectadasState extends State<RaspberriesConectadas> {
   }
 
   VistaPreviaReproduccion(int index) async {
-    Color onPopUp;
-    Color offPopUp;
+    //Color onPopUp;
+    //Color offPopUp;
     String ip = ObtieneDatos.listadoEquipos[index]['f_ip'].toString();
     String valorActivo =
         ObtieneDatos.listadoEquipos[index]['f_equipoActivo'].toString();
     if (valorActivo == '1') {
       valorSwitchUno = false;
-      onPopUp = Colors.black;
-      offPopUp = Colors.white;
+      //onPopUp = Colors.black;
+      //offPopUp = Colors.white;
     } else {
       valorSwitchUno = true;
-      onPopUp = Colors.white;
-      offPopUp = Colors.black;
+      //onPopUp = Colors.white;
+      //offPopUp = Colors.black;
     }
 
     showGeneralDialog(

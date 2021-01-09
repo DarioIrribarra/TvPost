@@ -7,7 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:tvpost_flutter/utilidades/datos_estaticos.dart';
 import 'package:tvpost_flutter/utilidades/obtiene_datos_webservice.dart';
 import 'package:tvpost_flutter/utilidades/custom_widgets.dart';
-import 'package:tvpost_flutter/ventanas/raspberries_conectadas.dart';
+//import 'package:tvpost_flutter/ventanas/raspberries_conectadas.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:liquid_pull_to_refresh/liquid_pull_to_refresh.dart';
 //import 'package:path_provider/path_provider.dart';
@@ -290,17 +290,23 @@ class _DetalleEquipoState extends State<DetalleEquipo> {
                               children: [
                                 CircleAvatar(
                                     backgroundColor: Colors.blueAccent,
-                                    radius: 8,
-                                    child: IconButton(
+                                    radius: 10,
+                                    child: FlatButton(
                                       onPressed: () async {
                                         _widgetPopUpAlias();
                                       },
-                                      icon: Icon(Tvlapiz.lapiz
-                                          //size: 10,
-                                          ),
-                                    )),
-                                Text(""),
-                                Text("")
+                                      child: Container(
+                                        transform: Matrix4.translationValues(-16.0, 0.0, 0.0),
+                                        child: Icon(
+                                          Tvlapiz.lapiz,
+                                          size: 20,
+                                          color: Colors.white,
+                                        ),
+                                      ),
+                                    ),
+                                ),
+                                /*Text(""),
+                                Text("")*/
                               ],
                             )
                           ],
