@@ -44,34 +44,47 @@ class _RaspberriesConectadasState extends State<RaspberriesConectadas> {
     ObtieneDatos datos = ObtieneDatos();
 
     return WillPopScope(
-      onWillPop: (){
+      onWillPop: () {
         Widget contenidoPopUp = Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Text('¿Desea salir de TvPost?', textAlign: TextAlign.center,),
-            SizedBox(height: 10,),
+            Text(
+              '¿Desea salir de TvPost?',
+              textAlign: TextAlign.center,
+            ),
+            SizedBox(
+              height: 10,
+            ),
             Row(
               children: [
                 Expanded(
                   flex: 1,
                   child: RaisedButton(
-                    onPressed: (){
-                      if (Platform.isAndroid){
+                    onPressed: () {
+                      if (Platform.isAndroid) {
                         SystemNavigator.pop();
                         return;
                       } else {
                         exit(0);
                       }
                     },
-                    child: Text('Aceptar', textAlign: TextAlign.center,),
+                    child: Text(
+                      'Aceptar',
+                      textAlign: TextAlign.center,
+                    ),
                   ),
                 ),
-                SizedBox(width: 10,),
+                SizedBox(
+                  width: 10,
+                ),
                 Expanded(
                   flex: 1,
                   child: RaisedButton(
                     onPressed: () => Navigator.pop(context),
-                    child: Text('Cancelar', textAlign: TextAlign.center,),
+                    child: Text(
+                      'Cancelar',
+                      textAlign: TextAlign.center,
+                    ),
                   ),
                 ),
               ],
@@ -136,9 +149,14 @@ class _RaspberriesConectadasState extends State<RaspberriesConectadas> {
                                       if (snapshot.data[2] == true &&
                                           snapshot.data[3] == true) {
                                         //Se añade el index a los equipos conectados
-                                          if (DatosEstaticos.listadoIndexEquiposConectados.contains(index) == false){
-                                            DatosEstaticos.listadoIndexEquiposConectados.add(index);
-                                          }
+                                        if (DatosEstaticos
+                                                .listadoIndexEquiposConectados
+                                                .contains(index) ==
+                                            false) {
+                                          DatosEstaticos
+                                              .listadoIndexEquiposConectados
+                                              .add(index);
+                                        }
                                         //print(DatosEstaticos.listadoIndexEquiposConectados.length);
                                         return Column(
                                             mainAxisAlignment:
@@ -148,8 +166,15 @@ class _RaspberriesConectadasState extends State<RaspberriesConectadas> {
                                                 onTap: () {
                                                   //Libera los widgets y datos creados
                                                   LimpiarDatosEstaticos();
-                                                  DatosEstaticos.indexSeleccionado = index;
-                                                  DatosEstaticos.ipSeleccionada = ObtieneDatos.listadoEquipos[index]['f_ip'].toString();
+                                                  DatosEstaticos
+                                                          .indexSeleccionado =
+                                                      index;
+                                                  DatosEstaticos
+                                                          .ipSeleccionada =
+                                                      ObtieneDatos
+                                                          .listadoEquipos[index]
+                                                              ['f_ip']
+                                                          .toString();
                                                   /*return Navigator.push(
                                                       context,
                                                       PageRouteBuilder(
@@ -160,19 +185,21 @@ class _RaspberriesConectadasState extends State<RaspberriesConectadas> {
                                                       ),
                                                   );*/
 
-                                                  return Navigator.popAndPushNamed(
-                                                      context, '/detalle_equipo',
-                                                      arguments: {
-                                                        "indexEquipoGrid": index,
-                                                      }
-                                                    );
+                                                  return Navigator
+                                                      .popAndPushNamed(context,
+                                                          '/detalle_equipo',
+                                                          arguments: {
+                                                        "indexEquipoGrid":
+                                                            index,
+                                                      });
                                                 },
                                                 child: Column(
                                                   mainAxisAlignment:
                                                       MainAxisAlignment.center,
                                                   children: [
                                                     Image.asset(
-                                                      snapshot.data[1].toString(),
+                                                      snapshot.data[1]
+                                                          .toString(),
                                                       width:
                                                           MediaQuery.of(context)
                                                                   .size
@@ -206,13 +233,16 @@ class _RaspberriesConectadasState extends State<RaspberriesConectadas> {
                                                                       VistaPreviaReproduccion(
                                                                           index);
                                                                     },
-                                                                    child: Center(
-                                                                      child: Icon(
+                                                                    child:
+                                                                        Center(
+                                                                      child:
+                                                                          Icon(
                                                                         Icons
                                                                             .remove_red_eye_sharp,
                                                                         color: Colors
                                                                             .blueAccent,
-                                                                        size: 30,
+                                                                        size:
+                                                                            30,
                                                                       ),
                                                                     )),
                                                           ),
@@ -227,7 +257,12 @@ class _RaspberriesConectadasState extends State<RaspberriesConectadas> {
                                                                       DatosEstaticos
                                                                               .indexSeleccionado =
                                                                           index;
-                                                                      DatosEstaticos.ipSeleccionada = ObtieneDatos.listadoEquipos[index]['f_ip'].toString();
+                                                                      DatosEstaticos.ipSeleccionada = ObtieneDatos
+                                                                          .listadoEquipos[
+                                                                              index]
+                                                                              [
+                                                                              'f_ip']
+                                                                          .toString();
                                                                       return Navigator.popAndPushNamed(
                                                                           context,
                                                                           '/detalle_equipo',
@@ -236,12 +271,12 @@ class _RaspberriesConectadasState extends State<RaspberriesConectadas> {
                                                                                 index,
                                                                           });
                                                                     },
-                                                                    child: Center(
+                                                                    child:
+                                                                        Center(
                                                                       child:
                                                                           CircleAvatar(
                                                                         backgroundColor:
-                                                                            Colors
-                                                                                .blueAccent,
+                                                                            Colors.blueAccent,
                                                                         radius:
                                                                             10,
                                                                         child:
@@ -250,8 +285,8 @@ class _RaspberriesConectadasState extends State<RaspberriesConectadas> {
                                                                               .edit,
                                                                           size:
                                                                               17,
-                                                                          color: Colors
-                                                                              .white,
+                                                                          color:
+                                                                              Colors.white,
                                                                         ),
                                                                       ),
                                                                     )),
@@ -270,7 +305,8 @@ class _RaspberriesConectadasState extends State<RaspberriesConectadas> {
                                                         textAlign:
                                                             TextAlign.right,
                                                         style: TextStyle(
-                                                          fontFamily: 'textoMont',
+                                                          fontFamily:
+                                                              'textoMont',
                                                           fontSize: 12,
                                                         ),
                                                       ),
@@ -284,8 +320,13 @@ class _RaspberriesConectadasState extends State<RaspberriesConectadas> {
                                       else if (snapshot.data[2] == true &&
                                           snapshot.data[3] == false) {
                                         //Se añade el index a los equipos conectados
-                                        if (DatosEstaticos.listadoIndexEquiposConectados.contains(index) == false){
-                                          DatosEstaticos.listadoIndexEquiposConectados.add(index);
+                                        if (DatosEstaticos
+                                                .listadoIndexEquiposConectados
+                                                .contains(index) ==
+                                            false) {
+                                          DatosEstaticos
+                                              .listadoIndexEquiposConectados
+                                              .add(index);
                                         }
                                         return Column(
                                             mainAxisAlignment:
@@ -296,12 +337,20 @@ class _RaspberriesConectadasState extends State<RaspberriesConectadas> {
                                                   //MensajeActivarEquipo(index);
                                                   LimpiarDatosEstaticos();
                                                   DatosEstaticos
-                                                      .indexSeleccionado = index;
-                                                  DatosEstaticos.ipSeleccionada = ObtieneDatos.listadoEquipos[index]['f_ip'].toString();
-                                                  return Navigator.popAndPushNamed(
-                                                      context, '/detalle_equipo',
-                                                      arguments: {
-                                                        "indexEquipoGrid": index,
+                                                          .indexSeleccionado =
+                                                      index;
+                                                  DatosEstaticos
+                                                          .ipSeleccionada =
+                                                      ObtieneDatos
+                                                          .listadoEquipos[index]
+                                                              ['f_ip']
+                                                          .toString();
+                                                  return Navigator
+                                                      .popAndPushNamed(context,
+                                                          '/detalle_equipo',
+                                                          arguments: {
+                                                        "indexEquipoGrid":
+                                                            index,
                                                       });
                                                 },
                                                 child: Column(
@@ -309,7 +358,8 @@ class _RaspberriesConectadasState extends State<RaspberriesConectadas> {
                                                       MainAxisAlignment.center,
                                                   children: [
                                                     Image.asset(
-                                                      snapshot.data[1].toString(),
+                                                      snapshot.data[1]
+                                                          .toString(),
                                                       width:
                                                           MediaQuery.of(context)
                                                                   .size
@@ -339,13 +389,16 @@ class _RaspberriesConectadasState extends State<RaspberriesConectadas> {
                                                             child:
                                                                 GestureDetector(
                                                                     onTap: null,
-                                                                    child: Center(
-                                                                      child: Icon(
+                                                                    child:
+                                                                        Center(
+                                                                      child:
+                                                                          Icon(
                                                                         Icons
                                                                             .remove_red_eye_sharp,
                                                                         color: Colors
                                                                             .transparent,
-                                                                        size: 30,
+                                                                        size:
+                                                                            30,
                                                                       ),
                                                                     )),
                                                           ),
@@ -362,7 +415,12 @@ class _RaspberriesConectadasState extends State<RaspberriesConectadas> {
                                                                       DatosEstaticos
                                                                               .indexSeleccionado =
                                                                           index;
-                                                                      DatosEstaticos.ipSeleccionada = ObtieneDatos.listadoEquipos[index]['f_ip'].toString();
+                                                                      DatosEstaticos.ipSeleccionada = ObtieneDatos
+                                                                          .listadoEquipos[
+                                                                              index]
+                                                                              [
+                                                                              'f_ip']
+                                                                          .toString();
                                                                       return Navigator.popAndPushNamed(
                                                                           context,
                                                                           '/detalle_equipo',
@@ -371,12 +429,12 @@ class _RaspberriesConectadasState extends State<RaspberriesConectadas> {
                                                                                 index,
                                                                           });
                                                                     },
-                                                                    child: Center(
+                                                                    child:
+                                                                        Center(
                                                                       child:
                                                                           CircleAvatar(
                                                                         backgroundColor:
-                                                                            HexColor(
-                                                                                '#FC4C8B'),
+                                                                            HexColor('#FC4C8B'),
                                                                         radius:
                                                                             10,
                                                                         child:
@@ -385,8 +443,8 @@ class _RaspberriesConectadasState extends State<RaspberriesConectadas> {
                                                                               .edit,
                                                                           size:
                                                                               17,
-                                                                          color: Colors
-                                                                              .white,
+                                                                          color:
+                                                                              Colors.white,
                                                                         ),
                                                                       ),
                                                                     )),
@@ -405,7 +463,8 @@ class _RaspberriesConectadasState extends State<RaspberriesConectadas> {
                                                         textAlign:
                                                             TextAlign.right,
                                                         style: TextStyle(
-                                                          fontFamily: 'textoMont',
+                                                          fontFamily:
+                                                              'textoMont',
                                                           fontSize: 12,
                                                         ),
                                                       ),
@@ -416,8 +475,13 @@ class _RaspberriesConectadasState extends State<RaspberriesConectadas> {
                                             ]);
                                       } else {
                                         //Se remueve el index a los equipos conectados
-                                        if (DatosEstaticos.listadoIndexEquiposConectados.contains(index) == false){
-                                          DatosEstaticos.listadoIndexEquiposConectados.remove(index);
+                                        if (DatosEstaticos
+                                                .listadoIndexEquiposConectados
+                                                .contains(index) ==
+                                            false) {
+                                          DatosEstaticos
+                                              .listadoIndexEquiposConectados
+                                              .remove(index);
                                         }
                                         return Column(
                                           mainAxisAlignment:
@@ -433,10 +497,11 @@ class _RaspberriesConectadasState extends State<RaspberriesConectadas> {
                                                 children: [
                                                   Image.asset(
                                                     snapshot.data[1].toString(),
-                                                    width: MediaQuery.of(context)
-                                                            .size
-                                                            .width /
-                                                        2.3,
+                                                    width:
+                                                        MediaQuery.of(context)
+                                                                .size
+                                                                .width /
+                                                            2.3,
                                                   ),
                                                 ],
                                               ),
@@ -449,52 +514,57 @@ class _RaspberriesConectadasState extends State<RaspberriesConectadas> {
                                               child: Row(
                                                 children: [
                                                   SizedBox(
-                                                    width: MediaQuery.of(context)
-                                                            .size
-                                                            .width /
-                                                        6.5,
+                                                    width:
+                                                        MediaQuery.of(context)
+                                                                .size
+                                                                .width /
+                                                            6.5,
                                                     child: Row(
                                                       children: [
                                                         Expanded(
                                                           flex: 1,
-                                                          child: GestureDetector(
-                                                              onTap: null,
-                                                              child: Center(
-                                                                child: Icon(
-                                                                  Icons
-                                                                      .do_disturb_on_rounded,
-                                                                  color: Colors
-                                                                      .transparent,
-                                                                ),
-                                                              )),
+                                                          child:
+                                                              GestureDetector(
+                                                                  onTap: null,
+                                                                  child: Center(
+                                                                    child: Icon(
+                                                                      Icons
+                                                                          .do_disturb_on_rounded,
+                                                                      color: Colors
+                                                                          .transparent,
+                                                                    ),
+                                                                  )),
                                                         ),
                                                         Expanded(
                                                           flex: 1,
-                                                          child: GestureDetector(
-                                                              onTap: () {
-                                                                EquipoSinConexion(
-                                                                    index);
-                                                              },
-                                                              child: Center(
-                                                                child: Icon(
-                                                                  Icons
-                                                                      .do_disturb_on_rounded,
-                                                                  color: HexColor(
-                                                                      '#FC4C8B'),
-                                                                ),
-                                                              )),
+                                                          child:
+                                                              GestureDetector(
+                                                                  onTap: () {
+                                                                    EquipoSinConexion(
+                                                                        index);
+                                                                  },
+                                                                  child: Center(
+                                                                    child: Icon(
+                                                                      Icons
+                                                                          .do_disturb_on_rounded,
+                                                                      color: HexColor(
+                                                                          '#FC4C8B'),
+                                                                    ),
+                                                                  )),
                                                         ),
                                                       ],
                                                     ),
                                                   ),
                                                   SizedBox(
-                                                    width: MediaQuery.of(context)
-                                                            .size
-                                                            .width /
-                                                        4,
+                                                    width:
+                                                        MediaQuery.of(context)
+                                                                .size
+                                                                .width /
+                                                            4,
                                                     child: Text(
                                                       '${snapshot.data[0].toString().toUpperCase()}',
-                                                      textAlign: TextAlign.right,
+                                                      textAlign:
+                                                          TextAlign.right,
                                                       style: TextStyle(
                                                         fontFamily: 'textoMont',
                                                         fontSize: 12,
@@ -519,8 +589,13 @@ class _RaspberriesConectadasState extends State<RaspberriesConectadas> {
                                     }
                                   } else if (snapshot.hasError) {
                                     //Se remueve el index a los equipos conectados
-                                    if (DatosEstaticos.listadoIndexEquiposConectados.contains(index) == false){
-                                      DatosEstaticos.listadoIndexEquiposConectados.remove(index);
+                                    if (DatosEstaticos
+                                            .listadoIndexEquiposConectados
+                                            .contains(index) ==
+                                        false) {
+                                      DatosEstaticos
+                                          .listadoIndexEquiposConectados
+                                          .remove(index);
                                     }
                                     return Center(
                                       child: Text(
@@ -531,8 +606,9 @@ class _RaspberriesConectadasState extends State<RaspberriesConectadas> {
                                     return Padding(
                                       padding: const EdgeInsets.all(40.0),
                                       child: CircularProgressIndicator(
-                                        valueColor: AlwaysStoppedAnimation<Color>(
-                                            HexColor("#FC4C8B")),
+                                        valueColor:
+                                            AlwaysStoppedAnimation<Color>(
+                                                HexColor("#FC4C8B")),
                                       ),
                                     );
                                   }
@@ -927,93 +1003,72 @@ class _RaspberriesConectadasState extends State<RaspberriesConectadas> {
                 child: Stack(
                   children: [
                     Positioned(
-                        bottom: 50,
-                        right: 100,
-                        left: 100,
-                        child: Container(
-                          decoration: new BoxDecoration(
-                              borderRadius: BorderRadius.circular(20),
-                              gradient: LinearGradient(
-                                  colors: [
-                                    HexColor("#3edb9b"),
-                                    HexColor("#0683ff")
-                                  ],
-                                  stops: [
-                                    0.4,
-                                    1
-                                  ],
-                                  begin: Alignment.topLeft,
-                                  end: FractionalOffset.bottomRight)),
-                          child: Stack(
-                            children: [
-                              IgnorePointer(
-                                child: FSwitch(
-                                  offset: 10,
-                                  open: valorSwitchUno,
-                                  onChanged: (bool v) {},
-                                  sliderColor: Colors.white,
-                                  color: Colors.transparent,
-                                  openColor: Colors.transparent,
-                                  width: 200,
-                                  height: 40,
+                      bottom: 35,
+                      child: Container(
+                        /*decoration: new BoxDecoration(
+                                  gradient: new LinearGradient(
+                                      colors: [Colors.white, Colors.transparent],
+                                      begin: Alignment.bottomCenter,
+                                      end: Alignment.topCenter,
+                                      stops: [0.5, 0.5],
+                                  ),
+                                ),*/
+                        color: Colors.transparent,
+                        width: MediaQuery.of(context).size.width,
+                        child: Center(
+                          child: Padding(
+                            padding: const EdgeInsets.only(top: 20),
+                            child: Stack(children: [
+                              Positioned(
+                                child: Container(
+                                  decoration: new BoxDecoration(
+                                      borderRadius: BorderRadius.circular(20),
+                                      gradient: LinearGradient(
+                                          colors: [
+                                            HexColor("#3edb9b"),
+                                            HexColor("#0683ff")
+                                          ],
+                                          stops: [
+                                            0.4,
+                                            1
+                                          ],
+                                          begin: Alignment.topLeft,
+                                          end: FractionalOffset.bottomRight)),
+                                  child: IgnorePointer(
+                                    child: FSwitch(
+                                      offset: 10,
+                                      open: valorSwitchTodos,
+                                      onChanged: (bool v) {},
+                                      sliderColor: Colors.white,
+                                      color: Colors.transparent,
+                                      openColor: Colors.transparent,
+                                      width: 200,
+                                      height: 40,
+                                    ),
+                                  ),
                                 ),
                               ),
                               Positioned(
-                                left: 16,
                                 bottom: 13,
+                                left: 17,
                                 child: Text(
                                   "ON",
-                                  style: TextStyle(color: onPopUp),
+                                  style: TextStyle(color: on),
                                 ),
                               ),
                               Positioned(
-                                right: 18,
                                 bottom: 13,
+                                left: 159,
                                 child: Text(
                                   "OFF",
-                                  style: TextStyle(color: offPopUp),
+                                  style: TextStyle(color: off),
                                 ),
-                              ),
-                            ],
+                              )
+                            ]),
                           ),
-                        ) /*AnimatedContainer(
-                      duration: Duration(milliseconds: 1000),
-                      height: 40,
-                      width: 100,
-                      decoration: new BoxDecoration(
-                          borderRadius: BorderRadius.circular(20),
-                          gradient: LinearGradient(
-                              colors: [HexColor("#3edb9b"), HexColor("#0683ff")],
-                              stops: [0.5, 1],
-                              begin: Alignment.topLeft,
-                              end: FractionalOffset.bottomRight)),
-                      child: Stack(
-                        children: [
-                          AnimatedPositioned(
-                            child: InkWell(
-                              onTap: toggleButton,
-                            ),
-                            duration: Duration(milliseconds: 1000),
-                            curve: Curves.easeIn,
-                            top: 3.0,
-                            left: estadoToogle ? 60.0 : 0.0,
-                            right: estadoToogle ? 0.0 : 60.0,
-
-                          )
-                        ],
-                      ),
-                    ),*/
                         ),
-                    /*Positioned(
-                      bottom: 63,
-                      left: 90,
-                      child: Text("ON"),
+                      ),
                     ),
-                    Positioned(
-                      bottom: 63,
-                      left: 247,
-                      child: Text("OFF"),
-                    )*/
                   ],
                 ),
               ),
@@ -1132,7 +1187,9 @@ class _RaspberriesConectadasState extends State<RaspberriesConectadas> {
                                     //Libera los widgets y datos creados
                                     LimpiarDatosEstaticos();
                                     DatosEstaticos.indexSeleccionado = index;
-                                    DatosEstaticos.ipSeleccionada = ObtieneDatos.listadoEquipos[index]['f_ip'].toString();
+                                    DatosEstaticos.ipSeleccionada = ObtieneDatos
+                                        .listadoEquipos[index]['f_ip']
+                                        .toString();
                                     return Navigator.popAndPushNamed(
                                         context, '/detalle_equipo',
                                         arguments: {
@@ -1343,7 +1400,9 @@ class _RaspberriesConectadasState extends State<RaspberriesConectadas> {
                                     //Libera los widgets y datos creados
                                     LimpiarDatosEstaticos();
                                     DatosEstaticos.indexSeleccionado = index;
-                                    DatosEstaticos.ipSeleccionada = ObtieneDatos.listadoEquipos[index]['f_ip'].toString();
+                                    DatosEstaticos.ipSeleccionada = ObtieneDatos
+                                        .listadoEquipos[index]['f_ip']
+                                        .toString();
                                     return Navigator.popAndPushNamed(
                                         context, '/detalle_equipo',
                                         arguments: {

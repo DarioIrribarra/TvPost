@@ -802,10 +802,17 @@ class _DetalleEquipoState extends State<DetalleEquipo> {
       context: context,
       child: AnimacionPadding(
         child: new AlertDialog(
-          contentPadding: const EdgeInsets.all(16.0),
+          contentPadding:
+              const EdgeInsets.only(bottom: 20, top: 20, left: 5, right: 5),
+          backgroundColor: Colors.grey.withOpacity(0.0),
           content: Form(
             key: _keyValidador,
             child: Container(
+              decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(40),
+                  color: HexColor('#f4f4f4')),
+              height: 150,
+              width: 250,
               child: new Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [

@@ -360,22 +360,41 @@ class _CrearContenidoState extends State<CrearContenido> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text("Elegir opción: "),
-          content: SingleChildScrollView(
-            child: ListBody(
-              children: <Widget>[
-                GestureDetector(
-                  child: Text("Galeria"),
-                  onTap: () {
-                    _abrirGaleria2(context);
-                  },
+          contentPadding:
+              const EdgeInsets.only(bottom: 20, top: 20, left: 5, right: 5),
+          backgroundColor: Colors.grey.withOpacity(0.0),
+          content: Container(
+            decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(40),
+                color: HexColor('#f4f4f4')),
+            height: 150,
+            width: 250,
+            child: Column(
+              children: [
+                SizedBox(
+                  height: 15,
                 ),
-                Padding(padding: EdgeInsets.all(8.0)),
-                GestureDetector(
-                  child: Text("Camara"),
-                  onTap: () {
-                    _abrirCamara2(context);
-                  },
+                Text("ELEGIR OPCIÓN: "),
+                SizedBox(
+                  height: 15,
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: <Widget>[
+                    GestureDetector(
+                      child: Text("GALERÍA"),
+                      onTap: () {
+                        _abrirGaleria2(context);
+                      },
+                    ),
+                    Padding(padding: EdgeInsets.all(8.0)),
+                    GestureDetector(
+                      child: Text("CAMARA"),
+                      onTap: () {
+                        _abrirCamara2(context);
+                      },
+                    ),
+                  ],
                 ),
               ],
             ),
@@ -499,36 +518,55 @@ class _CrearContenidoState extends State<CrearContenido> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text("Elegir color: "),
-          content: SingleChildScrollView(
-            child: ListBody(
-              children: <Widget>[
-                GestureDetector(
-                  child: new ColorPicker(
-                    enableAlpha: false,
-                    showLabel: false,
-                    pickerColor: Colors.black,
-                    onColorChanged: (value) {
-                      setState(() {
-                        imagenFondo = null;
-                        colorFondo = value;
-                      });
+          contentPadding:
+              const EdgeInsets.only(bottom: 20, top: 20, left: 5, right: 5),
+          backgroundColor: Colors.grey.withOpacity(0.0),
+          content: Container(
+            decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(40),
+                color: HexColor('#f4f4f4')),
+            height: 250,
+            width: 250,
+            child: SingleChildScrollView(
+              child: Column(
+                children: <Widget>[
+                  SizedBox(
+                    height: 15,
+                  ),
+                  Center(
+                    child: Text("ELEGIR COLOR: "),
+                  ),
+                  SizedBox(
+                    height: 15,
+                  ),
+                  GestureDetector(
+                    child: new ColorPicker(
+                      colorPickerWidth: 250,
+                      enableAlpha: false,
+                      showLabel: false,
+                      pickerColor: Colors.black,
+                      onColorChanged: (value) {
+                        setState(() {
+                          imagenFondo = null;
+                          colorFondo = value;
+                        });
+                      },
+                      pickerAreaHeightPercent: 0.25,
+                    ),
+                  ),
+                  GestureDetector(
+                      child: RaisedButton(
+                    onPressed: () {
+                      Navigator.of(context).pop();
                     },
-                    pickerAreaHeightPercent: 0.7,
-                  ),
-                ),
-                GestureDetector(
-                    child: RaisedButton(
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  },
-                  child: Icon(
-                    Icons.check_circle,
-                    color: Colors.lightBlue,
-                  ),
-                  color: Colors.white,
-                ))
-              ],
+                    child: Icon(
+                      Icons.check_circle,
+                      color: Colors.lightBlue,
+                    ),
+                    color: Colors.white,
+                  ))
+                ],
+              ),
             ),
           ),
         );

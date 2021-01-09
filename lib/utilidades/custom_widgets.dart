@@ -286,8 +286,7 @@ class MenuAppBar {
           listadoEquipos: DatosEstaticos.listadoIndexEquiposConectados,
           context: context,
           rutaVentana: "/seleccionar_imagen",
-          rutaProveniente: rutaProveniente
-      );
+          rutaProveniente: rutaProveniente);
     }
     if (itemSeleccionado == MenuAppBar.administrarVideos) {
       if (rutaProveniente == "/seleccionar_video") {
@@ -309,9 +308,7 @@ class MenuAppBar {
           listadoEquipos: DatosEstaticos.listadoIndexEquiposConectados,
           context: context,
           rutaVentana: "/seleccionar_video",
-          rutaProveniente: rutaProveniente
-      );
-
+          rutaProveniente: rutaProveniente);
     }
   }
 
@@ -591,7 +588,8 @@ class _OpcionesSeleccionMediaState extends State<OpcionesSeleccionMedia> {
                         Navigator.popAndPushNamed(context, "/seleccionar_video",
                             arguments: {
                               'division_layout': DatosEstaticos.divisionLayout,
-                              'ruta_proveniente': ModalRoute.of(context).settings.name,
+                              'ruta_proveniente':
+                                  ModalRoute.of(context).settings.name,
                             });
                       },
                       child:
@@ -666,49 +664,59 @@ class _OpcionesSeleccionMediaState extends State<OpcionesSeleccionMedia> {
       child: StatefulBuilder(builder: (context, setState) {
         return AnimacionPadding(
           child: new AlertDialog(
+            contentPadding:
+                const EdgeInsets.only(bottom: 20, top: 20, left: 5, right: 5),
+            backgroundColor: Colors.grey.withOpacity(0.0),
             content: SingleChildScrollView(
               child: Card(
                 child: Form(
                   key: _keyValidador,
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      TextFormField(
-                        controller: controladorTextoUrl,
-                        decoration: InputDecoration(
-                          suffixIcon: IconButton(
-                            icon: Icon(Icons.search),
-                            onPressed: () {
-                              _abrirBuscador();
-                            },
+                  child: Container(
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(40),
+                        color: HexColor('#f4f4f4')),
+                    height: 150,
+                    width: 250,
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        TextFormField(
+                          controller: controladorTextoUrl,
+                          decoration: InputDecoration(
+                            suffixIcon: IconButton(
+                              icon: Icon(Icons.search),
+                              onPressed: () {
+                                _abrirBuscador();
+                              },
+                            ),
                           ),
+                          validator: (urlEscrita) {
+                            if (urlEscrita.isEmpty) {
+                              return 'Ingrese un enlace web';
+                            }
+                            if (urlEscrita.trim().length <= 0) {
+                              return 'Ingrese un enlace web';
+                            }
+                            return null;
+                          },
                         ),
-                        validator: (urlEscrita) {
-                          if (urlEscrita.isEmpty) {
-                            return 'Ingrese un enlace web';
-                          }
-                          if (urlEscrita.trim().length <= 0) {
-                            return 'Ingrese un enlace web';
-                          }
-                          return null;
-                        },
-                      ),
-                      RaisedButton(
-                        child: Text('Ingresar enlace'),
-                        onPressed: () {
-                          if (_keyValidador.currentState.validate()) {
-                            //Crea webvbiew
-                            crearWebView(
-                                controladorTextoUrl.text.toString().trim());
-                            //Cierra popup cargando
-                            Navigator.of(context, rootNavigator: true).pop();
+                        RaisedButton(
+                          child: Text('Ingresar enlace'),
+                          onPressed: () {
+                            if (_keyValidador.currentState.validate()) {
+                              //Crea webvbiew
+                              crearWebView(
+                                  controladorTextoUrl.text.toString().trim());
+                              //Cierra popup cargando
+                              Navigator.of(context, rootNavigator: true).pop();
 
-                            widget.actualizaEstado();
-                          }
-                        },
-                      ),
-                    ],
+                              widget.actualizaEstado();
+                            }
+                          },
+                        ),
+                      ],
+                    ),
                   ),
                 ),
               ),
@@ -1207,6 +1215,6 @@ class AnimacionPadding extends StatelessWidget {
   }
 }
 
-class RutasRedireccionMenu{
+class RutasRedireccionMenu {
   static String RutaDeDondeViene = "";
 }
