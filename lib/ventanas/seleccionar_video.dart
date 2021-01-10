@@ -487,35 +487,45 @@ class _SeleccionarVideoState extends State<SeleccionarVideo> {
           child: Column(
             children: <Widget>[
               Container(
-                margin: EdgeInsets.only(bottom: 10),
-                padding: EdgeInsets.only(bottom: 5),
-                decoration: BoxDecoration(
-                    border: Border(
-                  bottom: BorderSide(width: 5, color: Colors.green),
-                )),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
+                    SizedBox(
+                      height: 20,
+                    ),
                     Stack(
                       alignment: Alignment.center,
                       children: [
                         Align(
                           alignment: Alignment.center,
                           child: Text(
-                            'Seleccione un video',
+                            'SELECCIONE VIDEO',
                             textScaleFactor: 1.3,
                           ),
                         ),
                         Align(
                           alignment: Alignment.centerRight,
-                          child: FloatingActionButton(
-                              child: Icon(Icons.add),
-                              heroTag: null,
-                              onPressed: () {
-                                abrirGaleria();
-                              }),
+                          child: Container(
+                            height: 30,
+                            width: 30,
+                            transform:
+                                Matrix4.translationValues(-22.0, -2.0, 22.0),
+                            child: FloatingActionButton(
+                                child: Icon(
+                                  Icons.add,
+                                  size: 30,
+                                ),
+                                heroTag: null,
+                                backgroundColor: HexColor('#FC4C8B'),
+                                onPressed: () {
+                                  abrirGaleria();
+                                }),
+                          ),
                         )
                       ],
+                    ),
+                    SizedBox(
+                      height: 15,
                     ),
                   ],
                 ),

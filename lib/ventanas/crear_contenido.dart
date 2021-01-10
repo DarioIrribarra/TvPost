@@ -333,22 +333,67 @@ class _CrearContenidoState extends State<CrearContenido> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text("Elegir opción: "),
-          content: SingleChildScrollView(
-            child: ListBody(
-              children: <Widget>[
-                GestureDetector(
-                  child: Text("Galeria"),
-                  onTap: () {
-                    _abrirGaleria(context);
-                  },
+          contentPadding:
+              const EdgeInsets.only(bottom: 20, top: 20, left: 5, right: 5),
+          backgroundColor: Colors.grey.withOpacity(0.0),
+          content: Container(
+            decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(40),
+                color: HexColor('#f4f4f4')),
+            height: 150,
+            width: 250,
+            child: Column(
+              children: [
+                SizedBox(
+                  height: 40,
                 ),
-                Padding(padding: EdgeInsets.all(8.0)),
-                GestureDetector(
-                  child: Text("Camara"),
-                  onTap: () {
-                    _abrirCamara(context);
-                  },
+                Text("CARGAR IMÁGENES "),
+                SizedBox(
+                  height: 15,
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    GestureDetector(
+                      child: Icon(Icons.camera_alt,
+                          size: 40, color: HexColor('#3EDB9B')),
+                      onTap: () {
+                        _abrirCamara(context);
+                      },
+                    ),
+                    Padding(padding: EdgeInsets.all(8.0)),
+                    GestureDetector(
+                      child: Icon(Icons.photo_album,
+                          size: 40, color: HexColor('#FC4C8B')),
+                      onTap: () {
+                        _abrirGaleria(context);
+                      },
+                    ),
+                  ],
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: <Widget>[
+                    GestureDetector(
+                      child: Text(
+                        "CAMARA",
+                        style: TextStyle(fontSize: 10),
+                      ),
+                      onTap: () {
+                        _abrirCamara(context);
+                      },
+                    ),
+                    Padding(padding: EdgeInsets.all(8.0)),
+                    GestureDetector(
+                      child: Text(
+                        "GALERÍA",
+                        style: TextStyle(fontSize: 10),
+                      ),
+                      onTap: () {
+                        _abrirGaleria(context);
+                      },
+                    ),
+                  ],
                 ),
               ],
             ),
@@ -554,7 +599,7 @@ class _CrearContenidoState extends State<CrearContenido> {
             decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(40),
                 color: HexColor('#f4f4f4')),
-            height: 250,
+            height: 240,
             width: 250,
             child: SingleChildScrollView(
               child: Column(
@@ -563,7 +608,7 @@ class _CrearContenidoState extends State<CrearContenido> {
                     height: 15,
                   ),
                   Center(
-                    child: Text("ELEGIR COLOR: "),
+                    child: Text("COLOR"),
                   ),
                   SizedBox(
                     height: 15,
@@ -584,16 +629,15 @@ class _CrearContenidoState extends State<CrearContenido> {
                     ),
                   ),
                   GestureDetector(
-                      child: RaisedButton(
-                    onPressed: () {
+                    onTap: () {
                       Navigator.of(context).pop();
                     },
                     child: Icon(
                       Icons.check_circle,
-                      color: Colors.lightBlue,
+                      color: HexColor('#3EDB9B'),
+                      size: 30,
                     ),
-                    color: Colors.white,
-                  ))
+                  )
                 ],
               ),
             ),
@@ -662,64 +706,103 @@ class _CrearContenidoState extends State<CrearContenido> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text("Ingrese el texto: "),
-          content: SingleChildScrollView(
-            child: ListBody(
-              children: <Widget>[
-                TextField(
-                  keyboardType: TextInputType.multiline,
-                  maxLines: null,
-                  decoration: InputDecoration(
-                    border: OutlineInputBorder(),
-                    labelText: 'Ingrese texto',
-                  ),
-                  onChanged: (String str) {
-                    this.setState(() {
-                      textoo = str;
-                    });
-                  },
+          contentPadding:
+              const EdgeInsets.only(bottom: 20, top: 20, left: 5, right: 5),
+          backgroundColor: Colors.grey.withOpacity(0.0),
+          content: Container(
+              decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(40),
+                  color: HexColor('#f4f4f4')),
+              height: 370,
+              width: 300,
+              child: SingleChildScrollView(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: <Widget>[
+                    SizedBox(
+                      height: 20,
+                    ),
+                    Text("TEXTO"),
+                    SizedBox(
+                      height: 15,
+                    ),
+                    Container(
+                      height: 30,
+                      width: 220,
+                      child: TextField(
+                        keyboardType: TextInputType.multiline,
+                        maxLines: null,
+                        decoration: InputDecoration(
+                          border: OutlineInputBorder(),
+                          labelText: 'Ingrese texto aquí',
+                        ),
+                        onChanged: (String str) {
+                          this.setState(() {
+                            textoo = str;
+                          });
+                        },
+                      ),
+                    ),
+                    new ColorPicker(
+                      enableAlpha: false,
+                      showLabel: false,
+                      displayThumbColor: true,
+                      pickerColor: colorTexto,
+                      onColorChanged: (value) {
+                        _colorTexto(value);
+                        setState(() {});
+                      },
+                      pickerAreaHeightPercent: 0.7,
+                      colorPickerWidth: 220,
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        GestureDetector(
+                          onTap: () {
+                            if (textoo != null) {
+                              if (textoo.isNotEmpty &&
+                                  textoo.trim().length > 0) {
+                                setState(() {
+                                  txt = Text(
+                                    textoo,
+                                    style: DefaultTextStyle.of(context)
+                                        .style
+                                        .apply(
+                                            fontSizeFactor: 0.5,
+                                            decoration: TextDecoration.none,
+                                            color: colorTexto),
+                                  );
+                                  mockData.add(
+                                    EditableItem()
+                                      ..type = ItemType.Text
+                                      ..value = txt,
+                                  );
+                                });
+                              }
+                            }
+                            Navigator.of(context).pop();
+                          },
+                          child: Icon(
+                            Icons.check_circle,
+                            color: HexColor('#3EDB9B'),
+                            size: 30,
+                          ),
+                        ),
+                        GestureDetector(
+                            child: Icon(
+                              Icons.cancel,
+                              color: HexColor('#FC4C8B'),
+                              size: 30,
+                            ),
+                            onTap: () {
+                              Navigator.pop(context);
+                            }),
+                      ],
+                    )
+                  ],
                 ),
-                new ColorPicker(
-                  enableAlpha: false,
-                  showLabel: false,
-                  displayThumbColor: true,
-                  pickerColor: colorTexto,
-                  onColorChanged: (value) {
-                    _colorTexto(value);
-                    setState(() {});
-                  },
-                  pickerAreaHeightPercent: 0.7,
-                ),
-                RaisedButton(
-                  onPressed: () {
-                    if (textoo != null) {
-                      if (textoo.isNotEmpty && textoo.trim().length > 0) {
-                        setState(() {
-                          txt = Text(
-                            textoo,
-                            style: DefaultTextStyle.of(context).style.apply(
-                                fontSizeFactor: 0.5,
-                                decoration: TextDecoration.none,
-                                color: colorTexto),
-                          );
-                          mockData.add(
-                            EditableItem()
-                              ..type = ItemType.Text
-                              ..value = txt,
-                          );
-                        });
-                      }
-                    }
-                    Navigator.of(context).pop();
-                  },
-                  child: Icon(
-                    Icons.check_circle,
-                    color: Colors.lightBlue,
-                  ),
-                )
-              ],
-            ),
-          ),
+              )),
         );
       },
     );
@@ -830,153 +913,183 @@ class _CrearContenidoState extends State<CrearContenido> {
                   Limite(controladorOferta.text.length);
                 },
                 child: AlertDialog(
-                  title: Text(
-                    "Vista Previa Oferta",
-                    textAlign: TextAlign.center,
-                  ),
-                  content: Column(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      WidgetToImage(builder: (key) {
-                        this.key2 = key;
-                        return GestureDetector(
-                          onTap: () {
-                            FocusScope.of(context).requestFocus(nodoTexto);
-                            //print(foc);
-                          },
-                          child: Stack(
-                            alignment: Alignment.center,
-                            children: [
-                              Container(
-                                width: MediaQuery.of(context).size.width / 2,
-                                height: MediaQuery.of(context).size.height / 6,
-                                decoration: BoxDecoration(
-                                  shape: BoxShape.circle,
-                                  color: pickerColorFondo,
-                                ),
-                                child: Column(
-                                  children: [
-                                    SizedBox(
-                                      height: 20,
-                                    ),
-                                    Text(
-                                      'OFERTA',
-                                      style: TextStyle(color: pickerColorTexto),
-                                    ),
-                                    Container(
-                                      width: 110,
-                                      //margin: EdgeInsets.only(left: 5.0),
-                                      alignment: Alignment.center,
-                                      child: TextFormField(
-                                        focusNode: nodoTexto,
-                                        autofocus: true,
-                                        controller: controladorOferta,
-                                        maxLengthEnforced: true,
-                                        textAlign: TextAlign.center,
-                                        textAlignVertical:
-                                            TextAlignVertical.center,
-                                        maxLength: 3,
-                                        maxLines: 1,
-                                        onEditingComplete: () {
-                                          Limite(controladorOferta.text.length);
-                                        },
-                                        //Decoración caja
-                                        decoration: InputDecoration(
-                                          border: InputBorder.none,
-                                          focusedBorder: InputBorder.none,
-                                          enabledBorder: InputBorder.none,
-                                          errorBorder: InputBorder.none,
-                                          disabledBorder: InputBorder.none,
-                                          counterText: "",
-                                        ),
-                                        //Decoración Texto
-                                        style: TextStyle(
-                                          color: pickerColorTexto,
-                                          fontSize: MediaQuery.of(context)
-                                                  .size
-                                                  .height /
-                                              17,
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              Container(
-                                width: (MediaQuery.of(context).size.width / 2) -
-                                    10,
-                                height:
-                                    (MediaQuery.of(context).size.height / 6) -
-                                        10,
-                                decoration: BoxDecoration(
-                                  shape: BoxShape.circle,
-                                  border: Border.all(
-                                      color: pickerColorTexto,
-                                      width: 2.0,
-                                      style: BorderStyle.solid),
-                                ),
-                              ),
-                            ],
-                          ),
-                        );
-                      }),
-                      Column(
+                  contentPadding:
+                      EdgeInsets.only(bottom: 20, top: 20, left: 5, right: 5),
+                  backgroundColor: Colors.grey.withOpacity(0.0),
+                  content: Container(
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(40),
+                          color: HexColor('#f4f4f4')),
+                      height: 500,
+                      child: Column(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
                           Text(
-                            "Fondo",
-                            textScaleFactor: 1.5,
-                            style: TextStyle(
-                                color: Colors.black,
-                                fontWeight: FontWeight.bold),
+                            "OFERTA",
+                            textAlign: TextAlign.center,
                           ),
-                          ColorPicker(
-                            //Sin barra deslizadora de degradación
-                            enableAlpha: false,
-                            pickerColor: pickerColorFondo,
-                            showLabel: false,
-                            displayThumbColor: true,
-                            pickerAreaHeightPercent: 0.15,
-                            onColorChanged: (color) {
-                              changeColorFondo(color);
-                              setState(() {});
-                            },
+                          WidgetToImage(builder: (key) {
+                            this.key2 = key;
+                            return GestureDetector(
+                              onTap: () {
+                                FocusScope.of(context).requestFocus(nodoTexto);
+                                //print(foc);
+                              },
+                              child: Stack(
+                                alignment: Alignment.center,
+                                children: [
+                                  Container(
+                                    width:
+                                        MediaQuery.of(context).size.width / 2,
+                                    height:
+                                        MediaQuery.of(context).size.height / 6,
+                                    decoration: BoxDecoration(
+                                      shape: BoxShape.circle,
+                                      color: pickerColorFondo,
+                                    ),
+                                    child: Column(
+                                      children: [
+                                        SizedBox(
+                                          height: 20,
+                                        ),
+                                        Text(
+                                          'OFERTA',
+                                          style: TextStyle(
+                                              color: pickerColorTexto),
+                                        ),
+                                        Container(
+                                          width: 110,
+                                          //margin: EdgeInsets.only(left: 5.0),
+                                          alignment: Alignment.center,
+                                          child: TextFormField(
+                                            focusNode: nodoTexto,
+                                            autofocus: true,
+                                            controller: controladorOferta,
+                                            maxLengthEnforced: true,
+                                            textAlign: TextAlign.center,
+                                            textAlignVertical:
+                                                TextAlignVertical.center,
+                                            maxLength: 3,
+                                            maxLines: 1,
+                                            onEditingComplete: () {
+                                              Limite(controladorOferta
+                                                  .text.length);
+                                            },
+                                            //Decoración caja
+                                            decoration: InputDecoration(
+                                              border: InputBorder.none,
+                                              focusedBorder: InputBorder.none,
+                                              enabledBorder: InputBorder.none,
+                                              errorBorder: InputBorder.none,
+                                              disabledBorder: InputBorder.none,
+                                              counterText: "",
+                                            ),
+                                            //Decoración Texto
+                                            style: TextStyle(
+                                              color: pickerColorTexto,
+                                              fontSize: MediaQuery.of(context)
+                                                      .size
+                                                      .height /
+                                                  17,
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                  Container(
+                                    width: (MediaQuery.of(context).size.width /
+                                            2) -
+                                        10,
+                                    height:
+                                        (MediaQuery.of(context).size.height /
+                                                6) -
+                                            10,
+                                    decoration: BoxDecoration(
+                                      shape: BoxShape.circle,
+                                      border: Border.all(
+                                          color: pickerColorTexto,
+                                          width: 2.0,
+                                          style: BorderStyle.solid),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            );
+                          }),
+                          Column(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            children: [
+                              Text(
+                                "COLOR DE FONDO",
+                                textScaleFactor: 0.8,
+                                style: TextStyle(
+                                    color: Colors.black,
+                                    fontWeight: FontWeight.bold),
+                              ),
+                              ColorPicker(
+                                //Sin barra deslizadora de degradación
+                                enableAlpha: false,
+                                pickerColor: pickerColorFondo,
+                                showLabel: false,
+                                displayThumbColor: true,
+                                pickerAreaHeightPercent: 0.15,
+                                onColorChanged: (color) {
+                                  changeColorFondo(color);
+                                  setState(() {});
+                                },
+                              ),
+                              Text(
+                                "COLOR DE TEXTO",
+                                textScaleFactor: 0.8,
+                                style: TextStyle(
+                                    color: Colors.black,
+                                    fontWeight: FontWeight.bold),
+                              ),
+                              ColorPicker(
+                                //Sin barra deslizadora de degradación
+                                enableAlpha: false,
+                                pickerColor: pickerColorTexto,
+                                showLabel: false,
+                                displayThumbColor: true,
+                                pickerAreaHeightPercent: 0.15,
+                                onColorChanged: (color) {
+                                  changeColorLetras(color);
+                                  setState(() {});
+                                },
+                              ),
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceEvenly,
+                                children: [
+                                  GestureDetector(
+                                    onTap: () async {
+                                      //Acá se debe sacar el screenshot de la oferta
+                                      // o moverlo
+                                      //**//
+                                      _ponerOferta(context);
+                                    },
+                                    child: Icon(
+                                      Icons.check_circle,
+                                      color: HexColor('#3EDB9B'),
+                                      size: 30,
+                                    ),
+                                  ),
+                                  GestureDetector(
+                                      child: Icon(
+                                        Icons.cancel,
+                                        color: HexColor('#FC4C8B'),
+                                        size: 30,
+                                      ),
+                                      onTap: () {
+                                        Navigator.pop(context);
+                                      }),
+                                ],
+                              ),
+                            ],
                           ),
-                          Text(
-                            "Oferta",
-                            textScaleFactor: 1.5,
-                            style: TextStyle(
-                                color: Colors.black,
-                                fontWeight: FontWeight.bold),
-                          ),
-                          ColorPicker(
-                            //Sin barra deslizadora de degradación
-                            enableAlpha: false,
-                            pickerColor: pickerColorTexto,
-                            showLabel: false,
-                            displayThumbColor: true,
-                            pickerAreaHeightPercent: 0.15,
-                            onColorChanged: (color) {
-                              changeColorLetras(color);
-                              setState(() {});
-                            },
-                          ),
-                          RaisedButton(
-                            onPressed: () async {
-                              //Acá se debe sacar el screenshot de la oferta
-                              // o moverlo
-                              //**//
-                              _ponerOferta(context);
-                            },
-                            child: Icon(
-                              Icons.check_circle,
-                              color: Colors.lightBlue,
-                            ),
-                          )
                         ],
-                      ),
-                    ],
-                  ),
+                      )),
                 ),
               ),
             ),
@@ -990,22 +1103,35 @@ class _CrearContenidoState extends State<CrearContenido> {
     AlertDialog alert;
     // Configura el popup
     alert = AlertDialog(
-      title: Text(
-        "Emojis",
-        textAlign: TextAlign.center,
-      ),
-      content: SingleChildScrollView(
-        scrollDirection: Axis.horizontal,
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            EmojiPickerWidget(
-              onEmojiSelected: onEmojiSelected,
-            ),
-          ],
-        ),
-      ),
-    );
+        contentPadding:
+            const EdgeInsets.only(bottom: 20, top: 0, left: 20, right: 20),
+        backgroundColor: Colors.grey.withOpacity(0.0),
+        content: Container(
+          decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(40),
+              color: HexColor('#f4f4f4')),
+          height: 420,
+          width: 400,
+          child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                Text(
+                  "EMOJI",
+                  textAlign: TextAlign.left,
+                ),
+                SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      EmojiPickerWidget(
+                        onEmojiSelected: onEmojiSelected,
+                      )
+                    ],
+                  ),
+                ),
+              ]),
+        ));
 
     // Muestro el popup
     showDialog(

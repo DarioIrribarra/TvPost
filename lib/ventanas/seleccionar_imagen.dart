@@ -338,7 +338,9 @@ class _SeleccionarImagenState extends State<SeleccionarImagen> {
                                               //String dir = (await getTemporaryDirectory()).path;
                                               //File temporal = new File('$dir/img_temp_creada.png');
                                               //Se desactiva la publicación en redes sociales
-                                              DatosEstaticos.PublicarEnRedesSociales = false;
+                                              DatosEstaticos
+                                                      .PublicarEnRedesSociales =
+                                                  false;
                                               Widget imagen = Image.network(
                                                   'http://'
                                                   '${DatosEstaticos.ipSeleccionada}'
@@ -392,7 +394,9 @@ class _SeleccionarImagenState extends State<SeleccionarImagen> {
                                                           '${DatosEstaticos.listadoNombresImagenes[index]}');*/
                                               //Valor que activa la publicación en redes sociales
                                               //Este valor se desactiva luego de proyectar en tv
-                                              DatosEstaticos.PublicarEnRedesSociales = true;
+                                              DatosEstaticos
+                                                      .PublicarEnRedesSociales =
+                                                  true;
                                               Widget imagen = Image.network(
                                                   'http://'
                                                   '${DatosEstaticos.ipSeleccionada}'
@@ -566,33 +570,41 @@ class _SeleccionarImagenState extends State<SeleccionarImagen> {
           child: Column(
             children: <Widget>[
               Container(
-                margin: EdgeInsets.only(bottom: 10),
-                padding: EdgeInsets.only(bottom: 5),
-                decoration: BoxDecoration(
-                    border: Border(
-                  bottom: BorderSide(width: 5, color: Colors.green),
-                )),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
+                    SizedBox(
+                      height: 20,
+                    ),
                     Stack(
                       alignment: Alignment.center,
                       children: [
                         Align(
                           alignment: Alignment.center,
                           child: Text(
-                            'Seleccione una imagen',
+                            'SELECCIONE IMAGEN',
                             textScaleFactor: 1.3,
                           ),
                         ),
                         Align(
                           alignment: Alignment.centerRight,
-                          child: FloatingActionButton(
-                              child: Icon(Icons.add),
-                              heroTag: null,
-                              onPressed: () {
-                                abrirGaleria(context);
-                              }),
+                          child: Container(
+                            height: 30,
+                            width: 30,
+                            transform:
+                                Matrix4.translationValues(-22.0, -2.0, 22.0),
+                            child: FloatingActionButton(
+                                mini: true,
+                                child: Icon(
+                                  Icons.add,
+                                  size: 30,
+                                ),
+                                heroTag: null,
+                                backgroundColor: HexColor('#FC4C8B'),
+                                onPressed: () {
+                                  abrirGaleria(context);
+                                }),
+                          ),
                         )
                       ],
                     ),

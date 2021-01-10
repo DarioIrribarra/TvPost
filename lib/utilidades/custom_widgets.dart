@@ -15,12 +15,19 @@ class PopUps {
   //Se crea popup de cargando
   static popUpCargando(BuildContext context, String texto) {
     AlertDialog alert = AlertDialog(
-      content: new Row(
-        children: [
-          CircularProgressIndicator(),
-          Container(margin: EdgeInsets.only(left: 20), child: Text(texto)),
-        ],
-      ),
+      contentPadding: EdgeInsets.only(bottom: 20, top: 20, left: 5, right: 5),
+      backgroundColor: Colors.grey.withOpacity(0.0),
+      content: Container(
+          decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(40),
+              color: HexColor('#f4f4f4')),
+          height: 100,
+          width: 250,
+          child:
+              Row(mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: [
+            Center(child: Text(texto, style: TextStyle(fontSize: 13))),
+            CircularProgressIndicator()
+          ])),
     );
     showDialog(
       barrierDismissible: false,
@@ -610,26 +617,7 @@ class _OpcionesSeleccionMediaState extends State<OpcionesSeleccionMedia> {
                         style: TextStyle(color: Colors.white),
                       ),
                     ),
-                    FlatButton(
-                      color: Colors.transparent,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(18.0),
-                      ),
-                      onPressed: () {
-                        //Se limpia listado estático de selección de videos
-                        SeleccionaVideo.videosSelecionados.clear();
-                        //Va a la otra ventana esperando respuesta
-                        //navegarYEsperarRespuesta('/seleccionar_video');
-                        Navigator.popAndPushNamed(context, "/seleccionar_video",
-                            arguments: {
-                              'division_layout': DatosEstaticos.divisionLayout,
-                              'ruta_proveniente':
-                                  ModalRoute.of(context).settings.name,
-                            });
-                      },
-                      child:
-                          Text('VIDEO', style: TextStyle(color: Colors.white)),
-                    ),
+                    activarVideo(widget.divisionLayout)
                   ],
                 ),
                 Row(
@@ -672,6 +660,18 @@ class _OpcionesSeleccionMediaState extends State<OpcionesSeleccionMedia> {
           style: TextStyle(color: Colors.white.withOpacity(0.4)),
         ),
       );
+    } else if (divisionDellayout == "3-3") {
+      return FlatButton(
+        color: Colors.transparent,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(18.0),
+        ),
+        onPressed: () {},
+        child: Text(
+          'URL',
+          style: TextStyle(color: Colors.white.withOpacity(0.4)),
+        ),
+      );
     } else {
       return FlatButton(
         color: Colors.transparent,
@@ -684,8 +684,55 @@ class _OpcionesSeleccionMediaState extends State<OpcionesSeleccionMedia> {
           /*PopUps.PopUpConWidget(w
                           context, contenidoPopUpSeleccionUrl());*/
         },
+        child: Text('URL', style: TextStyle(color: Colors.white)),
+      );
+    }
+  }
+
+  //aca se activa y desactiva el boton video, dependiendo de la porsion seleccionada
+  Widget activarVideo(String divisionDellayout) {
+    if (divisionDellayout == "3-2") {
+      return FlatButton(
+        color: Colors.transparent,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(18.0),
+        ),
+        onPressed: () {},
         child: Text(
-          'URL',
+          'VIDEO',
+          style: TextStyle(color: Colors.white.withOpacity(0.4)),
+        ),
+      );
+    } else if (divisionDellayout == "3-3") {
+      return FlatButton(
+        color: Colors.transparent,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(18.0),
+        ),
+        onPressed: () {},
+        child: Text(
+          'VIDEO',
+          style: TextStyle(color: Colors.white.withOpacity(0.4)),
+        ),
+      );
+    } else {
+      return FlatButton(
+        color: Colors.transparent,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(18.0),
+        ),
+        onPressed: () {
+          //Se limpia listado estático de selección de videos
+          SeleccionaVideo.videosSelecionados.clear();
+          //Va a la otra ventana esperando respuesta
+          //navegarYEsperarRespuesta('/seleccionar_video');
+          Navigator.popAndPushNamed(context, "/seleccionar_video", arguments: {
+            'division_layout': DatosEstaticos.divisionLayout,
+            'ruta_proveniente': ModalRoute.of(context).settings.name,
+          });
+        },
+        child: Text(
+          'VIDEO',
           style: TextStyle(color: Colors.white),
         ),
       );

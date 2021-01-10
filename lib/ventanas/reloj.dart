@@ -10,7 +10,6 @@ class EditarReloj extends StatefulWidget {
 }
 
 class _EditarRelojState extends State<EditarReloj> {
-
   // Valores para color de fonddo y texto
   Color pickerColorFondo = HexColor(DatosEstaticos.color_fondo_reloj);
   Color pickerColorTexto = HexColor(DatosEstaticos.color_texto_reloj);
@@ -47,100 +46,127 @@ class _EditarRelojState extends State<EditarReloj> {
         return Center(
           child: SingleChildScrollView(
             child: AlertDialog(
-              title: Text(
-                "Vista Previa Reloj",
-                textAlign: TextAlign.center,
-              ),
-              content: Column(
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.only(bottom: 15.0),
-                    child: DecoratedBox(
-                      decoration: BoxDecoration(
-                        color: pickerColorFondo,
-                      ),
-                      child: Text(
-                        '00:00:00',
-                        textScaleFactor: 2.0,
-                        textAlign: TextAlign.center,
-                        style: TextStyle(color: pickerColorTexto),
-                      ),
+              contentPadding:
+                  EdgeInsets.only(bottom: 20, top: 20, left: 5, right: 5),
+              backgroundColor: Colors.grey.withOpacity(0.0),
+              content: Container(
+                decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(40),
+                    color: HexColor('#f4f4f4')),
+                height: 450,
+                width: MediaQuery.of(context).size.width / 2,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    Text(
+                      "RELOJ",
+                      textAlign: TextAlign.center,
+                      textScaleFactor: 1,
                     ),
-                  ),
-                  Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      Text(
-                        "Fondo",
-                        textScaleFactor: 1.5,
-                        style: TextStyle(
-                            color: Colors.black, fontWeight: FontWeight.bold),
-                      ),
-                      ColorPicker(
-                        pickerColor: pickerColorFondo,
-                        showLabel: false,
-                        enableAlpha: false,
-                        displayThumbColor: true,
-                        pickerAreaHeightPercent: 0.25,
-                        onColorChanged: (color) {
-                          changeColorFondo(color);
-                          setState(() {});
-                        },
-                      ),
-                      Text(
-                        "Hora",
-                        textScaleFactor: 1.5,
-                        style: TextStyle(
-                            color: Colors.black, fontWeight: FontWeight.bold),
-                      ),
-                      ColorPicker(
-                        pickerColor: pickerColorTexto,
-                        showLabel: false,
-                        enableAlpha: false,
-                        displayThumbColor: true,
-                        pickerAreaHeightPercent: 0.25,
-                        onColorChanged: (color) {
-                          changeColorLetras(color);
-                          setState(() {});
-                        },
-                      ),
-                      Row(
-                        children: [
-                          Expanded(
-                            flex: 1,
-                            child: RaisedButton(
-                                child: Text("Guardar"),
-                                onPressed: () {
-                                  //Navigator.of(context, rootNavigator: true).pop()
-                                  //Diego, acá deberías manejar el estado del reloj en pantalla
-                                  //Lo pasas a true y en el crear_layout3.dart preguntas
-                                  //por el estado del reloj, si es true, cambias el
-                                  //widget del layout por uno con una imagen de reloj
-                                  //si es false, muestras el antiguo. Así lo haría yo, pero
-                                  //si tu quieres haz otro archivo completamente como veo que lo pensabas
-                                  //hacer.
-                                  //mira la línea 141 en crear_layout3
-                                  DatosEstaticos.relojEnPantalla = true;
-                                  Navigator.pop(context);
-                                  Navigator.popAndPushNamed(context, '/crear_layout3');
-                                }
+                    Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.only(bottom: 15.0),
+                          child: DecoratedBox(
+                            decoration: BoxDecoration(
+                              color: pickerColorFondo,
+                            ),
+                            child: Text(
+                              '00:00:00',
+                              textScaleFactor: 2.0,
+                              textAlign: TextAlign.center,
+                              style: TextStyle(color: pickerColorTexto),
                             ),
                           ),
-                          Expanded(
-                            flex: 1,
-                            child: RaisedButton(
-                                child: Text("Cancelar"),
-                                onPressed: () {
-                                  DatosEstaticos.relojEnPantalla = false;
-                                  Navigator.pop(context);
-                                }
+                        ),
+                        Column(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.only(bottom: 8.0),
+                              child: Text(
+                                "COLOR DE FONDO",
+                                textScaleFactor: 0.8,
+                                style: TextStyle(
+                                    color: Colors.black,
+                                    fontWeight: FontWeight.bold),
+                              ),
                             ),
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-                ],
+                            ColorPicker(
+                              pickerColor: pickerColorFondo,
+                              showLabel: false,
+                              enableAlpha: false,
+                              displayThumbColor: true,
+                              pickerAreaHeightPercent: 0.15,
+                              onColorChanged: (color) {
+                                changeColorFondo(color);
+                                setState(() {});
+                              },
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.only(bottom: 8.0),
+                              child: Text(
+                                "COLOR DE HORA",
+                                textScaleFactor: 0.8,
+                                style: TextStyle(
+                                    color: Colors.black,
+                                    fontWeight: FontWeight.bold),
+                              ),
+                            ),
+                            ColorPicker(
+                              pickerColor: pickerColorTexto,
+                              showLabel: false,
+                              enableAlpha: false,
+                              displayThumbColor: true,
+                              pickerAreaHeightPercent: 0.15,
+                              onColorChanged: (color) {
+                                changeColorLetras(color);
+                                setState(() {});
+                              },
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              children: [
+                                GestureDetector(
+                                    child: Icon(
+                                      Icons.check_circle,
+                                      color: HexColor('#3EDB9B'),
+                                      size: 30,
+                                    ),
+                                    onTap: () {
+                                      //Navigator.of(context, rootNavigator: true).pop()
+                                      //Diego, acá deberías manejar el estado del reloj en pantalla
+                                      //Lo pasas a true y en el crear_layout3.dart preguntas
+                                      //por el estado del reloj, si es true, cambias el
+                                      //widget del layout por uno con una imagen de reloj
+                                      //si es false, muestras el antiguo. Así lo haría yo, pero
+                                      //si tu quieres haz otro archivo completamente como veo que lo pensabas
+                                      //hacer.
+                                      //mira la línea 141 en crear_layout3
+                                      DatosEstaticos.relojEnPantalla = true;
+                                      Navigator.pop(context);
+                                      Navigator.popAndPushNamed(
+                                          context, '/crear_layout3');
+                                    }),
+                                GestureDetector(
+                                    child: Icon(
+                                      Icons.cancel,
+                                      color: HexColor('#FC4C8B'),
+                                      size: 30,
+                                    ),
+                                    onTap: () {
+                                      DatosEstaticos.relojEnPantalla = false;
+                                      Navigator.pop(context);
+                                    }),
+                              ],
+                            ),
+                          ],
+                        ),
+                      ],
+                    )
+                  ],
+                ),
               ),
             ),
           ),
@@ -282,7 +308,7 @@ EditarReloj() {
     );
   });
 
-  *//*return showDialog(
+  */ /*return showDialog(
       context: context,
       barrierDismissible: false,
       child: StatefulBuilder(builder: (context, setState) {
@@ -387,5 +413,5 @@ EditarReloj() {
           ),
         );
       }),
-    );*//*
+    );*/ /*
 }*/

@@ -13,6 +13,11 @@ import 'package:liquid_pull_to_refresh/liquid_pull_to_refresh.dart';
 //import 'package:path_provider/path_provider.dart';
 import 'package:fswitch/fswitch.dart';
 import 'package:tvpost_flutter/tvlapiz_icons.dart';
+/*import 'package:tvpost_flutter/my_flutter_app_icons.dart';
+Icon(
+                                  MyFlutterApp.a_1,
+                                  color: Colors.blue,
+                                )*/
 
 class DetalleEquipo extends StatefulWidget {
   @override
@@ -306,6 +311,7 @@ class _DetalleEquipoState extends State<DetalleEquipo> {
                                     ),
                                   ),
                                 ),
+
                                 /*Text(""),
                                 Text("")*/
                               ],
@@ -574,17 +580,23 @@ class _DetalleEquipoState extends State<DetalleEquipo> {
                       Column(
                         children: [
                           CircleAvatar(
-                              backgroundColor: Colors.blueAccent,
-                              radius: 8,
-                              child: IconButton(
-                                onPressed: () async {
-                                  _widgetPopUpAlias();
-                                },
-                                icon: Icon(
-                                  Icons.edit,
-                                  size: 10,
+                            backgroundColor: Colors.blueAccent,
+                            radius: 10,
+                            child: FlatButton(
+                              onPressed: () async {
+                                _widgetPopUpAlias();
+                              },
+                              child: Container(
+                                transform:
+                                    Matrix4.translationValues(-16.0, 0.0, 0.0),
+                                child: Icon(
+                                  Tvlapiz.lapiz,
+                                  size: 20,
+                                  color: Colors.white,
                                 ),
-                              )),
+                              ),
+                            ),
+                          ),
                           Text(""),
                           Text("")
                         ],
@@ -1048,100 +1060,116 @@ class _DetalleEquipoState extends State<DetalleEquipo> {
     Widget contenido;
 
     contenido = new AlertDialog(
-      title: Text(
-        'Deshabilitar Equipo',
-        textAlign: TextAlign.center,
-      ),
-      content: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Text(
-            'Alias: ${alias}',
-            textAlign: TextAlign.center,
-          ),
-          Text(
-            'Serial: ${serial}',
-            textAlign: TextAlign.center,
-          ),
-          Text(
-            'Ip: ${ip}',
-            textAlign: TextAlign.center,
-          ),
-          SizedBox(
-            height: 10,
-          ),
-          Row(
-            children: [
-              Expanded(
-                  flex: 1,
-                  child: RaisedButton(
-                    child: Text(
-                      'Aceptar',
-                      textScaleFactor: 1.3,
-                    ),
-                    onPressed: () async {
-                      PopUps.popUpCargando(context, 'Deshabilitando equipo...');
-                      var resultado = await actualizarEstado.updateEstadoEquipo(
-                          serial: serial, estado: "0");
-                      await actualizarEstado.getDatosEquipos();
-                      if (resultado == 1) {
-                        setState(() {
-                          Navigator.pop(context);
-                          Navigator.pop(context);
-                          //valorSwitchUno = true;
-                          Widget contenidoPopUp = Column(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              Text('Equipo $alias deshabilitado'),
-                              SizedBox(
-                                width: 10,
+      contentPadding: EdgeInsets.only(bottom: 20, top: 20, left: 5, right: 5),
+      backgroundColor: Colors.grey.withOpacity(0.0),
+      content: Container(
+        decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(40),
+            color: HexColor('#f4f4f4')),
+        height: 150,
+        width: 250,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            Text(
+              'DESHABILITAR EQUIPO',
+              textAlign: TextAlign.center,
+            ),
+            Column(
+              mainAxisSize: MainAxisSize.min,
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                Text(
+                  'Alias: ${alias}',
+                  textAlign: TextAlign.center,
+                ),
+                Text(
+                  'Serial: ${serial}',
+                  textAlign: TextAlign.center,
+                ),
+                Text(
+                  'Ip: ${ip}',
+                  textAlign: TextAlign.center,
+                ),
+                SizedBox(
+                  height: 10,
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    GestureDetector(
+                      child: Icon(
+                        Icons.check_circle,
+                        color: HexColor('#3EDB9B'),
+                        size: 30,
+                      ),
+                      onTap: () async {
+                        PopUps.popUpCargando(
+                            context, 'DESHABILITANDO EQUIPO...');
+                        var resultado = await actualizarEstado
+                            .updateEstadoEquipo(serial: serial, estado: "0");
+                        await actualizarEstado.getDatosEquipos();
+                        if (resultado == 1) {
+                          setState(() {
+                            Navigator.pop(context);
+                            Navigator.pop(context);
+                            //valorSwitchUno = true;
+                            Widget contenidoPopUp = Container(
+                              decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(40),
+                                  color: HexColor('#f4f4f4')),
+                              height: 150,
+                              width: 250,
+                              child: Column(
+                                mainAxisSize: MainAxisSize.min,
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceEvenly,
+                                children: [
+                                  Text(
+                                    'EQUIPO $alias DESHABILITADO',
+                                    textAlign: TextAlign.center,
+                                  ),
+                                  SizedBox(
+                                    width: 10,
+                                  ),
+                                  GestureDetector(
+                                    child: Icon(
+                                      Icons.check_circle,
+                                      color: HexColor('#3EDB9B'),
+                                      size: 30,
+                                    ),
+                                    onTap: () {
+                                      Navigator.pop(context);
+                                    },
+                                  ),
+                                ],
                               ),
-                              RaisedButton(
-                                child: Text(
-                                  'Aceptar',
-                                  textScaleFactor: 1.3,
-                                ),
-                                onPressed: () {
-                                  //Navigator.pop(context);
-                                  Navigator.pop(context);
-                                  //Libera los widgets y datos creados
-                                  //LimpiarDatosEstaticos();
-                                  /*DatosEstaticos.indexSeleccionado = index;
-                                  return Navigator.pushNamed(
-                                      context, '/detalle_equipo',
-                                      arguments: {
-                                        "indexEquipoGrid": index,
-                                      });*/
-                                },
-                              ),
-                            ],
-                          );
-                          PopUps.PopUpConWidget(context, contenidoPopUp);
-                        });
-                      }
-                    },
-                  )),
-              SizedBox(
-                width: 10,
-              ),
-              Expanded(
-                  flex: 1,
-                  child: RaisedButton(
-                    child: Text(
-                      'Cancelar',
-                      textScaleFactor: 1.3,
+                            );
+                            PopUps.PopUpConWidget(context, contenidoPopUp);
+                          });
+                        }
+                      },
                     ),
-                    onPressed: () {
-                      Navigator.pop(context);
-                      /*setState(() {
+                    GestureDetector(
+                      child: Icon(
+                        Icons.cancel,
+                        color: HexColor('#FC4C8B'),
+                        size: 30,
+                      ),
+                      onTap: () {
+                        Navigator.pop(context);
+                        /*setState(() {
                           Navigator.pop(context);
                           valorSwitchUno = valorSwitch;
                         });*/
-                    },
-                  )),
-            ],
-          ),
-        ],
+                      },
+                    ),
+                  ],
+                ),
+              ],
+            )
+          ],
+        ),
       ),
     );
 
@@ -1163,100 +1191,110 @@ class _DetalleEquipoState extends State<DetalleEquipo> {
     Widget contenido;
 
     contenido = new AlertDialog(
-      title: Text(
-        'Habilitar Equipo',
-        textAlign: TextAlign.center,
-      ),
-      content: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Text(
-            'Alias: ${alias}',
-            textAlign: TextAlign.center,
-          ),
-          Text(
-            'Serial: ${serial}',
-            textAlign: TextAlign.center,
-          ),
-          Text(
-            'Ip: ${ip}',
-            textAlign: TextAlign.center,
-          ),
-          SizedBox(
-            height: 10,
-          ),
-          Row(
-            children: [
-              Expanded(
-                  flex: 1,
-                  child: RaisedButton(
-                    child: Text(
-                      'Aceptar',
-                      textScaleFactor: 1.3,
+      contentPadding: EdgeInsets.only(bottom: 20, top: 20, left: 5, right: 5),
+      backgroundColor: Colors.grey.withOpacity(0.0),
+      content: Container(
+        decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(40),
+            color: HexColor('#f4f4f4')),
+        height: 150,
+        width: 250,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            Text(
+              'Habilitar Equipo',
+              textAlign: TextAlign.center,
+            ),
+            Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  'Alias: ${alias}',
+                  textAlign: TextAlign.center,
+                ),
+                Text(
+                  'Serial: ${serial}',
+                  textAlign: TextAlign.center,
+                ),
+                Text(
+                  'Ip: ${ip}',
+                  textAlign: TextAlign.center,
+                ),
+                SizedBox(
+                  height: 10,
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    GestureDetector(
+                      child: Icon(
+                        Icons.check_circle,
+                        color: HexColor('#3EDB9B'),
+                        size: 30,
+                      ),
+                      onTap: () async {
+                        PopUps.popUpCargando(context, 'Habilitando equipo...');
+                        var resultado = await actualizarEstado
+                            .updateEstadoEquipo(serial: serial, estado: "1");
+                        await actualizarEstado.getDatosEquipos();
+                        if (resultado == 1) {
+                          setState(() {
+                            Navigator.pop(context);
+                            Navigator.pop(context);
+                            //valorSwitchUno = false;
+                            Widget contenidoPopUp = Container(
+                                decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(40),
+                                    color: HexColor('#f4f4f4')),
+                                height: 150,
+                                width: 250,
+                                child: Column(
+                                  mainAxisSize: MainAxisSize.min,
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceEvenly,
+                                  children: [
+                                    Text('EQUIPO $alias HABILITADO'),
+                                    SizedBox(
+                                      width: 10,
+                                    ),
+                                    GestureDetector(
+                                      child: Icon(
+                                        Icons.check_circle,
+                                        color: HexColor('#3EDB9B'),
+                                        size: 30,
+                                      ),
+                                      onTap: () {
+                                        Navigator.pop(context);
+                                      },
+                                    ),
+                                  ],
+                                ));
+                            PopUps.PopUpConWidget(context, contenidoPopUp);
+                          });
+                        }
+                      },
                     ),
-                    onPressed: () async {
-                      PopUps.popUpCargando(context, 'Habilitando equipo...');
-                      var resultado = await actualizarEstado.updateEstadoEquipo(
-                          serial: serial, estado: "1");
-                      await actualizarEstado.getDatosEquipos();
-                      if (resultado == 1) {
-                        setState(() {
-                          Navigator.pop(context);
-                          Navigator.pop(context);
-                          //valorSwitchUno = false;
-                          Widget contenidoPopUp = Column(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              Text('Equipo $alias habilitado'),
-                              SizedBox(
-                                width: 10,
-                              ),
-                              RaisedButton(
-                                child: Text(
-                                  'Aceptar',
-                                  textScaleFactor: 1.3,
-                                ),
-                                onPressed: () {
-                                  //Navigator.pop(context);
-                                  Navigator.pop(context);
-                                  //Libera los widgets y datos creados
-                                  //LimpiarDatosEstaticos();
-                                  //DatosEstaticos.indexSeleccionado = index;
-                                  /*return Navigator.pushNamed(
-                                      context, '/detalle_equipo',
-                                      arguments: {
-                                        "indexEquipoGrid": index,
-                                      });*/
-                                },
-                              ),
-                            ],
-                          );
-                          PopUps.PopUpConWidget(context, contenidoPopUp);
-                        });
-                      }
-                    },
-                  )),
-              SizedBox(
-                width: 10,
-              ),
-              Expanded(
-                  flex: 1,
-                  child: RaisedButton(
-                    child: Text(
-                      'Cancelar',
-                      textScaleFactor: 1.3,
-                    ),
-                    onPressed: () {
-                      Navigator.pop(context);
-                      /*setState(() {
+                    GestureDetector(
+                      child: Icon(
+                        Icons.cancel,
+                        color: HexColor('#FC4C8B'),
+                        size: 30,
+                      ),
+                      onTap: () {
+                        Navigator.pop(context);
+                        /*setState(() {
                           Navigator.pop(context);
                           valorSwitchUno = valorSwitch;
                         });*/
-                    },
-                  )),
-            ],
-          ),
-        ],
+                      },
+                    ),
+                  ],
+                ),
+              ],
+            )
+          ],
+        ),
       ),
     );
 
