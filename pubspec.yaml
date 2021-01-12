@@ -35,7 +35,7 @@ dependencies:
   chewie: ^0.9.10
   video_player: '>=0.10.0 <2.0.0'
   webview_flutter: ^1.0.0
-  url_launcher: ^5.7.2
+  url_launcher: ^5.7.10
   flutter_colorpicker: ^0.3.4
   emoji_picker: ^0.1.0
   flutter_keyboard_visibility: ^3.2.2
@@ -53,6 +53,8 @@ dependencies:
   flutter_social_content_share: ^0.0.3
   fswitch: ^1.1.2
   lite_rolling_switch: ^0.1.1
+  circular_profile_avatar: ^1.0.6
+ 
 
 
 dev_dependencies:

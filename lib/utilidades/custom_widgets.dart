@@ -5,6 +5,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:tvpost_flutter/utilidades/datos_estaticos.dart';
 import 'package:tvpost_flutter/utilidades/obtiene_datos_webservice.dart';
+import 'package:tvpost_flutter/ventanas/mi_perfil.dart';
+import 'package:tvpost_flutter/ventanas/soporte.dart';
 //import 'package:tvpost_flutter/ventanas/crear_layout3.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -328,8 +330,23 @@ class MenuAppBar {
           rutaVentana: "/seleccionar_video",
           rutaProveniente: rutaProveniente);
     }
-    if (itemSeleccionado == MenuAppBar.soporte) {}
-    if (itemSeleccionado == MenuAppBar.miPerfil) {}
+    if (itemSeleccionado == MenuAppBar.soporte) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => Soporte(),
+        ),
+      );
+      //return Navigator.popUntil(context,  ModalRoute.of(context).('/soporte'));
+    }
+    if (itemSeleccionado == MenuAppBar.miPerfil) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => Perfil(),
+        ),
+      );
+    }
     if (itemSeleccionado == MenuAppBar.cerrarSesion) {}
   }
 
