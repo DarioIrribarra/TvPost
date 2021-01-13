@@ -40,12 +40,10 @@ class _SeleccionarLayoutState extends State<SeleccionarLayout> {
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
-      onWillPop: (){
-        Navigator.popAndPushNamed(
-            context, '/detalle_equipo',
-            arguments: {
-              "indexEquipoGrid": DatosEstaticos.indexSeleccionado,
-            });
+      onWillPop: () {
+        Navigator.popAndPushNamed(context, '/detalle_equipo', arguments: {
+          "indexEquipoGrid": DatosEstaticos.indexSeleccionado,
+        });
         return;
       },
       child: Scaffold(
@@ -65,9 +63,8 @@ class _SeleccionarLayoutState extends State<SeleccionarLayout> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Text(
-                            ObtieneDatos
-                                .listadoEquipos[DatosEstaticos.indexSeleccionado]
-                                    ['f_alias']
+                            ObtieneDatos.listadoEquipos[
+                                    DatosEstaticos.indexSeleccionado]['f_alias']
                                 .toString(),
                             style: TextStyle(fontSize: 16.5),
                             textAlign: TextAlign.center,
@@ -81,7 +78,8 @@ class _SeleccionarLayoutState extends State<SeleccionarLayout> {
                                 onPressed: () {
                                   //Se asigna layout seleccionado a 1
                                   DatosEstaticos.layoutSeleccionado = 1;
-                                  Navigator.popAndPushNamed(context, '/crear_layout1');
+                                  Navigator.popAndPushNamed(
+                                      context, '/crear_layout1');
                                 },
                               ),
                             ),
@@ -106,7 +104,8 @@ class _SeleccionarLayoutState extends State<SeleccionarLayout> {
                             ),
                           ),
                           Padding(
-                            padding: const EdgeInsets.only(top: 10.0, bottom: 3),
+                            padding:
+                                const EdgeInsets.only(top: 10.0, bottom: 3),
                             child: Container(
                               decoration: _decorationLayoutSeleccionado2,
                               child: Column(
@@ -144,7 +143,8 @@ class _SeleccionarLayoutState extends State<SeleccionarLayout> {
                             ),
                           ),
                           Padding(
-                            padding: const EdgeInsets.only(top: 10.0, bottom: 3),
+                            padding:
+                                const EdgeInsets.only(top: 10.0, bottom: 3),
                             child: Container(
                               decoration: _decorationLayoutSeleccionado3,
                               child: FlatButton(
@@ -221,9 +221,7 @@ class _SeleccionarLayoutState extends State<SeleccionarLayout> {
             child: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
-                  Text(
-                    "¿DESEA ACTIVAR RELOJ?",
-                  ),
+                  Text("¿DESEA ACTIVAR RELOJ?", style: TextStyle(fontSize: 13)),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: <Widget>[

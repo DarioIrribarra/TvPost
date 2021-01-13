@@ -58,11 +58,11 @@ class _EditarRelojState extends State<EditarReloj> {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
-                    Text(
-                      "RELOJ",
-                      textAlign: TextAlign.center,
-                      textScaleFactor: 1,
-                    ),
+                    Text("RELOJ",
+                        textAlign: TextAlign.center,
+                        style: TextStyle(fontSize: 13)
+                        // textScaleFactor: 1,
+                        ),
                     Column(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [

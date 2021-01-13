@@ -229,7 +229,11 @@ class MenuAppBar {
         listadoEquipos.forEach((element) {
           //print(element);
           Container item = Container(
-            margin: EdgeInsets.only(left: 10),
+            decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(40),
+                color: HexColor('#f4f4f4')),
+            height: 100,
+            width: 250,
             child: ListTile(
               contentPadding: EdgeInsets.all(0),
               leading: Icon(Icons.screen_share),
@@ -253,17 +257,21 @@ class MenuAppBar {
         PopUps.PopUpConWidget(
           context,
           Container(
-            width: MediaQuery.of(context).size.width / 2,
+            decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(40),
+                color: HexColor('#f4f4f4')),
+            //height: 100,
+            width: 250,
+            /* width: MediaQuery.of(context).size.width / 2,*/
             height: altura,
             child: Column(
-              mainAxisSize: MainAxisSize.min,
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
                 Container(
                   height: 20,
-                  child: Text(
-                    'Equipos conectados',
-                    textAlign: TextAlign.center,
-                  ),
+                  child: Text('EQUIPOS CONECTADOS',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(fontSize: 13)),
                 ),
                 Container(
                   height: altura - 20,
@@ -277,7 +285,7 @@ class MenuAppBar {
         );
       }
     } else {
-      PopUps.PopUpConWidget(context, Text('Usted no posee equipos conectados'));
+      PopUps.PopUpConWidget(context, Text('USTED NO POSEE EQUIPOS CONECTADOS'));
     }
   }
 
@@ -781,7 +789,8 @@ class _OpcionesSeleccionMediaState extends State<OpcionesSeleccionMedia> {
                       children: [
                         Padding(
                           padding: const EdgeInsets.only(top: 50.0),
-                          child: Text("INGRESAR URL"),
+                          child: Text("INGRESAR URL",
+                              style: TextStyle(fontSize: 13)),
                         ),
                         Row(
                           children: [
@@ -1000,7 +1009,9 @@ class BotonEnviarAEquipo extends StatelessWidget {
                 PopUps.PopUpConWidget(context, EsperarRespuestaProyeccion());
               } else {
                 PopUps.PopUpConWidget(
-                    context, Text('Error: Contenido no seleccionado'));
+                    context,
+                    Text('Error: Contenido no seleccionado',
+                        style: TextStyle(fontSize: 13)));
               }
             },
             child: Text(mensaje_boton, style: TextStyle(color: Colors.white)),
@@ -1139,80 +1150,112 @@ class BotonEnviarAEquipo extends StatelessWidget {
               F_ArchivoPorcion3: DatosEstaticos.nombreArchivoWidget3,
             );
 
-            return Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Text('Ok, vea sus pantallas'),
-                RaisedButton(
-                  child: Text('Aceptar'),
-                  onPressed: () async {
-                    //Acá se publica
-                    if (this.publicar_rrss) {
-                      String resultado = await PublicarEnRedesSociales();
-                      if (resultado != 'Success') {
-                        Widget contenidoPopUp = Column(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Text(
-                              'Error de publicación',
-                              textAlign: TextAlign.center,
-                              textScaleFactor: 1.3,
-                              style: TextStyle(fontWeight: FontWeight.bold),
-                            ),
-                            SizedBox(
-                              height: 10,
-                            ),
-                            Text(
-                              'Instale, otorgue permisos y configure '
-                              'Instagram para realizar una publicación',
-                              textAlign: TextAlign.center,
-                            ),
-                            SizedBox(
-                              height: 10,
-                            ),
-                            RaisedButton(
-                              child: Text(
-                                'Aceptar',
-                                textScaleFactor: 1.3,
-                              ),
-                              onPressed: () {
-                                Navigator.pop(context);
-                                VolverADetalleEquipo(context);
-                              },
-                            ),
-                          ],
-                        );
-                        PopUps.PopUpConWidget(context, contenidoPopUp);
+            return Container(
+              decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(40),
+                  color: HexColor('#f4f4f4')),
+              height: 100,
+              width: 250,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  Text('OK, VEA SUS PANTALLAS', style: TextStyle(fontSize: 13)),
+                  FlatButton(
+                    child: Icon(
+                      Icons.check_circle,
+                      color: HexColor('#3EDB9B'),
+                      size: 30,
+                    ),
+                    onPressed: () async {
+                      //Acá se publica
+                      if (this.publicar_rrss) {
+                        String resultado = await PublicarEnRedesSociales();
+                        if (resultado != 'Success') {
+                          Widget contenidoPopUp = Container(
+                              decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(40),
+                                  color: HexColor('#f4f4f4')),
+                              height: 100,
+                              width: 250,
+                              child: Column(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceEvenly,
+                                children: [
+                                  Text(
+                                    'Error de publicación',
+                                    textAlign: TextAlign.center,
+                                    textScaleFactor: 1.3,
+                                    style:
+                                        TextStyle(fontWeight: FontWeight.bold),
+                                  ),
+                                  SizedBox(
+                                    height: 10,
+                                  ),
+                                  Text(
+                                    'Instale, otorgue permisos y configure '
+                                    'Instagram para realizar una publicación',
+                                    textAlign: TextAlign.center,
+                                  ),
+                                  SizedBox(
+                                    height: 10,
+                                  ),
+                                  FlatButton(
+                                    child: Icon(
+                                      Icons.check_circle,
+                                      color: HexColor('#3EDB9B'),
+                                      size: 30,
+                                    ),
+                                    onPressed: () {
+                                      Navigator.pop(context);
+                                      VolverADetalleEquipo(context);
+                                    },
+                                  ),
+                                ],
+                              ));
+                          PopUps.PopUpConWidget(context, contenidoPopUp);
+                        } else {
+                          //El valor se cambia luego de publicar y proyectar
+                          //en pantallas
+                          DatosEstaticos.PublicarEnRedesSociales = false;
+                          VolverADetalleEquipo(context);
+                        }
                       } else {
-                        //El valor se cambia luego de publicar y proyectar
-                        //en pantallas
-                        DatosEstaticos.PublicarEnRedesSociales = false;
                         VolverADetalleEquipo(context);
                       }
-                    } else {
-                      VolverADetalleEquipo(context);
-                    }
-                  },
-                ),
-              ],
+                    },
+                  ),
+                ],
+              ),
             );
           }
-          return Row(
-            children: [
-              CircularProgressIndicator(),
-              Container(
-                  margin: EdgeInsets.only(left: 20),
-                  child: Text('Preparando pantallas...')),
-            ],
+          return Container(
+            decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(40),
+                color: HexColor('#f4f4f4')),
+            height: 100,
+            width: 250,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                CircularProgressIndicator(),
+                Text('Preparando pantallas...', style: TextStyle(fontSize: 13))
+              ],
+            ),
           );
         }
-        return Row(
-          children: [
-            CircularProgressIndicator(),
-            Container(
-                margin: EdgeInsets.only(left: 20),
-                child: Text('Preparando pantallas...')),
-          ],
+        return Container(
+          decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(40),
+              color: HexColor('#f4f4f4')),
+          height: 100,
+          width: 250,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              CircularProgressIndicator(),
+              Text('Preparando pantallas...', style: TextStyle(fontSize: 13)),
+            ],
+          ),
         );
       },
     );

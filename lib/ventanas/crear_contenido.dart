@@ -347,7 +347,7 @@ class _CrearContenidoState extends State<CrearContenido> {
                 SizedBox(
                   height: 40,
                 ),
-                Text("CARGAR IMÁGENES "),
+                Text("CARGAR IMÁGENES ", style: TextStyle(fontSize: 13)),
                 SizedBox(
                   height: 15,
                 ),
@@ -422,7 +422,7 @@ class _CrearContenidoState extends State<CrearContenido> {
                 SizedBox(
                   height: 40,
                 ),
-                Text("CARGAR IMÁGENES "),
+                Text("CARGAR IMÁGENES ", style: TextStyle(fontSize: 13)),
                 SizedBox(
                   height: 15,
                 ),
@@ -608,7 +608,7 @@ class _CrearContenidoState extends State<CrearContenido> {
                     height: 15,
                   ),
                   Center(
-                    child: Text("COLOR"),
+                    child: Text("COLOR", style: TextStyle(fontSize: 13)),
                   ),
                   SizedBox(
                     height: 15,
@@ -722,7 +722,7 @@ class _CrearContenidoState extends State<CrearContenido> {
                     SizedBox(
                       height: 20,
                     ),
-                    Text("TEXTO"),
+                    Text("TEXTO", style: TextStyle(fontSize: 13)),
                     SizedBox(
                       height: 15,
                     ),
@@ -924,10 +924,9 @@ class _CrearContenidoState extends State<CrearContenido> {
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
-                          Text(
-                            "OFERTA",
-                            textAlign: TextAlign.center,
-                          ),
+                          Text("OFERTA",
+                              textAlign: TextAlign.center,
+                              style: TextStyle(fontSize: 13)),
                           WidgetToImage(builder: (key) {
                             this.key2 = key;
                             return GestureDetector(
@@ -1115,10 +1114,7 @@ class _CrearContenidoState extends State<CrearContenido> {
           child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
-                Text(
-                  "EMOJI",
-                  textAlign: TextAlign.left,
-                ),
+                Text("EMOJI", style: TextStyle(fontSize: 13)),
                 SingleChildScrollView(
                   scrollDirection: Axis.horizontal,
                   child: Column(

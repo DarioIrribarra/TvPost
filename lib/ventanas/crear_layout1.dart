@@ -168,27 +168,37 @@ class _CrearLayout1State extends State<CrearLayout1> {
                 actualizaEstado: () {
                   setState(() {
                     widget1 = DatosEstaticos.widget1;
-                    if (DatosEstaticos.PublicarEnRedesSociales){
-                      Widget contenido = Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Text(
-                            'Publicación Redes Sociales',
-                            textAlign: TextAlign.center,
-                            style: TextStyle(fontWeight: FontWeight.bold),
-                          ),
-                          SizedBox(height: 10,),
-                          Text(
-                            'Proyecte en la TV para realizar publciación',
-                            textAlign: TextAlign.center,
-                          ),
-                          SizedBox(height: 10,),
-                          FlatButton(
-                              onPressed: () => Navigator.pop(context),
-                              child: Text('Aceptar'),
-                          ),
-                        ],
-                      );
+                    if (DatosEstaticos.PublicarEnRedesSociales) {
+                      Widget contenido = Container(
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(40),
+                              color: HexColor('#f4f4f4')),
+                          height: 100,
+                          width: 250,
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            children: [
+                              Text(
+                                'Publicación Redes Sociales',
+                                textAlign: TextAlign.center,
+                                style: TextStyle(fontWeight: FontWeight.bold),
+                              ),
+                              SizedBox(
+                                height: 10,
+                              ),
+                              Text(
+                                'Proyecte en la TV para realizar publicacion',
+                                textAlign: TextAlign.center,
+                              ),
+                              SizedBox(
+                                height: 10,
+                              ),
+                              FlatButton(
+                                onPressed: () => Navigator.pop(context),
+                                child: Text('Aceptar'),
+                              ),
+                            ],
+                          ));
                       PopUps.PopUpConWidget(context, contenido);
                     }
                   });
@@ -210,12 +220,12 @@ class _CrearLayout1State extends State<CrearLayout1> {
     switch (seleccionada) {
       case 0:
         _decorationPorcion1 = BoxDecoration(
-            borderRadius: BorderRadius.circular(50),
+            // borderRadius: BorderRadius.circular(50),
             color: HexColor('#3EDB9B').withOpacity(0.2));
         break;
       case 1:
         _decorationPorcion1 = BoxDecoration(
-            borderRadius: BorderRadius.circular(50),
+            //borderRadius: BorderRadius.circular(50),
             color: HexColor('#3EDB9B'));
         break;
     }

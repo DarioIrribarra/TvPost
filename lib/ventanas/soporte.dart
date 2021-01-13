@@ -20,7 +20,7 @@ class _SoporteState extends State<Soporte> {
         children: [
           Text(
             "SOPORTE TÉCNICO",
-            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+            style: TextStyle(fontSize: 16.5),
           ),
           Container(
             width: 120,
@@ -51,7 +51,13 @@ class _SoporteState extends State<Soporte> {
                       width: 1,
                       color: Colors.greenAccent,
                     ),
-                    Text("Escríbe un mensaje"),
+                    Text(
+                      "Escríbe un mensaje...",
+                      style: TextStyle(
+                        fontFamily: 'textoMont',
+                        fontSize: 12,
+                      ),
+                    ),
                     SizedBox(
                       width: 10,
                     ),
@@ -82,10 +88,7 @@ class _SoporteState extends State<Soporte> {
                   ],
                 )),
           ),
-          Text(
-            "CONTÁCTANOS",
-            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
-          ),
+          Text("CONTÁCTANOS", style: TextStyle(fontSize: 13)),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
@@ -139,29 +142,44 @@ class _SoporteState extends State<Soporte> {
           ),
           Container(
               padding: EdgeInsets.only(top: 20),
-              height: MediaQuery.of(context).size.height / 8,
+              height: MediaQuery.of(context).size.height / 7,
               width: MediaQuery.of(context).size.width,
               child: Column(
                 children: [
                   Text(
                     "Empresa de Diseño y Desarrollo Producnova",
-                    style: TextStyle(fontSize: 10),
+                    style: TextStyle(
+                      fontFamily: 'textoMont',
+                      fontSize: 12,
+                    ),
                   ),
                   Text(
                     "Ejercito 435, Concepción. Chile",
-                    style: TextStyle(fontSize: 10),
+                    style: TextStyle(
+                      fontFamily: 'textoMont',
+                      fontSize: 12,
+                    ),
                   ),
                   Text(
                     "www.tvpost.cl",
-                    style: TextStyle(fontSize: 10),
+                    style: TextStyle(
+                      fontFamily: 'textoMont',
+                      fontSize: 12,
+                    ),
                   ),
                   Text(
                     "contacto@tvpost.cl",
-                    style: TextStyle(fontSize: 10),
+                    style: TextStyle(
+                      fontFamily: 'textoMont',
+                      fontSize: 12,
+                    ),
                   ),
                   Text(
                     "(+569) 87654321",
-                    style: TextStyle(fontSize: 10),
+                    style: TextStyle(
+                      fontFamily: 'textoMont',
+                      fontSize: 12,
+                    ),
                   ),
                 ],
               )),

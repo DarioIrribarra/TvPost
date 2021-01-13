@@ -54,10 +54,9 @@ class _RaspberriesConectadasState extends State<RaspberriesConectadas> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
-                Text(
-                  '¿DESEA CERRAR SESIÓN?',
-                  textAlign: TextAlign.center,
-                ),
+                Text('¿DESEA CERRAR SESIÓN?',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(fontSize: 13)),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
@@ -1141,10 +1140,8 @@ class _RaspberriesConectadasState extends State<RaspberriesConectadas> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
-              Text(
-                'DESHABILITAR EQUIPO',
-                textAlign: TextAlign.center,
-              ),
+              Text('DESHABILITAR EQUIPO',
+                  textAlign: TextAlign.center, style: TextStyle(fontSize: 13)),
               Column(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
@@ -1195,7 +1192,8 @@ class _RaspberriesConectadasState extends State<RaspberriesConectadas> {
                                     MainAxisAlignment.spaceEvenly,
                                 children: [
                                   Text('EQUIPO $alias DESHABILITADO',
-                                      textAlign: TextAlign.center),
+                                      textAlign: TextAlign.center,
+                                      style: TextStyle(fontSize: 13)),
                                   SizedBox(
                                     width: 10,
                                   ),
@@ -1258,10 +1256,9 @@ class _RaspberriesConectadasState extends State<RaspberriesConectadas> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
-                Text(
-                  '¿DESEA DESHABILITAR TODOS LOS EQUIPOS?',
-                  textAlign: TextAlign.center,
-                ),
+                Text('¿DESEA DESHABILITAR TODOS LOS EQUIPOS?',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(fontSize: 13)),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
@@ -1294,10 +1291,9 @@ class _RaspberriesConectadasState extends State<RaspberriesConectadas> {
                                   mainAxisAlignment:
                                       MainAxisAlignment.spaceEvenly,
                                   children: [
-                                    Text(
-                                      'TODOS LOS EQUIPOS DESHABILITADOS',
-                                      textAlign: TextAlign.center,
-                                    ),
+                                    Text('TODOS LOS EQUIPOS DESHABILITADOS',
+                                        textAlign: TextAlign.center,
+                                        style: TextStyle(fontSize: 13)),
                                     GestureDetector(
                                       child: Icon(
                                         Icons.check_circle,
@@ -1410,7 +1406,8 @@ class _RaspberriesConectadasState extends State<RaspberriesConectadas> {
                             child: Column(
                               mainAxisSize: MainAxisSize.min,
                               children: [
-                                Text('EQUIPO $alias HABILITADO'),
+                                Text('EQUIPO $alias HABILITADO',
+                                    style: TextStyle(fontSize: 13)),
                                 SizedBox(
                                   width: 10,
                                 ),
@@ -1471,10 +1468,8 @@ class _RaspberriesConectadasState extends State<RaspberriesConectadas> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
-              Text(
-                '¿DESEA HABILITAR TODOS LOS EQUIPOS?',
-                textAlign: TextAlign.center,
-              ),
+              Text('¿DESEA HABILITAR TODOS LOS EQUIPOS?',
+                  textAlign: TextAlign.center, style: TextStyle(fontSize: 13)),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
@@ -1505,10 +1500,9 @@ class _RaspberriesConectadasState extends State<RaspberriesConectadas> {
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceEvenly,
                                 children: [
-                                  Text(
-                                    'TODOS LOS EQUIPOS HABILITADOS',
-                                    textAlign: TextAlign.center,
-                                  ),
+                                  Text('TODOS LOS EQUIPOS HABILITADOS',
+                                      textAlign: TextAlign.center,
+                                      style: TextStyle(fontSize: 13)),
                                   GestureDetector(
                                     child: Icon(
                                       Icons.check_circle,
@@ -1638,10 +1632,8 @@ class _RaspberriesConectadasState extends State<RaspberriesConectadas> {
             SizedBox(
               height: 10,
             ),
-            Text(
-              "Active equipo ' $alias ' y vuelva a intentarlo",
-              textAlign: TextAlign.center,
-            ),
+            Text("Active equipo ' $alias ' y vuelva a intentarlo",
+                textAlign: TextAlign.center, style: TextStyle(fontSize: 13)),
             SizedBox(
               height: 10,
             ),

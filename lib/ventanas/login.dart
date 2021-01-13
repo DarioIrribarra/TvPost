@@ -41,7 +41,7 @@ class _LoginState extends State<Login> {
 
   @override
   Widget build(BuildContext context) {
-    return WillPopScope(
+    return /*WillPopScope(
       onWillPop: (){
         Widget contenidoPopUp = Column(
           mainAxisSize: MainAxisSize.min,
@@ -82,279 +82,280 @@ class _LoginState extends State<Login> {
         return;
       },
       //Acá debe preguntar si quiere cerrar la app y matarla
-      child: Scaffold(
-        body: Container(
-          height: double.infinity,
-          decoration: new BoxDecoration(
-              gradient: LinearGradient(
-                  colors: [HexColor("#3edb9b"), HexColor("#0683ff")],
-                  stops: [0.5, 1],
-                  begin: Alignment.topLeft,
-                  end: FractionalOffset.bottomRight)),
-          child: SafeArea(
-            child: Form(
-              key: _formKey,
-              child: SingleChildScrollView(
-                child: Container(
-                  margin: EdgeInsets.fromLTRB(40.0, 100.0, 40.0, 0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      SizedBox(
-                        height: 40,
+      child: */
+        Scaffold(
+      body: Container(
+        height: double.infinity,
+        decoration: new BoxDecoration(
+            gradient: LinearGradient(
+                colors: [HexColor("#3edb9b"), HexColor("#0683ff")],
+                stops: [0.5, 1],
+                begin: Alignment.topLeft,
+                end: FractionalOffset.bottomRight)),
+        child: SafeArea(
+          child: Form(
+            key: _formKey,
+            child: SingleChildScrollView(
+              child: Container(
+                margin: EdgeInsets.fromLTRB(40.0, 100.0, 40.0, 0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    SizedBox(
+                      height: 40,
+                    ),
+                    Container(
+                      width: 135,
+                      height: 135,
+                      child: Image.asset(
+                        'imagenes/logovertical.png',
                       ),
-                      Container(
-                        width: 135,
-                        height: 135,
-                        child: Image.asset(
-                          'imagenes/logovertical.png',
-                        ),
-                      ),
-                      SizedBox(
-                        height: 45,
-                      ),
-                      Column(
-                        children: [
-                          Container(
-                            height: 36.5,
-                            margin: EdgeInsets.fromLTRB(16, 0, 16, 0),
-                            decoration: new BoxDecoration(
-                                borderRadius: BorderRadius.circular(45),
-                                color: Colors.white),
-                            child: new Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceAround,
-                              //crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Expanded(
-                                  flex: 2,
-                                  child: Text(
-                                    "RUT EMPRESA",
-                                    textAlign: TextAlign.right,
-                                  ),
-                                ),
-                                Expanded(
-                                  flex: 3,
-                                  child: Container(
-                                    padding: EdgeInsets.only(
-                                        bottom: 9.8, left: 15, right: 15),
-                                    child: new TextFormField(
-                                      style: TextStyle(
-                                        fontFamily: 'textoMont',
-                                        fontSize: 13.5,
-                                      ),
-                                      textAlign: TextAlign.center,
-                                      initialValue: rutEmpresa,
-                                      decoration: InputDecoration(
-                                          //errorStyle: TextStyle(height: 2),
-                                          //   labelText: 'Rut Empresa',
-                                          //hintText:'Rut Empresa (sin puntos ni guión)',
-                                          //labelStyle: TextStyle(color: Colors.white),
-                                          enabledBorder: new UnderlineInputBorder(
-                                              borderSide: new BorderSide(
-                                                  color: HexColor('#bdbdbd')))),
-                                      onChanged: (texto) {
-                                        rutEmpresa = texto;
-                                      },
-                                      //validator: (texto) => validaRutEmpresa,
-                                    ),
-                                  ),
-                                )
-                              ],
-                            ),
-                          ),
-                          WidgetError(
-                              visible: visibleErrorRutEmpresa,
-                              textoError: validaRutEmpresa),
-                        ],
-                      ),
-                      SizedBox(
-                        height: 15,
-                      ),
-                      Column(
-                        children: [
-                          Container(
-                            height: 36.5,
-                            margin: EdgeInsets.fromLTRB(16, 0, 16, 0),
-                            decoration: new BoxDecoration(
-                                borderRadius: BorderRadius.circular(45),
-                                color: Colors.white),
-                            child: Row(children: [
+                    ),
+                    SizedBox(
+                      height: 45,
+                    ),
+                    Column(
+                      children: [
+                        Container(
+                          height: 36.5,
+                          margin: EdgeInsets.fromLTRB(16, 0, 16, 0),
+                          decoration: new BoxDecoration(
+                              borderRadius: BorderRadius.circular(45),
+                              color: Colors.white),
+                          child: new Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceAround,
+                            //crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
                               Expanded(
-                                  flex: 2,
-                                  child: Text(
-                                    "USUARIO",
-                                    textAlign: TextAlign.right,
-                                  )),
+                                flex: 2,
+                                child: Text(
+                                  "RUT EMPRESA",
+                                  textAlign: TextAlign.right,
+                                ),
+                              ),
                               Expanded(
                                 flex: 3,
                                 child: Container(
                                   padding: EdgeInsets.only(
                                       bottom: 9.8, left: 15, right: 15),
-                                  child: TextFormField(
+                                  child: new TextFormField(
                                     style: TextStyle(
-                                        fontFamily: 'textoMont',
-                                        fontSize: 13.5,
-                                        color: Colors.black),
+                                      fontFamily: 'textoMont',
+                                      fontSize: 13.5,
+                                    ),
                                     textAlign: TextAlign.center,
+                                    initialValue: rutEmpresa,
                                     decoration: InputDecoration(
                                         //errorStyle: TextStyle(height: 2),
-                                        // hintText: 'Nombre de usuario',
+                                        //   labelText: 'Rut Empresa',
+                                        //hintText:'Rut Empresa (sin puntos ni guión)',
+                                        //labelStyle: TextStyle(color: Colors.white),
                                         enabledBorder: new UnderlineInputBorder(
                                             borderSide: new BorderSide(
                                                 color: HexColor('#bdbdbd')))),
-                                    //Se asigna lo que se escribe a la variable
-                                    initialValue: nombreUsuario,
                                     onChanged: (texto) {
-                                      nombreUsuario = texto;
+                                      rutEmpresa = texto;
                                     },
-                                    //validator: (texto) => validaNombreUsuario,
+                                    //validator: (texto) => validaRutEmpresa,
                                   ),
                                 ),
                               )
-                            ]),
+                            ],
                           ),
-                          WidgetError(
-                              visible: visibleErrorUsuario,
-                              textoError: validaNombreUsuario),
-                        ],
-                      ),
-                      SizedBox(
-                        height: 15,
-                      ),
-                      Column(
-                        children: [
-                          Container(
-                            height: 36.5,
-                            margin: EdgeInsets.fromLTRB(16, 0, 16, 0),
-                            decoration: new BoxDecoration(
-                                borderRadius: BorderRadius.circular(45),
-                                color: Colors.white),
-                            child: Row(children: [
-                              Expanded(
-                                  flex: 2,
-                                  child: Text(
-                                    "CONTRASEÑA",
-                                    textAlign: TextAlign.right,
-                                  )),
-                              Expanded(
-                                flex: 3,
-                                child: Container(
-                                  padding: EdgeInsets.only(
-                                      bottom: 9.8, left: 15, right: 15),
-                                  child: TextFormField(
-                                    style: TextStyle(
-                                        fontFamily: 'textoMont',
-                                        fontSize: 13.5,
-                                        color: Colors.black),
-                                    textAlign: TextAlign.center,
-                                    obscureText: true,
-                                    decoration: InputDecoration(
-                                        //errorStyle: TextStyle(height: 2),
-                                        //hintText: 'Contraseña',
-                                        enabledBorder: new UnderlineInputBorder(
-                                            borderSide: new BorderSide(
-                                                color: HexColor('#bdbdbd')))),
-                                    initialValue: password,
-                                    onChanged: (texto) {
-                                      password = texto;
-                                    },
-                                    //validator: (password) => validaPasword,
-                                  ),
+                        ),
+                        WidgetError(
+                            visible: visibleErrorRutEmpresa,
+                            textoError: validaRutEmpresa),
+                      ],
+                    ),
+                    SizedBox(
+                      height: 15,
+                    ),
+                    Column(
+                      children: [
+                        Container(
+                          height: 36.5,
+                          margin: EdgeInsets.fromLTRB(16, 0, 16, 0),
+                          decoration: new BoxDecoration(
+                              borderRadius: BorderRadius.circular(45),
+                              color: Colors.white),
+                          child: Row(children: [
+                            Expanded(
+                                flex: 2,
+                                child: Text(
+                                  "USUARIO",
+                                  textAlign: TextAlign.right,
+                                )),
+                            Expanded(
+                              flex: 3,
+                              child: Container(
+                                padding: EdgeInsets.only(
+                                    bottom: 9.8, left: 15, right: 15),
+                                child: TextFormField(
+                                  style: TextStyle(
+                                      fontFamily: 'textoMont',
+                                      fontSize: 13.5,
+                                      color: Colors.black),
+                                  textAlign: TextAlign.center,
+                                  decoration: InputDecoration(
+                                      //errorStyle: TextStyle(height: 2),
+                                      // hintText: 'Nombre de usuario',
+                                      enabledBorder: new UnderlineInputBorder(
+                                          borderSide: new BorderSide(
+                                              color: HexColor('#bdbdbd')))),
+                                  //Se asigna lo que se escribe a la variable
+                                  initialValue: nombreUsuario,
+                                  onChanged: (texto) {
+                                    nombreUsuario = texto;
+                                  },
+                                  //validator: (texto) => validaNombreUsuario,
                                 ),
                               ),
-                            ]),
-                          ),
-                          WidgetError(
-                              visible: visibleErrorPassword,
-                              textoError: validaPasword),
-                        ],
-                      ),
-                      SizedBox(
-                        height: 25,
-                      ),
-                      Container(
-                        height: 50,
-                        margin: EdgeInsets.fromLTRB(16.0, 0, 16.0, 0),
-                        child: RaisedButton(
-                            color: HexColor('#0683FF'),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(30.0),
-                              side: BorderSide(
-                                width: 2.3,
-                                color: Colors.white,
+                            )
+                          ]),
+                        ),
+                        WidgetError(
+                            visible: visibleErrorUsuario,
+                            textoError: validaNombreUsuario),
+                      ],
+                    ),
+                    SizedBox(
+                      height: 15,
+                    ),
+                    Column(
+                      children: [
+                        Container(
+                          height: 36.5,
+                          margin: EdgeInsets.fromLTRB(16, 0, 16, 0),
+                          decoration: new BoxDecoration(
+                              borderRadius: BorderRadius.circular(45),
+                              color: Colors.white),
+                          child: Row(children: [
+                            Expanded(
+                                flex: 2,
+                                child: Text(
+                                  "CONTRASEÑA",
+                                  textAlign: TextAlign.right,
+                                )),
+                            Expanded(
+                              flex: 3,
+                              child: Container(
+                                padding: EdgeInsets.only(
+                                    bottom: 9.8, left: 15, right: 15),
+                                child: TextFormField(
+                                  style: TextStyle(
+                                      fontFamily: 'textoMont',
+                                      fontSize: 13.5,
+                                      color: Colors.black),
+                                  textAlign: TextAlign.center,
+                                  obscureText: true,
+                                  decoration: InputDecoration(
+                                      //errorStyle: TextStyle(height: 2),
+                                      //hintText: 'Contraseña',
+                                      enabledBorder: new UnderlineInputBorder(
+                                          borderSide: new BorderSide(
+                                              color: HexColor('#bdbdbd')))),
+                                  initialValue: password,
+                                  onChanged: (texto) {
+                                    password = texto;
+                                  },
+                                  //validator: (password) => validaPasword,
+                                ),
                               ),
                             ),
-                            child: Text(
-                              'ENTRAR',
-                              style: TextStyle(color: Colors.white),
+                          ]),
+                        ),
+                        WidgetError(
+                            visible: visibleErrorPassword,
+                            textoError: validaPasword),
+                      ],
+                    ),
+                    SizedBox(
+                      height: 25,
+                    ),
+                    Container(
+                      height: 50,
+                      margin: EdgeInsets.fromLTRB(16.0, 0, 16.0, 0),
+                      child: RaisedButton(
+                          color: HexColor('#0683FF'),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(30.0),
+                            side: BorderSide(
+                              width: 2.3,
+                              color: Colors.white,
                             ),
-                            onPressed: () async {
-                              //Se crea popup de cargando
-                              PopUps.popUpCargando(context, 'Cargando...');
-                              //Se cambia el estado para asignar valor de rut empresa a la
-                              //variable local. Ir a buscar el dato de empresa
-                              ObtieneDatos datos = ObtieneDatos();
-                              if (rutEmpresa != null) {
-                                await datos.getDatosEmpresa(rutEmpresa.trim());
-                              }
-                              if (nombreUsuario != null) {
-                                await datos.getDatosUsuario(nombreUsuario.trim());
-                              }
+                          ),
+                          child: Text(
+                            'ENTRAR',
+                            style: TextStyle(color: Colors.white),
+                          ),
+                          onPressed: () async {
+                            //Se crea popup de cargando
+                            PopUps.popUpCargando(context, 'Cargando...');
+                            //Se cambia el estado para asignar valor de rut empresa a la
+                            //variable local. Ir a buscar el dato de empresa
+                            ObtieneDatos datos = ObtieneDatos();
+                            if (rutEmpresa != null) {
+                              await datos.getDatosEmpresa(rutEmpresa.trim());
+                            }
+                            if (nombreUsuario != null) {
+                              await datos.getDatosUsuario(nombreUsuario.trim());
+                            }
 
-                              //Espera el resultado de la función async para validar rut
-                              await datos.ValidaRutEmpresa();
-                              //Espera el resultado de la función async para validar
-                              // nombre de usuario
-                              await datos.ValidaNombreUsuario();
-                              //Espera el resultado de la función async para validar
-                              // password
-                              if (password != null && nombreUsuario != null) {
-                                await datos.ValidaPasswordUsuario(
-                                    password.trim(), nombreUsuario.trim());
-                              }
+                            //Espera el resultado de la función async para validar rut
+                            await datos.ValidaRutEmpresa();
+                            //Espera el resultado de la función async para validar
+                            // nombre de usuario
+                            await datos.ValidaNombreUsuario();
+                            //Espera el resultado de la función async para validar
+                            // password
+                            if (password != null && nombreUsuario != null) {
+                              await datos.ValidaPasswordUsuario(
+                                  password.trim(), nombreUsuario.trim());
+                            }
 
-                              //Se inicializa el listado de equipos
-                              await datos.getDatosEquipos();
+                            //Se inicializa el listado de equipos
+                            await datos.getDatosEquipos();
 
-                              //Set state para cambiar los valores del validador
-                              setState(() {
-                                validaRutEmpresa = datos.rutEmpresaDevuelto;
-                                validaNombreUsuario = datos.nombreUsuarioDevuelto;
-                                validaPasword = datos.passwordDevuelto;
+                            //Set state para cambiar los valores del validador
+                            setState(() {
+                              validaRutEmpresa = datos.rutEmpresaDevuelto;
+                              validaNombreUsuario = datos.nombreUsuarioDevuelto;
+                              validaPasword = datos.passwordDevuelto;
 
-                                if (validaRutEmpresa != null) {
-                                  visibleErrorRutEmpresa = true;
-                                } else {
-                                  visibleErrorRutEmpresa = false;
-                                }
-
-                                if (validaNombreUsuario != null) {
-                                  visibleErrorUsuario = true;
-                                } else {
-                                  visibleErrorUsuario = false;
-                                }
-
-                                if (validaPasword != null) {
-                                  visibleErrorPassword = true;
-                                } else {
-                                  visibleErrorPassword = false;
-                                }
-                              });
-                              //Al pasar todas las validaciones se utiliza el shared
-                              //preferences
-                              if (visibleErrorUsuario == false &&
-                                  visibleErrorPassword == false &&
-                                  visibleErrorRutEmpresa == false) {
-                                GuardarSharedPreferences();
-                                Navigator.pop(context);
-                                //Al guardar to do se va a la otra ventana
-                                Navigator.popAndPushNamed(
-                                    context, '/raspberries_conectadas');
+                              if (validaRutEmpresa != null) {
+                                visibleErrorRutEmpresa = true;
                               } else {
-                                Navigator.pop(context);
+                                visibleErrorRutEmpresa = false;
                               }
-                              /*if (_formKey.currentState.validate()) {
+
+                              if (validaNombreUsuario != null) {
+                                visibleErrorUsuario = true;
+                              } else {
+                                visibleErrorUsuario = false;
+                              }
+
+                              if (validaPasword != null) {
+                                visibleErrorPassword = true;
+                              } else {
+                                visibleErrorPassword = false;
+                              }
+                            });
+                            //Al pasar todas las validaciones se utiliza el shared
+                            //preferences
+                            if (visibleErrorUsuario == false &&
+                                visibleErrorPassword == false &&
+                                visibleErrorRutEmpresa == false) {
+                              GuardarSharedPreferences();
+                              Navigator.pop(context);
+                              //Al guardar to do se va a la otra ventana
+                              Navigator.popAndPushNamed(
+                                  context, '/raspberries_conectadas');
+                            } else {
+                              Navigator.pop(context);
+                            }
+                            /*if (_formKey.currentState.validate()) {
                                 GuardarSharedPreferences();
                                 Navigator.pop(context);
                                 //Al guardar to do se va a la otra ventana
@@ -364,11 +365,10 @@ class _LoginState extends State<Login> {
                                 Navigator.pop(context);
                               }*/
 
-                              //print(validaRutEmpresa);
-                            }),
-                      ),
-                    ],
-                  ),
+                            //print(validaRutEmpresa);
+                          }),
+                    ),
+                  ],
                 ),
               ),
             ),
@@ -376,6 +376,7 @@ class _LoginState extends State<Login> {
         ),
       ),
     );
+    //);
   }
 
   ///Guarda las preferencias de usuario si se ha validado correctamente

@@ -23,10 +23,7 @@ class _PerfilState extends State<Perfil> {
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
             SizedBox(),
-            Text(
-              "MI PERFIL",
-              style: TextStyle(fontWeight: FontWeight.bold),
-            ),
+            Text("MI PERFIL", style: TextStyle(fontSize: 16.5)),
             SizedBox(),
             Container(
                 width: 110,
@@ -62,17 +59,11 @@ class _PerfilState extends State<Perfil> {
             Container(
                 child: Column(
               children: [
-                Text(
-                  "EMPRESA PRODUCNOVA",
-                  style: TextStyle(fontWeight: FontWeight.bold),
-                ),
+                Text("EMPRESA PRODUCNOVA", style: TextStyle(fontSize: 13)),
                 SizedBox(
                   height: 10,
                 ),
-                Text(
-                  "98.765.432",
-                  style: TextStyle(fontWeight: FontWeight.bold),
-                ),
+                Text("98.765.432", style: TextStyle(fontSize: 13)),
               ],
             )),
             Container(
@@ -96,24 +87,15 @@ class _PerfilState extends State<Perfil> {
                               SizedBox(
                                 height: 4,
                               ),
-                              Text(
-                                'EMAIL',
-                                style: TextStyle(fontWeight: FontWeight.bold),
-                              ),
+                              Text('EMAIL', style: TextStyle(fontSize: 13)),
                               SizedBox(
                                 height: 10,
                               ),
-                              Text(
-                                'FONO',
-                                style: TextStyle(fontWeight: FontWeight.bold),
-                              ),
+                              Text('FONO', style: TextStyle(fontSize: 13)),
                               SizedBox(
                                 height: 10,
                               ),
-                              Text(
-                                'WEB',
-                                style: TextStyle(fontWeight: FontWeight.bold),
-                              ),
+                              Text('WEB', style: TextStyle(fontSize: 13)),
                             ]),
                         Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
@@ -157,14 +139,17 @@ class _PerfilState extends State<Perfil> {
                               ),
                             ),*/
                       SizedBox(
-                        height: 4,
+                        height: 2,
                       ),
                       Text(
                         "contacto@productnova.cl",
-                        style: TextStyle(fontSize: 12),
+                        style: TextStyle(
+                          fontFamily: 'textoMont',
+                          fontSize: 12,
+                        ),
                       ),
                       SizedBox(
-                        height: 13,
+                        height: 9,
                       ),
                       /*Text(
                               DatosEstaticos.listadoDatosEquipoSeleccionado[0]
@@ -176,9 +161,13 @@ class _PerfilState extends State<Perfil> {
                                 fontSize: 12,
                               ),
                             ),*/
-                      Text("(987) 987654321", style: TextStyle(fontSize: 12)),
+                      Text("(987) 987654321",
+                          style: TextStyle(
+                            fontFamily: 'textoMont',
+                            fontSize: 12,
+                          )),
                       SizedBox(
-                        height: 13,
+                        height: 8,
                       ),
                       /*Text(
                               DatosEstaticos.listadoDatosEquipoSeleccionado[0]
@@ -188,7 +177,11 @@ class _PerfilState extends State<Perfil> {
                                 fontSize: 12,
                               ),
                             ),*/
-                      Text("www.producnova.cl", style: TextStyle(fontSize: 12)),
+                      Text("www.producnova.cl",
+                          style: TextStyle(
+                            fontFamily: 'textoMont',
+                            fontSize: 12,
+                          )),
                     ],
                   ),
                 ],

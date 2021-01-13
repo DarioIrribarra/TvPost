@@ -839,7 +839,8 @@ class _DetalleEquipoState extends State<DetalleEquipo> {
                     children: [
                       Padding(
                         padding: const EdgeInsets.only(top: 50.0),
-                        child: Text("CAMBIAR NOMBRE"),
+                        child: Text("CAMBIAR NOMBRE",
+                            style: TextStyle(fontSize: 13)),
                       ),
                       Row(
                         children: [
@@ -1118,17 +1119,16 @@ class _DetalleEquipoState extends State<DetalleEquipo> {
                               decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(40),
                                   color: HexColor('#f4f4f4')),
-                              height: 150,
+                              height: 100,
                               width: 250,
                               child: Column(
                                 mainAxisSize: MainAxisSize.min,
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceEvenly,
                                 children: [
-                                  Text(
-                                    'EQUIPO $alias DESHABILITADO',
-                                    textAlign: TextAlign.center,
-                                  ),
+                                  Text('EQUIPO $alias DESHABILITADO',
+                                      textAlign: TextAlign.center,
+                                      style: TextStyle(fontSize: 13)),
                                   SizedBox(
                                     width: 10,
                                   ),
@@ -1247,14 +1247,15 @@ class _DetalleEquipoState extends State<DetalleEquipo> {
                                 decoration: BoxDecoration(
                                     borderRadius: BorderRadius.circular(40),
                                     color: HexColor('#f4f4f4')),
-                                height: 150,
+                                height: 100,
                                 width: 250,
                                 child: Column(
                                   mainAxisSize: MainAxisSize.min,
                                   mainAxisAlignment:
                                       MainAxisAlignment.spaceEvenly,
                                   children: [
-                                    Text('EQUIPO $alias HABILITADO'),
+                                    Text('EQUIPO $alias HABILITADO',
+                                        style: TextStyle(fontSize: 13)),
                                     SizedBox(
                                       width: 10,
                                     ),
