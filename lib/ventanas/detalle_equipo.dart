@@ -1,5 +1,5 @@
 import 'dart:async';
-import 'dart:convert';
+//import 'dart:convert';
 import 'dart:io';
 import 'dart:typed_data';
 import 'package:flutter/cupertino.dart';
@@ -13,11 +13,7 @@ import 'package:liquid_pull_to_refresh/liquid_pull_to_refresh.dart';
 //import 'package:path_provider/path_provider.dart';
 import 'package:fswitch/fswitch.dart';
 import 'package:tvpost_flutter/tvlapiz_icons.dart';
-/*import 'package:tvpost_flutter/my_flutter_app_icons.dart';
-Icon(
-                                  MyFlutterApp.a_1,
-                                  color: Colors.blue,
-                                )*/
+
 
 class DetalleEquipo extends StatefulWidget {
   @override
@@ -40,6 +36,7 @@ class _DetalleEquipoState extends State<DetalleEquipo> {
   //Guarda el estado del context para usarlo con el snackbar
   final _scaffoldKey = GlobalKey<ScaffoldState>();
   bool valorSwitch;
+  EventosPropios eventosPropios = EventosPropios();
 
   //Utilizar el memoizer hace que la función de Future (getScreenShot())
   // solo ocurra una vez. De lo contrario se llama con cada acción del build
@@ -94,12 +91,12 @@ class _DetalleEquipoState extends State<DetalleEquipo> {
               ),
               Center(
                   child: Padding(
-                padding: const EdgeInsets.only(bottom: 10),
-                child: Text(
-                  "¡Ups, algo ha salido mal!",
-                  textScaleFactor: 1.2,
-                ),
-              )),
+                    padding: const EdgeInsets.only(bottom: 10),
+                    child: Text(
+                      "¡Ups, algo ha salido mal!",
+                      textScaleFactor: 1.2,
+                    ),
+                  )),
               Text(
                 "Deslice hacia abajo para recargar imagen",
                 textScaleFactor: 1.2,
@@ -109,15 +106,13 @@ class _DetalleEquipoState extends State<DetalleEquipo> {
           if (snapshot.connectionState == ConnectionState.done) {
             if (snapshot.data == null) {
               return widgetError;
-            } else {
+            }
+            else {
               //Retorna el widget con la imagen de screenshot
               var tipoimage = _screenshotProcesada.image.runtimeType.toString();
               if (tipoimage == "AssetImage") {
                 return widgetError;
               }
-
-              //Acá obtengo las dimensiones base exactas de la pantalla
-              ObtenerSizePixelesPantalla();
 
               return Column(
                 children: [
@@ -142,7 +137,7 @@ class _DetalleEquipoState extends State<DetalleEquipo> {
                                   child: FlatButton(
                                       child: Row(
                                         mainAxisAlignment:
-                                            MainAxisAlignment.center,
+                                        MainAxisAlignment.center,
                                         children: [
                                           Icon(
                                             Icons.screen_share_outlined,
@@ -181,27 +176,27 @@ class _DetalleEquipoState extends State<DetalleEquipo> {
                         ],
                       ),
                       /*
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          children: [
-                            FloatingActionButton(
-                              heroTag: null,
-                              child: Icon(Icons.refresh),
-                              onPressed: () {
-                                setState(() {});
-                              },
-                            ),
-                            FloatingActionButton(
-                              heroTag: null,
-                              child: Icon(Icons.screen_search_desktop),
-                              onPressed: () {
-                                _vncRaspberryWeb();
-                              },
-                            )
-                          ],
-                        ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            children: [
+                              FloatingActionButton(
+                                heroTag: null,
+                                child: Icon(Icons.refresh),
+                                onPressed: () {
+                                  setState(() {});
+                                },
+                              ),
+                              FloatingActionButton(
+                                heroTag: null,
+                                child: Icon(Icons.screen_search_desktop),
+                                onPressed: () {
+                                  _vncRaspberryWeb();
+                                },
+                              )
+                            ],
+                          ),
 
-                         */
+                           */
                       Container(
                         margin: EdgeInsets.only(top: 40),
                         height: MediaQuery.of(context).size.height / 10,
@@ -214,7 +209,7 @@ class _DetalleEquipoState extends State<DetalleEquipo> {
                                 children: [
                                   Column(
                                       crossAxisAlignment:
-                                          CrossAxisAlignment.start,
+                                      CrossAxisAlignment.start,
                                       children: [
                                         SizedBox(
                                           height: 4,
@@ -231,7 +226,7 @@ class _DetalleEquipoState extends State<DetalleEquipo> {
                                       ]),
                                   Column(
                                       crossAxisAlignment:
-                                          CrossAxisAlignment.start,
+                                      CrossAxisAlignment.start,
                                       children: [
                                         SizedBox(
                                           height: 4,
@@ -255,7 +250,7 @@ class _DetalleEquipoState extends State<DetalleEquipo> {
                                 Text(
                                   DatosEstaticos
                                       .listadoDatosEquipoSeleccionado[0]
-                                          ['f_alias']
+                                  ['f_alias']
                                       .toString()
                                       .toUpperCase(),
                                   style: TextStyle(
@@ -269,7 +264,7 @@ class _DetalleEquipoState extends State<DetalleEquipo> {
                                 Text(
                                   DatosEstaticos
                                       .listadoDatosEquipoSeleccionado[0]
-                                          ['f_serial']
+                                  ['f_serial']
                                       .toString()
                                       .toUpperCase(),
                                   style: TextStyle(
@@ -282,8 +277,8 @@ class _DetalleEquipoState extends State<DetalleEquipo> {
                                 ),
                                 Text(
                                   DatosEstaticos
-                                          .listadoDatosEquipoSeleccionado[0]
-                                      ['f_ip'],
+                                      .listadoDatosEquipoSeleccionado[0]
+                                  ['f_ip'],
                                   style: TextStyle(
                                     fontFamily: 'textoMont',
                                     fontSize: 12,
@@ -313,7 +308,7 @@ class _DetalleEquipoState extends State<DetalleEquipo> {
                                 ),
 
                                 /*Text(""),
-                                Text("")*/
+                                  Text("")*/
                               ],
                             )
                           ],
@@ -734,7 +729,7 @@ class _DetalleEquipoState extends State<DetalleEquipo> {
         appBar: CustomAppBar(),
         body: LiquidPullToRefresh(
           springAnimationDurationInMilliseconds: 450,
-          onRefresh: () => _recargarGrid(),
+          onRefresh: () =>_recargarGrid(),
           child: ListView(
             children: [
               Container(
@@ -1019,36 +1014,11 @@ class _DetalleEquipoState extends State<DetalleEquipo> {
 */
 
   Future<void> _recargarGrid() async {
+    //await eventosPropios.ObtenerSizePixelesPantalla();
     setState(() {});
   }
 
-  void ObtenerSizePixelesPantalla() async {
-    String resp;
-    Uint8List _respuesta;
-    List<int> listadoRespuestas = [];
-    try {
-      Socket socket;
-      socket = await Socket.connect(DatosEstaticos.ipSeleccionada,
-              DatosEstaticos.puertoSocketRaspberry)
-          .timeout(Duration(seconds: 5));
-      socket.write('TVPOSTGETSIZEPANTALLA');
-      socket.listen((event) {
-        listadoRespuestas.addAll(event.toList());
-      }).onDone(() {
-        _respuesta = Uint8List.fromList(listadoRespuestas);
-        socket.close();
-        return;
-      });
 
-      await socket.done.whenComplete(() => resp = utf8.decode(_respuesta));
-      //Se manipula la respuesta de datos
-      Map<String, dynamic> datosRecibidos = json.decode(resp);
-      DatosEstaticos.ancho_pantalla_seleccionada =
-          int.parse(datosRecibidos['anchoPantalla'].toString());
-      DatosEstaticos.alto_pantalla_seleccionada =
-          int.parse(datosRecibidos['altoPantalla'].toString());
-    } catch (e) {}
-  }
 
   void AlertaDeshabilitar({
     int index = 0,

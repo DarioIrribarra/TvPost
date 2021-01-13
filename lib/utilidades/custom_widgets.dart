@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
+import 'dart:typed_data';
 import 'package:http/http.dart' as http;
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -1350,7 +1351,9 @@ class BotonEnviarAEquipo extends StatelessWidget {
   void VolverADetalleEquipo(BuildContext context) {
     Navigator.of(context, rootNavigator: true).pop();
     Navigator.pushNamedAndRemoveUntil(
-        context, '/detalle_equipo', ModalRoute.withName('/seleccionar_layout'),
+        context,
+        '/detalle_equipo',
+        ModalRoute.withName('/'),
         arguments: {
           "indexEquipoGrid": DatosEstaticos.indexSeleccionado,
         });
@@ -1404,4 +1407,36 @@ class AnimacionPadding extends StatelessWidget {
 
 class RutasRedireccionMenu {
   static String RutaDeDondeViene = "";
+}
+
+class EventosPropios{
+
+  Future ObtenerSizePixelesPantalla() async {
+    String resp;
+    Uint8List _respuesta;
+    List<int> listadoRespuestas = [];
+    try {
+      Socket socket;
+      socket = await Socket.connect(DatosEstaticos.ipSeleccionada,
+          DatosEstaticos.puertoSocketRaspberry)
+          .timeout(Duration(seconds: 5));
+      socket.write('TVPOSTGETSIZEPANTALLA');
+      socket.listen((event) {
+        listadoRespuestas.addAll(event.toList());
+      }).onDone(() {
+        _respuesta = Uint8List.fromList(listadoRespuestas);
+        socket.close();
+
+      });
+
+      await socket.done.whenComplete(() => resp = utf8.decode(_respuesta));
+      //Se manipula la respuesta de datos
+      Map<String, dynamic> datosRecibidos = json.decode(resp);
+      DatosEstaticos.ancho_pantalla_seleccionada =
+          int.parse(datosRecibidos['anchoPantalla'].toString());
+      DatosEstaticos.alto_pantalla_seleccionada =
+          int.parse(datosRecibidos['altoPantalla'].toString());
+      return true;
+    } catch (e) {}
+  }
 }

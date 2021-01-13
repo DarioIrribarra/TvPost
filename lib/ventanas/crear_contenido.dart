@@ -81,7 +81,7 @@ class _CrearContenidoState extends State<CrearContenido> {
       divisionLayout = datosDesdeVentanaAnterior['division_layout'];
       if (divisionLayout.contains('-1')) {
         anchoCanvas = MediaQuery.of(context).size.width;
-        altoCanvas = MediaQuery.of(context).size.height / 4;
+        altoCanvas = MediaQuery.of(context).size.height / 2;
       }
       if (divisionLayout.contains('2-')) {
         anchoCanvas = MediaQuery.of(context).size.width;
@@ -101,21 +101,19 @@ class _CrearContenidoState extends State<CrearContenido> {
 
     return Scaffold(
       appBar: CustomAppBar(),
-      body: Center(
-        child: SingleChildScrollView(
-          scrollDirection: Axis.vertical,
-          child: Column(
-            children: [
-              Center(
-                child: Container(
-                  child: Text("DISEÑAR LAYOUT"),
-                  margin: EdgeInsets.only(top: 30),
-                ),
-              ),
-              SizedBox(
-                height: 30,
-              ),
-              WidgetToImage(builder: (key) {
+      body: Column(
+        children: [
+          Container(
+            margin: EdgeInsets.only(top: 30, bottom: 30),
+            child: Text(
+              "DISEÑAR LAYOUT",
+              style: TextStyle(fontSize: 16.5),
+            ),
+          ),
+          Expanded(
+            flex: 1,
+            child: Center(
+              child: WidgetToImage(builder: (key) {
                 this.key1 = key;
                 return Container(
                   height: altoCanvas,
@@ -157,80 +155,202 @@ class _CrearContenidoState extends State<CrearContenido> {
                   ),
                 );
               }),
-              SingleChildScrollView(
-                scrollDirection: Axis.horizontal,
-                child: Container(
-                    margin: EdgeInsets.only(top: 10, bottom: 10),
-                    height: MediaQuery.of(context).size.height / 4,
-                    child: Column(
-                      children: [
-                        Row(
-                          children: [
-                            botonColorFondo(),
-                            botonJPG(),
-                            botonPNG(),
-                            botonTexto(),
-                            botonEmoji(),
-                            botonOferta(),
-                          ],
-                        ),
-                        SizedBox(
-                          height: 50,
-                        ),
-                        Container(
-                          margin: EdgeInsets.symmetric(horizontal: 100),
-                          width: 150.0,
-                          height: 30.0,
-                          decoration: new BoxDecoration(
+            ),
+          ),
+          Expanded(
+            flex:1,
+            child: SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              child: Container(
+                  margin: EdgeInsets.only(top: 10, bottom: 10),
+                  height: MediaQuery.of(context).size.height / 4,
+                  child: Column(
+                    children: [
+                      Row(
+                        children: [
+                          botonColorFondo(),
+                          botonJPG(),
+                          botonPNG(),
+                          botonTexto(),
+                          botonEmoji(),
+                          botonOferta(),
+                        ],
+                      ),
+                      SizedBox(
+                        height: 50,
+                      ),
+                      Container(
+                        margin: EdgeInsets.symmetric(horizontal: 100),
+                        width: 150.0,
+                        height: 30.0,
+                        decoration: new BoxDecoration(
+                            borderRadius: BorderRadius.circular(20),
+                            gradient: LinearGradient(
+                                colors: [
+                                  HexColor("#0683ff"),
+                                  HexColor("#3edb9b")
+                                ],
+                                stops: [
+                                  0.1,
+                                  0.6
+                                ],
+                                begin: Alignment.topLeft,
+                                end: FractionalOffset.bottomRight)),
+                        child: FlatButton(
+                          color: Colors.transparent,
+                          shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(20),
-                              gradient: LinearGradient(
-                                  colors: [
-                                    HexColor("#0683ff"),
-                                    HexColor("#3edb9b")
-                                  ],
-                                  stops: [
-                                    0.1,
-                                    0.6
-                                  ],
-                                  begin: Alignment.topLeft,
-                                  end: FractionalOffset.bottomRight)),
-                          child: FlatButton(
-                            color: Colors.transparent,
-                            shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(20),
-                                side: BorderSide(
-                                    color: Color.fromARGB(30, 0, 0, 0))),
-                            child: Text(
-                              'CARGAR',
-                              style: TextStyle(color: Colors.white),
-                            ),
-                            onPressed: () async {
-                              PopUps.popUpCargando(context, 'Guardando Imagen');
-                              final bytes1 = await Utils.capture(key1);
-                              //Cierra popup cargando
-                              Navigator.of(context, rootNavigator: true).pop();
-                              /*setState(() {
-                      this.bytes1 = bytes1;
-                    });*/
-                              //Acá tiene que aparecer el popup para guardar imagen con nombre,
-                              //al igual que en el seleccionar imagen
-                              await _finalizarGuardado(bytes1);
-                            },
+                              side: BorderSide(
+                                  color: Color.fromARGB(30, 0, 0, 0))),
+                          child: Text(
+                            'CARGAR',
+                            style: TextStyle(color: Colors.white),
                           ),
+                          onPressed: () async {
+                            PopUps.popUpCargando(context, 'Guardando Imagen');
+                            final bytes1 = await Utils.capture(key1);
+                            //Cierra popup cargando
+                            Navigator.of(context, rootNavigator: true).pop();
+                            /*setState(() {
+                              this.bytes1 = bytes1;
+                            });*/
+                            //Acá tiene que aparecer el popup para guardar imagen con nombre,
+                            //al igual que en el seleccionar imagen
+                            await _finalizarGuardado(bytes1);
+                          },
                         ),
-                      ],
-                    )),
+                      ),
+                    ],
+                  )),
+            ),
+          ),
+          /*
+                SizedBox(
+                  height: 30,
+                ),
+
+
+              Expanded(
+                flex: 2,
+                child: WidgetToImage(builder: (key) {
+                  this.key1 = key;
+                  return Container(
+                    height: altoCanvas,
+                    width: anchoCanvas,
+                    color: Colors.red,
+                    child: GestureDetector(
+                      onScaleStart: (details) {
+                        if (_activeItem == null) return;
+
+                        _initPos = details.focalPoint;
+                        _currentPos = _activeItem.position;
+                        _currentScale = _activeItem.scale;
+                        _currentRotation = _activeItem.rotation;
+                      },
+                      onScaleUpdate: (details) {
+                        if (_activeItem == null) return;
+                        final delta = details.focalPoint - _initPos;
+                        final left =
+                            (delta.dx / screen.width) + _currentPos.dx;
+                        final top =
+                            (delta.dy / screen.height) + _currentPos.dy;
+
+                        setState(() {
+                          _activeItem.position = Offset(left, top);
+                          _activeItem.rotation =
+                              details.rotation + _currentRotation;
+                          _activeItem.scale = details.scale * _currentScale;
+                        });
+                      },
+                      child: Stack(
+                        children: [
+                          Container(
+                            color: Colors.black12,
+                          ),
+                          imagenDeFondo(),
+                          ...mockData.map(_buildItemWidget).toList(),
+                        ],
+                      ),
+                    ),
+                  );
+                }),
               ),
-              Align(
-                alignment: Alignment.bottomCenter,
-                heightFactor: 2.8,
+              Expanded(
+                flex:1,
+                child: SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  child: Container(
+                      margin: EdgeInsets.only(top: 10, bottom: 10),
+                      height: MediaQuery.of(context).size.height / 4,
+                      child: Column(
+                        children: [
+                          Row(
+                            children: [
+                              botonColorFondo(),
+                              botonJPG(),
+                              botonPNG(),
+                              botonTexto(),
+                              botonEmoji(),
+                              botonOferta(),
+                            ],
+                          ),
+                          SizedBox(
+                            height: 50,
+                          ),
+                          Container(
+                            margin: EdgeInsets.symmetric(horizontal: 100),
+                            width: 150.0,
+                            height: 30.0,
+                            decoration: new BoxDecoration(
+                                borderRadius: BorderRadius.circular(20),
+                                gradient: LinearGradient(
+                                    colors: [
+                                      HexColor("#0683ff"),
+                                      HexColor("#3edb9b")
+                                    ],
+                                    stops: [
+                                      0.1,
+                                      0.6
+                                    ],
+                                    begin: Alignment.topLeft,
+                                    end: FractionalOffset.bottomRight)),
+                            child: FlatButton(
+                              color: Colors.transparent,
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(20),
+                                  side: BorderSide(
+                                      color: Color.fromARGB(30, 0, 0, 0))),
+                              child: Text(
+                                'CARGAR',
+                                style: TextStyle(color: Colors.white),
+                              ),
+                              onPressed: () async {
+                                PopUps.popUpCargando(context, 'Guardando Imagen');
+                                final bytes1 = await Utils.capture(key1);
+                                //Cierra popup cargando
+                                Navigator.of(context, rootNavigator: true).pop();
+                                /*setState(() {
+                              this.bytes1 = bytes1;
+                            });*/
+                                //Acá tiene que aparecer el popup para guardar imagen con nombre,
+                                //al igual que en el seleccionar imagen
+                                await _finalizarGuardado(bytes1);
+                              },
+                            ),
+                          ),
+                        ],
+                      )),
+                ),
+              ),
+              Expanded(
+                flex: 1,
                 child: Visibility(
                   visible: false,
                   maintainSize: true,
                   maintainAnimation: true,
                   maintainState: true,
                   child: Container(
-                    height: 40,
+                    //height: 40,
                     width: 200,
                     decoration: new BoxDecoration(
                         borderRadius: BorderRadius.circular(20),
@@ -254,13 +374,9 @@ class _CrearContenidoState extends State<CrearContenido> {
                   ),
                 ),
               ),
-              /*Container(
-                height: 500,
-                child: buildImage(bytes1),
-              ),*/
-            ],
-          ),
-        ),
+
+               */
+        ],
       ),
     );
   }

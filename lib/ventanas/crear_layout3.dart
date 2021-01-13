@@ -255,6 +255,7 @@ class _CrearLayout3State extends State<CrearLayout3> {
                     Expanded(
                       flex: 3,
                       child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
                         children: [
                           Expanded(
                             flex: 4,

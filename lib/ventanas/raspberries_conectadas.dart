@@ -161,7 +161,7 @@ class _RaspberriesConectadasState extends State<RaspberriesConectadas> {
                                                 MainAxisAlignment.spaceEvenly,
                                             children: [
                                               GestureDetector(
-                                                onTap: () {
+                                                onTap: () async {
                                                   //Libera los widgets y datos creados
                                                   LimpiarDatosEstaticos();
                                                   DatosEstaticos
@@ -182,6 +182,8 @@ class _RaspberriesConectadasState extends State<RaspberriesConectadas> {
                                                         pageBuilder: (_, __, ___) => DetalleEquipo(),
                                                       ),
                                                   );*/
+                                                  EventosPropios eventosPropios = EventosPropios();
+                                                  await eventosPropios.ObtenerSizePixelesPantalla();
 
                                                   return Navigator
                                                       .popAndPushNamed(context,
@@ -334,7 +336,7 @@ class _RaspberriesConectadasState extends State<RaspberriesConectadas> {
                                                 MainAxisAlignment.spaceEvenly,
                                             children: [
                                               GestureDetector(
-                                                onTap: () {
+                                                onTap: () async {
                                                   //MensajeActivarEquipo(index);
                                                   LimpiarDatosEstaticos();
                                                   DatosEstaticos
@@ -346,6 +348,8 @@ class _RaspberriesConectadasState extends State<RaspberriesConectadas> {
                                                           .listadoEquipos[index]
                                                               ['f_ip']
                                                           .toString();
+                                                  EventosPropios eventosPropios = EventosPropios();
+                                                  await eventosPropios.ObtenerSizePixelesPantalla();
                                                   return Navigator
                                                       .popAndPushNamed(context,
                                                           '/detalle_equipo',
