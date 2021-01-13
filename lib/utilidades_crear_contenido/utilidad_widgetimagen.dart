@@ -55,6 +55,9 @@ class Utils {
         nuevaAltura = (DatosEstaticos.alto_pantalla_seleccionada*0.9).toInt();
         break;
       case '3-3':
+        if (DatosEstaticos.relojEnPantalla){
+          nuevoAncho = (DatosEstaticos.ancho_pantalla_seleccionada*0.8).toInt();
+        }
         nuevaAltura = (DatosEstaticos.alto_pantalla_seleccionada*0.1).toInt();
         break;
     }

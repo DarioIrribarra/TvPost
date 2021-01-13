@@ -118,47 +118,41 @@ class _CrearContenidoState extends State<CrearContenido> {
               WidgetToImage(builder: (key) {
                 this.key1 = key;
                 return Container(
-                  height: MediaQuery.of(context).size.height / 2,
-                  width: MediaQuery.of(context).size.width,
-                  child: Center(
-                    child: Container(
-                      height: altoCanvas,
-                      width: anchoCanvas,
-                      color: colorFondo,
-                      child: GestureDetector(
-                        onScaleStart: (details) {
-                          if (_activeItem == null) return;
+                  height: altoCanvas,
+                  width: anchoCanvas,
+                  color: colorFondo,
+                  child: GestureDetector(
+                    onScaleStart: (details) {
+                      if (_activeItem == null) return;
 
-                          _initPos = details.focalPoint;
-                          _currentPos = _activeItem.position;
-                          _currentScale = _activeItem.scale;
-                          _currentRotation = _activeItem.rotation;
-                        },
-                        onScaleUpdate: (details) {
-                          if (_activeItem == null) return;
-                          final delta = details.focalPoint - _initPos;
-                          final left =
-                              (delta.dx / screen.width) + _currentPos.dx;
-                          final top =
-                              (delta.dy / screen.height) + _currentPos.dy;
+                      _initPos = details.focalPoint;
+                      _currentPos = _activeItem.position;
+                      _currentScale = _activeItem.scale;
+                      _currentRotation = _activeItem.rotation;
+                    },
+                    onScaleUpdate: (details) {
+                      if (_activeItem == null) return;
+                      final delta = details.focalPoint - _initPos;
+                      final left =
+                          (delta.dx / screen.width) + _currentPos.dx;
+                      final top =
+                          (delta.dy / screen.height) + _currentPos.dy;
 
-                          setState(() {
-                            _activeItem.position = Offset(left, top);
-                            _activeItem.rotation =
-                                details.rotation + _currentRotation;
-                            _activeItem.scale = details.scale * _currentScale;
-                          });
-                        },
-                        child: Stack(
-                          children: [
-                            Container(
-                              color: Colors.black12,
-                            ),
-                            imagenDeFondo(),
-                            ...mockData.map(_buildItemWidget).toList(),
-                          ],
+                      setState(() {
+                        _activeItem.position = Offset(left, top);
+                        _activeItem.rotation =
+                            details.rotation + _currentRotation;
+                        _activeItem.scale = details.scale * _currentScale;
+                      });
+                    },
+                    child: Stack(
+                      children: [
+                        Container(
+                          color: Colors.black12,
                         ),
-                      ),
+                        imagenDeFondo(),
+                        ...mockData.map(_buildItemWidget).toList(),
+                      ],
                     ),
                   ),
                 );
@@ -1172,11 +1166,9 @@ class _CrearContenidoState extends State<CrearContenido> {
   }
 
   _requestPermission() async {
-    Map<Permission, PermissionStatus> statuses = await [
-      Permission.storage,
-    ].request();
+    await [Permission.storage,].request();
 
-    final info = statuses[Permission.storage].toString();
+    //final info = statuses[Permission.storage].toString();
     //print();
     //_toastInfo('Permisos');
   }
@@ -1210,10 +1202,10 @@ class _CrearContenidoState extends State<CrearContenido> {
               mainAxisSize: MainAxisSize.min,
               children: [
                 Container(
+                  width: MediaQuery.of(context).size.width - 10,
+                  height: MediaQuery.of(context).size.height / 4,
                   child: Image.memory(
                     imagenEnBytes,
-                    width: MediaQuery.of(context).size.width - 10,
-                    height: MediaQuery.of(context).size.height / 4,
                   ),
                 ),
                 Center(
@@ -1260,7 +1252,9 @@ class _CrearContenidoState extends State<CrearContenido> {
                       if (resultado) {
                         //Si el envío es correcto, se redirecciona
                         Image imagen = Image.network(
-                            "http://${DatosEstaticos.ipSeleccionada}/ImagenesPostTv/$nombreNuevaImagen");
+                          "http://${DatosEstaticos.ipSeleccionada}/ImagenesPostTv/$nombreNuevaImagen",
+                          fit: BoxFit.cover,
+                        );
                         RedireccionarCrearLayout(
                             imagen,
                             "/var/www/html/ImagenesPostTv/$nombreNuevaImagen",
