@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 import 'dart:typed_data';
+import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -356,7 +357,53 @@ class MenuAppBar {
         ),
       );
     }
-    if (itemSeleccionado == MenuAppBar.cerrarSesion) {}
+    if (itemSeleccionado == MenuAppBar.cerrarSesion) {
+      Widget contenidoPopUp = Container(
+          decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(40),
+              color: HexColor('#f4f4f4')),
+          height: 150,
+          width: 250,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              Text('¿DESEA CERRAR SESIÓN?',
+                  textAlign: TextAlign.center, style: TextStyle(fontSize: 13)),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  GestureDetector(
+                    child: Icon(
+                      Icons.check_circle,
+                      color: HexColor('#3EDB9B'),
+                      size: 30,
+                    ),
+                    onTap: () {
+                      if (Platform.isAndroid) {
+                        SystemNavigator.pop();
+                        return;
+                      } else {
+                        exit(0);
+                      }
+                    },
+                  ),
+                  GestureDetector(
+                    child: Icon(
+                      Icons.cancel,
+                      color: HexColor('#FC4C8B'),
+                      size: 30,
+                    ),
+                    onTap: () {
+                      Navigator.pop(context);
+                    },
+                  ),
+                ],
+              )
+            ],
+          ));
+      PopUps.PopUpConWidget(context, contenidoPopUp);
+      return;
+    }
   }
 
   static PopupMenuButton botonMenu(BuildContext context) {
@@ -1351,9 +1398,7 @@ class BotonEnviarAEquipo extends StatelessWidget {
   void VolverADetalleEquipo(BuildContext context) {
     Navigator.of(context, rootNavigator: true).pop();
     Navigator.pushNamedAndRemoveUntil(
-        context,
-        '/detalle_equipo',
-        ModalRoute.withName('/'),
+        context, '/detalle_equipo', ModalRoute.withName('/'),
         arguments: {
           "indexEquipoGrid": DatosEstaticos.indexSeleccionado,
         });
@@ -1409,8 +1454,7 @@ class RutasRedireccionMenu {
   static String RutaDeDondeViene = "";
 }
 
-class EventosPropios{
-
+class EventosPropios {
   Future ObtenerSizePixelesPantalla() async {
     String resp;
     Uint8List _respuesta;
@@ -1418,7 +1462,7 @@ class EventosPropios{
     try {
       Socket socket;
       socket = await Socket.connect(DatosEstaticos.ipSeleccionada,
-          DatosEstaticos.puertoSocketRaspberry)
+              DatosEstaticos.puertoSocketRaspberry)
           .timeout(Duration(seconds: 5));
       socket.write('TVPOSTGETSIZEPANTALLA');
       socket.listen((event) {
@@ -1426,7 +1470,6 @@ class EventosPropios{
       }).onDone(() {
         _respuesta = Uint8List.fromList(listadoRespuestas);
         socket.close();
-
       });
 
       await socket.done.whenComplete(() => resp = utf8.decode(_respuesta));

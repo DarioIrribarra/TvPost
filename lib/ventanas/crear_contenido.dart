@@ -131,10 +131,8 @@ class _CrearContenidoState extends State<CrearContenido> {
                     onScaleUpdate: (details) {
                       if (_activeItem == null) return;
                       final delta = details.focalPoint - _initPos;
-                      final left =
-                          (delta.dx / screen.width) + _currentPos.dx;
-                      final top =
-                          (delta.dy / screen.height) + _currentPos.dy;
+                      final left = (delta.dx / screen.width) + _currentPos.dx;
+                      final top = (delta.dy / screen.height) + _currentPos.dy;
 
                       setState(() {
                         _activeItem.position = Offset(left, top);
@@ -158,7 +156,7 @@ class _CrearContenidoState extends State<CrearContenido> {
             ),
           ),
           Expanded(
-            flex:1,
+            flex: 1,
             child: SingleChildScrollView(
               scrollDirection: Axis.horizontal,
               child: Container(
@@ -817,13 +815,13 @@ class _CrearContenidoState extends State<CrearContenido> {
       builder: (BuildContext context) {
         return AlertDialog(
           contentPadding:
-              const EdgeInsets.only(bottom: 20, top: 20, left: 5, right: 5),
+              const EdgeInsets.only(bottom: 17, top: 17, left: 5, right: 5),
           backgroundColor: Colors.grey.withOpacity(0.0),
           content: Container(
               decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(40),
                   color: HexColor('#f4f4f4')),
-              height: 370,
+              height: MediaQuery.of(context).size.height / 1.7,
               width: 300,
               child: SingleChildScrollView(
                 child: Column(
@@ -837,11 +835,11 @@ class _CrearContenidoState extends State<CrearContenido> {
                       height: 15,
                     ),
                     Container(
-                      height: 30,
                       width: 220,
                       child: TextField(
                         keyboardType: TextInputType.multiline,
-                        maxLines: null,
+                        maxLines: 5,
+                        minLines: 1,
                         decoration: InputDecoration(
                           border: OutlineInputBorder(),
                           labelText: 'Ingrese texto aquí',
@@ -1282,7 +1280,9 @@ class _CrearContenidoState extends State<CrearContenido> {
   }
 
   _requestPermission() async {
-    await [Permission.storage,].request();
+    await [
+      Permission.storage,
+    ].request();
 
     //final info = statuses[Permission.storage].toString();
     //print();

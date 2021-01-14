@@ -29,23 +29,28 @@ class _PerfilState extends State<Perfil> {
                 width: 110,
                 height: 110,
                 decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(60),
-                    color: Colors.greenAccent),
+                  borderRadius: BorderRadius.circular(60),
+                  color: HexColor("#3EDB9B"),
+                ),
                 child: FlatButton(
                   onPressed: () {
                     _cargarImagen(context);
                   },
                   child: Container(
-                      width: 105,
-                      height: 105,
+                      width: 75,
+                      height: 100,
                       decoration: new BoxDecoration(
                         shape: BoxShape.circle,
                       ),
                       child: archivoImagen == null
-                          ? Image.asset(
-                              'imagenes/logohorizontal.png',
-                              fit: BoxFit.fill,
+                          ? Icon(
+                              Icons.file_upload,
+                              size: 40,
                             )
+                          /*Image.asset(
+                              'imagenes/logovertical.png',
+                              fit: BoxFit.fill,
+                            )*/
                           : ClipRRect(
                               borderRadius: BorderRadius.circular(50),
                               child: Image.file(
@@ -69,7 +74,7 @@ class _PerfilState extends State<Perfil> {
             Container(
               width: MediaQuery.of(context).size.width / 1.3,
               height: 1.5,
-              color: Colors.greenAccent,
+              color: HexColor("#3EDB9B"),
             ),
             Container(
               margin: EdgeInsets.only(top: 10),
@@ -80,6 +85,7 @@ class _PerfilState extends State<Perfil> {
                 children: [
                   Column(children: [
                     Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
                         Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
@@ -98,27 +104,27 @@ class _PerfilState extends State<Perfil> {
                               Text('WEB', style: TextStyle(fontSize: 13)),
                             ]),
                         Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
                               SizedBox(
                                 height: 4,
                               ),
                               Text(
-                                '  : ',
+                                '    : ',
                                 style: TextStyle(fontWeight: FontWeight.bold),
                               ),
                               SizedBox(
                                 height: 10,
                               ),
                               Text(
-                                '  : ',
+                                '    : ',
                                 style: TextStyle(fontWeight: FontWeight.bold),
                               ),
                               SizedBox(
                                 height: 10,
                               ),
                               Text(
-                                '  : ',
+                                '    : ',
                                 style: TextStyle(fontWeight: FontWeight.bold),
                               )
                             ]),

@@ -23,11 +23,12 @@ class _SoporteState extends State<Soporte> {
             style: TextStyle(fontSize: 16.5),
           ),
           Container(
-            width: 120,
-            height: 120,
+            width: 110,
+            height: 110,
             decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(60),
-                color: Colors.greenAccent),
+              borderRadius: BorderRadius.circular(60),
+              color: HexColor("#3EDB9B"),
+            ),
             //color: Colors.greenAccent,
             //decoration: BoxDecoration(borderRadius: BorderRadius.circular(5),),
           ),
@@ -49,7 +50,7 @@ class _SoporteState extends State<Soporte> {
                     Container(
                       height: 30,
                       width: 1,
-                      color: Colors.greenAccent,
+                      color: HexColor("#3EDB9B"),
                     ),
                     Text(
                       "Escríbe un mensaje...",

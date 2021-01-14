@@ -42,7 +42,7 @@ class _CrearLayout1State extends State<CrearLayout1> {
     } else {
       Widget _imageSeleccionLayout = Container(
         decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(60),
+            //     borderRadius: BorderRadius.circular(60),
             color: HexColor('#3EDB9B').withOpacity(0.2)),
       );
       //Image.asset('imagenes/layout1a.png', fit: BoxFit.fill);
