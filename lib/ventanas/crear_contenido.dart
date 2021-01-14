@@ -84,8 +84,9 @@ class _CrearContenidoState extends State<CrearContenido> {
         altoCanvas = MediaQuery.of(context).size.height / 2;
       }
       if (divisionLayout.contains('2-')) {
-        anchoCanvas = MediaQuery.of(context).size.width;
+        anchoCanvas = MediaQuery.of(context).size.width / 1.8;
         altoCanvas = MediaQuery.of(context).size.height / 2;
+        //anchoCanvas = altoCanvas;
       }
       if (divisionLayout.contains('3-2')) {
         anchoCanvas = MediaQuery.of(context).size.width / 3;
@@ -158,68 +159,72 @@ class _CrearContenidoState extends State<CrearContenido> {
           Expanded(
             flex: 1,
             child: SingleChildScrollView(
-              scrollDirection: Axis.horizontal,
-              child: Container(
-                  margin: EdgeInsets.only(top: 10, bottom: 10),
-                  height: MediaQuery.of(context).size.height / 4,
-                  child: Column(
-                    children: [
-                      Row(
-                        children: [
-                          botonColorFondo(),
-                          botonJPG(),
-                          botonPNG(),
-                          botonTexto(),
-                          botonEmoji(),
-                          botonOferta(),
-                        ],
-                      ),
-                      SizedBox(
-                        height: 50,
-                      ),
-                      Container(
-                        margin: EdgeInsets.symmetric(horizontal: 100),
-                        width: 150.0,
-                        height: 30.0,
-                        decoration: new BoxDecoration(
-                            borderRadius: BorderRadius.circular(20),
-                            gradient: LinearGradient(
-                                colors: [
-                                  HexColor("#0683ff"),
-                                  HexColor("#3edb9b")
-                                ],
-                                stops: [
-                                  0.1,
-                                  0.6
-                                ],
-                                begin: Alignment.topLeft,
-                                end: FractionalOffset.bottomRight)),
-                        child: FlatButton(
-                          color: Colors.transparent,
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(20),
-                              side: BorderSide(
-                                  color: Color.fromARGB(30, 0, 0, 0))),
-                          child: Text(
-                            'CARGAR',
-                            style: TextStyle(color: Colors.white),
-                          ),
-                          onPressed: () async {
-                            PopUps.popUpCargando(context, 'Guardando Imagen');
-                            final bytes1 = await Utils.capture(key1);
-                            //Cierra popup cargando
-                            Navigator.of(context, rootNavigator: true).pop();
-                            /*setState(() {
-                              this.bytes1 = bytes1;
-                            });*/
-                            //Acá tiene que aparecer el popup para guardar imagen con nombre,
-                            //al igual que en el seleccionar imagen
-                            await _finalizarGuardado(bytes1);
-                          },
+              child: SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                child: Container(
+                    margin: EdgeInsets.only(top: 30, bottom: 10),
+                    height: MediaQuery.of(context).size.height / 4,
+                    child: Column(
+                      children: [
+                        Row(
+                          children: [
+                            botonColorFondo(),
+                            botonJPG(),
+                            botonPNG(),
+                            botonTexto(),
+                            botonEmoji(),
+                            botonOferta(),
+                          ],
                         ),
-                      ),
-                    ],
-                  )),
+                        SizedBox(
+                          height: 50,
+                        ),
+                        Container(
+                          margin: EdgeInsets.symmetric(horizontal: 100),
+                          width: 150.0,
+                          height: 30.0,
+                          decoration: new BoxDecoration(
+                              borderRadius: BorderRadius.circular(20),
+                              gradient: LinearGradient(
+                                  colors: [
+                                    HexColor("#0683ff"),
+                                    HexColor("#3edb9b")
+                                  ],
+                                  stops: [
+                                    0.1,
+                                    0.6
+                                  ],
+                                  begin: Alignment.topLeft,
+                                  end: FractionalOffset.bottomRight)),
+                          child: FlatButton(
+                            color: Colors.transparent,
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(20),
+                                side: BorderSide(
+                                    color: Color.fromARGB(30, 0, 0, 0))),
+                            child: Text(
+                              'CARGAR',
+                              style: TextStyle(color: Colors.white),
+                            ),
+                            onPressed: () async {
+                              PopUps.popUpCargando(context, 'Guardando Imagen');
+                              final bytes1 = await Utils.capture(key1);
+                              //Cierra popup cargando
+                              Navigator.of(context, rootNavigator: true).pop();
+
+                              /*setState(() {
+                                this.bytes1 = bytes1;
+                              });*/
+                              //Acá tiene que aparecer el popup para guardar imagen con nombre,
+                              //al igual que en el seleccionar imagen
+                              await _finalizarGuardado(bytes1);
+                            },
+                          ),
+                        ),
+                      ],
+                    ),
+                ),
+              ),
             ),
           ),
           /*
@@ -1312,80 +1317,82 @@ class _CrearContenidoState extends State<CrearContenido> {
       context: context,
       child: AnimacionPadding(
         child: new AlertDialog(
-          content: Form(
-            key: _keyValidadorTxtImagen,
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Container(
-                  width: MediaQuery.of(context).size.width - 10,
-                  height: MediaQuery.of(context).size.height / 4,
-                  child: Image.memory(
-                    imagenEnBytes,
+          content: SingleChildScrollView(
+            child: Form(
+              key: _keyValidadorTxtImagen,
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Container(
+                    width: MediaQuery.of(context).size.width - 10,
+                    height: MediaQuery.of(context).size.height / 4,
+                    child: Image.memory(
+                      imagenEnBytes,
+                    ),
                   ),
-                ),
-                Center(
-                  child: TextFormField(
-                    textAlign: TextAlign.center,
-                    validator: (textoEscrito) {
-                      if (textoEscrito.isEmpty) {
-                        return "Error: Nombre de imagen vacío";
-                      }
-                      if (textoEscrito.trim().length <= 0) {
-                        return "Error: Nombre de imagen vacío";
-                      } else {
-                        nombreNuevaImagen =
-                            textoEscrito.trim().toString() + '.png';
-                        //Chequear si el valor ya existe
-                        if (DatosEstaticos.listadoNombresImagenes
-                            .contains(nombreNuevaImagen)) {
-                          return "Error: Nombre de imagen ya existe";
+                  Center(
+                    child: TextFormField(
+                      textAlign: TextAlign.center,
+                      validator: (textoEscrito) {
+                        if (textoEscrito.isEmpty) {
+                          return "Error: Nombre de imagen vacío";
+                        }
+                        if (textoEscrito.trim().length <= 0) {
+                          return "Error: Nombre de imagen vacío";
                         } else {
-                          return null;
+                          nombreNuevaImagen =
+                              textoEscrito.trim().toString() + '.png';
+                          //Chequear si el valor ya existe
+                          if (DatosEstaticos.listadoNombresImagenes
+                              .contains(nombreNuevaImagen)) {
+                            return "Error: Nombre de imagen ya existe";
+                          } else {
+                            return null;
+                          }
+                        }
+                      },
+                    ),
+                  ),
+                  RaisedButton(
+                    child: Text('Añadir'),
+                    autofocus: true,
+                    onPressed: () async {
+                      if (_keyValidadorTxtImagen.currentState.validate()) {
+                        //Se abre el popup de cargando
+                        PopUps.popUpCargando(context, 'Añadiendo imagen...');
+
+                        //Se crea el archivo final del tamaño modificado
+                        File temporal =
+                            await Utils.crearArchivoTemporalRedimensionado(
+                                imagenEnBytes);
+
+                        //Obtengo el resultado del envio
+                        var resultado =
+                            await PopUps.enviarImagen(nombreNuevaImagen, temporal)
+                                .then((value) => value);
+
+                        if (resultado) {
+                          //Si el envío es correcto, se redirecciona
+                          Image imagen = Image.network(
+                            "http://${DatosEstaticos.ipSeleccionada}/ImagenesPostTv/$nombreNuevaImagen",
+                            fit: BoxFit.cover,
+                          );
+                          RedireccionarCrearLayout(
+                              imagen,
+                              "/var/www/html/ImagenesPostTv/$nombreNuevaImagen",
+                              true);
+                        } else {
+                          //Cierra popup cargando
+                          Navigator.of(context, rootNavigator: true).pop();
+
+                          PopUps.PopUpConWidget(
+                              context, Text('Error al enviar imagen'));
                         }
                       }
                     },
                   ),
-                ),
-                RaisedButton(
-                  child: Text('Añadir'),
-                  autofocus: true,
-                  onPressed: () async {
-                    if (_keyValidadorTxtImagen.currentState.validate()) {
-                      //Se abre el popup de cargando
-                      PopUps.popUpCargando(context, 'Añadiendo imagen...');
-
-                      //Se crea el archivo final del tamaño modificado
-                      File temporal =
-                          await Utils.crearArchivoTemporalRedimensionado(
-                              imagenEnBytes);
-
-                      //Obtengo el resultado del envio
-                      var resultado =
-                          await PopUps.enviarImagen(nombreNuevaImagen, temporal)
-                              .then((value) => value);
-
-                      if (resultado) {
-                        //Si el envío es correcto, se redirecciona
-                        Image imagen = Image.network(
-                          "http://${DatosEstaticos.ipSeleccionada}/ImagenesPostTv/$nombreNuevaImagen",
-                          fit: BoxFit.cover,
-                        );
-                        RedireccionarCrearLayout(
-                            imagen,
-                            "/var/www/html/ImagenesPostTv/$nombreNuevaImagen",
-                            true);
-                      } else {
-                        //Cierra popup cargando
-                        Navigator.of(context, rootNavigator: true).pop();
-
-                        PopUps.PopUpConWidget(
-                            context, Text('Error al enviar imagen'));
-                      }
-                    }
-                  },
-                ),
-              ],
+                ],
+              ),
             ),
           ),
         ),

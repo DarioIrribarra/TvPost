@@ -1476,9 +1476,9 @@ class EventosPropios {
       //Se manipula la respuesta de datos
       Map<String, dynamic> datosRecibidos = json.decode(resp);
       DatosEstaticos.ancho_pantalla_seleccionada =
-          int.parse(datosRecibidos['anchoPantalla'].toString());
+          double.parse(datosRecibidos['anchoPantalla'].toString())*2;
       DatosEstaticos.alto_pantalla_seleccionada =
-          int.parse(datosRecibidos['altoPantalla'].toString());
+          double.parse(datosRecibidos['altoPantalla'].toString())*2;
       return true;
     } catch (e) {}
   }

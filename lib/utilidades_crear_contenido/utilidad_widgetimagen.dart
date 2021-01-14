@@ -36,29 +36,29 @@ class Utils {
 
     //Modifico valores dependiendo de la porción elegida y el tamaño real
     // de la pantalla
-    int nuevaAltura = DatosEstaticos.alto_pantalla_seleccionada;
-    int nuevoAncho = DatosEstaticos.ancho_pantalla_seleccionada;
+    int nuevaAltura = DatosEstaticos.alto_pantalla_seleccionada.round();
+    int nuevoAncho = DatosEstaticos.ancho_pantalla_seleccionada.round();
 
     switch(divisionYPorcion){
       case '2-1':
-        nuevoAncho = (DatosEstaticos.ancho_pantalla_seleccionada*0.5).toInt();
+        nuevoAncho = (DatosEstaticos.ancho_pantalla_seleccionada*0.5).round();
         break;
       case '2-2':
-        nuevoAncho = (DatosEstaticos.ancho_pantalla_seleccionada*0.5).toInt();
+        nuevoAncho = (DatosEstaticos.ancho_pantalla_seleccionada*0.5).round();
         break;
       case '3-1':
-        nuevoAncho = (DatosEstaticos.ancho_pantalla_seleccionada*0.8).toInt();
-        nuevaAltura = (DatosEstaticos.alto_pantalla_seleccionada*0.9).toInt();
+        nuevoAncho = (DatosEstaticos.ancho_pantalla_seleccionada*0.8).round();
+        nuevaAltura = (DatosEstaticos.alto_pantalla_seleccionada*0.9).round();
         break;
       case '3-2':
-        nuevoAncho = (DatosEstaticos.ancho_pantalla_seleccionada*0.2).toInt();
-        nuevaAltura = (DatosEstaticos.alto_pantalla_seleccionada*0.9).toInt();
+        nuevoAncho = (DatosEstaticos.ancho_pantalla_seleccionada*0.2).round();
+        nuevaAltura = (DatosEstaticos.alto_pantalla_seleccionada*0.9).round();
         break;
       case '3-3':
-        if (DatosEstaticos.relojEnPantalla){
-          nuevoAncho = (DatosEstaticos.ancho_pantalla_seleccionada*0.8).toInt();
-        }
-        nuevaAltura = (DatosEstaticos.alto_pantalla_seleccionada*0.1).toInt();
+        /*if (DatosEstaticos.relojEnPantalla){
+          nuevoAncho = (DatosEstaticos.ancho_pantalla_seleccionada*0.8).round();
+        }*/
+        nuevaAltura = ((DatosEstaticos.alto_pantalla_seleccionada*0.1).round()) + 8;
         break;
     }
 
