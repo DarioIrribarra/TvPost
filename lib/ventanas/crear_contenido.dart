@@ -6,6 +6,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:flutter/rendering.dart';
+import 'package:tvpost_flutter/utilidades/comunicacion_raspberry.dart';
 import 'package:tvpost_flutter/utilidades/custom_widgets.dart';
 import 'package:tvpost_flutter/utilidades/datos_estaticos.dart';
 import 'package:tvpost_flutter/utilidades_crear_contenido/editableitem.dart';
@@ -1377,6 +1378,7 @@ class _CrearContenidoState extends State<CrearContenido> {
                             "http://${DatosEstaticos.ipSeleccionada}/ImagenesPostTv/$nombreNuevaImagen",
                             fit: BoxFit.cover,
                           );
+                          await ComunicacionRaspberry.ReplicarImagen(nombreNuevaImagen);
                           RedireccionarCrearLayout(
                               imagen,
                               "/var/www/html/ImagenesPostTv/$nombreNuevaImagen",

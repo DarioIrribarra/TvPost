@@ -103,7 +103,7 @@ class ComunicacionRaspberry{
     nombresAEliminar.forEach((element) {
       instruccion += ' "'+ element + '"';
     });
-    print ("Instrucción: $instruccion");
+    //print ("Instrucción: $instruccion");
 
     Socket socket;
     try{
@@ -125,6 +125,36 @@ class ComunicacionRaspberry{
       print("Error al enviar nuevo layout ${e.toString()}");
       return null;
     }
+  }
+
+  static Future<dynamic> ReplicarImagen(String nombre) async{
+    String nombreFormateado = nombre.replaceAll(RegExp(' +'), '<!-!>');
+    String resp;
+    Uint8List _respuesta;
+    List<int> listadoRespuestas = [];
+    String instruccion = 'TVPOSTREPLICAIMAGEN $nombreFormateado';
+
+    Socket socket;
+    try{
+      socket = await Socket.connect(DatosEstaticos.ipSeleccionada,
+          DatosEstaticos.puertoSocketRaspberry).timeout(Duration(seconds: 5));
+      socket.write(instruccion);
+      socket.listen((event) {
+        listadoRespuestas.addAll(event.toList());
+      }).onDone(() {
+        _respuesta = Uint8List.fromList(listadoRespuestas);
+        socket.close();
+        return;
+      });
+
+      await socket.done.whenComplete(() => resp = utf8.decode(_respuesta));
+
+      return resp;
+    }catch(e){
+      print("Error al enviar nuevo layout ${e.toString()}");
+      return null;
+    }
+
   }
 }
 
