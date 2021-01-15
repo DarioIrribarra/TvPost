@@ -14,7 +14,6 @@ import 'package:liquid_pull_to_refresh/liquid_pull_to_refresh.dart';
 import 'package:fswitch/fswitch.dart';
 import 'package:tvpost_flutter/tvlapiz_icons.dart';
 
-
 class DetalleEquipo extends StatefulWidget {
   @override
   _DetalleEquipoState createState() => _DetalleEquipoState();
@@ -91,12 +90,12 @@ class _DetalleEquipoState extends State<DetalleEquipo> {
               ),
               Center(
                   child: Padding(
-                    padding: const EdgeInsets.only(bottom: 10),
-                    child: Text(
-                      "¡Ups, algo ha salido mal!",
-                      textScaleFactor: 1.2,
-                    ),
-                  )),
+                padding: const EdgeInsets.only(bottom: 10),
+                child: Text(
+                  "¡Ups, algo ha salido mal!",
+                  textScaleFactor: 1.2,
+                ),
+              )),
               Text(
                 "Deslice hacia abajo para recargar imagen",
                 textScaleFactor: 1.2,
@@ -106,8 +105,7 @@ class _DetalleEquipoState extends State<DetalleEquipo> {
           if (snapshot.connectionState == ConnectionState.done) {
             if (snapshot.data == null) {
               return widgetError;
-            }
-            else {
+            } else {
               //Retorna el widget con la imagen de screenshot
               var tipoimage = _screenshotProcesada.image.runtimeType.toString();
               if (tipoimage == "AssetImage") {
@@ -137,7 +135,7 @@ class _DetalleEquipoState extends State<DetalleEquipo> {
                                   child: FlatButton(
                                       child: Row(
                                         mainAxisAlignment:
-                                        MainAxisAlignment.center,
+                                            MainAxisAlignment.center,
                                         children: [
                                           Icon(
                                             Icons.screen_share_outlined,
@@ -209,7 +207,7 @@ class _DetalleEquipoState extends State<DetalleEquipo> {
                                 children: [
                                   Column(
                                       crossAxisAlignment:
-                                      CrossAxisAlignment.start,
+                                          CrossAxisAlignment.start,
                                       children: [
                                         SizedBox(
                                           height: 4,
@@ -226,7 +224,7 @@ class _DetalleEquipoState extends State<DetalleEquipo> {
                                       ]),
                                   Column(
                                       crossAxisAlignment:
-                                      CrossAxisAlignment.start,
+                                          CrossAxisAlignment.start,
                                       children: [
                                         SizedBox(
                                           height: 4,
@@ -250,7 +248,7 @@ class _DetalleEquipoState extends State<DetalleEquipo> {
                                 Text(
                                   DatosEstaticos
                                       .listadoDatosEquipoSeleccionado[0]
-                                  ['f_alias']
+                                          ['f_alias']
                                       .toString()
                                       .toUpperCase(),
                                   style: TextStyle(
@@ -264,7 +262,7 @@ class _DetalleEquipoState extends State<DetalleEquipo> {
                                 Text(
                                   DatosEstaticos
                                       .listadoDatosEquipoSeleccionado[0]
-                                  ['f_serial']
+                                          ['f_serial']
                                       .toString()
                                       .toUpperCase(),
                                   style: TextStyle(
@@ -277,8 +275,8 @@ class _DetalleEquipoState extends State<DetalleEquipo> {
                                 ),
                                 Text(
                                   DatosEstaticos
-                                      .listadoDatosEquipoSeleccionado[0]
-                                  ['f_ip'],
+                                          .listadoDatosEquipoSeleccionado[0]
+                                      ['f_ip'],
                                   style: TextStyle(
                                     fontFamily: 'textoMont',
                                     fontSize: 12,
@@ -729,7 +727,7 @@ class _DetalleEquipoState extends State<DetalleEquipo> {
         appBar: CustomAppBar(),
         body: LiquidPullToRefresh(
           springAnimationDurationInMilliseconds: 450,
-          onRefresh: () =>_recargarGrid(),
+          onRefresh: () => _recargarGrid(),
           child: ListView(
             children: [
               Container(
@@ -825,7 +823,7 @@ class _DetalleEquipoState extends State<DetalleEquipo> {
               decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(40),
                   color: HexColor('#f4f4f4')),
-              height: 175,
+              height: 140,
               width: 250,
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -833,7 +831,7 @@ class _DetalleEquipoState extends State<DetalleEquipo> {
                   Column(
                     children: [
                       Padding(
-                        padding: const EdgeInsets.only(top: 50.0),
+                        padding: const EdgeInsets.only(top: 38.0),
                         child: Text("CAMBIAR NOMBRE",
                             style: TextStyle(fontSize: 13)),
                       ),
@@ -1018,8 +1016,6 @@ class _DetalleEquipoState extends State<DetalleEquipo> {
     setState(() {});
   }
 
-
-
   void AlertaDeshabilitar({
     int index = 0,
   }) async {
@@ -1075,6 +1071,7 @@ class _DetalleEquipoState extends State<DetalleEquipo> {
                         size: 30,
                       ),
                       onTap: () async {
+                        Navigator.pop(context);
                         PopUps.popUpCargando(
                             context, 'DESHABILITANDO EQUIPO...');
                         var resultado = await actualizarEstado
@@ -1082,7 +1079,6 @@ class _DetalleEquipoState extends State<DetalleEquipo> {
                         await actualizarEstado.getDatosEquipos();
                         if (resultado == 1) {
                           setState(() {
-                            Navigator.pop(context);
                             Navigator.pop(context);
                             //valorSwitchUno = true;
                             Widget contenidoPopUp = Container(
@@ -1204,13 +1200,13 @@ class _DetalleEquipoState extends State<DetalleEquipo> {
                         size: 30,
                       ),
                       onTap: () async {
+                        Navigator.pop(context);
                         PopUps.popUpCargando(context, 'Habilitando equipo...');
                         var resultado = await actualizarEstado
                             .updateEstadoEquipo(serial: serial, estado: "1");
                         await actualizarEstado.getDatosEquipos();
                         if (resultado == 1) {
                           setState(() {
-                            Navigator.pop(context);
                             Navigator.pop(context);
                             //valorSwitchUno = false;
                             Widget contenidoPopUp = Container(

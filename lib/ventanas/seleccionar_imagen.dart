@@ -237,18 +237,11 @@ class _SeleccionarImagenState extends State<SeleccionarImagen> {
             } else {
               if (snapshot.data[0] == "") {
                 return Column(
-                  mainAxisSize: MainAxisSize.min,
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
-                    Image.asset(
-                      'imagenes/arrow.png',
-                      width: MediaQuery.of(context).size.width / 1.5,
-                    ),
-                    Padding(
-                      padding: EdgeInsets.only(top: 5),
-                      child: Text(
-                        "Presione el ícono para agregar imágenes",
-                        textScaleFactor: 1.3,
-                      ),
+                    Text(
+                      "Presione el ícono para agregar imágenes",
+                      textScaleFactor: 1.3,
                     ),
                   ],
                 );
@@ -1044,62 +1037,76 @@ class CambiosSeleccion {
     } else {
       textoPopUp = Text('¿Eliminar ${listadoSeleccionadas.length} imagenes?');
     }
-    contenidoPopUp = Column(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        textoPopUp,
-        Row(
-          children: [
-            Expanded(
-              flex: 1,
-              child: FlatButton(
-                child: Text('Aceptar'),
-                //Eliminar
-                onPressed: () async {
-                  Navigator.pop(context);
-                  PopUps.popUpCargando(context, 'Eliminando imagenes...');
-                  var resultadoEliminar =
-                      await ComunicacionRaspberry.EliminarContenido(
-                          tipoContenido: 'imagenes',
-                          nombresAEliminar: listadoSeleccionadas);
-                  if (resultadoEliminar != null) {
+    contenidoPopUp = Container(
+      decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(40), color: HexColor('#f4f4f4')),
+      height: 100,
+      width: 250,
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: [
+          textoPopUp,
+          Row(
+            children: [
+              Expanded(
+                flex: 1,
+                child: FlatButton(
+                  child: Icon(
+                    Icons.check_circle,
+                    color: HexColor('#3EDB9B'),
+                    size: 30,
+                  ),
+                  //Eliminar
+                  onPressed: () async {
                     Navigator.pop(context);
-                    Navigator.popAndPushNamed(context, "/seleccionar_imagen",
-                        arguments: {
-                          'division_layout': '0',
-                          'ruta_proveniente': rutaPadre,
-                        });
-                    Fluttertoast.showToast(
-                      msg: "Imagenes eliminadas",
-                      toastLength: Toast.LENGTH_SHORT,
-                      webBgColor: "#e74c3c",
-                      timeInSecForIosWeb: 5,
-                    );
-                  } else {
-                    Navigator.pop(context);
-                    Fluttertoast.showToast(
-                      msg: "Error al eliminar, intente nuevamente",
-                      toastLength: Toast.LENGTH_SHORT,
-                      webBgColor: "#e74c3c",
-                      timeInSecForIosWeb: 5,
-                    );
-                  }
-                },
+                    PopUps.popUpCargando(context, 'Eliminando imagenes...');
+                    var resultadoEliminar =
+                        await ComunicacionRaspberry.EliminarContenido(
+                            tipoContenido: 'imagenes',
+                            nombresAEliminar: listadoSeleccionadas);
+                    if (resultadoEliminar != null) {
+                      Navigator.pop(context);
+                      Navigator.popAndPushNamed(context, "/seleccionar_imagen",
+                          arguments: {
+                            'division_layout': '0',
+                            'ruta_proveniente': rutaPadre,
+                          });
+                      Fluttertoast.showToast(
+                        msg: "Imagenes eliminadas",
+                        toastLength: Toast.LENGTH_SHORT,
+                        webBgColor: "#e74c3c",
+                        timeInSecForIosWeb: 5,
+                      );
+                    } else {
+                      Navigator.pop(context);
+                      Fluttertoast.showToast(
+                        msg: "Error al eliminar, intente nuevamente",
+                        toastLength: Toast.LENGTH_SHORT,
+                        webBgColor: "#e74c3c",
+                        timeInSecForIosWeb: 5,
+                      );
+                    }
+                  },
+                ),
               ),
-            ),
-            SizedBox(
-              width: 10,
-            ),
-            Expanded(
-              flex: 1,
-              child: FlatButton(
-                child: Text('Cancelar'),
-                onPressed: () => Navigator.pop(context),
+              SizedBox(
+                width: 10,
               ),
-            ),
-          ],
-        ),
-      ],
+              Expanded(
+                flex: 1,
+                child: FlatButton(
+                  child: Icon(
+                    Icons.cancel,
+                    color: HexColor('#FC4C8B'),
+                    size: 30,
+                  ),
+                  onPressed: () => Navigator.pop(context),
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
     );
 
     PopUps.PopUpConWidget(context, contenidoPopUp);
@@ -1117,101 +1124,122 @@ class CambiosSeleccion {
     List<String> listadoNombres = [];
     textoPopUp =
         Text('Editando ${nombre.substring(0, nombre.lastIndexOf('.'))}');
-    contenidoPopUp = Form(
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          textoPopUp,
-          TextFormField(
-            textAlign: TextAlign.center,
-            validator: (textoEscrito) {
-              if (textoEscrito == null) {
-                return "Error: Nombre de imagen vacío";
-              }
-              if (textoEscrito.isEmpty) {
-                return "Error: Nombre de imagen vacío";
-              }
-              if (textoEscrito.trim().length <= 0) {
-                return "Error: Nombre de imagen vacío";
-              } else {
-                nombreNuevaImagen = textoEscrito.trim().toString() + extension;
-                //Chequear si el valor ya existe
-                if (DatosEstaticos.listadoNombresImagenes
-                    .contains(nombreNuevaImagen)) {
-                  return "Error: Nombre de imagen ya existe";
-                } else {
-                  return null;
-                }
-              }
-            },
-          ),
-          Row(
-            children: [
-              Expanded(
-                flex: 1,
-                child: FlatButton(
-                  child: Text('Añadir'),
-                  autofocus: true,
-                  onPressed: () async {
-                    if (_keyValidador2.currentState.validate()) {
-                      nombre = nombre.replaceAll(RegExp(' +'), '<!-!>');
-                      nombreNuevaImagen =
-                          nombreNuevaImagen.replaceAll(RegExp(' +'), '<!-!>');
-                      listadoNombres.add(nombre);
-                      listadoNombres.add(nombreNuevaImagen);
-                      print(listadoNombres);
-                      //Se abre el popup de cargando
-                      PopUps.popUpCargando(context, 'Editando imagen...');
-                      //Obtengo el resultado del envio
-                      var resultado =
-                          await ComunicacionRaspberry.EditarContenido(
-                        tipoContenido: 'imagenes',
-                        nombresAEliminar: listadoNombres,
-                      );
-                      if (resultado != null) {
-                        Navigator.pop(context);
-                        Navigator.pop(context);
-                        Navigator.popAndPushNamed(
-                            context, "/seleccionar_imagen",
-                            arguments: {
-                              'division_layout': '0',
-                              'ruta_proveniente': rutaPadre,
-                            });
-                        Fluttertoast.showToast(
-                          msg: "Imagen editada",
-                          toastLength: Toast.LENGTH_LONG,
-                          webBgColor: "#e74c3c",
-                          timeInSecForIosWeb: 10,
-                        );
-                      } else {
-                        Navigator.pop(context);
-                        Navigator.pop(context);
-                        Fluttertoast.showToast(
-                          msg: "Error al eliminar, intente nuevamente",
-                          toastLength: Toast.LENGTH_SHORT,
-                          webBgColor: "#e74c3c",
-                          timeInSecForIosWeb: 5,
-                        );
-                      }
+    contenidoPopUp = Container(
+      decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(40), color: HexColor('#f4f4f4')),
+      height: 140,
+      width: 250,
+      child: Form(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            Padding(
+              padding: const EdgeInsets.only(top: 28.0),
+              child: textoPopUp,
+            ),
+            SizedBox(
+              width: 180,
+              child: TextFormField(
+                textAlign: TextAlign.center,
+                validator: (textoEscrito) {
+                  if (textoEscrito == null) {
+                    return "Error: Nombre de imagen vacío";
+                  }
+                  if (textoEscrito.isEmpty) {
+                    return "Error: Nombre de imagen vacío";
+                  }
+                  if (textoEscrito.trim().length <= 0) {
+                    return "Error: Nombre de imagen vacío";
+                  } else {
+                    nombreNuevaImagen =
+                        textoEscrito.trim().toString() + extension;
+                    //Chequear si el valor ya existe
+                    if (DatosEstaticos.listadoNombresImagenes
+                        .contains(nombreNuevaImagen)) {
+                      return "Error: Nombre de imagen ya existe";
+                    } else {
+                      return null;
                     }
-                  },
+                  }
+                },
+              ),
+            ),
+            Row(
+              children: [
+                Expanded(
+                  flex: 1,
+                  child: FlatButton(
+                    child: Icon(
+                      Icons.check_circle,
+                      color: HexColor('#3EDB9B'),
+                      size: 30,
+                    ),
+                    autofocus: true,
+                    onPressed: () async {
+                      if (_keyValidador2.currentState.validate()) {
+                        nombre = nombre.replaceAll(RegExp(' +'), '<!-!>');
+                        nombreNuevaImagen =
+                            nombreNuevaImagen.replaceAll(RegExp(' +'), '<!-!>');
+                        listadoNombres.add(nombre);
+                        listadoNombres.add(nombreNuevaImagen);
+                        print(listadoNombres);
+                        //Se abre el popup de cargando
+                        PopUps.popUpCargando(context, 'Editando imagen...');
+                        //Obtengo el resultado del envio
+                        var resultado =
+                            await ComunicacionRaspberry.EditarContenido(
+                          tipoContenido: 'imagenes',
+                          nombresAEliminar: listadoNombres,
+                        );
+                        if (resultado != null) {
+                          Navigator.pop(context);
+                          Navigator.pop(context);
+                          Navigator.popAndPushNamed(
+                              context, "/seleccionar_imagen",
+                              arguments: {
+                                'division_layout': '0',
+                                'ruta_proveniente': rutaPadre,
+                              });
+                          Fluttertoast.showToast(
+                            msg: "Imagen editada",
+                            toastLength: Toast.LENGTH_LONG,
+                            webBgColor: "#e74c3c",
+                            timeInSecForIosWeb: 10,
+                          );
+                        } else {
+                          Navigator.pop(context);
+                          Navigator.pop(context);
+                          Fluttertoast.showToast(
+                            msg: "Error al eliminar, intente nuevamente",
+                            toastLength: Toast.LENGTH_SHORT,
+                            webBgColor: "#e74c3c",
+                            timeInSecForIosWeb: 5,
+                          );
+                        }
+                      }
+                    },
+                  ),
                 ),
-              ),
-              SizedBox(
-                width: 10,
-              ),
-              Expanded(
-                flex: 1,
-                child: FlatButton(
-                  child: Text('Cancelar'),
-                  onPressed: () => Navigator.pop(context),
+                SizedBox(
+                  width: 10,
                 ),
-              ),
-            ],
-          ),
-        ],
+                Expanded(
+                  flex: 1,
+                  child: FlatButton(
+                    child: Icon(
+                      Icons.cancel,
+                      color: HexColor('#FC4C8B'),
+                      size: 30,
+                    ),
+                    onPressed: () => Navigator.pop(context),
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
+        key: _keyValidador2,
       ),
-      key: _keyValidador2,
     );
 
     PopUps.PopUpConWidget(context, contenidoPopUp);

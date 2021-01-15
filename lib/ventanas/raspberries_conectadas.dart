@@ -182,8 +182,11 @@ class _RaspberriesConectadasState extends State<RaspberriesConectadas> {
                                                         pageBuilder: (_, __, ___) => DetalleEquipo(),
                                                       ),
                                                   );*/
-                                                  EventosPropios eventosPropios = EventosPropios();
-                                                  await eventosPropios.ObtenerSizePixelesPantalla();
+                                                  EventosPropios
+                                                      eventosPropios =
+                                                      EventosPropios();
+                                                  await eventosPropios
+                                                      .ObtenerSizePixelesPantalla();
 
                                                   return Navigator
                                                       .popAndPushNamed(context,
@@ -348,8 +351,11 @@ class _RaspberriesConectadasState extends State<RaspberriesConectadas> {
                                                           .listadoEquipos[index]
                                                               ['f_ip']
                                                           .toString();
-                                                  EventosPropios eventosPropios = EventosPropios();
-                                                  await eventosPropios.ObtenerSizePixelesPantalla();
+                                                  EventosPropios
+                                                      eventosPropios =
+                                                      EventosPropios();
+                                                  await eventosPropios
+                                                      .ObtenerSizePixelesPantalla();
                                                   return Navigator
                                                       .popAndPushNamed(context,
                                                           '/detalle_equipo',
@@ -1176,12 +1182,12 @@ class _RaspberriesConectadasState extends State<RaspberriesConectadas> {
                       size: 30,
                     ),
                     onTap: () async {
+                      Navigator.pop(context);
                       PopUps.popUpCargando(context, 'Deshabilitando equipo...');
                       var resultado = await actualizarEstado.updateEstadoEquipo(
                           serial: serial, estado: "0");
                       if (resultado == 1) {
                         setState(() {
-                          Navigator.pop(context);
                           Navigator.pop(context);
                           valorSwitchUno = true;
                           Widget contenidoPopUp = Container(
@@ -1210,6 +1216,7 @@ class _RaspberriesConectadasState extends State<RaspberriesConectadas> {
                                     onTap: () {
                                       //Navigator.pop(context);
                                       Navigator.pop(context);
+
                                       //Libera los widgets y datos creados
                                       LimpiarDatosEstaticos();
                                       DatosEstaticos.indexSeleccionado = index;
@@ -1273,6 +1280,7 @@ class _RaspberriesConectadasState extends State<RaspberriesConectadas> {
                         size: 30,
                       ),
                       onTap: () async {
+                        Navigator.pop(context);
                         PopUps.popUpCargando(
                             context, 'DESHABILITANDO EQUIPOS...');
                         var resultado =
@@ -1282,7 +1290,6 @@ class _RaspberriesConectadasState extends State<RaspberriesConectadas> {
                                 listadoEquipos: listadoEquipos);
                         if (resultado == 1) {
                           setState(() {
-                            Navigator.pop(context);
                             Navigator.pop(context);
                             valorSwitchTodos = true;
                             Widget contenidoPopUp = Container(
@@ -1393,12 +1400,12 @@ class _RaspberriesConectadasState extends State<RaspberriesConectadas> {
                     size: 30,
                   ),
                   onTap: () async {
+                    Navigator.pop(context);
                     PopUps.popUpCargando(context, 'HABILITANDO EQUIPO...');
                     var resultado = await actualizarEstado.updateEstadoEquipo(
                         serial: serial, estado: "1");
                     if (resultado == 1) {
                       setState(() {
-                        Navigator.pop(context);
                         Navigator.pop(context);
                         valorSwitchUno = false;
                         Widget contenidoPopUp = Container(
@@ -1484,6 +1491,7 @@ class _RaspberriesConectadasState extends State<RaspberriesConectadas> {
                       size: 30,
                     ),
                     onTap: () async {
+                      Navigator.pop(context);
                       PopUps.popUpCargando(context, 'HABILITANDO EQUIPOS...');
                       var resultado = await actualizarEstado.updateEstadoEquipo(
                           serial: "-1",
@@ -1491,7 +1499,6 @@ class _RaspberriesConectadasState extends State<RaspberriesConectadas> {
                           listadoEquipos: listadoEquipos);
                       if (resultado == 1) {
                         setState(() {
-                          Navigator.pop(context);
                           Navigator.pop(context);
                           valorSwitchTodos = false;
                           Widget contenidoPopUp = Container(

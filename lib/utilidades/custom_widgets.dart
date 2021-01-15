@@ -1058,8 +1058,17 @@ class BotonEnviarAEquipo extends StatelessWidget {
               } else {
                 PopUps.PopUpConWidget(
                     context,
-                    Text('Error: Contenido no seleccionado',
-                        style: TextStyle(fontSize: 13)));
+                    Container(
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(40),
+                          color: HexColor('#f4f4f4')),
+                      height: 100,
+                      width: 250,
+                      child: Center(
+                        child: Text('Error: Contenido no seleccionado',
+                            style: TextStyle(fontSize: 13)),
+                      ),
+                    ));
               }
             },
             child: Text(mensaje_boton, style: TextStyle(color: Colors.white)),
@@ -1204,75 +1213,79 @@ class BotonEnviarAEquipo extends StatelessWidget {
                   color: HexColor('#f4f4f4')),
               height: 100,
               width: 250,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  Text('OK, VEA SUS PANTALLAS', style: TextStyle(fontSize: 13)),
-                  FlatButton(
-                    child: Icon(
-                      Icons.check_circle,
-                      color: HexColor('#3EDB9B'),
-                      size: 30,
-                    ),
-                    onPressed: () async {
-                      //Acá se publica
-                      if (this.publicar_rrss) {
-                        String resultado = await PublicarEnRedesSociales();
-                        if (resultado != 'Success') {
-                          Widget contenidoPopUp = Container(
-                              decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(40),
-                                  color: HexColor('#f4f4f4')),
-                              height: 100,
-                              width: 250,
-                              child: Column(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceEvenly,
-                                children: [
-                                  Text(
-                                    'Error de publicación',
-                                    textAlign: TextAlign.center,
-                                    textScaleFactor: 1.3,
-                                    style:
-                                        TextStyle(fontWeight: FontWeight.bold),
-                                  ),
-                                  SizedBox(
-                                    height: 10,
-                                  ),
-                                  Text(
-                                    'Instale, otorgue permisos y configure '
-                                    'Instagram para realizar una publicación',
-                                    textAlign: TextAlign.center,
-                                  ),
-                                  SizedBox(
-                                    height: 10,
-                                  ),
-                                  FlatButton(
-                                    child: Icon(
-                                      Icons.check_circle,
-                                      color: HexColor('#3EDB9B'),
-                                      size: 30,
+              child: Padding(
+                padding: const EdgeInsets.only(top: 13),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text('OK, VEA SUS PANTALLAS',
+                        style: TextStyle(fontSize: 13)),
+                    FlatButton(
+                      child: Icon(
+                        Icons.check_circle,
+                        color: HexColor('#3EDB9B'),
+                        size: 30,
+                      ),
+                      onPressed: () async {
+                        //Acá se publica
+                        if (this.publicar_rrss) {
+                          String resultado = await PublicarEnRedesSociales();
+                          if (resultado != 'Success') {
+                            Widget contenidoPopUp = Container(
+                                decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(40),
+                                    color: HexColor('#f4f4f4')),
+                                height: 100,
+                                width: 250,
+                                child: Column(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceEvenly,
+                                  children: [
+                                    Text(
+                                      'Error de publicación',
+                                      textAlign: TextAlign.center,
+                                      textScaleFactor: 1.3,
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.bold),
                                     ),
-                                    onPressed: () {
-                                      Navigator.pop(context);
-                                      VolverADetalleEquipo(context);
-                                    },
-                                  ),
-                                ],
-                              ));
-                          PopUps.PopUpConWidget(context, contenidoPopUp);
+                                    SizedBox(
+                                      height: 10,
+                                    ),
+                                    Text(
+                                      'Instale, otorgue permisos y configure '
+                                      'Instagram para realizar una publicación',
+                                      textAlign: TextAlign.center,
+                                    ),
+                                    SizedBox(
+                                      height: 10,
+                                    ),
+                                    FlatButton(
+                                      child: Icon(
+                                        Icons.check_circle,
+                                        color: HexColor('#3EDB9B'),
+                                        size: 30,
+                                      ),
+                                      onPressed: () {
+                                        Navigator.pop(context);
+                                        VolverADetalleEquipo(context);
+                                      },
+                                    ),
+                                  ],
+                                ));
+                            PopUps.PopUpConWidget(context, contenidoPopUp);
+                          } else {
+                            //El valor se cambia luego de publicar y proyectar
+                            //en pantallas
+                            DatosEstaticos.PublicarEnRedesSociales = false;
+                            VolverADetalleEquipo(context);
+                          }
                         } else {
-                          //El valor se cambia luego de publicar y proyectar
-                          //en pantallas
-                          DatosEstaticos.PublicarEnRedesSociales = false;
                           VolverADetalleEquipo(context);
                         }
-                      } else {
-                        VolverADetalleEquipo(context);
-                      }
-                    },
-                  ),
-                ],
+                      },
+                    ),
+                  ],
+                ),
               ),
             );
           }
@@ -1476,9 +1489,9 @@ class EventosPropios {
       //Se manipula la respuesta de datos
       Map<String, dynamic> datosRecibidos = json.decode(resp);
       DatosEstaticos.ancho_pantalla_seleccionada =
-          double.parse(datosRecibidos['anchoPantalla'].toString())*2;
+          double.parse(datosRecibidos['anchoPantalla'].toString()) * 2;
       DatosEstaticos.alto_pantalla_seleccionada =
-          double.parse(datosRecibidos['altoPantalla'].toString())*2;
+          double.parse(datosRecibidos['altoPantalla'].toString()) * 2;
       return true;
     } catch (e) {}
   }
