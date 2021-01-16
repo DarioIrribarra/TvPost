@@ -1140,6 +1140,7 @@ class CambiosSeleccion {
             SizedBox(
               width: 180,
               child: TextFormField(
+                style: TextStyle(),
                 textAlign: TextAlign.center,
                 validator: (textoEscrito) {
                   if (textoEscrito == null) {

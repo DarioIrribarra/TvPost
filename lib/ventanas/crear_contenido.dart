@@ -162,67 +162,67 @@ class _CrearContenidoState extends State<CrearContenido> {
               child: SingleChildScrollView(
                 scrollDirection: Axis.horizontal,
                 child: Container(
-                    margin: EdgeInsets.only(top: 30, bottom: 10),
-                    height: MediaQuery.of(context).size.height / 4,
-                    child: Column(
-                      children: [
-                        Row(
-                          children: [
-                            botonColorFondo(),
-                            botonJPG(),
-                            botonPNG(),
-                            botonTexto(),
-                            botonEmoji(),
-                            botonOferta(),
-                          ],
-                        ),
-                        SizedBox(
-                          height: 50,
-                        ),
-                        Container(
-                          margin: EdgeInsets.symmetric(horizontal: 100),
-                          width: 150.0,
-                          height: 30.0,
-                          decoration: new BoxDecoration(
+                  margin: EdgeInsets.only(top: 30, bottom: 10),
+                  height: MediaQuery.of(context).size.height / 4,
+                  child: Column(
+                    children: [
+                      Row(
+                        children: [
+                          botonColorFondo(),
+                          botonJPG(),
+                          botonPNG(),
+                          botonTexto(),
+                          botonEmoji(),
+                          botonOferta(),
+                        ],
+                      ),
+                      SizedBox(
+                        height: 50,
+                      ),
+                      Container(
+                        margin: EdgeInsets.symmetric(horizontal: 100),
+                        width: 150.0,
+                        height: 30.0,
+                        decoration: new BoxDecoration(
+                            borderRadius: BorderRadius.circular(20),
+                            gradient: LinearGradient(
+                                colors: [
+                                  HexColor("#0683ff"),
+                                  HexColor("#3edb9b")
+                                ],
+                                stops: [
+                                  0.1,
+                                  0.6
+                                ],
+                                begin: Alignment.topLeft,
+                                end: FractionalOffset.bottomRight)),
+                        child: FlatButton(
+                          color: Colors.transparent,
+                          shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(20),
-                              gradient: LinearGradient(
-                                  colors: [
-                                    HexColor("#0683ff"),
-                                    HexColor("#3edb9b")
-                                  ],
-                                  stops: [
-                                    0.1,
-                                    0.6
-                                  ],
-                                  begin: Alignment.topLeft,
-                                  end: FractionalOffset.bottomRight)),
-                          child: FlatButton(
-                            color: Colors.transparent,
-                            shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(20),
-                                side: BorderSide(
-                                    color: Color.fromARGB(30, 0, 0, 0))),
-                            child: Text(
-                              'CARGAR',
-                              style: TextStyle(color: Colors.white),
-                            ),
-                            onPressed: () async {
-                              PopUps.popUpCargando(context, 'Guardando Imagen');
-                              final bytes1 = await Utils.capture(key1);
-                              //Cierra popup cargando
-                              Navigator.of(context, rootNavigator: true).pop();
+                              side: BorderSide(
+                                  color: Color.fromARGB(30, 0, 0, 0))),
+                          child: Text(
+                            'CARGAR',
+                            style: TextStyle(color: Colors.white),
+                          ),
+                          onPressed: () async {
+                            PopUps.popUpCargando(context, 'Guardando Imagen');
+                            final bytes1 = await Utils.capture(key1);
+                            //Cierra popup cargando
+                            Navigator.of(context, rootNavigator: true).pop();
 
-                              /*setState(() {
+                            /*setState(() {
                                 this.bytes1 = bytes1;
                               });*/
-                              //Acá tiene que aparecer el popup para guardar imagen con nombre,
-                              //al igual que en el seleccionar imagen
-                              await _finalizarGuardado(bytes1);
-                            },
-                          ),
+                            //Acá tiene que aparecer el popup para guardar imagen con nombre,
+                            //al igual que en el seleccionar imagen
+                            await _finalizarGuardado(bytes1);
+                          },
                         ),
-                      ],
-                    ),
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ),
@@ -1359,6 +1359,7 @@ class _CrearContenidoState extends State<CrearContenido> {
                     onPressed: () async {
                       if (_keyValidadorTxtImagen.currentState.validate()) {
                         //Se abre el popup de cargando
+
                         PopUps.popUpCargando(context, 'Añadiendo imagen...');
 
                         //Se crea el archivo final del tamaño modificado
@@ -1367,9 +1368,9 @@ class _CrearContenidoState extends State<CrearContenido> {
                                 imagenEnBytes);
 
                         //Obtengo el resultado del envio
-                        var resultado =
-                            await PopUps.enviarImagen(nombreNuevaImagen, temporal)
-                                .then((value) => value);
+                        var resultado = await PopUps.enviarImagen(
+                                nombreNuevaImagen, temporal)
+                            .then((value) => value);
 
                         if (resultado) {
                           //Si el envío es correcto, se redirecciona
