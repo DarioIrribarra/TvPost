@@ -1,7 +1,11 @@
+import 'dart:convert';
 import 'dart:io';
 import 'package:image_picker/image_picker.dart';
+import 'package:network_image_to_byte/network_image_to_byte.dart';
 import 'package:tvpost_flutter/utilidades/custom_widgets.dart';
 import 'package:flutter/material.dart';
+import 'package:tvpost_flutter/utilidades/datos_estaticos.dart';
+import 'package:http/http.dart' as http;
 
 class Perfil extends StatefulWidget {
   Perfil({Key key}) : super(key: key);
@@ -11,6 +15,10 @@ class Perfil extends StatefulWidget {
 }
 
 class _PerfilState extends State<Perfil> {
+  String nombrePerfil = DatosEstaticos.listadoDatosEquipoSeleccionado[0]
+          ['f_alias']
+      .toString()
+      .toUpperCase();
   File archivoImagen;
   Color fondo = Colors.green;
   @override
@@ -26,23 +34,26 @@ class _PerfilState extends State<Perfil> {
             Text("MI PERFIL", style: TextStyle(fontSize: 16.5)),
             SizedBox(),
             Container(
-                width: 110,
-                height: 110,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(60),
-                  color: HexColor("#3EDB9B"),
-                ),
-                child: FlatButton(
-                  onPressed: () {
+              width: 110,
+              height: 110,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(60),
+                color: HexColor("#3EDB9B"),
+              ),
+              /* child: FlatButton(
+                  onPressed: () async {
                     _cargarImagen(context);
                   },
                   child: Container(
-                      width: 75,
-                      height: 100,
-                      decoration: new BoxDecoration(
-                        shape: BoxShape.circle,
-                      ),
-                      child: archivoImagen == null
+                    width: 75,
+                    height: 100,
+                    decoration: new BoxDecoration(
+                      shape: BoxShape.circle,
+                    ),*/
+              child: Image.network(
+                  "http://drioxmaster.cl/imgPerfil/$nombrePerfil.png"),
+
+              /*archivoImagen == null
                           ? Icon(
                               Icons.file_upload,
                               size: 40,
@@ -56,8 +67,8 @@ class _PerfilState extends State<Perfil> {
                               child: Image.file(
                                 archivoImagen,
                               ),
-                            )),
-                )),
+                            )*/
+            ),
             SizedBox(
               height: 1,
             ),
@@ -213,6 +224,14 @@ class _PerfilState extends State<Perfil> {
     this.setState(() {
       archivoImagen = imagen;
     });
+    String nombreNuevaImagen = DatosEstaticos.listadoDatosEquipoSeleccionado[0]
+                ['f_alias']
+            .toString()
+            .toUpperCase() +
+        ".png";
+    var resultado = true;
+    resultado = await PopUps.guardarPerfil(nombreNuevaImagen, archivoImagen)
+        .then((value) => value);
     Navigator.of(context).pop();
   }
 

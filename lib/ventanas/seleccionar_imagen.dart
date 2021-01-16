@@ -79,14 +79,9 @@ class _SeleccionarImagenState extends State<SeleccionarImagen> {
             } else {
               if (snapshot.data[0] == "") {
                 return Column(
-                  mainAxisSize: MainAxisSize.min,
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
-                    Image.asset(
-                      'imagenes/arrow.png',
-                      width: MediaQuery.of(context).size.width / 1.5,
-                    ),
-                    Padding(
-                      padding: EdgeInsets.only(top: 5),
+                    Center(
                       child: Text(
                         "Presione el ícono para agregar imágenes",
                         textScaleFactor: 1.3,
@@ -105,7 +100,9 @@ class _SeleccionarImagenState extends State<SeleccionarImagen> {
                         // webserver
                         itemCount: DatosEstaticos.listadoNombresImagenes.length,
                         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                            crossAxisCount: 3),
+                            crossAxisCount: 3,
+                            crossAxisSpacing: 5,
+                            mainAxisSpacing: 5),
                         itemBuilder: (context, index) {
                           //Por cada imagen, busca su imagen.
                           // El nombre lo toma del listado estático
@@ -164,6 +161,9 @@ class _SeleccionarImagenState extends State<SeleccionarImagen> {
                                               nombre.substring(
                                                   0, nombre.lastIndexOf('.')),
                                               textAlign: TextAlign.center,
+                                              style: TextStyle(
+                                                  fontFamily: 'textoMont',
+                                                  fontSize: 12),
                                             ),
                                           ),
                                         ),
@@ -500,7 +500,7 @@ class _SeleccionarImagenState extends State<SeleccionarImagen> {
                                           fit: BoxFit.scaleDown,
                                         ),
                                       ),
-                                      /*  Expanded(
+                                      Expanded(
                                         flex: 1,
                                         child: Padding(
                                           padding: EdgeInsets.only(top: 3),
@@ -508,9 +508,12 @@ class _SeleccionarImagenState extends State<SeleccionarImagen> {
                                             nombre.substring(
                                                 0, nombre.lastIndexOf('.')),
                                             textAlign: TextAlign.center,
+                                            style: TextStyle(
+                                                fontFamily: 'textoMont',
+                                                fontSize: 12),
                                           ),
                                         ),
-                                      ),*/
+                                      ),
                                     ],
                                   ),
                                 ),

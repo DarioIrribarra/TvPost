@@ -131,6 +131,25 @@ class PopUps {
     );
   }
 
+  static Future<bool> guardarPerfil(String nombre, File imagen) async {
+    String imabenBytes = base64Encode(imagen.readAsBytesSync());
+    String rutaSubidaImagenes =
+        'http://drioxmaster.cl/imgPerfil/subirPerfil.php';
+    //'http://' + DatosEstaticos.ipSeleccionada + '/upload_one_image2.php';
+    bool resultado = await http.post(rutaSubidaImagenes, body: {
+      "image": imabenBytes,
+      "name": nombre,
+    }).then((result) {
+      //print("Resultado: " + result.statusCode.toString());
+      if (result.statusCode == 200) {
+        return true;
+      }
+    }).catchError((error) {
+      return false;
+    });
+    return resultado;
+  }
+
   static Future<bool> enviarImagen(String nombre, File imagen) async {
     String imabenBytes = base64Encode(imagen.readAsBytesSync());
     String rutaSubidaImagenes =
