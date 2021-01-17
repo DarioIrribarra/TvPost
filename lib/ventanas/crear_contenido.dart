@@ -1378,7 +1378,11 @@ class _CrearContenidoState extends State<CrearContenido> {
                             "http://${DatosEstaticos.ipSeleccionada}/ImagenesPostTv/$nombreNuevaImagen",
                             fit: BoxFit.cover,
                           );
-                          await ComunicacionRaspberry.ReplicarImagen(nombreNuevaImagen);
+                          //Replico imagen para tamaño en 10% con reloj
+                          if (divisionLayout.contains('-3')) {
+                            await ComunicacionRaspberry.ReplicarImagen(nombreNuevaImagen);
+                          }
+
                           RedireccionarCrearLayout(
                               imagen,
                               "/var/www/html/ImagenesPostTv/$nombreNuevaImagen",
