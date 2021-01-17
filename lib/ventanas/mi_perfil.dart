@@ -1,11 +1,11 @@
-import 'dart:convert';
+//import 'dart:convert';
 import 'dart:io';
 import 'package:image_picker/image_picker.dart';
-import 'package:network_image_to_byte/network_image_to_byte.dart';
+//import 'package:network_image_to_byte/network_image_to_byte.dart';
 import 'package:tvpost_flutter/utilidades/custom_widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:tvpost_flutter/utilidades/datos_estaticos.dart';
-import 'package:http/http.dart' as http;
+//import 'package:http/http.dart' as http;
 
 class Perfil extends StatefulWidget {
   Perfil({Key key}) : super(key: key);
@@ -15,10 +15,7 @@ class Perfil extends StatefulWidget {
 }
 
 class _PerfilState extends State<Perfil> {
-  String nombrePerfil = DatosEstaticos.listadoDatosEquipoSeleccionado[0]
-          ['f_alias']
-      .toString()
-      .toUpperCase();
+  String nombrePerfil = "logo${DatosEstaticos.rutEmpresa.toString().toUpperCase()}";
   File archivoImagen;
   Color fondo = Colors.green;
   @override
