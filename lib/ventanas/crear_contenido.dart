@@ -14,6 +14,7 @@ import 'package:tvpost_flutter/utilidades_crear_contenido/emoticones.dart';
 import 'package:tvpost_flutter/utilidades_crear_contenido/utilidad_widgetimagen.dart';
 import 'package:tvpost_flutter/utilidades_crear_contenido/widgetimagen.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:tvpost_flutter/custom_icons_icons.dart';
 
 class CrearContenido extends StatefulWidget {
   CrearContenido({Key key}) : super(key: key);
@@ -159,72 +160,67 @@ class _CrearContenidoState extends State<CrearContenido> {
           ),
           Expanded(
             flex: 1,
-            child: SingleChildScrollView(
-              child: SingleChildScrollView(
-                scrollDirection: Axis.horizontal,
-                child: Container(
-                    margin: EdgeInsets.only(top: 30, bottom: 10),
-                    height: MediaQuery.of(context).size.height / 4,
-                    child: Column(
-                      children: [
-                        Row(
-                          children: [
-                            botonColorFondo(),
-                            botonJPG(),
-                            botonPNG(),
-                            botonTexto(),
-                            botonEmoji(),
-                            botonOferta(),
-                          ],
-                        ),
-                        SizedBox(
-                          height: 50,
-                        ),
-                        Container(
-                          margin: EdgeInsets.symmetric(horizontal: 100),
-                          width: 150.0,
-                          height: 30.0,
-                          decoration: new BoxDecoration(
-                              borderRadius: BorderRadius.circular(20),
-                              gradient: LinearGradient(
-                                  colors: [
-                                    HexColor("#0683ff"),
-                                    HexColor("#3edb9b")
-                                  ],
-                                  stops: [
-                                    0.1,
-                                    0.6
-                                  ],
-                                  begin: Alignment.topLeft,
-                                  end: FractionalOffset.bottomRight)),
-                          child: FlatButton(
-                            color: Colors.transparent,
-                            shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(20),
-                                side: BorderSide(
-                                    color: Color.fromARGB(30, 0, 0, 0))),
-                            child: Text(
-                              'CARGAR',
-                              style: TextStyle(color: Colors.white),
-                            ),
-                            onPressed: () async {
-                              PopUps.popUpCargando(context, 'Guardando Imagen');
-                              final bytes1 = await Utils.capture(key1);
-                              //Cierra popup cargando
-                              Navigator.of(context, rootNavigator: true).pop();
+            child: Container(
+              margin: EdgeInsets.only(top: 30, bottom: 10),
+              height: MediaQuery.of(context).size.height / 4,
+              child: Column(
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      SizedBox(
+                        width: 1,
+                      ),
+                      botonColorFondo(),
+                      botonJPG(),
+                      botonPNG(),
+                      botonTexto(),
+                      botonEmoji(),
+                      botonOferta(),
+                      SizedBox(
+                        width: 20,
+                      )
+                    ],
+                  ),
+                  SizedBox(
+                    height: 50,
+                  ),
+                  Container(
+                    margin: EdgeInsets.symmetric(horizontal: 100),
+                    width: 150.0,
+                    height: 30.0,
+                    decoration: new BoxDecoration(
+                        borderRadius: BorderRadius.circular(20),
+                        gradient: LinearGradient(
+                            colors: [HexColor("#0683ff"), HexColor("#3edb9b")],
+                            stops: [0.1, 0.6],
+                            begin: Alignment.topLeft,
+                            end: FractionalOffset.bottomRight)),
+                    child: FlatButton(
+                      color: Colors.transparent,
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(20),
+                          side: BorderSide(color: Color.fromARGB(30, 0, 0, 0))),
+                      child: Text(
+                        'CARGAR',
+                        style: TextStyle(color: Colors.white),
+                      ),
+                      onPressed: () async {
+                        PopUps.popUpCargando(context, 'Guardando Imagen');
+                        final bytes1 = await Utils.capture(key1);
+                        //Cierra popup cargando
+                        Navigator.of(context, rootNavigator: true).pop();
 
-                              /*setState(() {
-                                this.bytes1 = bytes1;
-                              });*/
-                              //Acá tiene que aparecer el popup para guardar imagen con nombre,
-                              //al igual que en el seleccionar imagen
-                              await _finalizarGuardado(bytes1);
-                            },
-                          ),
-                        ),
-                      ],
+                        /*setState(() {
+                            this.bytes1 = bytes1;
+                          });*/
+                        //Acá tiene que aparecer el popup para guardar imagen con nombre,
+                        //al igual que en el seleccionar imagen
+                        await _finalizarGuardado(bytes1);
+                      },
                     ),
-                ),
+                  ),
+                ],
               ),
             ),
           ),
@@ -656,46 +652,32 @@ class _CrearContenidoState extends State<CrearContenido> {
       bytes != null ? Image.memory(bytes) : Container();
 
   Widget botonJPG() {
-    return Container(
-      margin: EdgeInsets.only(left: 10),
-      width: 55,
-      child: RaisedButton(
+    return SizedBox(
+      width: 50,
+      child: FlatButton(
         onPressed: () {
           _showChoiceDialog2(context);
         },
         child: Icon(
-          Icons.photo_size_select_actual,
-          color: Colors.white,
-        ),
-        color: Colors.lightBlue,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(18.0),
-          side: BorderSide(
-            color: Color.fromARGB(30, 0, 0, 0),
-          ),
+          CustomIcons.jpg,
+          size: 35,
+          color: HexColor('#0683FF'),
         ),
       ),
     );
   }
 
   Widget botonColorFondo() {
-    return Container(
-      margin: EdgeInsets.only(left: 5),
-      width: 55,
-      child: RaisedButton(
+    return SizedBox(
+      width: 50,
+      child: FlatButton(
         onPressed: () {
           _colorFondo(context);
         },
         child: Icon(
-          Icons.colorize,
-          color: Colors.white,
-        ),
-        color: Colors.lightBlue,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(20),
-          side: BorderSide(
-            color: Color.fromARGB(30, 0, 0, 0),
-          ),
+          CustomIcons.color,
+          size: 35,
+          color: HexColor('#0683FF'),
         ),
       ),
     );
@@ -762,46 +744,32 @@ class _CrearContenidoState extends State<CrearContenido> {
   }
 
   Widget botonPNG() {
-    return Container(
-      margin: EdgeInsets.only(left: 5),
-      width: 55,
-      child: RaisedButton(
+    return SizedBox(
+      width: 50,
+      child: FlatButton(
         onPressed: () {
           _showChoiceDialog(context);
         },
         child: Icon(
-          Icons.add_photo_alternate,
-          color: Colors.white,
-        ),
-        color: Colors.lightBlue,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(18.0),
-          side: BorderSide(
-            color: Color.fromARGB(30, 0, 0, 0),
-          ),
+          CustomIcons.png,
+          size: 35,
+          color: HexColor('#0683FF'),
         ),
       ),
     );
   }
 
   Widget botonTexto() {
-    return Container(
-      margin: EdgeInsets.only(left: 5),
-      width: 55,
-      child: RaisedButton(
+    return SizedBox(
+      width: 50,
+      child: FlatButton(
         onPressed: () {
-          return _eltexto(context);
+          _eltexto(context);
         },
         child: Icon(
-          Icons.text_fields,
-          color: Colors.white,
-        ),
-        color: Colors.lightBlue,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(20),
-          side: BorderSide(
-            color: Color.fromARGB(30, 0, 0, 0),
-          ),
+          CustomIcons.txt,
+          size: 35,
+          color: HexColor('#0683FF'),
         ),
       ),
     );
@@ -923,46 +891,32 @@ class _CrearContenidoState extends State<CrearContenido> {
   }
 
   Widget botonEmoji() {
-    return Container(
-      margin: EdgeInsets.only(left: 5),
-      width: 55,
-      child: RaisedButton(
+    return SizedBox(
+      width: 50,
+      child: FlatButton(
         onPressed: () {
-          return showAlertDialog(context);
+          showAlertDialog(context);
         },
         child: Icon(
-          Icons.tag_faces,
-          color: Colors.white,
-        ),
-        color: Colors.lightBlue,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(20),
-          side: BorderSide(
-            color: Color.fromARGB(30, 0, 0, 0),
-          ),
+          CustomIcons.emoji,
+          size: 35,
+          color: HexColor('#0683FF'),
         ),
       ),
     );
   }
 
   Widget botonOferta() {
-    return Container(
-      margin: EdgeInsets.only(left: 5),
-      width: 55,
-      child: RaisedButton(
+    return SizedBox(
+      width: 50,
+      child: FlatButton(
         onPressed: () {
           return PopUpOferta();
         },
         child: Icon(
-          Icons.local_offer,
-          color: Colors.white,
-        ),
-        color: Colors.lightBlue,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(20),
-          side: BorderSide(
-            color: Color.fromARGB(30, 0, 0, 0),
-          ),
+          CustomIcons.oferta,
+          size: 35,
+          color: HexColor('#0683FF'),
         ),
       ),
     );
@@ -1360,6 +1314,7 @@ class _CrearContenidoState extends State<CrearContenido> {
                     onPressed: () async {
                       if (_keyValidadorTxtImagen.currentState.validate()) {
                         //Se abre el popup de cargando
+
                         PopUps.popUpCargando(context, 'Añadiendo imagen...');
 
                         //Se crea el archivo final del tamaño modificado
@@ -1368,9 +1323,9 @@ class _CrearContenidoState extends State<CrearContenido> {
                                 imagenEnBytes);
 
                         //Obtengo el resultado del envio
-                        var resultado =
-                            await PopUps.enviarImagen(nombreNuevaImagen, temporal)
-                                .then((value) => value);
+                        var resultado = await PopUps.enviarImagen(
+                                nombreNuevaImagen, temporal)
+                            .then((value) => value);
 
                         if (resultado) {
                           //Si el envío es correcto, se redirecciona

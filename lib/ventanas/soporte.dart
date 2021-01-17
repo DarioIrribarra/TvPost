@@ -27,8 +27,8 @@ class _SoporteState extends State<Soporte> {
             height: 110,
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(60),
-              color: HexColor("#3EDB9B"),
             ),
+            child: Image.asset('imagenes/soporte.png'),
             //color: Colors.greenAccent,
             //decoration: BoxDecoration(borderRadius: BorderRadius.circular(5),),
           ),

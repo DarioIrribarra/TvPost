@@ -83,6 +83,9 @@ flutter:
      - family: tvlapiz
        fonts:
          - asset: iconos/Tvlapiz.ttf  
+     - family:  CustomIcons
+       fonts:
+       - asset: iconos/CustomIcons.ttf
    
      
        

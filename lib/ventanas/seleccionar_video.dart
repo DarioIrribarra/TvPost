@@ -153,6 +153,9 @@ class _SeleccionarVideoState extends State<SeleccionarVideo> {
                                           nombre.substring(
                                               0, nombre.lastIndexOf('.')),
                                           textAlign: TextAlign.center,
+                                          style: TextStyle(
+                                              fontFamily: 'textoMont',
+                                              fontSize: 12),
                                         ),
                                       ),
                                     ),
@@ -311,6 +314,9 @@ class _SeleccionarVideoState extends State<SeleccionarVideo> {
                                           nombre.substring(
                                               0, nombre.lastIndexOf('.')),
                                           textAlign: TextAlign.center,
+                                          style: TextStyle(
+                                              fontFamily: 'textoMont',
+                                              fontSize: 12),
                                         ),
                                       ),
                                     ),
