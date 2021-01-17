@@ -706,6 +706,9 @@ class _SeleccionarImagenState extends State<SeleccionarImagen> {
                                   .then((value) => value);
 
                               if (resultado) {
+                                //Replica la imagen para porción 10%
+                                await ComunicacionRaspberry.ReplicarImagen(nombreNuevaImagen);
+
                                 if (rutaDeDondeViene != null) {
                                   Navigator.pop(context);
                                   Navigator.pop(context);
@@ -745,7 +748,8 @@ class _SeleccionarImagenState extends State<SeleccionarImagen> {
             ),
           ),
         );
-      } else {
+      }
+      else {
         String nombreNuevaImagen = "";
         String extension;
         File imagenFinal;
@@ -793,6 +797,8 @@ class _SeleccionarImagenState extends State<SeleccionarImagen> {
                           );
                           break;
                         }
+                        //Replica imagen para porción 10%
+                        await ComunicacionRaspberry.ReplicarImagen(nombreNuevaImagen);
                       }
                       Navigator.pop(context);
                       Navigator.pop(context);
