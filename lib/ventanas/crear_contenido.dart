@@ -1334,9 +1334,7 @@ class _CrearContenidoState extends State<CrearContenido> {
                             fit: BoxFit.cover,
                           );
                           //Replico imagen para tamaño en 10% con reloj
-                          if (divisionLayout.contains('-3')) {
-                            await ComunicacionRaspberry.ReplicarImagen(nombreNuevaImagen);
-                          }
+                          await ComunicacionRaspberry.ReplicarImagen(nombreNuevaImagen);
 
                           RedireccionarCrearLayout(
                               imagen,
