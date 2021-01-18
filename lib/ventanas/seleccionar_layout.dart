@@ -190,7 +190,10 @@ class _SeleccionarLayoutState extends State<SeleccionarLayout> {
                     }
                   }
                   return Center(
-                    child: CircularProgressIndicator(),
+                    child: CircularProgressIndicator(
+                      valueColor:
+                          AlwaysStoppedAnimation<Color>(HexColor("#FC4C8B")),
+                    ),
                   );
                 },
               )),

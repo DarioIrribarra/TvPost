@@ -75,7 +75,7 @@ flutter:
   fonts:
      - family: tituloAxis
        fonts:
-         - asset: fonts/axis.ttf
+         - asset: fonts/axis.ttf 
   #         style: italic
      - family: textoMont
        fonts:

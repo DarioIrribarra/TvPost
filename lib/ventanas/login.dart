@@ -1,9 +1,7 @@
 import 'dart:io';
 import 'dart:ui';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:tvpost_flutter/utilidades/obtiene_datos_webservice.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -42,7 +40,9 @@ class _LoginState extends State<Login> {
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
-        onWillPop: () => exit(0),
+        onWillPop: () {
+          exit(0);
+        },
         //Acá debe preguntar si quiere cerrar la app y matarla
         child: Scaffold(
           body: Container(

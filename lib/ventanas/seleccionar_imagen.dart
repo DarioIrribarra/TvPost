@@ -213,11 +213,15 @@ class _SeleccionarImagenState extends State<SeleccionarImagen> {
           }
           if (snapshot.connectionState == ConnectionState.waiting) {
             return Center(
-              child: CircularProgressIndicator(),
+              child: CircularProgressIndicator(
+                valueColor: AlwaysStoppedAnimation<Color>(HexColor("#FC4C8B")),
+              ),
             );
           } else {
             return Center(
-              child: CircularProgressIndicator(),
+              child: CircularProgressIndicator(
+                valueColor: AlwaysStoppedAnimation<Color>(HexColor("#FC4C8B")),
+              ),
             );
           }
         },
@@ -537,11 +541,15 @@ class _SeleccionarImagenState extends State<SeleccionarImagen> {
           }
           if (snapshot.connectionState == ConnectionState.waiting) {
             return Center(
-              child: CircularProgressIndicator(),
+              child: CircularProgressIndicator(
+                valueColor: AlwaysStoppedAnimation<Color>(HexColor("#FC4C8B")),
+              ),
             );
           } else {
             return Center(
-              child: CircularProgressIndicator(),
+              child: CircularProgressIndicator(
+                valueColor: AlwaysStoppedAnimation<Color>(HexColor("#FC4C8B")),
+              ),
             );
           }
         },
@@ -707,7 +715,8 @@ class _SeleccionarImagenState extends State<SeleccionarImagen> {
 
                               if (resultado) {
                                 //Replica la imagen para porción 10%
-                                await ComunicacionRaspberry.ReplicarImagen(nombreNuevaImagen);
+                                await ComunicacionRaspberry.ReplicarImagen(
+                                    nombreNuevaImagen);
 
                                 if (rutaDeDondeViene != null) {
                                   Navigator.pop(context);
@@ -748,8 +757,7 @@ class _SeleccionarImagenState extends State<SeleccionarImagen> {
             ),
           ),
         );
-      }
-      else {
+      } else {
         String nombreNuevaImagen = "";
         String extension;
         File imagenFinal;
@@ -798,7 +806,8 @@ class _SeleccionarImagenState extends State<SeleccionarImagen> {
                           break;
                         }
                         //Replica imagen para porción 10%
-                        await ComunicacionRaspberry.ReplicarImagen(nombreNuevaImagen);
+                        await ComunicacionRaspberry.ReplicarImagen(
+                            nombreNuevaImagen);
                       }
                       Navigator.pop(context);
                       Navigator.pop(context);

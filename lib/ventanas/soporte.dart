@@ -32,63 +32,6 @@ class _SoporteState extends State<Soporte> {
             //color: Colors.greenAccent,
             //decoration: BoxDecoration(borderRadius: BorderRadius.circular(5),),
           ),
-          Padding(
-            padding: EdgeInsets.only(top: 20),
-            child: Container(
-                decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(20),
-                    color: Colors.grey[200]),
-                width: MediaQuery.of(context).size.width / 1.2,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    SizedBox(),
-                    Icon(
-                      Icons.sentiment_very_satisfied,
-                      color: Colors.grey,
-                    ),
-                    Container(
-                      height: 30,
-                      width: 1,
-                      color: HexColor("#3EDB9B"),
-                    ),
-                    Text(
-                      "Escríbe un mensaje...",
-                      style: TextStyle(
-                        fontFamily: 'textoMont',
-                        fontSize: 12,
-                      ),
-                    ),
-                    SizedBox(
-                      width: 10,
-                    ),
-                    Icon(
-                      Icons.attach_file_outlined,
-                      color: Colors.grey,
-                    ),
-                    Icon(
-                      Icons.add_a_photo_sharp,
-                      color: Colors.grey,
-                    ),
-                    Container(
-                      width: 45,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.only(
-                            topRight: Radius.circular(20),
-                            bottomRight: Radius.circular(20)),
-                        color: Colors.greenAccent,
-                      ),
-                      child: FlatButton(
-                          padding: EdgeInsets.only(right: 3),
-                          onPressed: () {},
-                          child: Icon(
-                            Icons.attach_money,
-                            color: Colors.white,
-                          )),
-                    )
-                  ],
-                )),
-          ),
           Text("CONTÁCTANOS", style: TextStyle(fontSize: 13)),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,

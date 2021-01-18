@@ -30,7 +30,9 @@ class PopUps {
           child:
               Row(mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: [
             Center(child: Text(texto, style: TextStyle(fontSize: 13))),
-            CircularProgressIndicator()
+            CircularProgressIndicator(
+              valueColor: AlwaysStoppedAnimation<Color>(HexColor("#FC4C8B")),
+            )
           ])),
     );
     showDialog(

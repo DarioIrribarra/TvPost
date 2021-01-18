@@ -218,11 +218,15 @@ class _SeleccionarVideoState extends State<SeleccionarVideo> {
           }
           if (snapshot.connectionState == ConnectionState.waiting) {
             return Center(
-              child: CircularProgressIndicator(),
+              child: CircularProgressIndicator(
+                valueColor: AlwaysStoppedAnimation<Color>(HexColor("#FC4C8B")),
+              ),
             );
           } else {
             return Center(
-              child: CircularProgressIndicator(),
+              child: CircularProgressIndicator(
+                valueColor: AlwaysStoppedAnimation<Color>(HexColor("#FC4C8B")),
+              ),
             );
           }
         },
@@ -454,11 +458,15 @@ class _SeleccionarVideoState extends State<SeleccionarVideo> {
           }
           if (snapshot.connectionState == ConnectionState.waiting) {
             return Center(
-              child: CircularProgressIndicator(),
+              child: CircularProgressIndicator(
+                valueColor: AlwaysStoppedAnimation<Color>(HexColor("#FC4C8B")),
+              ),
             );
           } else {
             return Center(
-              child: CircularProgressIndicator(),
+              child: CircularProgressIndicator(
+                valueColor: AlwaysStoppedAnimation<Color>(HexColor("#FC4C8B")),
+              ),
             );
           }
         },

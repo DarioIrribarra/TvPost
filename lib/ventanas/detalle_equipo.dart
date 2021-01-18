@@ -406,7 +406,9 @@ class _DetalleEquipoState extends State<DetalleEquipo> {
               );
             }
           } else {
-            return CircularProgressIndicator();
+            return CircularProgressIndicator(
+              valueColor: AlwaysStoppedAnimation<Color>(HexColor("#FC4C8B")),
+            );
           }
         },
       );
