@@ -233,110 +233,141 @@ class MenuAppBar {
       {List<int> listadoEquipos,
       BuildContext context,
       String rutaVentana,
-      String rutaProveniente}) {
+      String rutaProveniente,
+      bool necesitaEquipoConectado}) {
     //print(ModalRoute.of(context).settings.name);
-    if (listadoEquipos.length > 0) {
-      if (DatosEstaticos.ipSeleccionada != null) {
-        //Navigator.pop(context);
-        Navigator.popAndPushNamed(context, rutaVentana, arguments: {
-          'division_layout': '0',
-          'ruta_proveniente': rutaProveniente,
-        });
-        //Muestro listado de equipos a elegir
-      } else {
-        double altura = 30.0 + (30 * listadoEquipos.length);
-        if (altura >= MediaQuery.of(context).size.height) {
-          altura = MediaQuery.of(context).size.height;
-        }
-        List<Widget> listadoHabilitados = [];
-        listadoEquipos.forEach((element) {
-          //print(element);
-          Container item = Container(
-            decoration: BoxDecoration(
+    if (necesitaEquipoConectado){
+      if (listadoEquipos.length > 0) {
+        if (DatosEstaticos.ipSeleccionada != null) {
+          //Navigator.pop(context);
+          Navigator.popAndPushNamed(context, rutaVentana, arguments: {
+            'division_layout': '0',
+            'ruta_proveniente': rutaProveniente,
+          });
+          //Muestro listado de equipos a elegir
+          //Para que el listado funcione correctamente, por cada equipo se añade
+          //altura y si llega al máximo se deja de añadir. Esto hace que el efecto
+          //de deslizar funcione correctamente
+        } else {
+          double altura = 60.0 + (30 * listadoEquipos.length);
+          if (altura >= MediaQuery.of(context).size.height) {
+            altura = MediaQuery.of(context).size.height;
+          }
+          //Se crea el arreglo que almacena los equipos habilitados
+          List<Widget> listadoHabilitados = [];
+
+          //Cada elemento representa un item dentro del listado de los
+          //Equipos conectados que aparecen para elegir
+          listadoEquipos.forEach((element) {
+            //print(element);
+            Container item = Container(
+              /*decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(40),
-                color: HexColor('#f4f4f4')),
-            height: 100,
-            width: 250,
-            child: ListTile(
-              contentPadding: EdgeInsets.all(0),
-              leading: Icon(Icons.screen_share),
-              title: Text(ObtieneDatos.listadoEquipos[element]['f_alias']
-                  .toString()
-                  .toUpperCase()),
-              onTap: () {
-                DatosEstaticos.ipSeleccionada =
-                    ObtieneDatos.listadoEquipos[element]['f_ip'].toString();
-                Navigator.pop(context);
-                //Navigator.pop(context);
-                Navigator.popAndPushNamed(context, rutaVentana, arguments: {
-                  'division_layout': '0',
-                  'ruta_proveniente': rutaProveniente,
-                });
-              },
-            ),
-          );
-          listadoHabilitados.add(item);
-        });
-        PopUps.PopUpConWidget(
-          context,
-          Container(
-            decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(40),
-                color: HexColor('#f4f4f4')),
-            //height: 100,
-            width: 250,
-            /* width: MediaQuery.of(context).size.width / 2,*/
-            height: altura,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                Container(
-                  height: 20,
-                  child: Text('EQUIPOS CONECTADOS',
-                      textAlign: TextAlign.center,
-                      style: TextStyle(fontSize: 13)),
+                color: HexColor('#f4f4f4')),*/
+              height: MediaQuery.of(context).size.height/10,
+              width: 250,
+              child: ListTile(
+                contentPadding: EdgeInsets.only(
+                    left: MediaQuery.of(context).size.width/6
                 ),
-                Container(
-                  height: altura - 20,
-                  child: ListView(
-                    children: listadoHabilitados,
-                  ),
+                leading: Icon(Icons.screen_share, color: Colors.blueAccent,),
+                title: Text(
+                  ObtieneDatos.listadoEquipos[element]['f_alias']
+                      .toString().toUpperCase(),
+                  //'DARIO CLON 1',
+                  style: TextStyle(fontSize: 12,),
                 ),
-              ],
-            ),
-          ),
-        );
-      }
-    } else {
-      PopUps.PopUpConWidget(
-          context,
-          Container(
+                onTap: () {
+                  DatosEstaticos.ipSeleccionada =
+                      ObtieneDatos.listadoEquipos[element]['f_ip'].toString();
+                  Navigator.pop(context);
+                  //Navigator.pop(context);
+                  Navigator.popAndPushNamed(context, rutaVentana, arguments: {
+                    'division_layout': '0',
+                    'ruta_proveniente': rutaProveniente,
+                  });
+                },
+              ),
+            );
+            listadoHabilitados.add(item);
+          });
+          PopUps.PopUpConWidget(
+            context,
+            Container(
               decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(40),
                   color: HexColor('#f4f4f4')),
-              height: 100,
-              width: 250,
-              child: Center(
-                  child: Text(
-                'USTED NO POSEE EQUIPOS CONECTADOS',
-                textAlign: TextAlign.center,
-              ))));
+              width: MediaQuery.of(context).size.width,
+              height: altura,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  Container(
+                    margin: EdgeInsets.only(top: 10, bottom: 10),
+                    height: 10,
+                    child: Text('EQUIPOS CONECTADOS',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(fontSize: 13)
+                    ),
+                  ),
+                  Container(
+                    height: altura - 30,
+                    child: ListView(
+                      children: listadoHabilitados,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          );
+        }
+      } else {
+        PopUps.PopUpConWidget(
+            context,
+            Container(
+                decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(40),
+                    color: HexColor('#f4f4f4')),
+                height: 100,
+                width: 250,
+                child: Center(
+                    child: Text(
+                      'USTED NO POSEE EQUIPOS CONECTADOS',
+                      textAlign: TextAlign.center,
+                    ))));
+      }
+    } else {
+      Navigator.popAndPushNamed(context, rutaVentana, arguments: {
+          'division_layout': '0',
+          'ruta_proveniente': rutaProveniente,
+        }
+      );
     }
   }
 
   static void SeleccionMenu(String itemSeleccionado, BuildContext context) {
+
+    //Se toma la ruta base desde donde se clicó el menú
     String rutaProveniente = ModalRoute.of(context).settings.name;
-    //Listado de equipos que tienen conexión
+
+    //Selección Mis Pantallas
     if (itemSeleccionado == MenuAppBar.misPantallas) {}
+
+    //Selección de Imagenes
     if (itemSeleccionado == MenuAppBar.administrarImagenes) {
       //Se limpia listado de videos seleccionados
       SeleccionaVideo.videosSelecionados.clear();
 
+      //Si la ruta seleccionada es la misma ventana, no se cambia
       if (rutaProveniente == "/seleccionar_imagen") {
         return;
       }
 
-      if (rutaProveniente == "/seleccionar_video") {
+      if (
+          rutaProveniente == "/seleccionar_video"  ||
+          rutaProveniente == "/soporte"  ||
+          rutaProveniente == "/miPerfil"
+      ) {
         //se utiliza ruta ya almacenada
         rutaProveniente = RutasRedireccionMenu.RutaDeDondeViene;
       } else {
@@ -345,18 +376,61 @@ class MenuAppBar {
       }
 
       //print(RutasRedireccionMenu.RutaDeDondeViene);
+      //List<int> listaTest = [1, 2, 3, 4, 5, 6,7, 8, 9, 10, 11];
       Validacion(
+          necesitaEquipoConectado: true,
+          //listadoEquipos: listaTest,
           listadoEquipos: DatosEstaticos.listadoIndexEquiposConectados,
           context: context,
           rutaVentana: "/seleccionar_imagen",
-          rutaProveniente: rutaProveniente);
+          rutaProveniente: rutaProveniente
+      );
     }
+
+    //Selección Videos
     if (itemSeleccionado == MenuAppBar.administrarVideos) {
+
+      //Si la ruta seleccionada es la misma ventana, no se cambia
       if (rutaProveniente == "/seleccionar_video") {
         return;
       }
 
-      if (rutaProveniente == "/seleccionar_imagen") {
+      if  (
+            rutaProveniente == "/seleccionar_imagen"  ||
+            rutaProveniente == "/soporte"  ||
+            rutaProveniente == "/miPerfil"
+          ) {
+            //se utiliza ruta ya almacenada
+            rutaProveniente = RutasRedireccionMenu.RutaDeDondeViene;
+          } else {
+            //Se limpia listado de videos seleccionados
+            SeleccionaVideo.videosSelecionados.clear();
+            //Se reasigna la ruta
+            RutasRedireccionMenu.RutaDeDondeViene = rutaProveniente;
+          }
+
+      //print(RutasRedireccionMenu.RutaDeDondeViene);
+      Validacion(
+          necesitaEquipoConectado: true,
+          listadoEquipos: DatosEstaticos.listadoIndexEquiposConectados,
+          context: context,
+          rutaVentana: "/seleccionar_video",
+          rutaProveniente: rutaProveniente,
+      );
+    }
+
+    //Selección Soporte
+    if (itemSeleccionado == MenuAppBar.soporte) {
+      //Si la ruta seleccionada es la misma ventana, no se cambia
+      if (rutaProveniente == "/soporte") {
+        return;
+      }
+
+      if  (
+      rutaProveniente == "/seleccionar_imagen"  ||
+          rutaProveniente == "/seleccionar_video"  ||
+          rutaProveniente == "/miPerfil"
+      ) {
         //se utiliza ruta ya almacenada
         rutaProveniente = RutasRedireccionMenu.RutaDeDondeViene;
       } else {
@@ -366,30 +440,47 @@ class MenuAppBar {
         RutasRedireccionMenu.RutaDeDondeViene = rutaProveniente;
       }
 
-      //print(RutasRedireccionMenu.RutaDeDondeViene);
       Validacion(
-          listadoEquipos: DatosEstaticos.listadoIndexEquiposConectados,
-          context: context,
-          rutaVentana: "/seleccionar_video",
-          rutaProveniente: rutaProveniente);
-    }
-    if (itemSeleccionado == MenuAppBar.soporte) {
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => Soporte(),
-        ),
+        necesitaEquipoConectado: false,
+        listadoEquipos: DatosEstaticos.listadoIndexEquiposConectados,
+        context: context,
+        rutaVentana: "/soporte",
+        rutaProveniente: rutaProveniente,
       );
       //return Navigator.popUntil(context,  ModalRoute.of(context).('/soporte'));
     }
+
+    //Selección Mi perfil
     if (itemSeleccionado == MenuAppBar.miPerfil) {
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => Perfil(),
-        ),
+      //Si la ruta seleccionada es la misma ventana, no se cambia
+      if (rutaProveniente == "/miPerfil") {
+        return;
+      }
+
+      if  (
+          rutaProveniente == "/seleccionar_imagen"  ||
+          rutaProveniente == "/seleccionar_video"  ||
+          rutaProveniente == "/soporte"
+      ) {
+        //se utiliza ruta ya almacenada
+        rutaProveniente = RutasRedireccionMenu.RutaDeDondeViene;
+      } else {
+        //Se limpia listado de videos seleccionados
+        SeleccionaVideo.videosSelecionados.clear();
+        //Se reasigna la ruta
+        RutasRedireccionMenu.RutaDeDondeViene = rutaProveniente;
+      }
+
+      Validacion(
+        necesitaEquipoConectado: false,
+        listadoEquipos: DatosEstaticos.listadoIndexEquiposConectados,
+        context: context,
+        rutaVentana: "/miPerfil",
+        rutaProveniente: rutaProveniente,
       );
     }
+
+    //Selección Cerrar Sesión
     if (itemSeleccionado == MenuAppBar.cerrarSesion) {
       Widget contenidoPopUp = Container(
           decoration: BoxDecoration(

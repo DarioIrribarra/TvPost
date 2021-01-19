@@ -1,5 +1,6 @@
 import 'package:tvpost_flutter/utilidades/custom_widgets.dart';
 import 'package:flutter/material.dart';
+import 'package:tvpost_flutter/utilidades/datos_estaticos.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'dart:io';
 
@@ -11,32 +12,71 @@ class Soporte extends StatefulWidget {
 }
 
 class _SoporteState extends State<Soporte> {
+  Map datosDesdeVentanaAnterior = {};
+  String rutaDeDondeViene;
+  String divisionLayout;
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: CustomAppBar(),
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        children: [
-          Text(
-            "SOPORTE TÉCNICO",
-            style: TextStyle(fontSize: 16.5),
-          ),
-          Container(
-            width: 110,
-            height: 110,
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(60),
+    //Tomo los argumentos que vienen de la ruta anterior
+    datosDesdeVentanaAnterior = ModalRoute.of(context).settings.arguments;
+    if (datosDesdeVentanaAnterior != null) {
+      divisionLayout = datosDesdeVentanaAnterior['division_layout'];
+      rutaDeDondeViene = datosDesdeVentanaAnterior['ruta_proveniente'];
+    }
+    return WillPopScope(
+      onWillPop: () {
+        //Acá si la ruta no viene nula, se toma esa como el destino
+        //Y se le pasan argumentos necesarios para ciertas ventanas
+        if (rutaDeDondeViene != null) {
+          Navigator.popAndPushNamed(context, rutaDeDondeViene, arguments: {
+            "indexEquipoGrid": DatosEstaticos.indexSeleccionado,
+            "division_layout": DatosEstaticos.divisionLayout,
+          });
+        } else {
+          Navigator.pop(context);
+        }
+        return;
+      },
+      child: Scaffold(
+        appBar: CustomAppBar(),
+        body: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            Text(
+              "SOPORTE TÉCNICO",
+              style: TextStyle(fontSize: 16.5),
             ),
-            child: Image.asset('imagenes/soporte.png'),
-            //color: Colors.greenAccent,
-            //decoration: BoxDecoration(borderRadius: BorderRadius.circular(5),),
-          ),
-          Text("CONTÁCTANOS", style: TextStyle(fontSize: 13)),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              Container(
+            Container(
+              width: 110,
+              height: 110,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(60),
+              ),
+              child: Image.asset('imagenes/soporte.png'),
+              //color: Colors.greenAccent,
+              //decoration: BoxDecoration(borderRadius: BorderRadius.circular(5),),
+            ),
+            Text("CONTÁCTANOS", style: TextStyle(fontSize: 13)),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                Container(
+                    width: 70,
+                    height: 40,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(20),
+                      color: Colors.greenAccent,
+                    ),
+                    //color: Colors.greenAccent,
+                    child: FlatButton(
+                        onPressed: () {
+                          wsp(
+                              phone: "+56933710386",
+                              message: 'Hola, solicito ayuda!!!');
+                        },
+                        child: Icon(Icons.phone))),
+                Container(
                   width: 70,
                   height: 40,
                   decoration: BoxDecoration(
@@ -46,88 +86,74 @@ class _SoporteState extends State<Soporte> {
                   //color: Colors.greenAccent,
                   child: FlatButton(
                       onPressed: () {
-                        wsp(
-                            phone: "+56933710386",
-                            message: 'Hola, solicito ayuda!!!');
+                        llamada("tel:+56933710386");
                       },
-                      child: Icon(Icons.phone))),
-              Container(
-                width: 70,
-                height: 40,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(20),
-                  color: Colors.greenAccent,
+                      child: Icon(Icons.phone_android)),
                 ),
-                //color: Colors.greenAccent,
-                child: FlatButton(
-                    onPressed: () {
-                      llamada("tel:+56933710386");
-                    },
-                    child: Icon(Icons.phone_android)),
-              ),
-              Container(
-                width: 70,
-                height: 40,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(20),
-                  color: Colors.greenAccent,
+                Container(
+                  width: 70,
+                  height: 40,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(20),
+                    color: Colors.greenAccent,
+                  ),
+                  //color: Colors.greenAccent,
+                  child: FlatButton(
+                      onPressed: () {
+                        correo("mailto:d.saezzcc@gmail.com");
+                      },
+                      child: Icon(Icons.mail_outline)),
                 ),
-                //color: Colors.greenAccent,
-                child: FlatButton(
-                    onPressed: () {
-                      correo("mailto:d.saezzcc@gmail.com");
-                    },
-                    child: Icon(Icons.mail_outline)),
-              ),
-            ],
-          ),
-          SizedBox(
-            height: 20,
-          ),
-          Container(
-              padding: EdgeInsets.only(top: 20),
-              height: MediaQuery.of(context).size.height / 7,
-              width: MediaQuery.of(context).size.width,
-              child: Column(
-                children: [
-                  Text(
-                    "Empresa de Diseño y Desarrollo Producnova",
-                    style: TextStyle(
-                      fontFamily: 'textoMont',
-                      fontSize: 12,
+              ],
+            ),
+            SizedBox(
+              height: 20,
+            ),
+            Container(
+                padding: EdgeInsets.only(top: 20),
+                height: MediaQuery.of(context).size.height / 7,
+                width: MediaQuery.of(context).size.width,
+                child: Column(
+                  children: [
+                    Text(
+                      "Empresa de Diseño y Desarrollo Producnova",
+                      style: TextStyle(
+                        fontFamily: 'textoMont',
+                        fontSize: 12,
+                      ),
                     ),
-                  ),
-                  Text(
-                    "Ejercito 435, Concepción. Chile",
-                    style: TextStyle(
-                      fontFamily: 'textoMont',
-                      fontSize: 12,
+                    Text(
+                      "Ejercito 435, Concepción. Chile",
+                      style: TextStyle(
+                        fontFamily: 'textoMont',
+                        fontSize: 12,
+                      ),
                     ),
-                  ),
-                  Text(
-                    "www.tvpost.cl",
-                    style: TextStyle(
-                      fontFamily: 'textoMont',
-                      fontSize: 12,
+                    Text(
+                      "www.tvpost.cl",
+                      style: TextStyle(
+                        fontFamily: 'textoMont',
+                        fontSize: 12,
+                      ),
                     ),
-                  ),
-                  Text(
-                    "contacto@tvpost.cl",
-                    style: TextStyle(
-                      fontFamily: 'textoMont',
-                      fontSize: 12,
+                    Text(
+                      "contacto@tvpost.cl",
+                      style: TextStyle(
+                        fontFamily: 'textoMont',
+                        fontSize: 12,
+                      ),
                     ),
-                  ),
-                  Text(
-                    "(+569) 87654321",
-                    style: TextStyle(
-                      fontFamily: 'textoMont',
-                      fontSize: 12,
+                    Text(
+                      "(+569) 87654321",
+                      style: TextStyle(
+                        fontFamily: 'textoMont',
+                        fontSize: 12,
+                      ),
                     ),
-                  ),
-                ],
-              )),
-        ],
+                  ],
+                )),
+          ],
+        ),
       ),
     );
   }

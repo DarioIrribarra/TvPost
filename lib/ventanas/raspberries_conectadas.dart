@@ -802,7 +802,7 @@ class _RaspberriesConectadasState extends State<RaspberriesConectadas> {
         datos.add(true);
       }
     } else {
-      datos.add('imagenes/layoutdeshabilitado1.png');
+      datos.add('imagenes/fondogris.png');
       datos.add(false);
     }
 
@@ -1269,7 +1269,8 @@ class _RaspberriesConectadasState extends State<RaspberriesConectadas> {
               children: [
                 Text('¿DESEA DESHABILITAR TODOS LOS EQUIPOS?',
                     textAlign: TextAlign.center,
-                    style: TextStyle(fontSize: 13)),
+                    style: TextStyle(fontSize: 13)
+                ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
