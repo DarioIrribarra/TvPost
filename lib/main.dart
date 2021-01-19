@@ -2,7 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:tvpost_flutter/utilidades/custom_widgets.dart';
+//import 'package:tvpost_flutter/utilidades/custom_widgets.dart';
 import 'package:tvpost_flutter/utilidades/shared_preferences.dart';
 import 'package:tvpost_flutter/ventanas/crear_layout1.dart';
 import 'package:tvpost_flutter/ventanas/crear_layout2.dart';
@@ -20,40 +20,48 @@ import 'package:tvpost_flutter/ventanas/soporte.dart';
 import 'package:tvpost_flutter/ventanas/ventanaEnFondo.dart';
 
 Future<void> main() async {
-  SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
   //Se ejecuta el método de carga de shared preferences antes de que
   // inicie la app
   WidgetsFlutterBinding.ensureInitialized();
   await shared_preferences_tvPost.CargarSharedPreferences();
-  //Inicia la app
-  SystemChrome.setPreferredOrientations(
-          [DeviceOrientation.portraitDown, DeviceOrientation.portraitUp])
-      .then((_) => runApp(MaterialApp(
-            theme: ThemeData(
-                // accentColor: HexColor('#FC4C8B'),
-                fontFamily: 'tituloAxis',
-                textTheme: TextTheme(
-                  body1: TextStyle(fontSize: 12.5),
-                  title: TextStyle(fontSize: 12.5),
-                )),
 
-            //Rutas para navegar en las páginas
-            routes: {
-              //Ventana fantasma que se mantiene vacía
-              '/': (context) => VentanaFondo(),
-              '/login': (context) => Login(),
-              '/raspberries_conectadas': (context) => RaspberriesConectadas(),
-              '/detalle_equipo': (context) => DetalleEquipo(),
-              '/seleccionar_layout': (context) => SeleccionarLayout(),
-              '/crear_layout1': (context) => CrearLayout1(),
-              '/crear_layout2': (context) => CrearLayout2(),
-              '/crear_layout3': (context) => CrearLayout3(),
-              '/seleccionar_imagen': (context) => SeleccionarImagen(),
-              '/seleccionar_video': (context) => SeleccionarVideo(),
-              '/crear_contenido': (context) => CrearContenido(),
-              '/reloj': (context) => EditarReloj(),
-              '/soporte': (context) => Soporte(),
-              '/miPerfil': (context) => Perfil(),
-            },
-          )));
+  //Espera la orientación vertical
+  SystemChrome.setPreferredOrientations(
+          [DeviceOrientation.portraitDown,
+            DeviceOrientation.portraitUp]
+  ).then((_)  {
+                //Inicia la app
+                runApp(
+                  MaterialApp(
+                    theme: ThemeData(
+                      // accentColor: HexColor('#FC4C8B'),
+                        fontFamily: 'tituloAxis',
+                        textTheme: TextTheme(
+                          body1: TextStyle(fontSize: 12.5),
+                          title: TextStyle(fontSize: 12.5),
+                        )
+                    ),
+
+                    //Rutas para navegar en las páginas
+                    routes: {
+                      //Ventana fantasma que se mantiene vacía
+                      '/': (context) => VentanaFondo(),
+                      '/login': (context) => Login(),
+                      '/raspberries_conectadas': (context) => RaspberriesConectadas(),
+                      '/detalle_equipo': (context) => DetalleEquipo(),
+                      '/seleccionar_layout': (context) => SeleccionarLayout(),
+                      '/crear_layout1': (context) => CrearLayout1(),
+                      '/crear_layout2': (context) => CrearLayout2(),
+                      '/crear_layout3': (context) => CrearLayout3(),
+                      '/seleccionar_imagen': (context) => SeleccionarImagen(),
+                      '/seleccionar_video': (context) => SeleccionarVideo(),
+                      '/crear_contenido': (context) => CrearContenido(),
+                      '/reloj': (context) => EditarReloj(),
+                      '/soporte': (context) => Soporte(),
+                      '/miPerfil': (context) => Perfil(),
+                    },
+                  )
+                );
+              }
+        );
 }
