@@ -236,7 +236,7 @@ class MenuAppBar {
       String rutaProveniente,
       bool necesitaEquipoConectado}) {
     //print(ModalRoute.of(context).settings.name);
-    if (necesitaEquipoConectado){
+    if (necesitaEquipoConectado) {
       if (listadoEquipos.length > 0) {
         if (DatosEstaticos.ipSeleccionada != null) {
           //Navigator.pop(context);
@@ -264,18 +264,23 @@ class MenuAppBar {
               /*decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(40),
                 color: HexColor('#f4f4f4')),*/
-              height: MediaQuery.of(context).size.height/10,
+              height: MediaQuery.of(context).size.height / 10,
               width: 250,
               child: ListTile(
                 contentPadding: EdgeInsets.only(
-                    left: MediaQuery.of(context).size.width/6
+                    left: MediaQuery.of(context).size.width / 6),
+                leading: Icon(
+                  Icons.screen_share,
+                  color: Colors.blueAccent,
                 ),
-                leading: Icon(Icons.screen_share, color: Colors.blueAccent,),
                 title: Text(
                   ObtieneDatos.listadoEquipos[element]['f_alias']
-                      .toString().toUpperCase(),
+                      .toString()
+                      .toUpperCase(),
                   //'DARIO CLON 1',
-                  style: TextStyle(fontSize: 12,),
+                  style: TextStyle(
+                    fontSize: 12,
+                  ),
                 ),
                 onTap: () {
                   DatosEstaticos.ipSeleccionada =
@@ -307,8 +312,7 @@ class MenuAppBar {
                     height: 10,
                     child: Text('EQUIPOS CONECTADOS',
                         textAlign: TextAlign.center,
-                        style: TextStyle(fontSize: 13)
-                    ),
+                        style: TextStyle(fontSize: 13)),
                   ),
                   Container(
                     height: altura - 30,
@@ -322,31 +326,46 @@ class MenuAppBar {
           );
         }
       } else {
-        PopUps.PopUpConWidget(
-            context,
-            Container(
-                decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(40),
-                    color: HexColor('#f4f4f4')),
-                height: 100,
-                width: 250,
-                child: Center(
-                    child: Text(
-                      'USTED NO POSEE EQUIPOS CONECTADOS',
-                      textAlign: TextAlign.center,
-                    ))));
+        if (rutaVentana == "/seleccionar_imagen") {
+          PopUps.PopUpConWidget(
+              context,
+              Container(
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(40),
+                      color: HexColor('#f4f4f4')),
+                  height: 100,
+                  width: 250,
+                  child: Center(
+                      child: Text(
+                    'Active raspberry para ver galería de imagenes'
+                        .toUpperCase(),
+                    textAlign: TextAlign.center,
+                  ))));
+        } else if (rutaVentana == "/seleccionar_video") {
+          PopUps.PopUpConWidget(
+              context,
+              Container(
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(40),
+                      color: HexColor('#f4f4f4')),
+                  height: 100,
+                  width: 250,
+                  child: Center(
+                      child: Text(
+                    'Active raspberry para ver galeria de videos'.toUpperCase(),
+                    textAlign: TextAlign.center,
+                  ))));
+        }
       }
     } else {
       Navigator.popAndPushNamed(context, rutaVentana, arguments: {
-          'division_layout': '0',
-          'ruta_proveniente': rutaProveniente,
-        }
-      );
+        'division_layout': '0',
+        'ruta_proveniente': rutaProveniente,
+      });
     }
   }
 
   static void SeleccionMenu(String itemSeleccionado, BuildContext context) {
-
     //Se toma la ruta base desde donde se clicó el menú
     String rutaProveniente = ModalRoute.of(context).settings.name;
 
@@ -363,11 +382,9 @@ class MenuAppBar {
         return;
       }
 
-      if (
-          rutaProveniente == "/seleccionar_video"  ||
-          rutaProveniente == "/soporte"  ||
-          rutaProveniente == "/miPerfil"
-      ) {
+      if (rutaProveniente == "/seleccionar_video" ||
+          rutaProveniente == "/soporte" ||
+          rutaProveniente == "/miPerfil") {
         //se utiliza ruta ya almacenada
         rutaProveniente = RutasRedireccionMenu.RutaDeDondeViene;
       } else {
@@ -383,39 +400,35 @@ class MenuAppBar {
           listadoEquipos: DatosEstaticos.listadoIndexEquiposConectados,
           context: context,
           rutaVentana: "/seleccionar_imagen",
-          rutaProveniente: rutaProveniente
-      );
+          rutaProveniente: rutaProveniente);
     }
 
     //Selección Videos
     if (itemSeleccionado == MenuAppBar.administrarVideos) {
-
       //Si la ruta seleccionada es la misma ventana, no se cambia
       if (rutaProveniente == "/seleccionar_video") {
         return;
       }
 
-      if  (
-            rutaProveniente == "/seleccionar_imagen"  ||
-            rutaProveniente == "/soporte"  ||
-            rutaProveniente == "/miPerfil"
-          ) {
-            //se utiliza ruta ya almacenada
-            rutaProveniente = RutasRedireccionMenu.RutaDeDondeViene;
-          } else {
-            //Se limpia listado de videos seleccionados
-            SeleccionaVideo.videosSelecionados.clear();
-            //Se reasigna la ruta
-            RutasRedireccionMenu.RutaDeDondeViene = rutaProveniente;
-          }
+      if (rutaProveniente == "/seleccionar_imagen" ||
+          rutaProveniente == "/soporte" ||
+          rutaProveniente == "/miPerfil") {
+        //se utiliza ruta ya almacenada
+        rutaProveniente = RutasRedireccionMenu.RutaDeDondeViene;
+      } else {
+        //Se limpia listado de videos seleccionados
+        SeleccionaVideo.videosSelecionados.clear();
+        //Se reasigna la ruta
+        RutasRedireccionMenu.RutaDeDondeViene = rutaProveniente;
+      }
 
       //print(RutasRedireccionMenu.RutaDeDondeViene);
       Validacion(
-          necesitaEquipoConectado: true,
-          listadoEquipos: DatosEstaticos.listadoIndexEquiposConectados,
-          context: context,
-          rutaVentana: "/seleccionar_video",
-          rutaProveniente: rutaProveniente,
+        necesitaEquipoConectado: true,
+        listadoEquipos: DatosEstaticos.listadoIndexEquiposConectados,
+        context: context,
+        rutaVentana: "/seleccionar_video",
+        rutaProveniente: rutaProveniente,
       );
     }
 
@@ -426,11 +439,9 @@ class MenuAppBar {
         return;
       }
 
-      if  (
-      rutaProveniente == "/seleccionar_imagen"  ||
-          rutaProveniente == "/seleccionar_video"  ||
-          rutaProveniente == "/miPerfil"
-      ) {
+      if (rutaProveniente == "/seleccionar_imagen" ||
+          rutaProveniente == "/seleccionar_video" ||
+          rutaProveniente == "/miPerfil") {
         //se utiliza ruta ya almacenada
         rutaProveniente = RutasRedireccionMenu.RutaDeDondeViene;
       } else {
@@ -457,11 +468,9 @@ class MenuAppBar {
         return;
       }
 
-      if  (
-          rutaProveniente == "/seleccionar_imagen"  ||
-          rutaProveniente == "/seleccionar_video"  ||
-          rutaProveniente == "/soporte"
-      ) {
+      if (rutaProveniente == "/seleccionar_imagen" ||
+          rutaProveniente == "/seleccionar_video" ||
+          rutaProveniente == "/soporte") {
         //se utiliza ruta ya almacenada
         rutaProveniente = RutasRedireccionMenu.RutaDeDondeViene;
       } else {

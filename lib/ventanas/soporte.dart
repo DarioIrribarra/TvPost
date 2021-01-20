@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:tvpost_flutter/utilidades/datos_estaticos.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'dart:io';
+import 'package:tvpost_flutter/icon_soporte_icons.dart';
 
 class Soporte extends StatefulWidget {
   Soporte({Key key}) : super(key: key);
@@ -71,11 +72,15 @@ class _SoporteState extends State<Soporte> {
                     //color: Colors.greenAccent,
                     child: FlatButton(
                         onPressed: () {
-                          wsp(
-                              phone: "+56933710386",
-                              message: 'Hola, solicito ayuda!!!');
+                          wsp(phone: "+56933710386", message: 'Hola Tv Post');
                         },
-                        child: Icon(Icons.phone))),
+                        child: Container(
+                          color: Colors.amber,
+                          child: Icon(
+                            IconSoporte.whatsapp,
+                            color: Colors.black,
+                          ),
+                        ))),
                 Container(
                   width: 70,
                   height: 40,

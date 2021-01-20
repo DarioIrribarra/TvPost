@@ -86,7 +86,9 @@ flutter:
      - family:  CustomIcons
        fonts:
        - asset: iconos/CustomIcons.ttf
-   
+     - family:  IconSoporte
+       fonts:
+       - asset: iconos/IconSoporte.ttf
      
        
       

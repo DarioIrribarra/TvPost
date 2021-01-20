@@ -1269,8 +1269,7 @@ class _RaspberriesConectadasState extends State<RaspberriesConectadas> {
               children: [
                 Text('¿DESEA DESHABILITAR TODOS LOS EQUIPOS?',
                     textAlign: TextAlign.center,
-                    style: TextStyle(fontSize: 13)
-                ),
+                    style: TextStyle(fontSize: 13)),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
@@ -1567,51 +1566,57 @@ class _RaspberriesConectadasState extends State<RaspberriesConectadas> {
             color: HexColor('#f4f4f4')),
         height: 150,
         width: 250,
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            //Título
-            Text(
-              'Receptor sin comunicación',
-              textAlign: TextAlign.center,
-              textScaleFactor: 1.2,
-              style: TextStyle(fontWeight: FontWeight.bold),
-            ),
-            SizedBox(
-              height: 10,
-            ),
-            Text(
-              'Alias: ${alias}',
-              textAlign: TextAlign.center,
-            ),
-            Text(
-              'Serial: ${serial}',
-              textAlign: TextAlign.center,
-            ),
-            Text(
-              'Ip: ${ip}',
-              textAlign: TextAlign.center,
-            ),
-            SizedBox(
-              height: 10,
-            ),
-            Text(
-              'Compruebe conexión de red y energía',
-              textAlign: TextAlign.center,
-            ),
-            SizedBox(
-              height: 10,
-            ),
-            RaisedButton(
-              child: Text(
-                'Aceptar',
-                textScaleFactor: 1.3,
+        child: Padding(
+          padding: const EdgeInsets.only(top: 12),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              //Título
+              Text(
+                'RECEPTOR SIN COMUNICACIÓN',
+                textAlign: TextAlign.center,
+                textScaleFactor: 0.8,
+                style: TextStyle(fontWeight: FontWeight.bold),
               ),
-              onPressed: () {
-                Navigator.pop(context);
-              },
-            ),
-          ],
+              Text(
+                'Alias: ${alias}',
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontFamily: 'textoMont',
+                  fontSize: 12,
+                ),
+              ),
+              Text(
+                'Serial: ${serial}',
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontFamily: 'textoMont',
+                  fontSize: 12,
+                ),
+              ),
+              Text(
+                'Ip: ${ip}',
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontFamily: 'textoMont',
+                  fontSize: 12,
+                ),
+              ),
+              Text('Compruebe conexión de red y energía',
+                  textAlign: TextAlign.center, style: TextStyle(fontSize: 13)),
+
+              FlatButton(
+                child: Icon(
+                  Icons.check_circle,
+                  color: HexColor('#3EDB9B'),
+                  size: 30,
+                ),
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+              ),
+            ],
+          ),
         ));
     PopUps.PopUpConWidget(context, contenidoPopUp);
   }
