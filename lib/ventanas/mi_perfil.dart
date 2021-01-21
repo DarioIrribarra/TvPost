@@ -56,7 +56,6 @@ class _PerfilState extends State<Perfil> {
             children: [
               SizedBox(),
               Text("MI PERFIL", style: TextStyle(fontSize: 16.5)),
-              SizedBox(),
               Container(
                 width: 110,
                 height: 110,
@@ -96,7 +95,7 @@ class _PerfilState extends State<Perfil> {
                               )*/
               ),
               SizedBox(
-                height: 1,
+                height: 10,
               ),
               Container(
                   child: Column(
