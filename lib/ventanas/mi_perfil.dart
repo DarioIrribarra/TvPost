@@ -15,18 +15,17 @@ class Perfil extends StatefulWidget {
 }
 
 class _PerfilState extends State<Perfil> {
-
   Map datosDesdeVentanaAnterior = {};
   String rutaDeDondeViene;
   String divisionLayout;
 
-  String nombrePerfil = "logo${DatosEstaticos.rutEmpresa.toString().toUpperCase()}";
+  String nombrePerfil =
+      "logo${DatosEstaticos.rutEmpresa.toString().toUpperCase()}";
   File archivoImagen;
   Color fondo = Colors.green;
 
   @override
   Widget build(BuildContext context) {
-
     //Tomo los argumentos que vienen de la ruta anterior
     datosDesdeVentanaAnterior = ModalRoute.of(context).settings.arguments;
     if (datosDesdeVentanaAnterior != null) {
@@ -76,7 +75,9 @@ class _PerfilState extends State<Perfil> {
                         shape: BoxShape.circle,
                       ),*/
                 child: Image.network(
-                    "http://drioxmaster.cl/imgPerfil/$nombrePerfil.png"),
+                  "http://drioxmaster.cl/imgPerfil/$nombrePerfil.png",
+                  scale: 3,
+                ),
 
                 /*archivoImagen == null
                             ? Icon(

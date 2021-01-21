@@ -4,6 +4,7 @@ import 'package:tvpost_flutter/utilidades/datos_estaticos.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'dart:io';
 import 'package:tvpost_flutter/icon_soporte_icons.dart';
+import 'package:store_redirect/store_redirect.dart';
 
 class Soporte extends StatefulWidget {
   Soporte({Key key}) : super(key: key);
@@ -44,19 +45,28 @@ class _SoporteState extends State<Soporte> {
         body: Column(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
-            Text(
-              "SOPORTE TÉCNICO",
-              style: TextStyle(fontSize: 16.5),
+            Padding(
+              padding: const EdgeInsets.only(top: 10),
+              child: Text(
+                "SOPORTE TÉCNICO",
+                style: TextStyle(fontSize: 16.5),
+              ),
             ),
             Container(
               width: 110,
               height: 110,
               decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(60),
+                  borderRadius: BorderRadius.circular(60),
+                  color: HexColor('#3EDB9B')),
+              child: Image.asset(
+                'imagenes/soporte.png',
+                scale: 3,
               ),
-              child: Image.asset('imagenes/soporte.png'),
               //color: Colors.greenAccent,
               //decoration: BoxDecoration(borderRadius: BorderRadius.circular(5),),
+            ),
+            SizedBox(
+              height: 10,
             ),
             Text("CONTÁCTANOS", style: TextStyle(fontSize: 13)),
             Row(
@@ -111,15 +121,30 @@ class _SoporteState extends State<Soporte> {
                 ),
               ],
             ),
+            /* RaisedButton(
+                onPressed: () {
+                  StoreRedirect.redirect(
+                      androidAppId: "com.whatsapp", iOSAppId: "	310633997");
+                },
+                child: Text("presione aquí"))*/
             SizedBox(
-              height: 20,
+              height: 110,
             ),
             Container(
-                padding: EdgeInsets.only(top: 20),
-                height: MediaQuery.of(context).size.height / 7,
+                padding: EdgeInsets.only(top: 25),
+                height: MediaQuery.of(context).size.height / 5,
                 width: MediaQuery.of(context).size.width,
                 child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
+                    Container(
+                      width: MediaQuery.of(context).size.width / 1.2,
+                      height: 1.5,
+                      color: HexColor("#3EDB9B"),
+                    ),
+                    SizedBox(
+                      height: 15,
+                    ),
                     Text(
                       "Empresa de Diseño y Desarrollo Producnova",
                       style: TextStyle(
@@ -178,7 +203,9 @@ class _SoporteState extends State<Soporte> {
     if (await canLaunch(url())) {
       await launch(url());
     } else {
-      throw 'WSP INVALIDO ${url()}';
+      throw StoreRedirect.redirect(
+          androidAppId: "com.whatsapp",
+          iOSAppId: "	310633997"); //'WSP INVALIDO ${url()}';
     }
   }
 
