@@ -7,8 +7,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:tvpost_flutter/utilidades/datos_estaticos.dart';
 import 'package:tvpost_flutter/utilidades/obtiene_datos_webservice.dart';
-import 'package:tvpost_flutter/ventanas/mi_perfil.dart';
-import 'package:tvpost_flutter/ventanas/soporte.dart';
+//import 'package:tvpost_flutter/ventanas/mi_perfil.dart';
+//import 'package:tvpost_flutter/ventanas/soporte.dart';
 //import 'package:tvpost_flutter/ventanas/crear_layout3.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -337,7 +337,7 @@ class MenuAppBar {
                   width: 250,
                   child: Center(
                       child: Text(
-                    'Active raspberry para ver galería de imagenes'
+                    'Active algún receptor para ver galería de imagenes'
                         .toUpperCase(),
                     textAlign: TextAlign.center,
                   ))));
@@ -352,7 +352,7 @@ class MenuAppBar {
                   width: 250,
                   child: Center(
                       child: Text(
-                    'Active raspberry para ver galeria de videos'.toUpperCase(),
+                    'Active algún receptor para ver galeria de videos'.toUpperCase(),
                     textAlign: TextAlign.center,
                   ))));
         }
@@ -370,7 +370,29 @@ class MenuAppBar {
     String rutaProveniente = ModalRoute.of(context).settings.name;
 
     //Selección Mis Pantallas
-    if (itemSeleccionado == MenuAppBar.misPantallas) {}
+    if (itemSeleccionado == MenuAppBar.misPantallas) {
+
+      //Acá hay un problema de cuando se está en el popup para elegir
+      //videos o imágenes, se vuelve a cargar la ventana y hace que salte
+      //una excepción antes de cargar raspberries_conectadas;
+
+      /*if (RutasRedireccionMenu.divisionLayoutElegido != ""){
+        *//*Navigator.of(context).popUntil(ModalRoute.withName("/"));
+        Navigator.pushNamed(context, '/raspberries_conectadas')*//*;
+        //return;
+
+        CambiarRutaMisPantallas(context);
+        //return;
+        //Navigator.pop(context);
+
+        //Navigator.pushNamed(context, '/raspberries_conectadas');
+      }*/
+
+      Navigator.of(context).popUntil(ModalRoute.withName("/"));
+      Navigator.pushNamed(context, '/raspberries_conectadas');
+      return;
+
+    }
 
     //Selección de Imagenes
     if (itemSeleccionado == MenuAppBar.administrarImagenes) {
@@ -539,6 +561,15 @@ class MenuAppBar {
     }
   }
 
+  static void CambiarRutaMisPantallas(BuildContext context) async{
+    //Navigator.popUntil(context, ModalRoute.withName("/"));
+    Navigator.pop(context);
+    Navigator.of(context)
+        .pushNamedAndRemoveUntil('/ventana_fondo_estatica', ModalRoute.withName("/"));
+    Navigator.pushReplacementNamed(context, '/login');
+    Navigator.popAndPushNamed(context, '/raspberries_conectadas');
+  }
+
   static PopupMenuButton botonMenu(BuildContext context) {
     Widget fila(String e) {
       return Text(
@@ -548,6 +579,7 @@ class MenuAppBar {
     }
 
     return PopupMenuButton<String>(
+      captureInheritedThemes: false,
       icon: Icon(
         Icons.menu,
         color: Colors.white,
@@ -595,6 +627,77 @@ class MenuAppBar {
       onSelected: (selected) {
         MenuAppBar.SeleccionMenu(selected, context);
       },
+    );
+  }
+}
+
+class CustomAppBarSinMenu extends PreferredSize {
+  final double height;
+
+  CustomAppBarSinMenu({
+    this.height = kToolbarHeight,
+  });
+
+  @override
+  Size get preferredSize => Size.fromHeight(height);
+
+  @override
+  Widget build(BuildContext context) {
+    return SafeArea(
+      child: AppBar(
+        flexibleSpace: Container(
+          decoration: new BoxDecoration(
+              gradient: LinearGradient(
+                  colors: [HexColor("#0683ff"), HexColor("#3edb9b")],
+                  stops: [0.1, 0.6],
+                  begin: Alignment.centerLeft,
+                  end: FractionalOffset.centerRight)),
+          child: Padding(
+            padding:
+            EdgeInsets.only(left: MediaQuery.of(context).size.width / 5.5),
+            child: Container(
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  Expanded(
+                    flex: 3,
+                    child: Container(
+                      padding: EdgeInsets.all(12.0),
+                      child: Image.asset(
+                        'imagenes/logohorizontal.png',
+                      ),
+                    ),
+                  ),
+                  Expanded(
+                    flex: 1,
+                    child: Container(),
+                    /*
+                    child: IconButton(
+                      iconSize: 40,
+                      padding: const EdgeInsets.only(right: 20),
+                      icon: Icon(
+                        Icons.menu,
+                        color: Colors.white,
+                      ),
+                      onPressed: () {
+                        PopUps.PopUpConWidget(
+                            context,
+                            Text(
+                              'Menú en creación',
+                              textAlign: TextAlign.center,
+                            ));
+                      },
+                    ),
+
+                     */
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+      ),
     );
   }
 }
@@ -1136,6 +1239,8 @@ class _OpcionesSeleccionMediaState extends State<OpcionesSeleccionMedia> {
   }
 
   navegarYEsperarRespuesta(String rutaVentana) async {
+    //String rutaProvenienteAEsperar = ModalRoute.of(context).settings.name;
+    RutasRedireccionMenu.divisionLayoutElegido = widget.divisionLayout;
     final result = await Navigator.pushNamed(context, rutaVentana, arguments: {
       'division_layout': widget.divisionLayout,
     });
@@ -1144,6 +1249,13 @@ class _OpcionesSeleccionMediaState extends State<OpcionesSeleccionMedia> {
       //Ejecutó. La ventana anterior, ejecuta un setstate
       widget.actualizaEstado();
     }
+    RutasRedireccionMenu.divisionLayoutElegido = "";
+    /*else {
+      Navigator.pop(context);
+      Navigator.pushNamed(context, rutaProvenienteAEsperar);
+    }
+
+     */
   }
 }
 
@@ -1597,6 +1709,9 @@ class AnimacionPadding extends StatelessWidget {
 }
 
 class RutasRedireccionMenu {
+  //String que marca que se está eligiendo el menú desde una selección
+  //De layout activa (1-1, 2-1, 2-2...)
+  static String divisionLayoutElegido = "";
   static String RutaDeDondeViene = "";
 }
 

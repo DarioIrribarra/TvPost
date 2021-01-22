@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_social_content_share/flutter_social_content_share.dart';
+//import 'package:flutter_social_content_share/flutter_social_content_share.dart';
 import 'package:tvpost_flutter/utilidades/comunicacion_raspberry.dart';
 import 'package:tvpost_flutter/utilidades/custom_widgets.dart';
 import 'package:tvpost_flutter/utilidades/datos_estaticos.dart';
@@ -486,7 +486,7 @@ class _SeleccionarVideoState extends State<SeleccionarVideo> {
         return;
       },
       child: Scaffold(
-        appBar: CustomAppBar(),
+        appBar: divisionLayout == '0' ? CustomAppBar() : CustomAppBarSinMenu(),
         body: SafeArea(
           child: Column(
             children: <Widget>[

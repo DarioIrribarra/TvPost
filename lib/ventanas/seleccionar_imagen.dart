@@ -61,11 +61,11 @@ class _SeleccionarImagenState extends State<SeleccionarImagen> {
       rutaDeDondeViene = datosDesdeVentanaAnterior['ruta_proveniente'];
     }
 
-    Widget WidgetFutureGrilla;
+    Widget widgetFutureGrilla;
 
     if (rutaDeDondeViene != null) {
       CambiosSeleccion.rutaPadre = rutaDeDondeViene;
-      WidgetFutureGrilla = FutureBuilder(
+      widgetFutureGrilla = FutureBuilder(
         future: _listadoNombresImagenes,
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.done) {
@@ -227,7 +227,7 @@ class _SeleccionarImagenState extends State<SeleccionarImagen> {
         },
       );
     } else {
-      WidgetFutureGrilla = FutureBuilder(
+      widgetFutureGrilla = FutureBuilder(
         future: _listadoNombresImagenes,
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.done) {
@@ -569,7 +569,9 @@ class _SeleccionarImagenState extends State<SeleccionarImagen> {
         return;
       },
       child: Scaffold(
-        appBar: CustomAppBar(),
+        //Por error del future, se debe dejar sin acceso al menmú para que no redireccione
+        //a "Mis Pantallas"
+        appBar: divisionLayout == '0' ? CustomAppBar() : CustomAppBarSinMenu(),
         body: SafeArea(
           child: Column(
             children: <Widget>[
@@ -617,7 +619,7 @@ class _SeleccionarImagenState extends State<SeleccionarImagen> {
               ),
               Expanded(
                 //Acá hacer un future builder para nombres de imágenes
-                child: WidgetFutureGrilla,
+                child: widgetFutureGrilla,
               ),
             ],
           ),

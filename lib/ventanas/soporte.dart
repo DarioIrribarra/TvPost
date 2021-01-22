@@ -203,9 +203,10 @@ class _SoporteState extends State<Soporte> {
     if (await canLaunch(url())) {
       await launch(url());
     } else {
-      throw StoreRedirect.redirect(
+      StoreRedirect.redirect(
           androidAppId: "com.whatsapp",
-          iOSAppId: "	310633997"); //'WSP INVALIDO ${url()}';
+          iOSAppId: "	310633997"
+      ); //'WSP INVALIDO ${url()}';
     }
   }
 
