@@ -1052,78 +1052,88 @@ class CambiosSeleccion {
     String nombre;
     if (listadoSeleccionadas.length == 1) {
       nombre = listadoSeleccionadas[0];
-      textoPopUp =
-          Text('¿Eliminar ${nombre.substring(0, nombre.lastIndexOf('.'))}?');
+      textoPopUp = Text(
+          '¿ELIMINAR ${nombre.substring(0, nombre.lastIndexOf('.')).toUpperCase()} IMAGEN?',
+          style: TextStyle(fontSize: 13));
     } else {
-      textoPopUp = Text('¿Eliminar ${listadoSeleccionadas.length} imagenes?');
+      textoPopUp = Text(
+        '¿ELIMINAR ${listadoSeleccionadas.length} IMAGENES?',
+        style: TextStyle(fontSize: 13),
+      );
     }
     contenidoPopUp = Container(
       decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(40), color: HexColor('#f4f4f4')),
-      height: 100,
+      height: 150,
       width: 250,
       child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
-          textoPopUp,
-          Row(
-            children: [
-              Expanded(
-                flex: 1,
-                child: FlatButton(
-                  child: Icon(
-                    Icons.check_circle,
-                    color: HexColor('#3EDB9B'),
-                    size: 30,
-                  ),
-                  //Eliminar
-                  onPressed: () async {
-                    Navigator.pop(context);
-                    PopUps.popUpCargando(context, 'Eliminando imagenes...');
-                    var resultadoEliminar =
-                        await ComunicacionRaspberry.EliminarContenido(
-                            tipoContenido: 'imagenes',
-                            nombresAEliminar: listadoSeleccionadas);
-                    if (resultadoEliminar != null) {
+          Padding(
+            padding: const EdgeInsets.only(top: 5.0),
+            child: textoPopUp,
+          ),
+          Padding(
+            padding: const EdgeInsets.only(bottom: 5.0),
+            child: Row(
+              children: [
+                Expanded(flex: 3, child: SizedBox()),
+                Expanded(
+                  flex: 4,
+                  child: FlatButton(
+                    child: Icon(
+                      Icons.check_circle,
+                      color: HexColor('#3EDB9B'),
+                      size: 35,
+                    ),
+                    //Eliminar
+                    onPressed: () async {
                       Navigator.pop(context);
-                      Navigator.popAndPushNamed(context, "/seleccionar_imagen",
-                          arguments: {
-                            'division_layout': '0',
-                            'ruta_proveniente': rutaPadre,
-                          });
-                      Fluttertoast.showToast(
-                        msg: "Imagenes eliminadas",
-                        toastLength: Toast.LENGTH_SHORT,
-                        webBgColor: "#e74c3c",
-                        timeInSecForIosWeb: 5,
-                      );
-                    } else {
-                      Navigator.pop(context);
-                      Fluttertoast.showToast(
-                        msg: "Error al eliminar, intente nuevamente",
-                        toastLength: Toast.LENGTH_SHORT,
-                        webBgColor: "#e74c3c",
-                        timeInSecForIosWeb: 5,
-                      );
-                    }
-                  },
-                ),
-              ),
-              SizedBox(
-                width: 10,
-              ),
-              Expanded(
-                flex: 1,
-                child: FlatButton(
-                  child: Icon(
-                    Icons.cancel,
-                    color: HexColor('#FC4C8B'),
-                    size: 30,
+                      PopUps.popUpCargando(context, 'Eliminando imagenes...');
+                      var resultadoEliminar =
+                          await ComunicacionRaspberry.EliminarContenido(
+                              tipoContenido: 'imagenes',
+                              nombresAEliminar: listadoSeleccionadas);
+                      if (resultadoEliminar != null) {
+                        Navigator.pop(context);
+                        Navigator.popAndPushNamed(
+                            context, "/seleccionar_imagen",
+                            arguments: {
+                              'division_layout': '0',
+                              'ruta_proveniente': rutaPadre,
+                            });
+                        Fluttertoast.showToast(
+                          msg: "Imagenes eliminadas",
+                          toastLength: Toast.LENGTH_SHORT,
+                          webBgColor: "#e74c3c",
+                          timeInSecForIosWeb: 5,
+                        );
+                      } else {
+                        Navigator.pop(context);
+                        Fluttertoast.showToast(
+                          msg: "Error al eliminar, intente nuevamente",
+                          toastLength: Toast.LENGTH_SHORT,
+                          webBgColor: "#e74c3c",
+                          timeInSecForIosWeb: 5,
+                        );
+                      }
+                    },
                   ),
-                  onPressed: () => Navigator.pop(context),
                 ),
-              ),
-            ],
+                Expanded(
+                  flex: 4,
+                  child: FlatButton(
+                    child: Icon(
+                      Icons.cancel,
+                      color: HexColor('#FC4C8B'),
+                      size: 35,
+                    ),
+                    onPressed: () => Navigator.pop(context),
+                  ),
+                ),
+                Expanded(flex: 3, child: SizedBox()),
+              ],
+            ),
           ),
         ],
       ),
@@ -1135,32 +1145,43 @@ class CambiosSeleccion {
   static editarImagenesSeleccionadas() {
     GlobalKey<FormState> _keyValidador2 = GlobalKey<FormState>();
     String nombreNuevaImagen;
-    Text textoPopUp;
+    Text textoPopUp, linea2;
     Widget contenidoPopUp;
     String extension;
     String nombre;
     nombre = listadoSeleccionadas[0];
     extension = nombre.substring(nombre.lastIndexOf('.'));
     List<String> listadoNombres = [];
-    textoPopUp =
-        Text('Editando ${nombre.substring(0, nombre.lastIndexOf('.'))}');
+    textoPopUp = Text(
+      'EDITAR NOMBRE',
+      style: TextStyle(fontSize: 13),
+    );
+    linea2 = Text(
+      ' ${nombre.substring(0, nombre.lastIndexOf('.')).toUpperCase()}',
+      style: TextStyle(fontFamily: 'textoMont', fontSize: 12),
+    );
     contenidoPopUp = Container(
       decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(40), color: HexColor('#f4f4f4')),
-      height: 140,
+      height: 175,
       width: 250,
       child: Form(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
-            Padding(
-              padding: const EdgeInsets.only(top: 28.0),
-              child: textoPopUp,
+            Column(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.only(top: 15.0),
+                  child: textoPopUp,
+                ),
+                linea2,
+              ],
             ),
             SizedBox(
               width: 180,
               child: TextFormField(
-                style: TextStyle(),
+                style: TextStyle(fontSize: 13, fontFamily: 'textoMont'),
                 textAlign: TextAlign.center,
                 validator: (textoEscrito) {
                   if (textoEscrito == null) {
@@ -1187,13 +1208,14 @@ class CambiosSeleccion {
             ),
             Row(
               children: [
+                Expanded(flex: 2, child: SizedBox()),
                 Expanded(
-                  flex: 1,
+                  flex: 4,
                   child: FlatButton(
                     child: Icon(
                       Icons.check_circle,
                       color: HexColor('#3EDB9B'),
-                      size: 30,
+                      size: 35,
                     ),
                     autofocus: true,
                     onPressed: () async {
@@ -1241,20 +1263,18 @@ class CambiosSeleccion {
                     },
                   ),
                 ),
-                SizedBox(
-                  width: 10,
-                ),
                 Expanded(
-                  flex: 1,
+                  flex: 4,
                   child: FlatButton(
                     child: Icon(
                       Icons.cancel,
                       color: HexColor('#FC4C8B'),
-                      size: 30,
+                      size: 35,
                     ),
                     onPressed: () => Navigator.pop(context),
                   ),
                 ),
+                Expanded(flex: 2, child: SizedBox())
               ],
             ),
           ],

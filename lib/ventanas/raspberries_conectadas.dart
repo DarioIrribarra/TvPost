@@ -54,39 +54,53 @@ class _RaspberriesConectadasState extends State<RaspberriesConectadas> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
-                Text('¿DESEA CERRAR SESIÓN?',
-                    textAlign: TextAlign.center,
-                    style: TextStyle(fontSize: 13)),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    GestureDetector(
-                      child: Icon(
-                        Icons.check_circle,
-                        color: HexColor('#3EDB9B'),
-                        size: 30,
+                Padding(
+                  padding: const EdgeInsets.only(top: 5.0),
+                  child: Text('¿DESEA CERRAR SESIÓN?',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(fontSize: 13)),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 5.0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      Expanded(flex: 3, child: SizedBox()),
+                      Expanded(
+                        flex: 4,
+                        child: GestureDetector(
+                          child: Icon(
+                            Icons.check_circle,
+                            color: HexColor('#3EDB9B'),
+                            size: 35,
+                          ),
+                          onTap: () {
+                            if (Platform.isAndroid) {
+                              SystemNavigator.pop();
+                              return;
+                            } else {
+                              exit(0);
+                            }
+                          },
+                        ),
                       ),
-                      onTap: () {
-                        if (Platform.isAndroid) {
-                          SystemNavigator.pop();
-                          return;
-                        } else {
-                          exit(0);
-                        }
-                      },
-                    ),
-                    GestureDetector(
-                      child: Icon(
-                        Icons.cancel,
-                        color: HexColor('#FC4C8B'),
-                        size: 30,
+                      Expanded(
+                        flex: 4,
+                        child: GestureDetector(
+                          child: Icon(
+                            Icons.cancel,
+                            color: HexColor('#FC4C8B'),
+                            size: 35,
+                          ),
+                          onTap: () {
+                            Navigator.pop(context);
+                          },
+                        ),
                       ),
-                      onTap: () {
-                        Navigator.pop(context);
-                      },
-                    ),
-                  ],
-                )
+                      Expanded(flex: 3, child: SizedBox()),
+                    ],
+                  ),
+                ),
               ],
             ));
         PopUps.PopUpConWidget(context, contenidoPopUp);
@@ -1179,7 +1193,7 @@ class _RaspberriesConectadasState extends State<RaspberriesConectadas> {
                     child: Icon(
                       Icons.check_circle,
                       color: HexColor('#3EDB9B'),
-                      size: 30,
+                      size: 35,
                     ),
                     onTap: () async {
                       Navigator.pop(context);
@@ -1211,7 +1225,7 @@ class _RaspberriesConectadasState extends State<RaspberriesConectadas> {
                                     child: Icon(
                                       Icons.cancel,
                                       color: HexColor('#3EDB9B'),
-                                      size: 30,
+                                      size: 35,
                                     ),
                                     onTap: () {
                                       //Navigator.pop(context);
@@ -1242,7 +1256,7 @@ class _RaspberriesConectadasState extends State<RaspberriesConectadas> {
                     child: Icon(
                       Icons.cancel,
                       color: HexColor('#FC4C8B'),
-                      size: 30,
+                      size: 35,
                     ),
                     onTap: () {
                       Navigator.pop(context);
@@ -1277,7 +1291,7 @@ class _RaspberriesConectadasState extends State<RaspberriesConectadas> {
                       child: Icon(
                         Icons.check_circle,
                         color: HexColor('#3EDB9B'),
-                        size: 30,
+                        size: 35,
                       ),
                       onTap: () async {
                         Navigator.pop(context);
@@ -1302,14 +1316,21 @@ class _RaspberriesConectadasState extends State<RaspberriesConectadas> {
                                   mainAxisAlignment:
                                       MainAxisAlignment.spaceEvenly,
                                   children: [
-                                    Text('TODOS LOS EQUIPOS DESHABILITADOS',
-                                        textAlign: TextAlign.center,
-                                        style: TextStyle(fontSize: 13)),
+                                    Column(
+                                      children: [
+                                        Text('TODOS SUS EQUIPOS',
+                                            textAlign: TextAlign.center,
+                                            style: TextStyle(fontSize: 13)),
+                                        Text('ESTÁN DESHABILITADOS',
+                                            textAlign: TextAlign.center,
+                                            style: TextStyle(fontSize: 13)),
+                                      ],
+                                    ),
                                     GestureDetector(
                                       child: Icon(
                                         Icons.check_circle,
                                         color: HexColor('#3EDB9B'),
-                                        size: 30,
+                                        size: 35,
                                       ),
                                       onTap: () {
                                         Navigator.pop(context);
@@ -1326,7 +1347,7 @@ class _RaspberriesConectadasState extends State<RaspberriesConectadas> {
                       child: Icon(
                         Icons.cancel,
                         color: HexColor('#FC4C8B'),
-                        size: 30,
+                        size: 35,
                       ),
                       onTap: () {
                         Navigator.pop(context);
@@ -1344,16 +1365,6 @@ class _RaspberriesConectadasState extends State<RaspberriesConectadas> {
       barrierDismissible: true,
       child: contenido,
     );
-  }
-
-  void CambiarTexto(bool estado) {
-    setState(() {
-      if (estado = true) {
-        onOff = Text("GG");
-      } else {
-        onOff = Text("qq");
-      }
-    });
   }
 
   void AlertaHabilitar(
@@ -1397,7 +1408,7 @@ class _RaspberriesConectadasState extends State<RaspberriesConectadas> {
                   child: Icon(
                     Icons.check_circle,
                     color: HexColor('#3EDB9B'),
-                    size: 30,
+                    size: 35,
                   ),
                   onTap: () async {
                     Navigator.pop(context);
@@ -1426,7 +1437,7 @@ class _RaspberriesConectadasState extends State<RaspberriesConectadas> {
                                   child: Icon(
                                     Icons.check_circle,
                                     color: HexColor('#3EDB9B'),
-                                    size: 30,
+                                    size: 35,
                                   ),
                                   onTap: () {
                                     //Navigator.pop(context);
@@ -1455,7 +1466,7 @@ class _RaspberriesConectadasState extends State<RaspberriesConectadas> {
                   child: Icon(
                     Icons.check_circle,
                     color: HexColor('#3EDB9B'),
-                    size: 30,
+                    size: 35,
                   ),
                   onTap: () {
                     Navigator.pop(context);
@@ -1488,7 +1499,7 @@ class _RaspberriesConectadasState extends State<RaspberriesConectadas> {
                     child: Icon(
                       Icons.check_circle,
                       color: HexColor('#3EDB9B'),
-                      size: 30,
+                      size: 35,
                     ),
                     onTap: () async {
                       Navigator.pop(context);
@@ -1511,14 +1522,21 @@ class _RaspberriesConectadasState extends State<RaspberriesConectadas> {
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceEvenly,
                                 children: [
-                                  Text('TODOS LOS EQUIPOS HABILITADOS',
-                                      textAlign: TextAlign.center,
-                                      style: TextStyle(fontSize: 13)),
+                                  Column(
+                                    children: [
+                                      Text('TODOS SUS EQUIPOS',
+                                          textAlign: TextAlign.center,
+                                          style: TextStyle(fontSize: 13)),
+                                      Text('ESTÁN HABILITADOS',
+                                          textAlign: TextAlign.center,
+                                          style: TextStyle(fontSize: 13)),
+                                    ],
+                                  ),
                                   GestureDetector(
                                     child: Icon(
                                       Icons.check_circle,
                                       color: HexColor('#3EDB9B'),
-                                      size: 30,
+                                      size: 35,
                                     ),
                                     onTap: () {
                                       Navigator.pop(context);
@@ -1535,7 +1553,7 @@ class _RaspberriesConectadasState extends State<RaspberriesConectadas> {
                     child: Icon(
                       Icons.cancel,
                       color: HexColor('#FC4C8B'),
-                      size: 30,
+                      size: 35,
                     ),
                     onTap: () {
                       Navigator.pop(context);
@@ -1603,7 +1621,8 @@ class _RaspberriesConectadasState extends State<RaspberriesConectadas> {
                 ),
               ),
               Text('Compruebe conexión de red y energía',
-                  textAlign: TextAlign.center, style: TextStyle(fontSize: 13)),
+                  textAlign: TextAlign.center,
+                  style: TextStyle(fontSize: 13, fontFamily: 'textoMont')),
 
               FlatButton(
                 child: Icon(

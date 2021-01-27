@@ -85,13 +85,9 @@ class _EditarRelojState extends State<EditarReloj> {
                           children: [
                             Padding(
                               padding: const EdgeInsets.only(bottom: 8.0),
-                              child: Text(
-                                "COLOR DE FONDO",
-                                textScaleFactor: 0.8,
-                                style: TextStyle(
-                                    color: Colors.black,
-                                    fontWeight: FontWeight.bold),
-                              ),
+                              child: Text("COLOR DE FONDO",
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(fontSize: 13)),
                             ),
                             ColorPicker(
                               pickerColor: pickerColorFondo,
@@ -106,13 +102,9 @@ class _EditarRelojState extends State<EditarReloj> {
                             ),
                             Padding(
                               padding: const EdgeInsets.only(bottom: 8.0),
-                              child: Text(
-                                "COLOR DE HORA",
-                                textScaleFactor: 0.8,
-                                style: TextStyle(
-                                    color: Colors.black,
-                                    fontWeight: FontWeight.bold),
-                              ),
+                              child: Text("COLOR DE HORA",
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(fontSize: 13)),
                             ),
                             ColorPicker(
                               pickerColor: pickerColorTexto,

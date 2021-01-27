@@ -189,21 +189,28 @@ class _CrearContenidoState extends State<CrearContenido> {
                       height: 50,
                     ),
                     Container(
-                      margin: EdgeInsets.symmetric(horizontal: 100),
-                      width: 150.0,
-                      height: 30.0,
+                      //margin: EdgeInsets.symmetric(horizontal: 90),
+                      width: 200.0,
+                      height: 40.0,
                       decoration: new BoxDecoration(
                           borderRadius: BorderRadius.circular(20),
                           gradient: LinearGradient(
-                              colors: [HexColor("#0683ff"), HexColor("#3edb9b")],
-                              stops: [0.1, 0.6],
+                              colors: [
+                                HexColor("#0683ff"),
+                                HexColor("#3edb9b")
+                              ],
+                              stops: [
+                                0.1,
+                                0.6
+                              ],
                               begin: Alignment.topLeft,
                               end: FractionalOffset.bottomRight)),
                       child: FlatButton(
                         color: Colors.transparent,
                         shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(20),
-                            side: BorderSide(color: Color.fromARGB(30, 0, 0, 0))),
+                            side:
+                                BorderSide(color: Color.fromARGB(30, 0, 0, 0))),
                         child: Text(
                           'CARGAR',
                           style: TextStyle(color: Colors.white),
@@ -1091,12 +1098,11 @@ class _CrearContenidoState extends State<CrearContenido> {
                           Column(
                             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                             children: [
-                              Text(
-                                "COLOR DE FONDO",
-                                textScaleFactor: 0.8,
-                                style: TextStyle(
-                                    color: Colors.black,
-                                    fontWeight: FontWeight.bold),
+                              Padding(
+                                padding: const EdgeInsets.only(bottom: 8.0),
+                                child: Text("COLOR DE FONDO",
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(fontSize: 13)),
                               ),
                               ColorPicker(
                                 //Sin barra deslizadora de degradación
@@ -1110,12 +1116,11 @@ class _CrearContenidoState extends State<CrearContenido> {
                                   setState(() {});
                                 },
                               ),
-                              Text(
-                                "COLOR DE TEXTO",
-                                textScaleFactor: 0.8,
-                                style: TextStyle(
-                                    color: Colors.black,
-                                    fontWeight: FontWeight.bold),
+                              Padding(
+                                padding: const EdgeInsets.only(bottom: 8.0),
+                                child: Text("COLOR DE TEXTO",
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(fontSize: 13)),
                               ),
                               ColorPicker(
                                 //Sin barra deslizadora de degradación
@@ -1338,7 +1343,8 @@ class _CrearContenidoState extends State<CrearContenido> {
                             fit: BoxFit.cover,
                           );
                           //Replico imagen para tamaño en 10% con reloj
-                          await ComunicacionRaspberry.ReplicarImagen(nombreNuevaImagen);
+                          await ComunicacionRaspberry.ReplicarImagen(
+                              nombreNuevaImagen);
 
                           RedireccionarCrearLayout(
                               imagen,

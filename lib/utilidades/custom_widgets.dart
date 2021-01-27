@@ -352,7 +352,8 @@ class MenuAppBar {
                   width: 250,
                   child: Center(
                       child: Text(
-                    'Active algún receptor para ver galeria de videos'.toUpperCase(),
+                    'Active algún receptor para ver galeria de videos'
+                        .toUpperCase(),
                     textAlign: TextAlign.center,
                   ))));
         }
@@ -371,14 +372,13 @@ class MenuAppBar {
 
     //Selección Mis Pantallas
     if (itemSeleccionado == MenuAppBar.misPantallas) {
-
       //Acá hay un problema de cuando se está en el popup para elegir
       //videos o imágenes, se vuelve a cargar la ventana y hace que salte
       //una excepción antes de cargar raspberries_conectadas;
 
       /*if (RutasRedireccionMenu.divisionLayoutElegido != ""){
-        *//*Navigator.of(context).popUntil(ModalRoute.withName("/"));
-        Navigator.pushNamed(context, '/raspberries_conectadas')*//*;
+        */ /*Navigator.of(context).popUntil(ModalRoute.withName("/"));
+        Navigator.pushNamed(context, '/raspberries_conectadas')*/ /*;
         //return;
 
         CambiarRutaMisPantallas(context);
@@ -391,7 +391,6 @@ class MenuAppBar {
       Navigator.of(context).popUntil(ModalRoute.withName("/"));
       Navigator.pushNamed(context, '/raspberries_conectadas');
       return;
-
     }
 
     //Selección de Imagenes
@@ -522,38 +521,53 @@ class MenuAppBar {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
-              Text('¿DESEA CERRAR SESIÓN?',
-                  textAlign: TextAlign.center, style: TextStyle(fontSize: 13)),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  GestureDetector(
-                    child: Icon(
-                      Icons.check_circle,
-                      color: HexColor('#3EDB9B'),
-                      size: 30,
+              Padding(
+                padding: const EdgeInsets.only(top: 5.0),
+                child: Text('¿DESEA CERRAR SESIÓN?',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(fontSize: 13)),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(bottom: 5.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    Expanded(flex: 3, child: SizedBox()),
+                    Expanded(
+                      flex: 4,
+                      child: GestureDetector(
+                        child: Icon(
+                          Icons.check_circle,
+                          color: HexColor('#3EDB9B'),
+                          size: 35,
+                        ),
+                        onTap: () {
+                          if (Platform.isAndroid) {
+                            SystemNavigator.pop();
+                            return;
+                          } else {
+                            exit(0);
+                          }
+                        },
+                      ),
                     ),
-                    onTap: () {
-                      if (Platform.isAndroid) {
-                        SystemNavigator.pop();
-                        return;
-                      } else {
-                        exit(0);
-                      }
-                    },
-                  ),
-                  GestureDetector(
-                    child: Icon(
-                      Icons.cancel,
-                      color: HexColor('#FC4C8B'),
-                      size: 30,
+                    Expanded(
+                      flex: 4,
+                      child: GestureDetector(
+                        child: Icon(
+                          Icons.cancel,
+                          color: HexColor('#FC4C8B'),
+                          size: 35,
+                        ),
+                        onTap: () {
+                          Navigator.pop(context);
+                        },
+                      ),
                     ),
-                    onTap: () {
-                      Navigator.pop(context);
-                    },
-                  ),
-                ],
-              )
+                    Expanded(flex: 3, child: SizedBox()),
+                  ],
+                ),
+              ),
             ],
           ));
       PopUps.PopUpConWidget(context, contenidoPopUp);
@@ -561,11 +575,11 @@ class MenuAppBar {
     }
   }
 
-  static void CambiarRutaMisPantallas(BuildContext context) async{
+  static void CambiarRutaMisPantallas(BuildContext context) async {
     //Navigator.popUntil(context, ModalRoute.withName("/"));
     Navigator.pop(context);
-    Navigator.of(context)
-        .pushNamedAndRemoveUntil('/ventana_fondo_estatica', ModalRoute.withName("/"));
+    Navigator.of(context).pushNamedAndRemoveUntil(
+        '/ventana_fondo_estatica', ModalRoute.withName("/"));
     Navigator.pushReplacementNamed(context, '/login');
     Navigator.popAndPushNamed(context, '/raspberries_conectadas');
   }
@@ -654,7 +668,7 @@ class CustomAppBarSinMenu extends PreferredSize {
                   end: FractionalOffset.centerRight)),
           child: Padding(
             padding:
-            EdgeInsets.only(left: MediaQuery.of(context).size.width / 5.5),
+                EdgeInsets.only(left: MediaQuery.of(context).size.width / 5.5),
             child: Container(
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -1456,78 +1470,81 @@ class BotonEnviarAEquipo extends StatelessWidget {
               decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(40),
                   color: HexColor('#f4f4f4')),
-              height: 100,
+              height: 150,
               width: 250,
               child: Padding(
                 padding: const EdgeInsets.only(top: 13),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Text('OK, VEA SUS PANTALLAS',
+                    Text('PROYECCIÓN FINALIZADA',
                         style: TextStyle(fontSize: 13)),
-                    FlatButton(
-                      child: Icon(
-                        Icons.check_circle,
-                        color: HexColor('#3EDB9B'),
-                        size: 30,
-                      ),
-                      onPressed: () async {
-                        //Acá se publica
-                        if (this.publicar_rrss) {
-                          String resultado = await PublicarEnRedesSociales();
-                          if (resultado != 'Success') {
-                            Widget contenidoPopUp = Container(
-                                decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(40),
-                                    color: HexColor('#f4f4f4')),
-                                height: 100,
-                                width: 250,
-                                child: Column(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceEvenly,
-                                  children: [
-                                    Text(
-                                      'Error de publicación',
-                                      textAlign: TextAlign.center,
-                                      textScaleFactor: 1.3,
-                                      style: TextStyle(
-                                          fontWeight: FontWeight.bold),
-                                    ),
-                                    SizedBox(
-                                      height: 10,
-                                    ),
-                                    Text(
-                                      'Instale, otorgue permisos y configure '
-                                      'Instagram para realizar una publicación',
-                                      textAlign: TextAlign.center,
-                                    ),
-                                    SizedBox(
-                                      height: 10,
-                                    ),
-                                    FlatButton(
-                                      child: Icon(
-                                        Icons.check_circle,
-                                        color: HexColor('#3EDB9B'),
-                                        size: 30,
+                    Padding(
+                      padding: const EdgeInsets.only(top: 20.0),
+                      child: FlatButton(
+                        child: Icon(
+                          Icons.check_circle,
+                          color: HexColor('#3EDB9B'),
+                          size: 35,
+                        ),
+                        onPressed: () async {
+                          //Acá se publica
+                          if (this.publicar_rrss) {
+                            String resultado = await PublicarEnRedesSociales();
+                            if (resultado != 'Success') {
+                              Widget contenidoPopUp = Container(
+                                  decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(40),
+                                      color: HexColor('#f4f4f4')),
+                                  height: 100,
+                                  width: 250,
+                                  child: Column(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceEvenly,
+                                    children: [
+                                      Text(
+                                        'Error de publicación',
+                                        textAlign: TextAlign.center,
+                                        textScaleFactor: 1.3,
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.bold),
                                       ),
-                                      onPressed: () {
-                                        Navigator.pop(context);
-                                        VolverADetalleEquipo(context);
-                                      },
-                                    ),
-                                  ],
-                                ));
-                            PopUps.PopUpConWidget(context, contenidoPopUp);
+                                      SizedBox(
+                                        height: 10,
+                                      ),
+                                      Text(
+                                        'Instale, otorgue permisos y configure '
+                                        'Instagram para realizar una publicación',
+                                        textAlign: TextAlign.center,
+                                      ),
+                                      SizedBox(
+                                        height: 10,
+                                      ),
+                                      FlatButton(
+                                        child: Icon(
+                                          Icons.check_circle,
+                                          color: HexColor('#3EDB9B'),
+                                          size: 30,
+                                        ),
+                                        onPressed: () {
+                                          Navigator.pop(context);
+                                          VolverADetalleEquipo(context);
+                                        },
+                                      ),
+                                    ],
+                                  ));
+                              PopUps.PopUpConWidget(context, contenidoPopUp);
+                            } else {
+                              //El valor se cambia luego de publicar y proyectar
+                              //en pantallas
+                              DatosEstaticos.PublicarEnRedesSociales = false;
+                              VolverADetalleEquipo(context);
+                            }
                           } else {
-                            //El valor se cambia luego de publicar y proyectar
-                            //en pantallas
-                            DatosEstaticos.PublicarEnRedesSociales = false;
                             VolverADetalleEquipo(context);
                           }
-                        } else {
-                          VolverADetalleEquipo(context);
-                        }
-                      },
+                        },
+                      ),
                     ),
                   ],
                 ),
