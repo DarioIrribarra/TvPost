@@ -90,6 +90,9 @@ flutter:
      - family:  IconSoporte
        fonts:
        - asset: iconos/IconSoporte.ttf
+     - family:  IconRRSS
+       fonts:
+       - asset: iconos/IconRRSS.ttf
      
        
       

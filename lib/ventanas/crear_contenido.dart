@@ -216,7 +216,8 @@ class _CrearContenidoState extends State<CrearContenido> {
                           style: TextStyle(color: Colors.white),
                         ),
                         onPressed: () async {
-                          PopUps.popUpCargando(context, 'Guardando Imagen');
+                          PopUps.popUpCargando(
+                              context, 'Guardando Imagen'.toUpperCase());
                           final bytes1 = await Utils.capture(key1);
                           //Cierra popup cargando
                           Navigator.of(context, rootNavigator: true).pop();
@@ -1264,7 +1265,7 @@ class _CrearContenidoState extends State<CrearContenido> {
 
   Future _finalizarGuardado(Uint8List imagenEnBytes) async {
     GlobalKey<FormState> _keyValidadorTxtImagen = GlobalKey<FormState>();
-    PopUps.popUpCargando(context, 'Cambiando tamaño');
+    PopUps.popUpCargando(context, 'Cambiando tamaño'.toUpperCase());
     //Redimensiono imagen en memoria
     imagenEnBytes = await Utils.redimensionarImg(imagenEnBytes, divisionLayout);
 
@@ -1324,7 +1325,8 @@ class _CrearContenidoState extends State<CrearContenido> {
                       if (_keyValidadorTxtImagen.currentState.validate()) {
                         //Se abre el popup de cargando
 
-                        PopUps.popUpCargando(context, 'Añadiendo imagen...');
+                        PopUps.popUpCargando(
+                            context, 'Añadiendo imagen'.toUpperCase());
 
                         //Se crea el archivo final del tamaño modificado
                         File temporal =
@@ -1354,8 +1356,8 @@ class _CrearContenidoState extends State<CrearContenido> {
                           //Cierra popup cargando
                           Navigator.of(context, rootNavigator: true).pop();
 
-                          PopUps.PopUpConWidget(
-                              context, Text('Error al enviar imagen'));
+                          PopUps.PopUpConWidget(context,
+                              Text('Error al enviar imagen'.toUpperCase()));
                         }
                       }
                     },

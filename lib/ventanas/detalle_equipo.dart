@@ -848,7 +848,7 @@ class _DetalleEquipoState extends State<DetalleEquipo> {
                                 onPressed: () async {
                                   if (_keyValidador.currentState.validate()) {
                                     PopUps.popUpCargando(
-                                        context, 'Actualizando alias...');
+                                        context, 'ACTUALIZANDO ALIAS');
                                     ObtieneDatos datos = ObtieneDatos();
                                     String serial = DatosEstaticos
                                             .listadoDatosEquipoSeleccionado[0]
@@ -868,7 +868,7 @@ class _DetalleEquipoState extends State<DetalleEquipo> {
                                         Duration(milliseconds: 400));
                                     SnackBar snackbar = SnackBar(
                                         content: Text(
-                                          'Alias cambiado exitosamente',
+                                          'ALIAS CAMBIADO EXITOSAMENTE',
                                           textAlign: TextAlign.center,
                                         ),
                                         duration: Duration(seconds: 1));
@@ -1038,44 +1038,53 @@ class _DetalleEquipoState extends State<DetalleEquipo> {
         height: 150,
         width: 250,
         child: Column(
+          mainAxisSize: MainAxisSize.min,
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
+            Padding(
+              padding: const EdgeInsets.only(top: 5.0),
+              child: Column(
+                children: [
+                  Text(
+                    'DESHABILITAR EQUIPO',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(fontSize: 13),
+                  ),
+                  Text(
+                    '${alias}'.toUpperCase(),
+                    textAlign: TextAlign.center,
+                    style: TextStyle(fontSize: 13),
+                  ),
+                ],
+              ),
+            ),
+
+            /*
             Text(
-              'DESHABILITAR EQUIPO',
+              'Serial: ${serial}',
               textAlign: TextAlign.center,
             ),
-            Column(
-              mainAxisSize: MainAxisSize.min,
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                Text(
-                  'Alias: ${alias}',
-                  textAlign: TextAlign.center,
-                ),
-                Text(
-                  'Serial: ${serial}',
-                  textAlign: TextAlign.center,
-                ),
-                Text(
-                  'Ip: ${ip}',
-                  textAlign: TextAlign.center,
-                ),
-                SizedBox(
-                  height: 10,
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    GestureDetector(
+            Text(
+              'Ip: ${ip}',
+              textAlign: TextAlign.center,
+            ),*/
+            Padding(
+              padding: const EdgeInsets.only(bottom: 5.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  Expanded(flex: 3, child: SizedBox()),
+                  Expanded(
+                    flex: 4,
+                    child: GestureDetector(
                       child: Icon(
                         Icons.check_circle,
                         color: HexColor('#3EDB9B'),
-                        size: 30,
+                        size: 35,
                       ),
                       onTap: () async {
                         Navigator.pop(context);
-                        PopUps.popUpCargando(
-                            context, 'DESHABILITANDO EQUIPO...');
+                        PopUps.popUpCargando(context, 'DESHABILITANDO EQUIPO');
                         var resultado = await actualizarEstado
                             .updateEstadoEquipo(serial: serial, estado: "0");
                         await actualizarEstado.getDatosEquipos();
@@ -1087,24 +1096,28 @@ class _DetalleEquipoState extends State<DetalleEquipo> {
                               decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(40),
                                   color: HexColor('#f4f4f4')),
-                              height: 100,
+                              height: 150,
                               width: 250,
                               child: Column(
                                 mainAxisSize: MainAxisSize.min,
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceEvenly,
                                 children: [
-                                  Text('EQUIPO $alias DESHABILITADO',
-                                      textAlign: TextAlign.center,
-                                      style: TextStyle(fontSize: 13)),
-                                  SizedBox(
-                                    width: 10,
+                                  Column(
+                                    children: [
+                                      Text('EQUIPO $alias',
+                                          textAlign: TextAlign.center,
+                                          style: TextStyle(fontSize: 13)),
+                                      Text('DESHABILITADO',
+                                          textAlign: TextAlign.center,
+                                          style: TextStyle(fontSize: 13)),
+                                    ],
                                   ),
                                   GestureDetector(
                                     child: Icon(
                                       Icons.check_circle,
                                       color: HexColor('#3EDB9B'),
-                                      size: 30,
+                                      size: 35,
                                     ),
                                     onTap: () {
                                       Navigator.pop(context);
@@ -1118,11 +1131,14 @@ class _DetalleEquipoState extends State<DetalleEquipo> {
                         }
                       },
                     ),
-                    GestureDetector(
+                  ),
+                  Expanded(
+                    flex: 4,
+                    child: GestureDetector(
                       child: Icon(
                         Icons.cancel,
                         color: HexColor('#FC4C8B'),
-                        size: 30,
+                        size: 35,
                       ),
                       onTap: () {
                         Navigator.pop(context);
@@ -1132,10 +1148,11 @@ class _DetalleEquipoState extends State<DetalleEquipo> {
                         });*/
                       },
                     ),
-                  ],
-                ),
-              ],
-            )
+                  ),
+                  Expanded(flex: 3, child: SizedBox()),
+                ],
+              ),
+            ),
           ],
         ),
       ),
@@ -1168,100 +1185,118 @@ class _DetalleEquipoState extends State<DetalleEquipo> {
         height: 150,
         width: 250,
         child: Column(
+          mainAxisSize: MainAxisSize.min,
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
-            Text(
-              'Habilitar Equipo',
-              textAlign: TextAlign.center,
-            ),
             Column(
-              mainAxisSize: MainAxisSize.min,
               children: [
                 Text(
-                  'Alias: ${alias}',
+                  'Habilitar Equipo'.toUpperCase(),
                   textAlign: TextAlign.center,
+                  style: TextStyle(fontSize: 13),
                 ),
                 Text(
-                  'Serial: ${serial}',
+                  '${alias}'.toUpperCase(),
                   textAlign: TextAlign.center,
-                ),
-                Text(
-                  'Ip: ${ip}',
-                  textAlign: TextAlign.center,
-                ),
-                SizedBox(
-                  height: 10,
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    GestureDetector(
-                      child: Icon(
-                        Icons.check_circle,
-                        color: HexColor('#3EDB9B'),
-                        size: 30,
-                      ),
-                      onTap: () async {
-                        Navigator.pop(context);
-                        PopUps.popUpCargando(context, 'Habilitando equipo...');
-                        var resultado = await actualizarEstado
-                            .updateEstadoEquipo(serial: serial, estado: "1");
-                        await actualizarEstado.getDatosEquipos();
-                        if (resultado == 1) {
-                          setState(() {
-                            Navigator.pop(context);
-                            //valorSwitchUno = false;
-                            Widget contenidoPopUp = Container(
-                                decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(40),
-                                    color: HexColor('#f4f4f4')),
-                                height: 100,
-                                width: 250,
-                                child: Column(
-                                  mainAxisSize: MainAxisSize.min,
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceEvenly,
-                                  children: [
-                                    Text('EQUIPO $alias HABILITADO',
-                                        style: TextStyle(fontSize: 13)),
-                                    SizedBox(
-                                      width: 10,
-                                    ),
-                                    GestureDetector(
-                                      child: Icon(
-                                        Icons.check_circle,
-                                        color: HexColor('#3EDB9B'),
-                                        size: 30,
-                                      ),
-                                      onTap: () {
-                                        Navigator.pop(context);
-                                      },
-                                    ),
-                                  ],
-                                ));
-                            PopUps.PopUpConWidget(context, contenidoPopUp);
-                          });
-                        }
-                      },
-                    ),
-                    GestureDetector(
-                      child: Icon(
-                        Icons.cancel,
-                        color: HexColor('#FC4C8B'),
-                        size: 30,
-                      ),
-                      onTap: () {
-                        Navigator.pop(context);
-                        /*setState(() {
-                          Navigator.pop(context);
-                          valorSwitchUno = valorSwitch;
-                        });*/
-                      },
-                    ),
-                  ],
+                  style: TextStyle(fontSize: 13),
                 ),
               ],
-            )
+            ),
+            /* Text(
+              'Alias: ${alias}',
+              textAlign: TextAlign.center,
+            ),
+            Text(
+              'Serial: ${serial}',
+              textAlign: TextAlign.center,
+            ),
+            Text(
+              'Ip: ${ip}',
+              textAlign: TextAlign.center,
+            ),
+            SizedBox(
+              height: 10,
+            ),*/
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                Expanded(flex: 3, child: SizedBox()),
+                Expanded(
+                  flex: 4,
+                  child: GestureDetector(
+                    child: Icon(
+                      Icons.check_circle,
+                      color: HexColor('#3EDB9B'),
+                      size: 35,
+                    ),
+                    onTap: () async {
+                      Navigator.pop(context);
+                      PopUps.popUpCargando(
+                          context, 'Habilitando equipo'.toUpperCase());
+                      var resultado = await actualizarEstado.updateEstadoEquipo(
+                          serial: serial, estado: "1");
+                      await actualizarEstado.getDatosEquipos();
+                      if (resultado == 1) {
+                        setState(() {
+                          Navigator.pop(context);
+                          //valorSwitchUno = false;
+                          Widget contenidoPopUp = Container(
+                              decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(40),
+                                  color: HexColor('#f4f4f4')),
+                              height: 150,
+                              width: 250,
+                              child: Column(
+                                mainAxisSize: MainAxisSize.min,
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceEvenly,
+                                children: [
+                                  Column(
+                                    children: [
+                                      Text('EQUIPO $alias'.toUpperCase(),
+                                          style: TextStyle(fontSize: 13)),
+                                      Text('HABILITADO',
+                                          style: TextStyle(fontSize: 13)),
+                                    ],
+                                  ),
+                                  GestureDetector(
+                                    child: Icon(
+                                      Icons.check_circle,
+                                      color: HexColor('#3EDB9B'),
+                                      size: 35,
+                                    ),
+                                    onTap: () {
+                                      Navigator.pop(context);
+                                    },
+                                  ),
+                                ],
+                              ));
+                          PopUps.PopUpConWidget(context, contenidoPopUp);
+                        });
+                      }
+                    },
+                  ),
+                ),
+                Expanded(
+                  flex: 4,
+                  child: GestureDetector(
+                    child: Icon(
+                      Icons.cancel,
+                      color: HexColor('#FC4C8B'),
+                      size: 35,
+                    ),
+                    onTap: () {
+                      Navigator.pop(context);
+                      /*setState(() {
+                        Navigator.pop(context);
+                        valorSwitchUno = valorSwitch;
+                      });*/
+                    },
+                  ),
+                ),
+                Expanded(flex: 3, child: SizedBox()),
+              ],
+            ),
           ],
         ),
       ),

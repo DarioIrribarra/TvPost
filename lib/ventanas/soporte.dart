@@ -4,6 +4,7 @@ import 'package:tvpost_flutter/utilidades/datos_estaticos.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'dart:io';
 import 'package:tvpost_flutter/icon_soporte_icons.dart';
+import 'package:tvpost_flutter/icon_r_r_s_s_icons.dart';
 import 'package:store_redirect/store_redirect.dart';
 
 class Soporte extends StatefulWidget {
@@ -68,57 +69,73 @@ class _SoporteState extends State<Soporte> {
             SizedBox(
               height: 10,
             ),
-            Text("CONTÁCTANOS", style: TextStyle(fontSize: 13)),
+            Text("ESCRÍBENOS SOBRE TU PROBLEMA",
+                style: TextStyle(fontSize: 13)),
+            SizedBox(),
             Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              //mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
-                Container(
-                    width: 70,
-                    height: 40,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(20),
-                      color: Colors.greenAccent,
-                    ),
-                    //color: Colors.greenAccent,
+                Expanded(flex: 3, child: SizedBox()),
+                Expanded(
+                  flex: 2,
+                  child: CircleAvatar(
+                      radius: 28,
+                      backgroundColor: HexColor('#4fce5d'),
+                      child: FlatButton(
+                          onPressed: () {
+                            wsp(phone: "+56933710386", message: 'Hola Tv Post');
+                          },
+                          child: Container(
+                            transform:
+                                Matrix4.translationValues(-4.0, 0.0, 0.0),
+                            child: Icon(
+                              IconRRSS.whatsapp,
+                              color: Colors.white,
+                              size: 32,
+                            ),
+                          ))),
+                ),
+                Expanded(flex: 1, child: SizedBox()),
+                Expanded(
+                  flex: 2,
+                  child: CircleAvatar(
+                    radius: 28,
+                    backgroundColor: HexColor('#2e74ff'),
                     child: FlatButton(
                         onPressed: () {
-                          wsp(phone: "+56933710386", message: 'Hola Tv Post');
+                          llamada("tel:+56933710386");
                         },
                         child: Container(
-                          color: Colors.amber,
+                          transform: Matrix4.translationValues(-3.0, 1.0, 0.0),
                           child: Icon(
-                            IconSoporte.whatsapp,
-                            color: Colors.black,
+                            IconRRSS.phone,
+                            color: Colors.white,
+                            size: 32,
                           ),
-                        ))),
-                Container(
-                  width: 70,
-                  height: 40,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(20),
-                    color: Colors.greenAccent,
+                        )),
                   ),
-                  //color: Colors.greenAccent,
-                  child: FlatButton(
-                      onPressed: () {
-                        llamada("tel:+56933710386");
-                      },
-                      child: Icon(Icons.phone_android)),
                 ),
-                Container(
-                  width: 70,
-                  height: 40,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(20),
-                    color: Colors.greenAccent,
+                Expanded(flex: 1, child: SizedBox()),
+                Expanded(
+                  flex: 2,
+                  child: CircleAvatar(
+                    radius: 28,
+                    backgroundColor: HexColor('#ff534a'),
+                    child: FlatButton(
+                        onPressed: () {
+                          correo("mailto:d.saezzcc@gmail.com");
+                        },
+                        child: Container(
+                          transform: Matrix4.translationValues(-6.5, -1.0, 0.0),
+                          child: Icon(
+                            IconRRSS.mail_1,
+                            color: Colors.white,
+                            size: 32,
+                          ),
+                        )),
                   ),
-                  //color: Colors.greenAccent,
-                  child: FlatButton(
-                      onPressed: () {
-                        correo("mailto:d.saezzcc@gmail.com");
-                      },
-                      child: Icon(Icons.mail_outline)),
                 ),
+                Expanded(flex: 3, child: SizedBox()),
               ],
             ),
             /* RaisedButton(
@@ -128,7 +145,7 @@ class _SoporteState extends State<Soporte> {
                 },
                 child: Text("presione aquí"))*/
             SizedBox(
-              height: 110,
+              height: 100,
             ),
             Container(
                 padding: EdgeInsets.only(top: 25),
@@ -143,7 +160,7 @@ class _SoporteState extends State<Soporte> {
                       color: HexColor("#3EDB9B"),
                     ),
                     SizedBox(
-                      height: 15,
+                      height: 25,
                     ),
                     Text(
                       "Empresa de Diseño y Desarrollo Producnova",
@@ -182,6 +199,89 @@ class _SoporteState extends State<Soporte> {
                     ),
                   ],
                 )),
+            Row(
+              //   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                Expanded(flex: 2, child: SizedBox()),
+                Expanded(
+                  flex: 2,
+                  child: CircleAvatar(
+                      radius: 18,
+                      backgroundColor: HexColor('#3edb9b'),
+                      child: FlatButton(
+                          onPressed: () {
+                            //  wsp(phone: "+56933710386", message: 'Hola Tv Post');
+                          },
+                          child: Container(
+                            transform:
+                                Matrix4.translationValues(-0.0, 0.0, 0.0),
+                            child: Icon(
+                              IconRRSS.globe,
+                              color: Colors.white,
+                              size: 22,
+                            ),
+                          ))),
+                ),
+                Expanded(
+                  flex: 2,
+                  child: CircleAvatar(
+                    radius: 18,
+                    backgroundColor: HexColor('#0077b5'),
+                    child: FlatButton(
+                        onPressed: () {
+                          // llamada("tel:+56933710386");
+                        },
+                        child: Container(
+                          transform: Matrix4.translationValues(0.5, 0.0, 0.0),
+                          child: Icon(
+                            IconRRSS.linkedin_in,
+                            color: Colors.white,
+                            size: 22,
+                          ),
+                        )),
+                  ),
+                ),
+                Expanded(
+                  flex: 2,
+                  child: CircleAvatar(
+                    radius: 18,
+                    backgroundColor: HexColor('#dd2a7b'),
+                    child: FlatButton(
+                        onPressed: () {
+                          // correo("mailto:d.saezzcc@gmail.com");
+                        },
+                        child: Container(
+                          transform: Matrix4.translationValues(-0.0, 0.0, 0.0),
+                          child: Icon(
+                            IconRRSS.instagram,
+                            color: Colors.white,
+                            size: 22,
+                          ),
+                        )),
+                  ),
+                ),
+                Expanded(
+                  flex: 2,
+                  child: CircleAvatar(
+                    radius: 18,
+                    backgroundColor: HexColor('#1778f2'),
+                    child: FlatButton(
+                        onPressed: () {
+                          //  correo("mailto:d.saezzcc@gmail.com");
+                        },
+                        child: Container(
+                          transform: Matrix4.translationValues(-0.0, 3.0, 0.0),
+                          child: Icon(
+                            IconRRSS.facebook_f,
+                            color: Colors.white,
+                            size: 29,
+                          ),
+                        )),
+                  ),
+                ),
+                Expanded(flex: 2, child: SizedBox()),
+              ],
+            ),
           ],
         ),
       ),
@@ -205,8 +305,7 @@ class _SoporteState extends State<Soporte> {
     } else {
       StoreRedirect.redirect(
           androidAppId: "com.whatsapp",
-          iOSAppId: "	310633997"
-      ); //'WSP INVALIDO ${url()}';
+          iOSAppId: "	310633997"); //'WSP INVALIDO ${url()}';
     }
   }
 

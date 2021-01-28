@@ -260,7 +260,7 @@ class _LoginState extends State<Login> {
                               ),
                               onPressed: () async {
                                 //Se crea popup de cargando
-                                PopUps.popUpCargando(context, 'Cargando...');
+                                PopUps.popUpCargando(context, 'CARGANDO');
                                 //Se cambia el estado para asignar valor de rut empresa a la
                                 //variable local. Ir a buscar el dato de empresa
                                 ObtieneDatos datos = ObtieneDatos();

@@ -330,32 +330,100 @@ class MenuAppBar {
           PopUps.PopUpConWidget(
               context,
               Container(
-                  decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(40),
-                      color: HexColor('#f4f4f4')),
-                  height: 100,
-                  width: 250,
-                  child: Center(
-                      child: Text(
-                    'Active algún receptor para ver galería de imagenes'
-                        .toUpperCase(),
-                    textAlign: TextAlign.center,
-                  ))));
+                decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(40),
+                    color: HexColor('#f4f4f4')),
+                height: 100,
+                width: 250,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.only(left: 25),
+                          child: Column(
+                            children: [
+                              Padding(
+                                padding:
+                                    const EdgeInsets.only(top: 3, bottom: 1),
+                                child: Text(
+                                  'USTED NO POSEE',
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(fontSize: 12),
+                                ),
+                              ),
+                              Text(
+                                'EQUIPOS CONECTADOS',
+                                textAlign: TextAlign.center,
+                                style: TextStyle(fontSize: 12),
+                              ),
+                            ],
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.only(right: 25),
+                          child: Icon(
+                            Icons.do_disturb_on_rounded,
+                            color: HexColor('#FC4C8B'),
+                            size: 35,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ));
         } else if (rutaVentana == "/seleccionar_video") {
           PopUps.PopUpConWidget(
               context,
               Container(
-                  decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(40),
-                      color: HexColor('#f4f4f4')),
-                  height: 100,
-                  width: 250,
-                  child: Center(
-                      child: Text(
-                    'Active algún receptor para ver galeria de videos'
-                        .toUpperCase(),
-                    textAlign: TextAlign.center,
-                  ))));
+                decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(40),
+                    color: HexColor('#f4f4f4')),
+                height: 100,
+                width: 250,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.only(left: 25),
+                          child: Column(
+                            children: [
+                              Padding(
+                                padding:
+                                    const EdgeInsets.only(top: 3, bottom: 1),
+                                child: Text(
+                                  'USTED NO POSEE',
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(fontSize: 12),
+                                ),
+                              ),
+                              Text(
+                                'EQUIPOS CONECTADOS',
+                                textAlign: TextAlign.center,
+                                style: TextStyle(fontSize: 12),
+                              ),
+                            ],
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.only(right: 25),
+                          child: Icon(
+                            Icons.do_disturb_on_rounded,
+                            color: HexColor('#FC4C8B'),
+                            size: 35,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ));
         }
       }
     } else {
@@ -1078,7 +1146,7 @@ class _OpcionesSeleccionMediaState extends State<OpcionesSeleccionMedia> {
                 decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(40),
                     color: HexColor('#f4f4f4')),
-                height: 175,
+                height: 140,
                 width: 250,
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -1086,7 +1154,7 @@ class _OpcionesSeleccionMediaState extends State<OpcionesSeleccionMedia> {
                     Column(
                       children: [
                         Padding(
-                          padding: const EdgeInsets.only(top: 50.0),
+                          padding: const EdgeInsets.only(top: 38.0),
                           child: Text("INGRESAR URL",
                               style: TextStyle(fontSize: 13)),
                         ),
@@ -1560,8 +1628,10 @@ class BotonEnviarAEquipo extends StatelessWidget {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
-                CircularProgressIndicator(),
-                Text('Preparando pantallas...', style: TextStyle(fontSize: 13))
+                Text('PREPARANDO PANTALLAS', style: TextStyle(fontSize: 13)),
+                CircularProgressIndicator(
+                    valueColor:
+                        AlwaysStoppedAnimation<Color>(HexColor("#FC4C8B"))),
               ],
             ),
           );
@@ -1575,8 +1645,10 @@ class BotonEnviarAEquipo extends StatelessWidget {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
-              CircularProgressIndicator(),
-              Text('Preparando pantallas...', style: TextStyle(fontSize: 13)),
+              Text('PREPARANDO PANTALLAS', style: TextStyle(fontSize: 13)),
+              CircularProgressIndicator(
+                  valueColor:
+                      AlwaysStoppedAnimation<Color>(HexColor("#FC4C8B"))),
             ],
           ),
         );

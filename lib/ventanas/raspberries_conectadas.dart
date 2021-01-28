@@ -741,11 +741,16 @@ class _RaspberriesConectadasState extends State<RaspberriesConectadas> {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    CircularProgressIndicator(),
+                    Text(
+                      "ACTUALIZANDO PANTALLAS",
+                      style: TextStyle(fontSize: 13),
+                    ),
                     SizedBox(
                       width: 10,
                     ),
-                    Text("Actualizando pantallas"),
+                    CircularProgressIndicator(
+                        valueColor:
+                            AlwaysStoppedAnimation<Color>(HexColor("#FC4C8B"))),
                   ],
                 ),
               );
@@ -1197,7 +1202,8 @@ class _RaspberriesConectadasState extends State<RaspberriesConectadas> {
                     ),
                     onTap: () async {
                       Navigator.pop(context);
-                      PopUps.popUpCargando(context, 'Deshabilitando equipo...');
+                      PopUps.popUpCargando(
+                          context, 'Deshabilitando equipo'.toUpperCase());
                       var resultado = await actualizarEstado.updateEstadoEquipo(
                           serial: serial, estado: "0");
                       if (resultado == 1) {
@@ -1281,9 +1287,16 @@ class _RaspberriesConectadasState extends State<RaspberriesConectadas> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
-                Text('¿DESEA DESHABILITAR TODOS LOS EQUIPOS?',
-                    textAlign: TextAlign.center,
-                    style: TextStyle(fontSize: 13)),
+                Column(
+                  children: [
+                    Text('¿DESEA DESHABILITAR',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(fontSize: 13)),
+                    Text('TODOS SUS EQUIPOS?',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(fontSize: 13)),
+                  ],
+                ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
@@ -1295,8 +1308,7 @@ class _RaspberriesConectadasState extends State<RaspberriesConectadas> {
                       ),
                       onTap: () async {
                         Navigator.pop(context);
-                        PopUps.popUpCargando(
-                            context, 'DESHABILITANDO EQUIPOS...');
+                        PopUps.popUpCargando(context, 'DESHABILITANDO EQUIPOS');
                         var resultado =
                             await actualizarEstado.updateEstadoEquipo(
                                 serial: "-1",
@@ -1381,7 +1393,7 @@ class _RaspberriesConectadasState extends State<RaspberriesConectadas> {
     if (listadoEquipos == null) {
       contenido = new AlertDialog(
         title: Text(
-          'Habilitar Equipo',
+          'Habilitar Equipo'.toUpperCase(),
           textAlign: TextAlign.center,
         ),
         content: Column(
@@ -1412,7 +1424,7 @@ class _RaspberriesConectadasState extends State<RaspberriesConectadas> {
                   ),
                   onTap: () async {
                     Navigator.pop(context);
-                    PopUps.popUpCargando(context, 'HABILITANDO EQUIPO...');
+                    PopUps.popUpCargando(context, 'HABILITANDO EQUIPO');
                     var resultado = await actualizarEstado.updateEstadoEquipo(
                         serial: serial, estado: "1");
                     if (resultado == 1) {
@@ -1490,8 +1502,16 @@ class _RaspberriesConectadasState extends State<RaspberriesConectadas> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
-              Text('¿DESEA HABILITAR TODOS LOS EQUIPOS?',
-                  textAlign: TextAlign.center, style: TextStyle(fontSize: 13)),
+              Column(
+                children: [
+                  Text('¿DESEA HABILITAR',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(fontSize: 13)),
+                  Text('TODOS SUS EQUIPOS?',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(fontSize: 13)),
+                ],
+              ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
@@ -1503,7 +1523,7 @@ class _RaspberriesConectadasState extends State<RaspberriesConectadas> {
                     ),
                     onTap: () async {
                       Navigator.pop(context);
-                      PopUps.popUpCargando(context, 'HABILITANDO EQUIPOS...');
+                      PopUps.popUpCargando(context, 'HABILITANDO EQUIPOS');
                       var resultado = await actualizarEstado.updateEstadoEquipo(
                           serial: "-1",
                           estado: "1",
@@ -1582,49 +1602,38 @@ class _RaspberriesConectadasState extends State<RaspberriesConectadas> {
         decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(40),
             color: HexColor('#f4f4f4')),
-        height: 150,
+        height: 110,
         width: 250,
         child: Padding(
-          padding: const EdgeInsets.only(top: 12),
+          padding: const EdgeInsets.only(top: 25, bottom: 25),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
               //Título
-              Text(
-                'RECEPTOR SIN COMUNICACIÓN',
-                textAlign: TextAlign.center,
-                textScaleFactor: 0.8,
-                style: TextStyle(fontWeight: FontWeight.bold),
+              Column(
+                children: [
+                  Text(
+                    '${alias.toUpperCase()}',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      fontSize: 13,
+                    ),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.only(top: 2),
+                    child: Text(
+                      'SIN CONEXIÓN',
+                      textAlign: TextAlign.center,
+                      textScaleFactor: 0.8,
+                    ),
+                  ),
+                ],
               ),
-              Text(
-                'Alias: ${alias}',
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  fontFamily: 'textoMont',
-                  fontSize: 12,
-                ),
-              ),
-              Text(
-                'Serial: ${serial}',
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  fontFamily: 'textoMont',
-                  fontSize: 12,
-                ),
-              ),
-              Text(
-                'Ip: ${ip}',
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  fontFamily: 'textoMont',
-                  fontSize: 12,
-                ),
-              ),
+
               Text('Compruebe conexión de red y energía',
                   textAlign: TextAlign.center,
                   style: TextStyle(fontSize: 13, fontFamily: 'textoMont')),
-
-              FlatButton(
+              /*FlatButton(
                 child: Icon(
                   Icons.check_circle,
                   color: HexColor('#3EDB9B'),
@@ -1633,7 +1642,7 @@ class _RaspberriesConectadasState extends State<RaspberriesConectadas> {
                 onPressed: () {
                   Navigator.pop(context);
                 },
-              ),
+              ),*/
             ],
           ),
         ));
@@ -1653,7 +1662,7 @@ class _RaspberriesConectadasState extends State<RaspberriesConectadas> {
           children: [
             //Título
             Text(
-              'Función no permitida',
+              'Función no permitida'.toUpperCase(),
               textAlign: TextAlign.center,
               textScaleFactor: 1.2,
               style: TextStyle(fontWeight: FontWeight.bold),
@@ -1668,15 +1677,16 @@ class _RaspberriesConectadasState extends State<RaspberriesConectadas> {
             SizedBox(
               height: 10,
             ),
-            Text("Active equipo ' $alias ' y vuelva a intentarlo",
+            Text("Active equipo ' $alias ' y vuelva a intentarlo".toUpperCase(),
                 textAlign: TextAlign.center, style: TextStyle(fontSize: 13)),
             SizedBox(
               height: 10,
             ),
             RaisedButton(
-              child: Text(
-                'Aceptar',
-                textScaleFactor: 1.3,
+              child: Icon(
+                Icons.check_circle,
+                color: HexColor('#3EDB9B'),
+                size: 35,
               ),
               onPressed: () {
                 Navigator.pop(context);
