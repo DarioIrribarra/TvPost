@@ -708,8 +708,9 @@ class _SeleccionarImagenState extends State<SeleccionarImagen> {
                           onPressed: () async {
                             if (_keyValidador.currentState.validate()) {
                               //Se abre el popup de cargando
+                              Navigator.pop(context);
                               PopUps.popUpCargando(
-                                  context, 'Añadiendo imagen...');
+                                  context, 'Añadiendo imagen'.toUpperCase());
                               //Obtengo el resultado del envio
                               var resultado = await PopUps.enviarImagen(
                                       nombreNuevaImagen, imagenFinal)
@@ -763,86 +764,100 @@ class _SeleccionarImagenState extends State<SeleccionarImagen> {
         String nombreNuevaImagen = "";
         String extension;
         File imagenFinal;
-        Widget contenidoPopUp = Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Text(
-              '¿Agregar ${imagenSeleccionadaGaleria.files.length} imagenes?',
-              textAlign: TextAlign.center,
-            ),
-            Row(
-              children: [
-                Expanded(
-                  flex: 1,
-                  child: FlatButton(
-                    child: Text(
-                      'Aceptar',
-                      textAlign: TextAlign.center,
-                    ),
-                    onPressed: () async {
-                      PopUps.popUpCargando(context, 'Agregando imagenes...');
+        Widget contenidoPopUp = Container(
+          decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(40),
+              color: HexColor('#f4f4f4')),
+          height: 150,
+          width: 250,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              Text(
+                '¿Agregar ${imagenSeleccionadaGaleria.files.length} imagenes?'
+                    .toUpperCase(),
+                textAlign: TextAlign.center,
+                style: TextStyle(fontSize: 13),
+              ),
+              Row(
+                children: [
+                  Expanded(flex: 3, child: SizedBox()),
+                  Expanded(
+                    flex: 4,
+                    child: FlatButton(
+                      child: Icon(
+                        Icons.check_circle,
+                        color: HexColor('#3EDB9B'),
+                        size: 35,
+                      ),
+                      onPressed: () async {
+                        PopUps.popUpCargando(
+                            context, 'Agregando imagenes'.toUpperCase());
 
-                      for (int i = 0;
-                          i <= imagenSeleccionadaGaleria.files.length - 1;
-                          i++) {
-                        PlatformFile element =
-                            imagenSeleccionadaGaleria.files[i];
-                        extension = p.extension(element.path);
-                        imagenFinal = File(element.path);
-                        //Se le da el nombre de la hora actual + su posición
-                        // //en el listado
-                        DateTime now = DateTime.now();
-                        nombreNuevaImagen = '${now.year}${now.month}${now.day}'
-                            '${now.hour}${now.minute}${now.second}'
-                            '_$i$extension';
+                        for (int i = 0;
+                            i <= imagenSeleccionadaGaleria.files.length - 1;
+                            i++) {
+                          PlatformFile element =
+                              imagenSeleccionadaGaleria.files[i];
+                          extension = p.extension(element.path);
+                          imagenFinal = File(element.path);
+                          //Se le da el nombre de la hora actual + su posición
+                          // //en el listado
+                          DateTime now = DateTime.now();
+                          nombreNuevaImagen =
+                              '${now.year}${now.month}${now.day}'
+                              '${now.hour}${now.minute}${now.second}'
+                              '_$i$extension';
 
-                        //Obtengo el resultado del envio
-                        var resultado = await PopUps.enviarImagen(
-                                nombreNuevaImagen, imagenFinal)
-                            .then((value) => value);
-                        if (resultado == false) {
-                          showDialog(
-                            context: null,
-                            child: Text('Error al agregar imágenes'),
-                          );
-                          break;
+                          //Obtengo el resultado del envio
+                          var resultado = await PopUps.enviarImagen(
+                                  nombreNuevaImagen, imagenFinal)
+                              .then((value) => value);
+                          if (resultado == false) {
+                            showDialog(
+                              context: null,
+                              child: Text('Error al agregar imágenes'),
+                            );
+                            break;
+                          }
+                          //Replica imagen para porción 10%
+                          await ComunicacionRaspberry.ReplicarImagen(
+                              nombreNuevaImagen);
                         }
-                        //Replica imagen para porción 10%
-                        await ComunicacionRaspberry.ReplicarImagen(
-                            nombreNuevaImagen);
-                      }
-                      Navigator.pop(context);
-                      Navigator.pop(context);
-                      Navigator.popAndPushNamed(context, "/seleccionar_imagen",
-                          arguments: {
-                            'division_layout': '0',
-                            'ruta_proveniente': rutaDeDondeViene,
-                          });
-                      Fluttertoast.showToast(
-                        msg: "Imagenes agregadas",
-                        toastLength: Toast.LENGTH_SHORT,
-                        webBgColor: "#e74c3c",
-                        timeInSecForIosWeb: 5,
-                      );
-                    },
-                  ),
-                ),
-                SizedBox(
-                  width: 10,
-                ),
-                Expanded(
-                  flex: 1,
-                  child: FlatButton(
-                    child: Text(
-                      'Cancelar',
-                      textAlign: TextAlign.center,
+                        Navigator.pop(context);
+                        Navigator.pop(context);
+                        Navigator.popAndPushNamed(
+                            context, "/seleccionar_imagen",
+                            arguments: {
+                              'division_layout': '0',
+                              'ruta_proveniente': rutaDeDondeViene,
+                            });
+                        Fluttertoast.showToast(
+                          msg: "Imagenes agregadas",
+                          toastLength: Toast.LENGTH_SHORT,
+                          webBgColor: "#e74c3c",
+                          timeInSecForIosWeb: 5,
+                        );
+                      },
                     ),
-                    onPressed: () => Navigator.pop(context),
                   ),
-                ),
-              ],
-            ),
-          ],
+                  Expanded(
+                    flex: 4,
+                    child: FlatButton(
+                      child: Icon(
+                        Icons.cancel,
+                        color: HexColor('#FC4C8B'),
+                        size: 30,
+                      ),
+                      onPressed: () => Navigator.pop(context),
+                    ),
+                  ),
+                  Expanded(flex: 3, child: SizedBox()),
+                ],
+              ),
+            ],
+          ),
         );
         PopUps.PopUpConWidget(context, contenidoPopUp);
       }
@@ -1089,7 +1104,8 @@ class CambiosSeleccion {
                     //Eliminar
                     onPressed: () async {
                       Navigator.pop(context);
-                      PopUps.popUpCargando(context, 'Eliminando imagenes...');
+                      PopUps.popUpCargando(
+                          context, 'Eliminando imagenes'.toUpperCase());
                       var resultadoEliminar =
                           await ComunicacionRaspberry.EliminarContenido(
                               tipoContenido: 'imagenes',
@@ -1227,6 +1243,7 @@ class CambiosSeleccion {
                         listadoNombres.add(nombreNuevaImagen);
                         print(listadoNombres);
                         //Se abre el popup de cargando
+                        Navigator.of(context).pop();
                         PopUps.popUpCargando(context, 'Editando imagen...');
                         //Obtengo el resultado del envio
                         var resultado =

@@ -1324,7 +1324,7 @@ class _CrearContenidoState extends State<CrearContenido> {
                     onPressed: () async {
                       if (_keyValidadorTxtImagen.currentState.validate()) {
                         //Se abre el popup de cargando
-
+                        Navigator.of(context).pop();
                         PopUps.popUpCargando(
                             context, 'Añadiendo imagen'.toUpperCase());
 

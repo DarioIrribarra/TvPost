@@ -733,7 +733,7 @@ class _DetalleEquipoState extends State<DetalleEquipo> {
           child: ListView(
             children: [
               Container(
-                margin: EdgeInsets.only(top: 30),
+                margin: EdgeInsets.only(top: 20),
                 width: MediaQuery.of(context).size.width,
                 child: Center(
                   child: Text(

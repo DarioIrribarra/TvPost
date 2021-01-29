@@ -54,8 +54,11 @@ class _PerfilState extends State<Perfil> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
-              SizedBox(),
-              Text("MI PERFIL", style: TextStyle(fontSize: 16.5)),
+              //SizedBox(),
+              Padding(
+                padding: const EdgeInsets.only(top: 6, bottom: 10),
+                child: Text("MI PERFIL", style: TextStyle(fontSize: 16.5)),
+              ),
               Container(
                 width: 110,
                 height: 110,
@@ -94,26 +97,19 @@ class _PerfilState extends State<Perfil> {
                                 ),
                               )*/
               ),
-              SizedBox(
-                height: 10,
+              Padding(
+                padding: const EdgeInsets.only(top: 20.0),
+                child:
+                    Text("EMPRESA PRODUCNOVA", style: TextStyle(fontSize: 13)),
               ),
-              Container(
-                  child: Column(
-                children: [
-                  Text("EMPRESA PRODUCNOVA", style: TextStyle(fontSize: 13)),
-                  SizedBox(
-                    height: 10,
-                  ),
-                  Text("98.765.432", style: TextStyle(fontSize: 13)),
-                ],
-              )),
+              Text("98.765.432", style: TextStyle(fontSize: 13)),
               Container(
                 width: MediaQuery.of(context).size.width / 1.3,
                 height: 1.5,
                 color: HexColor("#3EDB9B"),
               ),
               Container(
-                margin: EdgeInsets.only(top: 10),
+                margin: EdgeInsets.only(top: 15),
                 height: MediaQuery.of(context).size.height / 8,
                 width: MediaQuery.of(context).size.width,
                 child: Row(
@@ -229,6 +225,8 @@ class _PerfilState extends State<Perfil> {
                   ],
                 ),
               ),
+              SizedBox(),
+              SizedBox(),
             ],
           ),
         ),

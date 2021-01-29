@@ -47,7 +47,7 @@ class _SoporteState extends State<Soporte> {
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
             Padding(
-              padding: const EdgeInsets.only(top: 10),
+              padding: const EdgeInsets.only(top: 11, bottom: 20),
               child: Text(
                 "SOPORTE TÉCNICO",
                 style: TextStyle(fontSize: 16.5),
@@ -66,12 +66,11 @@ class _SoporteState extends State<Soporte> {
               //color: Colors.greenAccent,
               //decoration: BoxDecoration(borderRadius: BorderRadius.circular(5),),
             ),
-            SizedBox(
-              height: 10,
+            Padding(
+              padding: const EdgeInsets.only(top: 30.0, bottom: 25),
+              child: Text("ESCRÍBENOS SOBRE TU PROBLEMA",
+                  style: TextStyle(fontSize: 13)),
             ),
-            Text("ESCRÍBENOS SOBRE TU PROBLEMA",
-                style: TextStyle(fontSize: 13)),
-            SizedBox(),
             Row(
               //mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
@@ -145,10 +144,10 @@ class _SoporteState extends State<Soporte> {
                 },
                 child: Text("presione aquí"))*/
             SizedBox(
-              height: 100,
+              height: 85,
             ),
             Container(
-                padding: EdgeInsets.only(top: 25),
+                padding: EdgeInsets.only(top: 20),
                 height: MediaQuery.of(context).size.height / 5,
                 width: MediaQuery.of(context).size.width,
                 child: Column(
@@ -160,7 +159,7 @@ class _SoporteState extends State<Soporte> {
                       color: HexColor("#3EDB9B"),
                     ),
                     SizedBox(
-                      height: 25,
+                      height: 15,
                     ),
                     Text(
                       "Empresa de Diseño y Desarrollo Producnova",
@@ -199,88 +198,93 @@ class _SoporteState extends State<Soporte> {
                     ),
                   ],
                 )),
-            Row(
-              //   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                Expanded(flex: 2, child: SizedBox()),
-                Expanded(
-                  flex: 2,
-                  child: CircleAvatar(
+            Padding(
+              padding: const EdgeInsets.only(top: 10.0, bottom: 5),
+              child: Row(
+                //   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  Expanded(flex: 2, child: SizedBox()),
+                  Expanded(
+                    flex: 2,
+                    child: CircleAvatar(
+                        radius: 18,
+                        backgroundColor: HexColor('#3edb9b'),
+                        child: FlatButton(
+                            onPressed: () {
+                              //  wsp(phone: "+56933710386", message: 'Hola Tv Post');
+                            },
+                            child: Container(
+                              transform:
+                                  Matrix4.translationValues(-0.0, 0.0, 0.0),
+                              child: Icon(
+                                IconRRSS.globe,
+                                color: Colors.white,
+                                size: 22,
+                              ),
+                            ))),
+                  ),
+                  Expanded(
+                    flex: 2,
+                    child: CircleAvatar(
                       radius: 18,
-                      backgroundColor: HexColor('#3edb9b'),
+                      backgroundColor: HexColor('#0077b5'),
                       child: FlatButton(
                           onPressed: () {
-                            //  wsp(phone: "+56933710386", message: 'Hola Tv Post');
+                            // llamada("tel:+56933710386");
+                          },
+                          child: Container(
+                            transform: Matrix4.translationValues(0.5, 0.0, 0.0),
+                            child: Icon(
+                              IconRRSS.linkedin_in,
+                              color: Colors.white,
+                              size: 22,
+                            ),
+                          )),
+                    ),
+                  ),
+                  Expanded(
+                    flex: 2,
+                    child: CircleAvatar(
+                      radius: 18,
+                      backgroundColor: HexColor('#dd2a7b'),
+                      child: FlatButton(
+                          onPressed: () {
+                            // correo("mailto:d.saezzcc@gmail.com");
                           },
                           child: Container(
                             transform:
                                 Matrix4.translationValues(-0.0, 0.0, 0.0),
                             child: Icon(
-                              IconRRSS.globe,
+                              IconRRSS.instagram,
                               color: Colors.white,
                               size: 22,
                             ),
-                          ))),
-                ),
-                Expanded(
-                  flex: 2,
-                  child: CircleAvatar(
-                    radius: 18,
-                    backgroundColor: HexColor('#0077b5'),
-                    child: FlatButton(
-                        onPressed: () {
-                          // llamada("tel:+56933710386");
-                        },
-                        child: Container(
-                          transform: Matrix4.translationValues(0.5, 0.0, 0.0),
-                          child: Icon(
-                            IconRRSS.linkedin_in,
-                            color: Colors.white,
-                            size: 22,
-                          ),
-                        )),
+                          )),
+                    ),
                   ),
-                ),
-                Expanded(
-                  flex: 2,
-                  child: CircleAvatar(
-                    radius: 18,
-                    backgroundColor: HexColor('#dd2a7b'),
-                    child: FlatButton(
-                        onPressed: () {
-                          // correo("mailto:d.saezzcc@gmail.com");
-                        },
-                        child: Container(
-                          transform: Matrix4.translationValues(-0.0, 0.0, 0.0),
-                          child: Icon(
-                            IconRRSS.instagram,
-                            color: Colors.white,
-                            size: 22,
-                          ),
-                        )),
+                  Expanded(
+                    flex: 2,
+                    child: CircleAvatar(
+                      radius: 18,
+                      backgroundColor: HexColor('#1778f2'),
+                      child: FlatButton(
+                          onPressed: () {
+                            //  correo("mailto:d.saezzcc@gmail.com");
+                          },
+                          child: Container(
+                            transform:
+                                Matrix4.translationValues(-0.0, 3.0, 0.0),
+                            child: Icon(
+                              IconRRSS.facebook_f,
+                              color: Colors.white,
+                              size: 29,
+                            ),
+                          )),
+                    ),
                   ),
-                ),
-                Expanded(
-                  flex: 2,
-                  child: CircleAvatar(
-                    radius: 18,
-                    backgroundColor: HexColor('#1778f2'),
-                    child: FlatButton(
-                        onPressed: () {
-                          //  correo("mailto:d.saezzcc@gmail.com");
-                        },
-                        child: Container(
-                          transform: Matrix4.translationValues(-0.0, 3.0, 0.0),
-                          child: Icon(
-                            IconRRSS.facebook_f,
-                            color: Colors.white,
-                            size: 29,
-                          ),
-                        )),
-                  ),
-                ),
-                Expanded(flex: 2, child: SizedBox()),
-              ],
+                  Expanded(flex: 2, child: SizedBox()),
+                ],
+              ),
             ),
           ],
         ),

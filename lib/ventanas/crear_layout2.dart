@@ -142,7 +142,8 @@ class _CrearLayout2State extends State<CrearLayout2> {
                 child: Text(
                   ObtieneDatos.listadoEquipos[DatosEstaticos.indexSeleccionado]
                           ['f_alias']
-                      .toString(),
+                      .toString()
+                      .toUpperCase(),
                   style: TextStyle(fontSize: 16.5),
                   textAlign: TextAlign.center,
                 ),

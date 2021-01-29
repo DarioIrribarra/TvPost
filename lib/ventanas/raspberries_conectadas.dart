@@ -126,7 +126,7 @@ class _RaspberriesConectadasState extends State<RaspberriesConectadas> {
                   return Column(
                     children: [
                       Padding(
-                        padding: const EdgeInsets.only(top: 30, bottom: 20),
+                        padding: const EdgeInsets.only(top: 20, bottom: 20),
                         child: Text(
                           "MIS PANTALLAS",
                           style: TextStyle(fontSize: 16.5),

@@ -650,8 +650,9 @@ class _SeleccionarVideoState extends State<SeleccionarVideo> {
                             onPressed: () async {
                               if (_keyValidadorvideo.currentState.validate()) {
                                 //Se abre el popup de cargando
+                                Navigator.pop(context);
                                 PopUps.popUpCargando(
-                                    context, 'Añadiendo video...');
+                                    context, 'Añadiendo video'.toUpperCase());
                                 //Obtengo el resultado del envio
                                 var resultado = await PopUps.enviarVideo(
                                         nombreNuevoVideo, videoFinal)
@@ -705,84 +706,97 @@ class _SeleccionarVideoState extends State<SeleccionarVideo> {
       } else {
         String extension;
         File videoFinal;
-        Widget contenidoPopUp = Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Text(
-              '¿Agregar ${videoSeleccionadoGaleria.files.length} videos?',
-              textAlign: TextAlign.center,
-            ),
-            Row(
+        Widget contenidoPopUp = Container(
+            decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(40),
+                color: HexColor('#f4f4f4')),
+            height: 150,
+            width: 250,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
-                Expanded(
-                  flex: 1,
-                  child: FlatButton(
-                    child: Text(
-                      'Aceptar',
-                      textAlign: TextAlign.center,
-                    ),
-                    onPressed: () async {
-                      PopUps.popUpCargando(context, 'Agregando videos...');
+                Text(
+                  '¿Agregar ${videoSeleccionadoGaleria.files.length} videos?'
+                      .toUpperCase(),
+                  textAlign: TextAlign.center,
+                  style: TextStyle(fontSize: 13),
+                ),
+                Row(
+                  children: [
+                    Expanded(flex: 3, child: SizedBox()),
+                    Expanded(
+                      flex: 4,
+                      child: FlatButton(
+                        child: Icon(
+                          Icons.check_circle,
+                          color: HexColor('#3EDB9B'),
+                          size: 35,
+                        ),
+                        onPressed: () async {
+                          PopUps.popUpCargando(
+                              context, 'Agregando videos'.toUpperCase());
 
-                      for (int i = 0;
-                          i <= videoSeleccionadoGaleria.files.length - 1;
-                          i++) {
-                        PlatformFile element =
-                            videoSeleccionadoGaleria.files[i];
-                        extension = p.extension(element.path);
-                        videoFinal = File(element.path);
-                        //Se le da el nombre de la hora actual + su posición
-                        // //en el listado
-                        DateTime now = DateTime.now();
-                        nombreNuevoVideo = '${now.year}${now.month}${now.day}'
-                            '${now.hour}${now.minute}${now.second}'
-                            '_$i$extension';
+                          for (int i = 0;
+                              i <= videoSeleccionadoGaleria.files.length - 1;
+                              i++) {
+                            PlatformFile element =
+                                videoSeleccionadoGaleria.files[i];
+                            extension = p.extension(element.path);
+                            videoFinal = File(element.path);
+                            //Se le da el nombre de la hora actual + su posición
+                            // //en el listado
+                            DateTime now = DateTime.now();
+                            nombreNuevoVideo =
+                                '${now.year}${now.month}${now.day}'
+                                '${now.hour}${now.minute}${now.second}'
+                                '_$i$extension';
 
-                        //Obtengo el resultado del envio
-                        var resultado = await PopUps.enviarVideo(
-                                nombreNuevoVideo, videoFinal)
-                            .then((value) => value);
-                        if (resultado == false) {
-                          showDialog(
-                            context: null,
-                            child: Text('Error al agregar videos'),
+                            //Obtengo el resultado del envio
+                            var resultado = await PopUps.enviarVideo(
+                                    nombreNuevoVideo, videoFinal)
+                                .then((value) => value);
+                            if (resultado == false) {
+                              showDialog(
+                                context: null,
+                                child: Text('Error al agregar videos'),
+                              );
+                              break;
+                            }
+                          }
+                          Navigator.pop(context);
+                          Navigator.pop(context);
+                          Navigator.popAndPushNamed(
+                              context, "/seleccionar_video",
+                              arguments: {
+                                'division_layout': '0',
+                                'ruta_proveniente': rutaDeDondeViene,
+                              });
+                          Fluttertoast.showToast(
+                            msg: "Videos agregados",
+                            toastLength: Toast.LENGTH_SHORT,
+                            webBgColor: "#e74c3c",
+                            timeInSecForIosWeb: 5,
                           );
-                          break;
-                        }
-                      }
-                      Navigator.pop(context);
-                      Navigator.pop(context);
-                      Navigator.popAndPushNamed(context, "/seleccionar_video",
-                          arguments: {
-                            'division_layout': '0',
-                            'ruta_proveniente': rutaDeDondeViene,
-                          });
-                      Fluttertoast.showToast(
-                        msg: "Videos agregados",
-                        toastLength: Toast.LENGTH_SHORT,
-                        webBgColor: "#e74c3c",
-                        timeInSecForIosWeb: 5,
-                      );
-                    },
-                  ),
-                ),
-                SizedBox(
-                  width: 10,
-                ),
-                Expanded(
-                  flex: 1,
-                  child: FlatButton(
-                    child: Text(
-                      'Cancelar',
-                      textAlign: TextAlign.center,
+                        },
+                      ),
                     ),
-                    onPressed: () => Navigator.pop(context),
-                  ),
+                    Expanded(
+                      flex: 4,
+                      child: FlatButton(
+                        child: Icon(
+                          Icons.cancel,
+                          color: HexColor('#FC4C8B'),
+                          size: 35,
+                        ),
+                        onPressed: () => Navigator.pop(context),
+                      ),
+                    ),
+                    Expanded(flex: 3, child: SizedBox()),
+                  ],
                 ),
               ],
-            ),
-          ],
-        );
+            ));
         PopUps.PopUpConWidget(context, contenidoPopUp);
       }
     }
@@ -1156,16 +1170,18 @@ class CambiosSeleccion {
     String nombre;
     if (SeleccionaVideo.videosSelecionados.length == 1) {
       nombre = SeleccionaVideo.videosSelecionados[0];
-      textoPopUp =
-          Text('¿Eliminar ${nombre.substring(0, nombre.lastIndexOf('.'))}?');
+      textoPopUp = Text(
+          '¿Eliminar ${nombre.substring(0, nombre.lastIndexOf('.'))} video?'
+              .toUpperCase());
     } else {
       textoPopUp = Text(
-          '¿Eliminar ${SeleccionaVideo.videosSelecionados.length} videos?');
+          '¿Eliminar ${SeleccionaVideo.videosSelecionados.length} videos?'
+              .toUpperCase());
     }
     contenidoPopUp = Container(
       decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(40), color: HexColor('#f4f4f4')),
-      height: 100,
+      height: 150,
       width: 250,
       child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -1173,18 +1189,20 @@ class CambiosSeleccion {
           textoPopUp,
           Row(
             children: [
+              Expanded(flex: 3, child: SizedBox()),
               Expanded(
-                flex: 1,
+                flex: 4,
                 child: FlatButton(
                   child: Icon(
                     Icons.check_circle,
                     color: HexColor('#3EDB9B'),
-                    size: 30,
+                    size: 35,
                   ),
                   //Eliminar
                   onPressed: () async {
                     Navigator.pop(context);
-                    PopUps.popUpCargando(context, 'Eliminando videos...');
+                    PopUps.popUpCargando(
+                        context, 'Eliminando videos'.toUpperCase());
                     var resultadoEliminar =
                         await ComunicacionRaspberry.EliminarContenido(
                             tipoContenido: 'videos',
@@ -1217,20 +1235,18 @@ class CambiosSeleccion {
                   },
                 ),
               ),
-              SizedBox(
-                width: 10,
-              ),
               Expanded(
-                flex: 1,
+                flex: 4,
                 child: FlatButton(
                   child: Icon(
                     Icons.cancel,
                     color: HexColor('#FC4C8B'),
-                    size: 30,
+                    size: 35,
                   ),
                   onPressed: () => Navigator.pop(context),
                 ),
               ),
+              Expanded(flex: 3, child: SizedBox()),
             ],
           ),
         ],
@@ -1243,30 +1259,43 @@ class CambiosSeleccion {
   static editarVideosSeleccionadas() {
     GlobalKey<FormState> _keyValidadorvideo2 = GlobalKey<FormState>();
     String nombreNuevaImagen;
-    Text textoPopUp;
+    Text textoPopUp, linea2;
     Widget contenidoPopUp;
     String extension;
     String nombre;
     nombre = SeleccionaVideo.videosSelecionados[0];
     extension = nombre.substring(nombre.lastIndexOf('.'));
     List<String> listadoNombres = [];
-    textoPopUp =
-        Text('Editando ${nombre.substring(0, nombre.lastIndexOf('.'))}');
+    textoPopUp = Text(
+      'EDITAR NOMBRE',
+      style: TextStyle(fontSize: 13),
+    );
+    linea2 = Text(
+      '${nombre.substring(0, nombre.lastIndexOf('.'))}',
+      style: TextStyle(fontFamily: 'textoMont', fontSize: 12),
+    );
     contenidoPopUp = Container(
       decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(40), color: HexColor('#f4f4f4')),
-      height: 140,
+      height: 175,
       width: 250,
       child: Form(
         child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
-            Padding(
-              padding: const EdgeInsets.only(top: 28),
-              child: textoPopUp,
+            Column(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.only(top: 15),
+                  child: textoPopUp,
+                ),
+                linea2
+              ],
             ),
             SizedBox(
               width: 180,
               child: TextFormField(
+                style: TextStyle(fontSize: 13, fontFamily: 'textoMont'),
                 textAlign: TextAlign.center,
                 validator: (textoEscrito) {
                   if (textoEscrito == null) {
@@ -1293,13 +1322,14 @@ class CambiosSeleccion {
             ),
             Row(
               children: [
+                Expanded(flex: 2, child: SizedBox()),
                 Expanded(
-                  flex: 1,
+                  flex: 4,
                   child: FlatButton(
                     child: Icon(
                       Icons.check_circle,
                       color: HexColor('#3EDB9B'),
-                      size: 30,
+                      size: 35,
                     ),
                     autofocus: true,
                     onPressed: () async {
@@ -1349,20 +1379,18 @@ class CambiosSeleccion {
                     },
                   ),
                 ),
-                SizedBox(
-                  width: 10,
-                ),
                 Expanded(
-                  flex: 1,
+                  flex: 4,
                   child: FlatButton(
                     child: Icon(
                       Icons.cancel,
                       color: HexColor('#FC4C8B'),
-                      size: 30,
+                      size: 35,
                     ),
                     onPressed: () => Navigator.pop(context),
                   ),
                 ),
+                Expanded(flex: 2, child: SizedBox()),
               ],
             ),
           ],
