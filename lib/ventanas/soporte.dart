@@ -44,10 +44,9 @@ class _SoporteState extends State<Soporte> {
       child: Scaffold(
         appBar: CustomAppBar(),
         body: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
             Padding(
-              padding: const EdgeInsets.only(top: 11, bottom: 20),
+              padding: const EdgeInsets.only(top: 20, bottom: 15),
               child: Text(
                 "SOPORTE TÉCNICO",
                 style: TextStyle(fontSize: 16.5),
@@ -63,13 +62,16 @@ class _SoporteState extends State<Soporte> {
                 'imagenes/soporte.png',
                 scale: 3,
               ),
-              //color: Colors.greenAccent,
-              //decoration: BoxDecoration(borderRadius: BorderRadius.circular(5),),
             ),
-            Padding(
-              padding: const EdgeInsets.only(top: 30.0, bottom: 25),
-              child: Text("ESCRÍBENOS SOBRE TU PROBLEMA",
-                  style: TextStyle(fontSize: 13)),
+            Container(
+              height: MediaQuery.of(context).size.height / 10,
+              child: Center(
+                child: Padding(
+                  padding: const EdgeInsets.only(top: 30.0, bottom: 25),
+                  child: Text("ESCRÍBENOS SOBRE TU PROBLEMA",
+                      style: TextStyle(fontSize: 13)),
+                ),
+              ),
             ),
             Row(
               //mainAxisAlignment: MainAxisAlignment.spaceEvenly,

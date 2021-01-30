@@ -52,13 +52,12 @@ class _PerfilState extends State<Perfil> {
         body: Container(
           height: MediaQuery.of(context).size.height / 1.7,
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            //mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
               //SizedBox(),
               Padding(
-                padding: const EdgeInsets.only(top: 6, bottom: 10),
-                child: Text("MI PERFIL", style: TextStyle(fontSize: 16.5)),
-              ),
+                  padding: const EdgeInsets.only(top: 20, bottom: 15),
+                  child: Text("MI PERFIL", style: TextStyle(fontSize: 16.5))),
               Container(
                 width: 110,
                 height: 110,
@@ -66,50 +65,37 @@ class _PerfilState extends State<Perfil> {
                   borderRadius: BorderRadius.circular(60),
                   color: HexColor("#3EDB9B"),
                 ),
-                /* child: FlatButton(
-                    onPressed: () async {
-                      _cargarImagen(context);
-                    },
-                    child: Container(
-                      width: 75,
-                      height: 100,
-                      decoration: new BoxDecoration(
-                        shape: BoxShape.circle,
-                      ),*/
                 child: Image.network(
                   "http://drioxmaster.cl/imgPerfil/$nombrePerfil.png",
                   scale: 3,
                 ),
-
-                /*archivoImagen == null
-                            ? Icon(
-                                Icons.file_upload,
-                                size: 40,
-                              )
-                            /*Image.asset(
-                                'imagenes/logovertical.png',
-                                fit: BoxFit.fill,
-                              )*/
-                            : ClipRRect(
-                                borderRadius: BorderRadius.circular(50),
-                                child: Image.file(
-                                  archivoImagen,
-                                ),
-                              )*/
               ),
-              Padding(
-                padding: const EdgeInsets.only(top: 20.0),
-                child:
-                    Text("EMPRESA PRODUCNOVA", style: TextStyle(fontSize: 13)),
+              Container(
+                height: MediaQuery.of(context).size.height / 10,
+                child: Center(
+                  child: Column(
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.only(top: 33.0, bottom: 10),
+                        child: Text("EMPRESA PRODUCNOVA",
+                            style: TextStyle(fontSize: 13)),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(bottom: 5.0),
+                        child:
+                            Text("98.765.432", style: TextStyle(fontSize: 13)),
+                      ),
+                    ],
+                  ),
+                ),
               ),
-              Text("98.765.432", style: TextStyle(fontSize: 13)),
               Container(
                 width: MediaQuery.of(context).size.width / 1.3,
                 height: 1.5,
                 color: HexColor("#3EDB9B"),
               ),
               Container(
-                margin: EdgeInsets.only(top: 15),
+                margin: EdgeInsets.only(top: 30),
                 height: MediaQuery.of(context).size.height / 8,
                 width: MediaQuery.of(context).size.width,
                 child: Row(

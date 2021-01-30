@@ -915,53 +915,39 @@ class _RaspberriesConectadasState extends State<RaspberriesConectadas> {
       transitionDuration:
           Duration(milliseconds: 400), //Cuanto demora en desaparecer
       pageBuilder: (_, __, ___) {
-        //widgets
         return Scaffold(
-          appBar: CustomAppBar(),
-          body: Container(
-            color: Colors.white,
-            height: MediaQuery.of(context).size.height,
-            width: MediaQuery.of(context).size.width,
-            child: Stack(children: [
-              Positioned(
-                top: 0,
-                child: Container(
-                  width: MediaQuery.of(context).size.width,
-                  height: 75,
-                  child: Center(
-                    child: Text(
-                      "MIS PANTALLAS",
-                      style: TextStyle(fontSize: 16.5),
-                    ),
-                  ),
+            appBar: CustomAppBar(),
+            body: Column(children: [
+              Padding(
+                padding: const EdgeInsets.only(top: 20, bottom: 20),
+                child: Text(
+                  "MIS PANTALLAS",
+                  style: TextStyle(fontSize: 16.5),
                 ),
               ),
-              Positioned(
-                top: 70,
-                right: 20,
-                left: 20,
-                child: Container(
-                  //Vista previa completa
-                  height: MediaQuery.of(context).size.height / 3.2,
-                  width: MediaQuery.of(context).size.width - 50,
-                  padding: EdgeInsets.all(20),
-                  decoration: new BoxDecoration(
-                      borderRadius: BorderRadius.circular(50),
-                      color: HexColor('#3EDB9B')
-                      /*gradient: LinearGradient(
-                                    colors: [HexColor("#3edb9b"), HexColor("#0683ff")],
-                                    stops: [0.5, 1],
-                                    begin: Alignment.topLeft,
-                                    end: FractionalOffset.bottomRight)*/
-                      ),
-                  child: Center(
+              Stack(children: [
+                Center(
+                  child: Container(
+                    //Vista previa completa
+                    height: MediaQuery.of(context).size.height / 3.2,
+                    width: MediaQuery.of(context).size.width - 50,
+                    padding: EdgeInsets.all(20),
+                    decoration: new BoxDecoration(
+                        borderRadius: BorderRadius.circular(50),
+                        color: HexColor('#3EDB9B')
+                        /*gradient: LinearGradient(
+                                          colors: [HexColor("#3edb9b"), HexColor("#0683ff")],
+                                          stops: [0.5, 1],
+                                          begin: Alignment.topLeft,
+                                          end: FractionalOffset.bottomRight)*/
+                        ),
                     child: Container(
                       //marco blanco de vista previa
                       decoration: new BoxDecoration(
                           borderRadius: BorderRadius.circular(20),
                           color: Colors.white),
                       /*width: MediaQuery.of(context).size.width / 1.2,
-                      height: MediaQuery.of(context).size.height / 3.8,*/
+                          height: MediaQuery.of(context).size.height / 3.8,*/
                       padding: EdgeInsets.all(10),
                       //margin: EdgeInsets.only(right: 35, left: 35),
                       child: FutureBuilder(
@@ -995,116 +981,305 @@ class _RaspberriesConectadasState extends State<RaspberriesConectadas> {
                     ),
                   ),
                 ),
-              ),
-              Positioned(
-                  top: 60,
-                  right: 18,
-                  child: CircleAvatar(
-                    radius: 13,
-                    backgroundColor: HexColor('#FC4C8B'),
-                  )
-                  /* Icon(
-                  Icons.circle,
-                  color: Colors.red,
-                  size: 20,
-                ),*/
-                  ),
-              Positioned(
-                  top: 49,
-                  right: 7,
-                  child: IconButton(
-                      icon: Icon(
-                        Icons.close,
-                        color: Colors.white,
-                        size: 20,
-                      ),
-                      onPressed: () {
-                        Navigator.of(context).pop();
-                      })),
-              GestureDetector(
-                onTap: () {
-                  if (valorSwitchUno == false) {
-                    AlertaDeshabilitar(
-                        index: index, valorSwitch: valorSwitchUno);
-                  } else {
-                    AlertaHabilitar(index: index, valorSwitch: valorSwitchUno);
-                  }
-                },
+                Positioned(
+                    top: 0,
+                    right: 18,
+                    child: CircleAvatar(
+                      radius: 13,
+                      backgroundColor: HexColor('#FC4C8B'),
+                    )),
+                Positioned(
+                    top: -11,
+                    right: 7,
+                    child: IconButton(
+                        icon: Icon(
+                          Icons.close,
+                          color: Colors.white,
+                          size: 20,
+                        ),
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                        })),
+              ]),
+              Expanded(
+                flex: 1,
                 child: Stack(
                   children: [
                     Positioned(
                       bottom: 35,
                       child: Container(
                         /*decoration: new BoxDecoration(
-                                  gradient: new LinearGradient(
-                                      colors: [Colors.white, Colors.transparent],
-                                      begin: Alignment.bottomCenter,
-                                      end: Alignment.topCenter,
-                                      stops: [0.5, 0.5],
-                                  ),
-                                ),*/
+                                    gradient: new LinearGradient(
+                                        colors: [Colors.white, Colors.transparent],
+                                        begin: Alignment.bottomCenter,
+                                        end: Alignment.topCenter,
+                                        stops: [0.5, 0.5],
+                                    ),
+                                  ),*/
                         color: Colors.transparent,
                         width: MediaQuery.of(context).size.width,
                         child: Center(
-                          child: Padding(
-                            padding: const EdgeInsets.only(top: 20),
-                            child: Stack(children: [
-                              Positioned(
-                                child: Container(
-                                  decoration: new BoxDecoration(
-                                      borderRadius: BorderRadius.circular(20),
-                                      gradient: LinearGradient(
-                                          colors: [
-                                            HexColor("#3edb9b"),
-                                            HexColor("#0683ff")
-                                          ],
-                                          stops: [
-                                            0.4,
-                                            1
-                                          ],
-                                          begin: Alignment.topLeft,
-                                          end: FractionalOffset.bottomRight)),
-                                  child: IgnorePointer(
-                                    child: FSwitch(
-                                      offset: 10,
-                                      open: valorSwitchTodos,
-                                      onChanged: (bool v) {},
-                                      sliderColor: Colors.white,
-                                      color: Colors.transparent,
-                                      openColor: Colors.transparent,
-                                      width: 200,
-                                      height: 40,
+                          child: GestureDetector(
+                            onTap: () {
+                              if (valorSwitchUno == false) {
+                                AlertaDeshabilitar(
+                                    index: index, valorSwitch: valorSwitchUno);
+                              } else {
+                                AlertaHabilitar(
+                                    index: index, valorSwitch: valorSwitchUno);
+                              }
+                            },
+                            child: Padding(
+                              padding: const EdgeInsets.only(top: 20),
+                              child: Stack(children: [
+                                Positioned(
+                                  child: Container(
+                                    decoration: new BoxDecoration(
+                                        borderRadius: BorderRadius.circular(20),
+                                        gradient: LinearGradient(
+                                            colors: [
+                                              HexColor("#3edb9b"),
+                                              HexColor("#0683ff")
+                                            ],
+                                            stops: [
+                                              0.4,
+                                              1
+                                            ],
+                                            begin: Alignment.topLeft,
+                                            end: FractionalOffset.bottomRight)),
+                                    child: IgnorePointer(
+                                      child: FSwitch(
+                                        offset: 10,
+                                        open: valorSwitchTodos,
+                                        onChanged: (bool v) {},
+                                        sliderColor: Colors.white,
+                                        color: Colors.transparent,
+                                        openColor: Colors.transparent,
+                                        width: 200,
+                                        height: 40,
+                                      ),
                                     ),
                                   ),
                                 ),
-                              ),
-                              Positioned(
-                                bottom: 13,
-                                left: 17,
-                                child: Text(
-                                  "ON",
-                                  style: TextStyle(color: on),
+                                Positioned(
+                                  bottom: 13,
+                                  left: 17,
+                                  child: Text(
+                                    "ON",
+                                    style: TextStyle(color: on),
+                                  ),
                                 ),
-                              ),
-                              Positioned(
-                                bottom: 13,
-                                left: 159,
-                                child: Text(
-                                  "OFF",
-                                  style: TextStyle(color: off),
-                                ),
-                              )
-                            ]),
+                                Positioned(
+                                  bottom: 13,
+                                  left: 159,
+                                  child: Text(
+                                    "OFF",
+                                    style: TextStyle(color: off),
+                                  ),
+                                )
+                              ]),
+                            ),
                           ),
                         ),
                       ),
                     ),
                   ],
                 ),
-              ),
-            ]),
+              )
+            ]));
+        //widgets
+        /* return Scaffold(
+          appBar: CustomAppBar(),
+          body: Container(
+            color: Colors.white,
+            height: MediaQuery.of(context).size.height,
+            width: MediaQuery.of(context).size.width,
+            child: Column(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.only(top: 20, bottom: 20),
+                  child: Text(
+                    "MIS PANTALLAS",
+                    style: TextStyle(fontSize: 16.5),
+                  ),
+                ),
+                Stack(children: [
+                  Positioned(
+                    top: 70,
+                    right: 20,
+                    left: 20,
+                    child: Container(
+                      //Vista previa completa
+                      height: MediaQuery.of(context).size.height / 3.2,
+                      width: MediaQuery.of(context).size.width - 50,
+                      padding: EdgeInsets.all(20),
+                      decoration: new BoxDecoration(
+                          borderRadius: BorderRadius.circular(50),
+                          color: HexColor('#3EDB9B')
+                          /*gradient: LinearGradient(
+                                      colors: [HexColor("#3edb9b"), HexColor("#0683ff")],
+                                      stops: [0.5, 1],
+                                      begin: Alignment.topLeft,
+                                      end: FractionalOffset.bottomRight)*/
+                          ),
+                      child: Center(
+                        child: Container(
+                          //marco blanco de vista previa
+                          decoration: new BoxDecoration(
+                              borderRadius: BorderRadius.circular(20),
+                              color: Colors.white),
+                          /*width: MediaQuery.of(context).size.width / 1.2,
+                        height: MediaQuery.of(context).size.height / 3.8,*/
+                          padding: EdgeInsets.all(10),
+                          //margin: EdgeInsets.only(right: 35, left: 35),
+                          child: FutureBuilder(
+                            future: _getScreenShot(ip),
+                            builder: (context, snapshot) {
+                              Widget widgetError = Column(
+                                children: [
+                                  _screenshotProcesada,
+                                ],
+                              );
+                              if (snapshot.connectionState ==
+                                  ConnectionState.done) {
+                                if (snapshot.data == null) {
+                                  return widgetError;
+                                } else {
+                                  //Retorna el widget con la imagen de screenshot
+                                  var tipoimage = _screenshotProcesada
+                                      .image.runtimeType
+                                      .toString();
+                                  if (tipoimage == "AssetImage") {
+                                    return widgetError;
+                                  }
+                                  return Container(
+                                      child:
+                                          Center(child: _screenshotProcesada));
+                                }
+                              } else {
+                                return Center(
+                                    child: CircularProgressIndicator());
+                              }
+                            },
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                  Positioned(
+                      top: 60,
+                      right: 18,
+                      child: CircleAvatar(
+                        radius: 13,
+                        backgroundColor: HexColor('#FC4C8B'),
+                      )
+                      /* Icon(
+                    Icons.circle,
+                    color: Colors.red,
+                    size: 20,
+                  ),*/
+                      ),
+                  Positioned(
+                      top: 49,
+                      right: 7,
+                      child: IconButton(
+                          icon: Icon(
+                            Icons.close,
+                            color: Colors.white,
+                            size: 20,
+                          ),
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                          })),
+                  GestureDetector(
+                    onTap: () {
+                      if (valorSwitchUno == false) {
+                        AlertaDeshabilitar(
+                            index: index, valorSwitch: valorSwitchUno);
+                      } else {
+                        AlertaHabilitar(
+                            index: index, valorSwitch: valorSwitchUno);
+                      }
+                    },
+                    child: Stack(
+                      children: [
+                        Positioned(
+                          bottom: 35,
+                          child: Container(
+                            /*decoration: new BoxDecoration(
+                                    gradient: new LinearGradient(
+                                        colors: [Colors.white, Colors.transparent],
+                                        begin: Alignment.bottomCenter,
+                                        end: Alignment.topCenter,
+                                        stops: [0.5, 0.5],
+                                    ),
+                                  ),*/
+                            color: Colors.transparent,
+                            width: MediaQuery.of(context).size.width,
+                            child: Center(
+                              child: Padding(
+                                padding: const EdgeInsets.only(top: 20),
+                                child: Stack(children: [
+                                  Positioned(
+                                    child: Container(
+                                      decoration: new BoxDecoration(
+                                          borderRadius:
+                                              BorderRadius.circular(20),
+                                          gradient: LinearGradient(
+                                              colors: [
+                                                HexColor("#3edb9b"),
+                                                HexColor("#0683ff")
+                                              ],
+                                              stops: [
+                                                0.4,
+                                                1
+                                              ],
+                                              begin: Alignment.topLeft,
+                                              end: FractionalOffset
+                                                  .bottomRight)),
+                                      child: IgnorePointer(
+                                        child: FSwitch(
+                                          offset: 10,
+                                          open: valorSwitchTodos,
+                                          onChanged: (bool v) {},
+                                          sliderColor: Colors.white,
+                                          color: Colors.transparent,
+                                          openColor: Colors.transparent,
+                                          width: 200,
+                                          height: 40,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                  Positioned(
+                                    bottom: 13,
+                                    left: 17,
+                                    child: Text(
+                                      "ON",
+                                      style: TextStyle(color: on),
+                                    ),
+                                  ),
+                                  Positioned(
+                                    bottom: 13,
+                                    left: 159,
+                                    child: Text(
+                                      "OFF",
+                                      style: TextStyle(color: off),
+                                    ),
+                                  )
+                                ]),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ]),
+              ],
+            ),
           ),
-        );
+        );*/
       },
     );
   }
@@ -1169,26 +1344,15 @@ class _RaspberriesConectadasState extends State<RaspberriesConectadas> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
-              Text('DESHABILITAR EQUIPO',
-                  textAlign: TextAlign.center, style: TextStyle(fontSize: 13)),
               Column(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
-                  Text(
-                    'Alias: ${alias}',
-                    textAlign: TextAlign.center,
-                  ),
-                  Text(
-                    'Serial: ${serial}',
-                    textAlign: TextAlign.center,
-                  ),
-                  Text(
-                    'Ip: ${ip}',
-                    textAlign: TextAlign.center,
-                  ),
-                  SizedBox(
-                    height: 10,
-                  ),
+                  Text('DESHABILITAR EQUIPO',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(fontSize: 13)),
+                  Text('${alias}'.toUpperCase(),
+                      textAlign: TextAlign.center,
+                      style: TextStyle(fontSize: 13)),
                 ],
               ),
               Row(
@@ -1221,15 +1385,19 @@ class _RaspberriesConectadasState extends State<RaspberriesConectadas> {
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceEvenly,
                                 children: [
-                                  Text('EQUIPO $alias DESHABILITADO',
-                                      textAlign: TextAlign.center,
-                                      style: TextStyle(fontSize: 13)),
-                                  SizedBox(
-                                    width: 10,
+                                  Column(
+                                    children: [
+                                      Text('EQUIPO DESHABILITADO',
+                                          textAlign: TextAlign.center,
+                                          style: TextStyle(fontSize: 13)),
+                                      Text('$alias'.toUpperCase(),
+                                          textAlign: TextAlign.center,
+                                          style: TextStyle(fontSize: 13)),
+                                    ],
                                   ),
                                   GestureDetector(
                                     child: Icon(
-                                      Icons.cancel,
+                                      Icons.check_circle,
                                       color: HexColor('#3EDB9B'),
                                       size: 35,
                                     ),
@@ -1392,14 +1560,18 @@ class _RaspberriesConectadasState extends State<RaspberriesConectadas> {
 
     if (listadoEquipos == null) {
       contenido = new AlertDialog(
-        title: Text(
-          'Habilitar Equipo'.toUpperCase(),
-          textAlign: TextAlign.center,
-        ),
         content: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
             Text(
+              'Habilitar Equipo'.toUpperCase(),
+              textAlign: TextAlign.center,
+            ),
+            Text(
+              'Alias: ${alias}'.toUpperCase(),
+              textAlign: TextAlign.center,
+            ),
+            /* Text(
               'Alias: ${alias}',
               textAlign: TextAlign.center,
             ),
@@ -1413,7 +1585,7 @@ class _RaspberriesConectadasState extends State<RaspberriesConectadas> {
             ),
             SizedBox(
               height: 10,
-            ),
+            ),*/
             Row(
               children: [
                 GestureDetector(

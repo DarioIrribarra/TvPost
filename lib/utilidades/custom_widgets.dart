@@ -351,13 +351,13 @@ class MenuAppBar {
                                 child: Text(
                                   'USTED NO POSEE',
                                   textAlign: TextAlign.center,
-                                  style: TextStyle(fontSize: 12),
+                                  style: TextStyle(fontSize: 13),
                                 ),
                               ),
                               Text(
                                 'EQUIPOS CONECTADOS',
                                 textAlign: TextAlign.center,
-                                style: TextStyle(fontSize: 12),
+                                style: TextStyle(fontSize: 13),
                               ),
                             ],
                           ),
@@ -400,13 +400,13 @@ class MenuAppBar {
                                 child: Text(
                                   'USTED NO POSEE',
                                   textAlign: TextAlign.center,
-                                  style: TextStyle(fontSize: 12),
+                                  style: TextStyle(fontSize: 13),
                                 ),
                               ),
                               Text(
                                 'EQUIPOS CONECTADOS',
                                 textAlign: TextAlign.center,
-                                style: TextStyle(fontSize: 12),
+                                style: TextStyle(fontSize: 13),
                               ),
                             ],
                           ),

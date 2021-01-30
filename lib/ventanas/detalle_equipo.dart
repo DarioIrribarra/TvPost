@@ -1105,10 +1105,10 @@ class _DetalleEquipoState extends State<DetalleEquipo> {
                                 children: [
                                   Column(
                                     children: [
-                                      Text('EQUIPO $alias',
+                                      Text('EQUIPO DESHABILITADO ',
                                           textAlign: TextAlign.center,
                                           style: TextStyle(fontSize: 13)),
-                                      Text('DESHABILITADO',
+                                      Text('$alias'.toUpperCase(),
                                           textAlign: TextAlign.center,
                                           style: TextStyle(fontSize: 13)),
                                     ],
@@ -1253,9 +1253,11 @@ class _DetalleEquipoState extends State<DetalleEquipo> {
                                 children: [
                                   Column(
                                     children: [
-                                      Text('EQUIPO $alias'.toUpperCase(),
+                                      Text('EQUIPO HABILITADO ',
+                                          textAlign: TextAlign.center,
                                           style: TextStyle(fontSize: 13)),
-                                      Text('HABILITADO',
+                                      Text('$alias'.toUpperCase(),
+                                          textAlign: TextAlign.center,
                                           style: TextStyle(fontSize: 13)),
                                     ],
                                   ),
