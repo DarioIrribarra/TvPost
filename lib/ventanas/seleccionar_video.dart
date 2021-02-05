@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:tvpost_flutter/tvlapiz_icons.dart';
 //import 'package:flutter_social_content_share/flutter_social_content_share.dart';
 import 'package:tvpost_flutter/utilidades/comunicacion_raspberry.dart';
 import 'package:tvpost_flutter/utilidades/custom_widgets.dart';
@@ -619,33 +620,64 @@ class _SeleccionarVideoState extends State<SeleccionarVideo> {
                               seleccionado: true,
                             ),
                           ),
-                          Center(
-                            child: TextFormField(
-                              textAlign: TextAlign.center,
-                              controller: _controladorTexto,
-                              validator: (textoEscrito) {
-                                if (textoEscrito.isEmpty) {
-                                  return "Error: Nombre de video vacío";
-                                }
-                                if (textoEscrito.trim().length <= 0) {
-                                  return "Error: Nombre de video vacío";
-                                } else {
-                                  nombreNuevoVideo =
-                                      textoEscrito.trim().toString() +
-                                          extension;
-                                  //Chequear si el valor ya existe
-                                  if (DatosEstaticos.listadoNombresVideos
-                                      .contains(nombreNuevoVideo)) {
-                                    return "Error: Nombre de video ya existe";
-                                  } else {
-                                    return null;
-                                  }
-                                }
-                              },
-                            ),
+                          Row(
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.only(top: 15),
+                                child: CircleAvatar(
+                                  backgroundColor: Colors.blueAccent,
+                                  radius: 10,
+                                  child: FlatButton(
+                                    onPressed: () async {},
+                                    child: Container(
+                                      transform: Matrix4.translationValues(
+                                          -16.0, 0.0, 0.0),
+                                      child: Icon(
+                                        Tvlapiz.lapiz,
+                                        size: 20,
+                                        color: Colors.white,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              SizedBox(
+                                width: 180,
+                                child: TextFormField(
+                                  textAlign: TextAlign.center,
+                                  decoration: InputDecoration(
+                                      labelText: 'INGRESE NOMBRE DEL VIDEO',
+                                      labelStyle: TextStyle(fontSize: 12)),
+                                  controller: _controladorTexto,
+                                  validator: (textoEscrito) {
+                                    if (textoEscrito.isEmpty) {
+                                      return "Error: Nombre de video vacío";
+                                    }
+                                    if (textoEscrito.trim().length <= 0) {
+                                      return "Error: Nombre de video vacío";
+                                    } else {
+                                      nombreNuevoVideo =
+                                          textoEscrito.trim().toString() +
+                                              extension;
+                                      //Chequear si el valor ya existe
+                                      if (DatosEstaticos.listadoNombresVideos
+                                          .contains(nombreNuevoVideo)) {
+                                        return "Error: Nombre de video ya existe";
+                                      } else {
+                                        return null;
+                                      }
+                                    }
+                                  },
+                                ),
+                              ),
+                            ],
                           ),
-                          RaisedButton(
-                            child: Text('Añadir'),
+                          FlatButton(
+                            child: Icon(
+                              Icons.check_circle,
+                              color: HexColor('#3EDB9B'),
+                              size: 35,
+                            ),
                             autofocus: true,
                             onPressed: () async {
                               if (_keyValidadorvideo.currentState.validate()) {

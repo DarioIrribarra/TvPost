@@ -88,7 +88,7 @@ class _SoporteState extends State<Soporte> {
                           },
                           child: Container(
                             transform:
-                                Matrix4.translationValues(-4.0, 0.0, 0.0),
+                                Matrix4.translationValues(-2.0, 0.0, 0.0),
                             child: Icon(
                               IconRRSS.whatsapp,
                               color: Colors.white,
@@ -107,7 +107,7 @@ class _SoporteState extends State<Soporte> {
                           llamada("tel:+56933710386");
                         },
                         child: Container(
-                          transform: Matrix4.translationValues(-3.0, 1.0, 0.0),
+                          transform: Matrix4.translationValues(-1.0, 1.0, 0.0),
                           child: Icon(
                             IconRRSS.phone,
                             color: Colors.white,
@@ -127,7 +127,7 @@ class _SoporteState extends State<Soporte> {
                           correo("mailto:d.saezzcc@gmail.com");
                         },
                         child: Container(
-                          transform: Matrix4.translationValues(-6.5, -1.0, 0.0),
+                          transform: Matrix4.translationValues(-4.0, -1.0, 0.0),
                           child: Icon(
                             IconRRSS.mail_1,
                             color: Colors.white,

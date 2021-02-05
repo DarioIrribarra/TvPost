@@ -1833,3 +1833,15 @@ class EventosPropios {
     } catch (e) {}
   }
 }
+
+class Posts {
+  String image, nombre;
+
+  Posts({this.image, this.nombre});
+}
+
+class Videos {
+  String video, nombre;
+
+  Videos({this.video, this.nombre});
+}

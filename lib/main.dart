@@ -27,41 +27,36 @@ Future<void> main() async {
 
   //Espera la orientación vertical
   SystemChrome.setPreferredOrientations(
-          [DeviceOrientation.portraitDown,
-            DeviceOrientation.portraitUp]
-  ).then((_)  {
-                //Inicia la app
-                runApp(
-                  MaterialApp(
-                    theme: ThemeData(
-                      // accentColor: HexColor('#FC4C8B'),
-                        fontFamily: 'tituloAxis',
-                        textTheme: TextTheme(
-                          body1: TextStyle(fontSize: 12.5),
-                          title: TextStyle(fontSize: 12.5),
-                        )
-                    ),
+      [DeviceOrientation.portraitDown, DeviceOrientation.portraitUp]).then((_) {
+    //Inicia la app
+    runApp(MaterialApp(
+      theme: ThemeData(
+          // accentColor: HexColor('#FC4C8B'),
+          fontFamily: 'tituloAxis',
+          textTheme: TextTheme(
+            body1: TextStyle(fontSize: 12.5),
+            title: TextStyle(fontSize: 12.5),
+          )),
+      debugShowCheckedModeBanner: false,
 
-                    //Rutas para navegar en las páginas
-                    routes: {
-                      //Ventana fantasma que se mantiene vacía
-                      '/': (context) => VentanaFondo(),
-                      '/login': (context) => Login(),
-                      '/raspberries_conectadas': (context) => RaspberriesConectadas(),
-                      '/detalle_equipo': (context) => DetalleEquipo(),
-                      '/seleccionar_layout': (context) => SeleccionarLayout(),
-                      '/crear_layout1': (context) => CrearLayout1(),
-                      '/crear_layout2': (context) => CrearLayout2(),
-                      '/crear_layout3': (context) => CrearLayout3(),
-                      '/seleccionar_imagen': (context) => SeleccionarImagen(),
-                      '/seleccionar_video': (context) => SeleccionarVideo(),
-                      '/crear_contenido': (context) => CrearContenido(),
-                      '/reloj': (context) => EditarReloj(),
-                      '/soporte': (context) => Soporte(),
-                      '/miPerfil': (context) => Perfil(),
-                    },
-                  )
-                );
-              }
-        );
+      //Rutas para navegar en las páginas
+      routes: {
+        //Ventana fantasma que se mantiene vacía
+        '/': (context) => VentanaFondo(),
+        '/login': (context) => Login(),
+        '/raspberries_conectadas': (context) => RaspberriesConectadas(),
+        '/detalle_equipo': (context) => DetalleEquipo(),
+        '/seleccionar_layout': (context) => SeleccionarLayout(),
+        '/crear_layout1': (context) => CrearLayout1(),
+        '/crear_layout2': (context) => CrearLayout2(),
+        '/crear_layout3': (context) => CrearLayout3(),
+        '/seleccionar_imagen': (context) => SeleccionarImagen(),
+        '/seleccionar_video': (context) => SeleccionarVideo(),
+        '/crear_contenido': (context) => CrearContenido(),
+        '/reloj': (context) => EditarReloj(),
+        '/soporte': (context) => Soporte(),
+        '/miPerfil': (context) => Perfil(),
+      },
+    ));
+  });
 }

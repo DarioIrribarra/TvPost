@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "396764510929",
+    "firebase_url": "https://tvpostintegracion-default-rtdb.firebaseio.com",
+    "project_id": "tvpostintegracion",
+    "storage_bucket": "tvpostintegracion.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:396764510929:android:b68558f916fbc2b99323f0",
+        "android_client_info": {
+          "package_name": "com.example.tvpost"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "396764510929-0je18fan2ccr6vo4j4mmladbi82r0lnd.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAMiDVoNM2-Iayi5grNwk60q0lnnyIzv7s"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "396764510929-0je18fan2ccr6vo4j4mmladbi82r0lnd.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

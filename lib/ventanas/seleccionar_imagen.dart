@@ -6,6 +6,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
+import 'package:tvpost_flutter/tvlapiz_icons.dart';
 //import 'package:flutter_social_content_share/flutter_social_content_share.dart';
 import 'package:tvpost_flutter/utilidades/comunicacion_raspberry.dart';
 import 'package:tvpost_flutter/utilidades/custom_widgets.dart';
@@ -13,6 +14,11 @@ import 'package:tvpost_flutter/utilidades/datos_estaticos.dart';
 import 'package:path/path.dart' as p;
 import 'package:file_picker/file_picker.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:firebase_database/firebase_database.dart';
+import 'package:firebase_storage/firebase_storage.dart';
+import 'package:intl/intl.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:tvpost_flutter/ventanas/soporte.dart';
 
 class SeleccionarImagen extends StatefulWidget {
   @override
@@ -20,6 +26,15 @@ class SeleccionarImagen extends StatefulWidget {
 }
 
 class _SeleccionarImagenState extends State<SeleccionarImagen> {
+  //ACA VAN LOS DATOS DE FIREBASE PARA MOSTRAR FILES
+  List<Posts> postList = List();
+  final fb = FirebaseDatabase.instance.reference().child("Imagenes");
+  //ACA VAN LOS DATOS DE FIREBASE PARA SUBIR IMAGENES
+  String rutdeEmpresa = DatosEstaticos.rutEmpresa;
+  File sampleImage; // imagen
+  String _myValue; // descripcion
+  String url; // url de la imagen
+  final formKey = GlobalKey<FormState>();
   //Datos que se envía completo desde la ventana de selección de media
   Map datosDesdeVentanaAnterior = {};
   String divisionLayout;
@@ -42,6 +57,15 @@ class _SeleccionarImagenState extends State<SeleccionarImagen> {
     _listadoNombresImagenes = PopUps.getNombresImagenes();
     //DatosEstaticos.PublicarEnRedesSociales = false;
     activarBoton = true;
+    fb.once().then((DataSnapshot snap) {
+      var data = snap.value;
+      postList.clear();
+      data.forEach((key, value) {
+        Posts posts = Posts(image: value['image'], nombre: value['nombre']);
+        postList.add(posts);
+      });
+      setState(() {});
+    });
   }
 
   @override
@@ -95,7 +119,34 @@ class _SeleccionarImagenState extends State<SeleccionarImagen> {
               return Column(
                 children: [
                   Expanded(
-                    child: GridView.builder(
+                    child: postList.length == 0
+                        ? Text("CARGUE IMAGENES PARA VISUALIZARLAS")
+                        : GridView.builder(
+                            itemCount: postList.length,
+                            gridDelegate:
+                                SliverGridDelegateWithFixedCrossAxisCount(
+                                    crossAxisCount: 2,
+                                    crossAxisSpacing: 0,
+                                    mainAxisSpacing: 0),
+                            itemBuilder: (BuildContext context, index) {
+                              return postsUI(postList[index].image,
+                                  postList[index].nombre);
+                              /* postList[index].date,
+                        postList[index].time);*/
+                            },
+                          ),
+
+                    /* ListView.builder(
+                      itemCount: postList.length,
+                      itemBuilder: (_, index) {
+                        return postsUI(
+                            postList[index].image, postList[index].nombre);
+                        /* postList[index].date,
+                        postList[index].time);*/
+                      },
+                    ),*/
+
+                    /*GridView.builder(
                         //Toma el total de imágenes desde la carpeta del
                         // webserver
                         itemCount: DatosEstaticos.listadoNombresImagenes.length,
@@ -183,7 +234,7 @@ class _SeleccionarImagenState extends State<SeleccionarImagen> {
                               ),
                             ),
                           );
-                        }),
+                        }),*/
                   ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -254,7 +305,35 @@ class _SeleccionarImagenState extends State<SeleccionarImagen> {
               //Future Builder para el gridview de imágenes
               return Column(children: [
                 Expanded(
-                  child: GridView.builder(
+                  child:
+                      /*ListView.builder(
+                    itemCount: postList.length,
+                    itemBuilder: (_, index) {
+                      return postsUI(
+                          postList[index].image, postList[index].nombre);
+                      /* postList[index].date,
+                        postList[index].time);*/
+                    },
+                  ),*/
+
+                      postList.length == 0
+                          ? Text("CARGUE IMAGENES PARA VISUALIZARLAS")
+                          : GridView.builder(
+                              itemCount: postList.length,
+                              gridDelegate:
+                                  SliverGridDelegateWithFixedCrossAxisCount(
+                                      crossAxisCount: 3,
+                                      crossAxisSpacing: 0,
+                                      mainAxisSpacing: 0),
+                              itemBuilder: (_, index) {
+                                return postsUI(postList[index].image,
+                                    postList[index].nombre);
+                                /* postList[index].date,
+                        postList[index].time);*/
+                              },
+                            ),
+
+                  /*GridView.builder(
                       //Toma el total de imágenes desde la carpeta del
                       // webserver
                       itemCount: DatosEstaticos.listadoNombresImagenes.length,
@@ -533,7 +612,7 @@ class _SeleccionarImagenState extends State<SeleccionarImagen> {
                             ),
                           ),
                         );
-                      }),
+                      }),*/
                 ),
                 cargaRRSS
               ]);
@@ -608,7 +687,8 @@ class _SeleccionarImagenState extends State<SeleccionarImagen> {
                                 heroTag: null,
                                 backgroundColor: HexColor('#FC4C8B'),
                                 onPressed: () {
-                                  abrirGaleria(context);
+                                  //abrirGaleria(context);
+                                  getImage();
                                 }),
                           ),
                         )
@@ -678,32 +758,64 @@ class _SeleccionarImagenState extends State<SeleccionarImagen> {
                           width: MediaQuery.of(context).size.width / 2,
                           height: MediaQuery.of(context).size.height / 4,
                         ),
-                        Center(
-                          child: TextFormField(
-                            textAlign: TextAlign.center,
-                            controller: _controladorTexto,
-                            validator: (textoEscrito) {
-                              if (textoEscrito.isEmpty) {
-                                return "Error: Nombre de imagen vacío";
-                              }
-                              if (textoEscrito.trim().length <= 0) {
-                                return "Error: Nombre de imagen vacío";
-                              } else {
-                                nombreNuevaImagen =
-                                    textoEscrito.trim().toString() + extension;
-                                //Chequear si el valor ya existe
-                                if (DatosEstaticos.listadoNombresImagenes
-                                    .contains(nombreNuevaImagen)) {
-                                  return "Error: Nombre de imagen ya existe";
-                                } else {
-                                  return null;
-                                }
-                              }
-                            },
-                          ),
+                        Row(
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.only(top: 15),
+                              child: CircleAvatar(
+                                backgroundColor: Colors.blueAccent,
+                                radius: 10,
+                                child: FlatButton(
+                                  onPressed: () async {},
+                                  child: Container(
+                                    transform: Matrix4.translationValues(
+                                        -16.0, 0.0, 0.0),
+                                    child: Icon(
+                                      Tvlapiz.lapiz,
+                                      size: 20,
+                                      color: Colors.white,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                            SizedBox(
+                              width: 180,
+                              child: TextFormField(
+                                textAlign: TextAlign.center,
+                                decoration: InputDecoration(
+                                    labelText: 'INGRESE NOMBRE DE LA IMAGEN',
+                                    labelStyle: TextStyle(fontSize: 12)),
+                                controller: _controladorTexto,
+                                validator: (textoEscrito) {
+                                  if (textoEscrito.isEmpty) {
+                                    return "Error: Nombre de imagen vacío";
+                                  }
+                                  if (textoEscrito.trim().length <= 0) {
+                                    return "Error: Nombre de imagen vacío";
+                                  } else {
+                                    nombreNuevaImagen =
+                                        textoEscrito.trim().toString() +
+                                            extension;
+                                    //Chequear si el valor ya existe
+                                    if (DatosEstaticos.listadoNombresImagenes
+                                        .contains(nombreNuevaImagen)) {
+                                      return "Error: Nombre de imagen ya existe";
+                                    } else {
+                                      return null;
+                                    }
+                                  }
+                                },
+                              ),
+                            ),
+                          ],
                         ),
-                        RaisedButton(
-                          child: Text('Añadir'),
+                        FlatButton(
+                          child: Icon(
+                            Icons.check_circle,
+                            color: HexColor('#3EDB9B'),
+                            size: 35,
+                          ),
                           autofocus: true,
                           onPressed: () async {
                             if (_keyValidador.currentState.validate()) {
@@ -957,6 +1069,157 @@ class _SeleccionarImagenState extends State<SeleccionarImagen> {
         }
         break;
     }
+  }
+
+//ACA SE COMENZARA A IMPLEMENTAR LAS FUNCIONES DE FIREBASE
+
+  Future getImage() async {
+    var tempImage = await ImagePicker.pickImage(source: ImageSource.gallery);
+    setState(() {
+      sampleImage = tempImage;
+    });
+    enableUpload(context);
+  }
+
+  Future<void> enableUpload(BuildContext context) async {
+    return showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+              content: SingleChildScrollView(
+                  child: Container(
+            child: Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Form(
+                key: formKey,
+                child: Column(
+                  children: <Widget>[
+                    Image.file(
+                      sampleImage,
+                      /* height: 300.0,
+                      width: 600.0,*/
+                      width: MediaQuery.of(context).size.width / 2,
+                      height: MediaQuery.of(context).size.height / 4,
+                    ),
+                    SizedBox(
+                      height: 15.0,
+                    ),
+                    TextFormField(
+                      decoration: InputDecoration(labelText: "Nombre imagen"),
+                      validator: (value) {
+                        return value.isEmpty ? "Nombre es requerido" : null;
+                      },
+                      onSaved: (value) {
+                        return _myValue = value;
+                      },
+                    ),
+                    SizedBox(
+                      height: 15.0,
+                    ),
+                    RaisedButton(
+                      elevation: 10.0,
+                      child: Text("Agregar nueva imagen"),
+                      textColor: Colors.white,
+                      color: Colors.blueAccent,
+                      onPressed: uploadStatusImage,
+                    )
+                  ],
+                ),
+              ),
+            ),
+          )));
+        });
+  }
+
+  void uploadStatusImage() async {
+    if (validateAndSave()) {
+      // Subir imagen a firebase storage
+      final StorageReference postIamgeRef =
+          FirebaseStorage.instance.ref().child("testeando" /*rutdeEmpresa*/);
+      final StorageUploadTask uploadTask =
+          postIamgeRef.child(_myValue + ".jpg").putFile(sampleImage);
+      var imageUrl = await (await uploadTask.onComplete).ref.getDownloadURL();
+      url = imageUrl.toString();
+      print("Image url: " + url);
+
+      // Guardar el post a firebase database: database realtime
+      saveToDatabase(url);
+
+      // Regresar a Home
+      Navigator.pop(context);
+      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) {
+        return Soporte();
+      }));
+    }
+  }
+
+  void saveToDatabase(String url) {
+    // Guardar un post (image, descripcion)
+
+    DatabaseReference ref = FirebaseDatabase.instance.reference();
+    var data = {
+      "image": url,
+      "nombre": _myValue,
+    };
+
+    ref.child("Imagenes").push().set(data);
+  }
+
+  bool validateAndSave() {
+    final form = formKey.currentState;
+    if (form.validate()) {
+      form.save();
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  Widget postsUI(
+    String image,
+    String nombre,
+    /* String date, String time*/
+  ) {
+    return /*Card(
+      elevation: 10.0,
+      margin: EdgeInsets.all(14.0),
+      child: Container(
+        padding: EdgeInsets.all(14.0),
+        child: */
+        Column(
+      children: <Widget>[
+        /*Row(
+          children: <Widget>[
+            /*  Text(
+                  date,
+                  style: Theme.of(context).textTheme.subtitle2,
+                  textAlign: TextAlign.center,
+                ),
+                Text(
+                  time,
+                  style: Theme.of(context).textTheme.subtitle2,
+                  textAlign: TextAlign.center,
+                ),*/
+          ],
+        ),*/
+        /*  SizedBox(
+              height: 10.0,
+            ),*/
+        Image.network(
+          image, /*fit: BoxFit.cover*/
+        ),
+        /*SizedBox(
+              height: 10.0,
+            ),
+            Text(
+              nombre,
+              style: Theme.of(context).textTheme.subtitle1,
+              textAlign: TextAlign.center,
+            )*/
+      ],
+    );
+    /*),
+    );*/
   }
 }
 
@@ -1303,3 +1566,5 @@ class CambiosSeleccion {
     PopUps.PopUpConWidget(context, contenidoPopUp);
   }
 }
+
+class SubiendoFirebase {}
