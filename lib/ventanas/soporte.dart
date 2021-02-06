@@ -201,15 +201,15 @@ class _SoporteState extends State<Soporte> {
                   ],
                 )),
             Padding(
-              padding: const EdgeInsets.only(top: 10.0, bottom: 5),
+              padding: const EdgeInsets.only(top: 20.0, bottom: 5),
               child: Row(
-                //   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                // mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
                   Expanded(flex: 2, child: SizedBox()),
                   Expanded(
                     flex: 2,
                     child: CircleAvatar(
-                        radius: 18,
+                        radius: 16,
                         backgroundColor: HexColor('#3edb9b'),
                         child: FlatButton(
                             onPressed: () {
@@ -221,14 +221,14 @@ class _SoporteState extends State<Soporte> {
                               child: Icon(
                                 IconRRSS.globe,
                                 color: Colors.white,
-                                size: 22,
+                                size: 18,
                               ),
                             ))),
                   ),
                   Expanded(
                     flex: 2,
                     child: CircleAvatar(
-                      radius: 18,
+                      radius: 16,
                       backgroundColor: HexColor('#0077b5'),
                       child: FlatButton(
                           onPressed: () {
@@ -239,7 +239,7 @@ class _SoporteState extends State<Soporte> {
                             child: Icon(
                               IconRRSS.linkedin_in,
                               color: Colors.white,
-                              size: 22,
+                              size: 18,
                             ),
                           )),
                     ),
@@ -247,7 +247,7 @@ class _SoporteState extends State<Soporte> {
                   Expanded(
                     flex: 2,
                     child: CircleAvatar(
-                      radius: 18,
+                      radius: 16,
                       backgroundColor: HexColor('#dd2a7b'),
                       child: FlatButton(
                           onPressed: () {
@@ -259,7 +259,7 @@ class _SoporteState extends State<Soporte> {
                             child: Icon(
                               IconRRSS.instagram,
                               color: Colors.white,
-                              size: 22,
+                              size: 18,
                             ),
                           )),
                     ),
@@ -267,7 +267,7 @@ class _SoporteState extends State<Soporte> {
                   Expanded(
                     flex: 2,
                     child: CircleAvatar(
-                      radius: 18,
+                      radius: 16,
                       backgroundColor: HexColor('#1778f2'),
                       child: FlatButton(
                           onPressed: () {
@@ -275,11 +275,11 @@ class _SoporteState extends State<Soporte> {
                           },
                           child: Container(
                             transform:
-                                Matrix4.translationValues(-0.0, 3.0, 0.0),
+                                Matrix4.translationValues(-0.0, 0.0, 0.0),
                             child: Icon(
                               IconRRSS.facebook_f,
                               color: Colors.white,
-                              size: 29,
+                              size: 20,
                             ),
                           )),
                     ),
