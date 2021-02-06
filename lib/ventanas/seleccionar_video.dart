@@ -119,7 +119,7 @@ class _SeleccionarVideoState extends State<SeleccionarVideo> {
       "videos": url,
       "nombre": _myValue,
     };
-
+    //CATEGORIA DE SUBCARPETAS
     ref.child("Videos").push().set(data);
   }
 
@@ -197,11 +197,11 @@ class _SeleccionarVideoState extends State<SeleccionarVideo> {
       // listaVideos.clear();
       data.forEach((key, value) {
         Videos v = Videos(video: value['video'], nombre: value['nombre']);
-        vpc = VideoPlayerController.network(
+        /*vpc = VideoPlayerController.network(
           value,
           // closedCaptionFile: _loadCaptions(),
           videoPlayerOptions: VideoPlayerOptions(mixWithOthers: true),
-        );
+        );*/
         if (v.video.contains(rutdeEmpresa)) {
           listaVideos.add(v);
         }
@@ -309,7 +309,7 @@ class _SeleccionarVideoState extends State<SeleccionarVideo> {
                         postList[index].time);*/
                                 },
                               ),
-
+//VERSION ANTERIOR
                     /* GridView.count(
                       crossAxisSpacing: 5,
                       shrinkWrap: true,
