@@ -62,7 +62,9 @@ class _SeleccionarImagenState extends State<SeleccionarImagen> {
       postList.clear();
       data.forEach((key, value) {
         Posts posts = Posts(image: value['image'], nombre: value['nombre']);
-        postList.add(posts);
+        if (posts.image.contains(rutdeEmpresa)) {
+          postList.add(posts);
+        }
       });
       setState(() {});
     });
@@ -125,10 +127,10 @@ class _SeleccionarImagenState extends State<SeleccionarImagen> {
                             itemCount: postList.length,
                             gridDelegate:
                                 SliverGridDelegateWithFixedCrossAxisCount(
-                                    crossAxisCount: 2,
-                                    crossAxisSpacing: 0,
-                                    mainAxisSpacing: 0),
-                            itemBuilder: (BuildContext context, index) {
+                                    crossAxisCount: 3,
+                                    crossAxisSpacing: 5,
+                                    mainAxisSpacing: 5),
+                            itemBuilder: (context, index) {
                               return postsUI(postList[index].image,
                                   postList[index].nombre);
                               /* postList[index].date,
@@ -323,8 +325,8 @@ class _SeleccionarImagenState extends State<SeleccionarImagen> {
                               gridDelegate:
                                   SliverGridDelegateWithFixedCrossAxisCount(
                                       crossAxisCount: 3,
-                                      crossAxisSpacing: 0,
-                                      mainAxisSpacing: 0),
+                                      crossAxisSpacing: 5,
+                                      mainAxisSpacing: 5),
                               itemBuilder: (_, index) {
                                 return postsUI(postList[index].image,
                                     postList[index].nombre);
@@ -1098,8 +1100,8 @@ class _SeleccionarImagenState extends State<SeleccionarImagen> {
                       sampleImage,
                       /* height: 300.0,
                       width: 600.0,*/
-                      width: MediaQuery.of(context).size.width / 2,
-                      height: MediaQuery.of(context).size.height / 4,
+                      //width: MediaQuery.of(context).size.width / 2,
+                      // height: MediaQuery.of(context).size.height / 4,
                     ),
                     SizedBox(
                       height: 15.0,
@@ -1135,7 +1137,7 @@ class _SeleccionarImagenState extends State<SeleccionarImagen> {
     if (validateAndSave()) {
       // Subir imagen a firebase storage
       final StorageReference postIamgeRef =
-          FirebaseStorage.instance.ref().child("testeando" /*rutdeEmpresa*/);
+          FirebaseStorage.instance.ref().child(rutdeEmpresa);
       final StorageUploadTask uploadTask =
           postIamgeRef.child(_myValue + ".jpg").putFile(sampleImage);
       var imageUrl = await (await uploadTask.onComplete).ref.getDownloadURL();
@@ -1178,6 +1180,7 @@ class _SeleccionarImagenState extends State<SeleccionarImagen> {
   Widget postsUI(
     String image,
     String nombre,
+    //String empresa,
     /* String date, String time*/
   ) {
     return /*Card(
@@ -1186,8 +1189,8 @@ class _SeleccionarImagenState extends State<SeleccionarImagen> {
       child: Container(
         padding: EdgeInsets.all(14.0),
         child: */
-        Column(
-      children: <Widget>[
+        /* Column(
+      children: <Widget>[*/
         /*Row(
           children: <Widget>[
             /*  Text(
@@ -1205,10 +1208,27 @@ class _SeleccionarImagenState extends State<SeleccionarImagen> {
         /*  SizedBox(
               height: 10.0,
             ),*/
+        Stack(
+      children: [
         Image.network(
-          image, /*fit: BoxFit.cover*/
+          image,
+          /*fit: BoxFit.cover*/
+          // width: MediaQuery.of(context).size.width / 2,
+          //  height: MediaQuery.of(context).size.height / 4,
         ),
-        /*SizedBox(
+        Positioned(
+            bottom: 0,
+            child: Container(
+              color: Colors.lightGreenAccent,
+              child: Text(
+                nombre,
+                style: Theme.of(context).textTheme.subtitle1,
+                textAlign: TextAlign.center,
+              ),
+            ))
+      ],
+    );
+    /*SizedBox(
               height: 10.0,
             ),
             Text(
@@ -1216,8 +1236,8 @@ class _SeleccionarImagenState extends State<SeleccionarImagen> {
               style: Theme.of(context).textTheme.subtitle1,
               textAlign: TextAlign.center,
             )*/
-      ],
-    );
+    /*],
+    );*/
     /*),
     );*/
   }

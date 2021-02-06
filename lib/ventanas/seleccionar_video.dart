@@ -1,8 +1,11 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
+import 'package:firebase_database/firebase_database.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:tvpost_flutter/tvlapiz_icons.dart';
 //import 'package:flutter_social_content_share/flutter_social_content_share.dart';
 import 'package:tvpost_flutter/utilidades/comunicacion_raspberry.dart';
@@ -11,6 +14,8 @@ import 'package:tvpost_flutter/utilidades/datos_estaticos.dart';
 //import 'package:http/http.dart' as http;
 import 'package:path/path.dart' as p;
 import 'package:file_picker/file_picker.dart';
+import 'package:tvpost_flutter/ventanas/soporte.dart';
+import 'package:tvpost_flutter/ventanas/video_widget.dart';
 import 'package:video_player/video_player.dart';
 //import 'package:chewie/chewie.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -21,6 +26,146 @@ class SeleccionarVideo extends StatefulWidget {
 }
 
 class _SeleccionarVideoState extends State<SeleccionarVideo> {
+  //funciones firebase
+//ACA SE COMENZARA A IMPLEMENTAR LAS FUNCIONES DE FIREBASE
+
+  Future getVideo() async {
+    var tempImage = await ImagePicker.pickVideo(source: ImageSource.gallery);
+
+    setState(() {
+      sampleVideo = tempImage;
+    });
+    subirVideo(context);
+  }
+
+  Future<void> subirVideo(BuildContext context) async {
+    return showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+              content: SingleChildScrollView(
+                  child: Container(
+            child: Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Form(
+                key: formKey,
+                child: Column(
+                  children: <Widget>[
+                    Image.file(
+                      sampleVideo,
+                      /* height: 300.0,
+                      width: 600.0,*/
+                      //width: MediaQuery.of(context).size.width / 2,
+                      // height: MediaQuery.of(context).size.height / 4,
+                    ),
+                    SizedBox(
+                      height: 15.0,
+                    ),
+                    TextFormField(
+                      decoration: InputDecoration(labelText: "Nombre video"),
+                      validator: (value) {
+                        return value.isEmpty ? "Nombre es requerido" : null;
+                      },
+                      onSaved: (value) {
+                        return _myValue = value;
+                      },
+                    ),
+                    SizedBox(
+                      height: 15.0,
+                    ),
+                    RaisedButton(
+                      elevation: 10.0,
+                      child: Text("Agregar nuevo video"),
+                      textColor: Colors.white,
+                      color: Colors.blueAccent,
+                      onPressed: modificarEstadoVideo,
+                    )
+                  ],
+                ),
+              ),
+            ),
+          )));
+        });
+  }
+
+  void modificarEstadoVideo() async {
+    if (validateAndSave()) {
+      // Subir imagen a firebase storage
+      final StorageReference postIamgeRef =
+          FirebaseStorage.instance.ref().child(rutdeEmpresa);
+      final StorageUploadTask uploadTask = postIamgeRef
+          .child(_myValue + '.mp4')
+          .putFile(sampleVideo, StorageMetadata(contentType: 'video/mp4'));
+      var imageUrl = await (await uploadTask.onComplete).ref.getDownloadURL();
+      url = imageUrl.toString();
+      print("Video url: " + url);
+
+      // Guardar el post a firebase database: database realtime
+      saveToDatabase(url);
+
+      // Regresar a Home
+      Navigator.pop(context);
+      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) {
+        return Soporte();
+      }));
+    }
+  }
+
+  void saveToDatabase(String url) {
+    // Guardar un post (image, descripcion)
+
+    DatabaseReference ref = FirebaseDatabase.instance.reference();
+    var data = {
+      "videos": url,
+      "nombre": _myValue,
+    };
+
+    ref.child("Videos").push().set(data);
+  }
+
+  bool validateAndSave() {
+    final form = formKey.currentState;
+    if (form.validate()) {
+      form.save();
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  Widget mostrarVideos(
+    String video,
+    String nombre,
+  ) {
+    return Stack(
+      children: [
+        // VideoPlayer(vpc),
+        Image.network(video),
+        Positioned(
+            bottom: 0,
+            child: Container(
+              color: Colors.lightGreenAccent,
+              child: Text(
+                nombre,
+                style: Theme.of(context).textTheme.subtitle1,
+                textAlign: TextAlign.center,
+              ),
+            ))
+      ],
+    );
+  }
+
+  //aca datos de firebase
+  //ACA VAN LOS DATOS DE FIREBASE PARA MOSTRAR FILES
+  List<Videos> listaVideos = List();
+  final fb = FirebaseDatabase.instance.reference().child("Videos");
+  //ACA VAN LOS DATOS DE FIREBASE PARA SUBIR IMAGENES
+  String rutdeEmpresa = DatosEstaticos.rutEmpresa;
+  File sampleVideo; // imagen
+  String _myValue; // descripcion
+  String url; // url de la imagen
+  final formKey = GlobalKey<FormState>();
+  VideoPlayerController vpc;
   //Datos que se envía completo desde la ventana de selección de media
   Map datosDesdeVentanaAnterior = {};
   String divisionLayout;
@@ -46,6 +191,23 @@ class _SeleccionarVideoState extends State<SeleccionarVideo> {
     _listadoNombresVideos = _getNombresVideos();
     activarBoton = true;
     super.initState();
+
+    fb.once().then((DataSnapshot snap) {
+      var data = snap.value;
+      // listaVideos.clear();
+      data.forEach((key, value) {
+        Videos v = Videos(video: value['video'], nombre: value['nombre']);
+        vpc = VideoPlayerController.network(
+          value,
+          // closedCaptionFile: _loadCaptions(),
+          videoPlayerOptions: VideoPlayerOptions(mixWithOthers: true),
+        );
+        if (v.video.contains(rutdeEmpresa)) {
+          listaVideos.add(v);
+        }
+      });
+      setState(() {});
+    });
   }
 
   @override
@@ -101,7 +263,54 @@ class _SeleccionarVideoState extends State<SeleccionarVideo> {
               return Column(
                 children: [
                   Expanded(
-                    child: GridView.count(
+                    child:
+                        /*ListView.separated(
+                      shrinkWrap: true,
+                      cacheExtent: 1000,
+                      physics: NeverScrollableScrollPhysics(),
+                      scrollDirection: Axis.vertical,
+                      key: PageStorageKey(widget.key),
+                      addAutomaticKeepAlives: true,
+                      itemCount: listaVideos.isEmpty ? 0 : listaVideos.length,
+                      itemBuilder: (BuildContext context, int index) =>
+                          Container(
+                        width: double.infinity,
+                        height: 250,
+                        alignment: Alignment.center,
+                        child: Container(
+                          key: new PageStorageKey(
+                            "keydata$index",
+                          ),
+                          child: mostrarVideos(listaVideos[index].video,
+                              listaVideos[index].nombre),
+                          /*
+                            VideoWidget(
+                                play: true, url: listaVideos[index].video)*/
+                        ),
+                      ),
+                      separatorBuilder: (context, index) {
+                        return Divider();
+                      },
+                    ),*/
+
+                        listaVideos.length == 0
+                            ? Text("CARGUE VIDEOS PARA VISUALIZARLOS")
+                            : GridView.builder(
+                                itemCount: listaVideos.length,
+                                gridDelegate:
+                                    SliverGridDelegateWithFixedCrossAxisCount(
+                                        crossAxisCount: 3,
+                                        crossAxisSpacing: 5,
+                                        mainAxisSpacing: 5),
+                                itemBuilder: (_, index) {
+                                  return mostrarVideos(listaVideos[index].video,
+                                      listaVideos[index].nombre);
+                                  /* postList[index].date,
+                        postList[index].time);*/
+                                },
+                              ),
+
+                    /* GridView.count(
                       crossAxisSpacing: 5,
                       shrinkWrap: true,
                       crossAxisCount: 3,
@@ -189,7 +398,7 @@ class _SeleccionarVideoState extends State<SeleccionarVideo> {
                               },*/
                         );
                       }),
-                    ),
+                    ),*/
                   ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -264,11 +473,15 @@ class _SeleccionarVideoState extends State<SeleccionarVideo> {
                 children: [
                   Expanded(
                     child: GridView.count(
-                      crossAxisSpacing: 5,
-                      shrinkWrap: true,
-                      crossAxisCount: 3,
-                      children: List.generate(
-                          DatosEstaticos.listadoNombresVideos.length, (index) {
+                        crossAxisSpacing: 5,
+                        shrinkWrap: true,
+                        crossAxisCount: 3,
+                        children: List.generate(listaVideos.length, (index) {
+                          return mostrarVideos(listaVideos[index].video,
+                              listaVideos[index].nombre);
+                        })
+
+                        /*   DatosEstaticos.listadoNombresVideos.length, (index) {
                         String nombre = DatosEstaticos
                             .listadoNombresVideos[index]
                             .toString();
@@ -354,9 +567,9 @@ class _SeleccionarVideoState extends State<SeleccionarVideo> {
                               },
 
                                */
-                        );
-                      }),
-                    ),
+                        );*/
+                        // }),
+                        ),
                   ),
                   SeleccionaVideo.videosSelecionados.length == 1
                       ? Container(
@@ -523,7 +736,7 @@ class _SeleccionarVideoState extends State<SeleccionarVideo> {
                                 heroTag: null,
                                 backgroundColor: HexColor('#FC4C8B'),
                                 onPressed: () {
-                                  abrirGaleria();
+                                  getVideo();
                                 }),
                           ),
                         )
