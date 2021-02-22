@@ -1762,6 +1762,7 @@ class CambiosSeleccion {
       mainAxisSize: MainAxisSize.min,
       children: [
         Icon(
+
           Icons.edit,
           color: Colors.white,
         ),
