@@ -235,7 +235,20 @@ class MenuAppBar {
       String rutaVentana,
       String rutaProveniente,
       bool necesitaEquipoConectado}) {
+    /*
+    Navigator.pushNamed(context, rutaVentana, arguments: {
+      'division_layout': '0',
+      'ruta_proveniente': rutaProveniente,
+    });
+    */
+      Navigator.popAndPushNamed(context, rutaVentana, arguments: {
+        'division_layout': '0',
+        'ruta_proveniente': rutaProveniente,
+      });
+
+
     //print(ModalRoute.of(context).settings.name);
+    /*
     if (necesitaEquipoConectado) {
       if (listadoEquipos.length > 0) {
         if (DatosEstaticos.ipSeleccionada != null) {
@@ -432,6 +445,8 @@ class MenuAppBar {
         'ruta_proveniente': rutaProveniente,
       });
     }
+
+     */
   }
 
   static void SeleccionMenu(String itemSeleccionado, BuildContext context) {
@@ -1836,12 +1851,10 @@ class EventosPropios {
 
 class Posts {
   String image, nombre;
-
   Posts({this.image, this.nombre});
 }
 
 class Videos {
   String video, nombre;
-
   Videos({this.video, this.nombre});
 }

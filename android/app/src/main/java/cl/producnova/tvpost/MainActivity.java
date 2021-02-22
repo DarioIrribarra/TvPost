@@ -1,4 +1,4 @@
-package com.example.tvpost_flutter;
+package cl.producnova.tvpost;
 
 import io.flutter.embedding.android.FlutterActivity;
 

@@ -1,5 +1,6 @@
 //import 'dart:js';
 
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 //import 'package:tvpost_flutter/utilidades/custom_widgets.dart';
@@ -24,6 +25,8 @@ Future<void> main() async {
   // inicie la app
   WidgetsFlutterBinding.ensureInitialized();
   await shared_preferences_tvPost.CargarSharedPreferences();
+  //Se inicializa Firebase
+  await Firebase.initializeApp();
 
   //Espera la orientación vertical
   SystemChrome.setPreferredOrientations(

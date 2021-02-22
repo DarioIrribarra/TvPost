@@ -90,14 +90,23 @@ class _SeleccionarVideoState extends State<SeleccionarVideo> {
 
   void modificarEstadoVideo() async {
     if (validateAndSave()) {
+      var videoUrl;
       // Subir imagen a firebase storage
+      FirebaseStorage storage = FirebaseStorage.instance;
+      Reference postVideoRef = storage.ref().child(rutdeEmpresa);
+      UploadTask uploadTask = postVideoRef.putFile(sampleVideo);
+      uploadTask.then((res) {videoUrl = res.ref.getDownloadURL();});
+      /*
       final StorageReference postIamgeRef =
           FirebaseStorage.instance.ref().child(rutdeEmpresa);
       final StorageUploadTask uploadTask = postIamgeRef
           .child(_myValue + '.mp4')
           .putFile(sampleVideo, StorageMetadata(contentType: 'video/mp4'));
       var imageUrl = await (await uploadTask.onComplete).ref.getDownloadURL();
-      url = imageUrl.toString();
+
+       */
+
+      url = videoUrl.toString();
       print("Video url: " + url);
 
       // Guardar el post a firebase database: database realtime

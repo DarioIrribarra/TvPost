@@ -1,34 +1,41 @@
 {
   "project_info": {
-    "project_number": "396764510929",
-    "firebase_url": "https://tvpostintegracion-default-rtdb.firebaseio.com",
-    "project_id": "tvpostintegracion",
-    "storage_bucket": "tvpostintegracion.appspot.com"
+    "project_number": "483684083896",
+    "project_id": "tvpost-d2d68",
+    "storage_bucket": "tvpost-d2d68.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:396764510929:android:b68558f916fbc2b99323f0",
+        "mobilesdk_app_id": "1:483684083896:android:0b249c10b5dee39aa96c4d",
         "android_client_info": {
-          "package_name": "com.example.tvpost"
+          "package_name": "cl.producnova.tvpost"
         }
       },
       "oauth_client": [
         {
-          "client_id": "396764510929-0je18fan2ccr6vo4j4mmladbi82r0lnd.apps.googleusercontent.com",
+          "client_id": "483684083896-c3ha18m9l9s2etk4s2jqccdjcd0mlick.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "cl.producnova.tvpost",
+            "certificate_hash": "0dacbd43bc2ebfd66e4efdb3b3c7d2adc22b3da2"
+          }
+        },
+        {
+          "client_id": "483684083896-tqum7ict6mumhcm9njm35q0tv8enef41.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyAMiDVoNM2-Iayi5grNwk60q0lnnyIzv7s"
+          "current_key": "AIzaSyAjT00AKdZDmaP_LnVMbS45yEIKRGiDuRQ"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "396764510929-0je18fan2ccr6vo4j4mmladbi82r0lnd.apps.googleusercontent.com",
+              "client_id": "483684083896-tqum7ict6mumhcm9njm35q0tv8enef41.apps.googleusercontent.com",
               "client_type": 3
             }
           ]

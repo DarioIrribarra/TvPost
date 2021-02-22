@@ -1,24 +1,18 @@
-import 'dart:async';
-//import 'dart:ffi';
 import 'dart:io';
 import 'dart:ui';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
 import 'package:tvpost_flutter/tvlapiz_icons.dart';
-//import 'package:flutter_social_content_share/flutter_social_content_share.dart';
+import 'package:tvpost_flutter/utilidades/CloudStorage.dart';
 import 'package:tvpost_flutter/utilidades/comunicacion_raspberry.dart';
 import 'package:tvpost_flutter/utilidades/custom_widgets.dart';
 import 'package:tvpost_flutter/utilidades/datos_estaticos.dart';
 import 'package:path/path.dart' as p;
 import 'package:file_picker/file_picker.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:firebase_database/firebase_database.dart';
-import 'package:firebase_storage/firebase_storage.dart';
-import 'package:intl/intl.dart';
-import 'package:image_picker/image_picker.dart';
-import 'package:tvpost_flutter/ventanas/soporte.dart';
 
 class SeleccionarImagen extends StatefulWidget {
   @override
@@ -27,24 +21,28 @@ class SeleccionarImagen extends StatefulWidget {
 
 class _SeleccionarImagenState extends State<SeleccionarImagen> {
   //ACA VAN LOS DATOS DE FIREBASE PARA MOSTRAR FILES
-  List<Posts> postList = List();
-  final fb = FirebaseDatabase.instance.reference().child("Imagenes");
+  //List<Posts> postList = List();
+  //final fb = FirebaseDatabase.instance.reference().child("Imagenes");
+
   //ACA VAN LOS DATOS DE FIREBASE PARA SUBIR IMAGENES
-  String rutdeEmpresa = DatosEstaticos.rutEmpresa;
-  File sampleImage; // imagen
-  String _myValue; // descripcion
-  String url; // url de la imagen
+  //String rutdeEmpresa = DatosEstaticos.rutEmpresa;
+  //File sampleImage; // imagen
+  //String _myValue; // descripcion
+  //String url; // url de la imagen
+
   final formKey = GlobalKey<FormState>();
   //Datos que se envía completo desde la ventana de selección de media
+
   Map datosDesdeVentanaAnterior = {};
   String divisionLayout;
   String rutaDeDondeViene;
-  Future<List<dynamic>> _listadoNombresImagenes;
+  //Future<List<dynamic>> _listadoNombresImagenes;
   int itemsVisiblesGrid = 0;
   FilePickerResult imagenSeleccionadaGaleria;
   TextEditingController _controladorTexto = TextEditingController();
   List<String> imagenesSeleccionadas = [];
   bool activarBoton = false;
+
   //bool _visible = false;
   Container cargaRRSS = Container(
     height: 200,
@@ -54,9 +52,10 @@ class _SeleccionarImagenState extends State<SeleccionarImagen> {
   void initState() {
     super.initState();
     //Acá se hace el llamado al listado de nombres de imágenes
-    _listadoNombresImagenes = PopUps.getNombresImagenes();
+    //_listadoNombresImagenes = PopUps.getNombresImagenes();
     //DatosEstaticos.PublicarEnRedesSociales = false;
     activarBoton = true;
+    /*
     fb.once().then((DataSnapshot snap) {
       var data = snap.value;
       postList.clear();
@@ -68,6 +67,8 @@ class _SeleccionarImagenState extends State<SeleccionarImagen> {
       });
       setState(() {});
     });
+
+     */
   }
 
   @override
@@ -88,9 +89,129 @@ class _SeleccionarImagenState extends State<SeleccionarImagen> {
     }
 
     Widget widgetFutureGrilla;
+    Widget rowBotones;
 
     if (rutaDeDondeViene != null) {
       CambiosSeleccion.rutaPadre = rutaDeDondeViene;
+
+      ///Acá se carga la grid desde Firebase
+      widgetFutureGrilla = StreamBuilder(
+        stream: FirebaseFirestore.instance.collection('empresas').doc(DatosEstaticos.rutEmpresa).collection('imagenes').snapshots(),
+        builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
+          return !snapshot.hasData
+              ? Center(child: CircularProgressIndicator(),)
+              : GridView.builder(
+                  //Toma el total de imágenes desde la carpeta del
+                  // webserver
+                  itemCount: snapshot.data.docs.length,
+                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: 3,
+                      crossAxisSpacing: 5,
+                      mainAxisSpacing: 5),
+                  itemBuilder: (context, index) {
+                    //Por cada imagen, busca su imagen.
+                    // El nombre lo toma del listado estático
+
+                    String nombre = snapshot.data.docs[index]['id'].toString();
+                    //BoxDecoration borderSelec;
+
+                    return GestureDetector(
+                      onTap: () {
+                        setState(() {
+                          if (!imagenesSeleccionadas.contains(nombre)) {
+                            imagenesSeleccionadas.add(nombre);
+                          } else {
+                            imagenesSeleccionadas.remove(nombre);
+                          }
+                          CambiosSeleccion.listadoSeleccionadas =
+                              imagenesSeleccionadas;
+                          //print(imagenesSeleccionadas);
+                        });
+                      },
+                      //Container de cada imagen
+                      child: Opacity(
+                        opacity: resultado(nombre),
+                        /* imagenesSeleccionadas.contains(nombre)
+                                  ? 1.0
+                                  : 0.1,*/
+                        child: Stack(
+                          alignment: Alignment.center,
+                          children: [
+                            Container(
+                              //Si se encuentra en el listado de seleccionadas se cambia el borde
+                              /*decoration:
+                                        imagenesSeleccionadas.contains(nombre)
+                                            ? CambiosSeleccion.bordeSeleccionado
+                                            : null,*/
+                              child: Column(
+                                crossAxisAlignment:
+                                CrossAxisAlignment.stretch,
+                                children: [
+                                  Expanded(
+                                    flex: 5,
+                                    child: Image.network(snapshot.data.docs[index]['url']),
+                                  ),
+
+                                  //NOMBRE DE IMAGENES DEJADO DE CADA UNA
+                                  /*
+                                  Expanded(
+                                    flex: 1,
+                                    child: Padding(
+                                      padding: EdgeInsets.only(top: 3),
+                                      child: Text(
+                                        nombre.substring(
+                                            0, nombre.lastIndexOf('.')),
+                                        textAlign: TextAlign.center,
+                                        style: TextStyle(
+                                            fontFamily: 'textoMont',
+                                            fontSize: 12),
+                                      ),
+                                    ),
+                                  ),
+
+                                   */
+                                ],
+                              ),
+                            ),
+                            Positioned(
+                              bottom: 30,
+                              right: 10,
+                              //Se aplica el ícono verde al seleccionar
+                              child:
+                              imagenesSeleccionadas.contains(nombre)
+                                  ? CambiosSeleccion.iconoSeleccionado
+                                  : Container(),
+                            ),
+                          ],
+                        ),
+                      ),
+                    );
+                  });
+        },
+      );
+      rowBotones = Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Container(
+            margin: EdgeInsets.only(top: 10, bottom: 10),
+            //Si la lista tiene algún seleccionado se cambia el botón
+            child: imagenesSeleccionadas.length == 1
+                ? CambiosSeleccion.btnEditarHabilitado
+                : CambiosSeleccion.btnEditarDeshabilitado,
+          ),
+          SizedBox(
+            width: 10,
+          ),
+          Container(
+            margin: EdgeInsets.only(top: 10, bottom: 10),
+            //Si la lista tiene algún seleccionado se cambia el botón
+            child: imagenesSeleccionadas.length > 0
+                ? CambiosSeleccion.btnEliminarHabilitado
+                : CambiosSeleccion.btnEliminarDeshabilitado,
+          ),
+        ],
+      );
+/*
       widgetFutureGrilla = FutureBuilder(
         future: _listadoNombresImagenes,
         builder: (context, snapshot) {
@@ -123,32 +244,8 @@ class _SeleccionarImagenState extends State<SeleccionarImagen> {
                   Expanded(
                     child: postList.length == 0
                         ? Text("CARGUE IMAGENES PARA VISUALIZARLAS")
-                        : GridView.builder(
-                            itemCount: postList.length,
-                            gridDelegate:
-                                SliverGridDelegateWithFixedCrossAxisCount(
-                                    crossAxisCount: 3,
-                                    crossAxisSpacing: 5,
-                                    mainAxisSpacing: 5),
-                            itemBuilder: (context, index) {
-                              return postsUI(postList[index].image,
-                                  postList[index].nombre);
-                              /* postList[index].date,
-                        postList[index].time);*/
-                            },
-                          ),
-
-                    /* ListView.builder(
-                      itemCount: postList.length,
-                      itemBuilder: (_, index) {
-                        return postsUI(
-                            postList[index].image, postList[index].nombre);
-                        /* postList[index].date,
-                        postList[index].time);*/
-                      },
-                    ),*/
-
-                    /*GridView.builder(
+                        :
+                    GridView.builder(
                         //Toma el total de imágenes desde la carpeta del
                         // webserver
                         itemCount: DatosEstaticos.listadoNombresImagenes.length,
@@ -236,7 +333,7 @@ class _SeleccionarImagenState extends State<SeleccionarImagen> {
                               ),
                             ),
                           );
-                        }),*/
+                        }),
                   ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -279,7 +376,277 @@ class _SeleccionarImagenState extends State<SeleccionarImagen> {
           }
         },
       );
+
+ */
+
     } else {
+      widgetFutureGrilla = StreamBuilder(
+        stream: FirebaseFirestore.instance.collection('empresas').doc(DatosEstaticos.rutEmpresa).collection('imagenes').snapshots(),
+        builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
+          return !snapshot.hasData
+              ? CircularProgressIndicator()
+              : GridView.builder(
+            //Toma el total de imágenes desde la carpeta del
+            // webserver
+              itemCount: snapshot.data.docs.length,
+              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 3,
+                  crossAxisSpacing: 5,
+                  mainAxisSpacing: 5),
+              itemBuilder: (context, index) {
+                //Por cada imagen, busca su imagen.
+                // El nombre lo toma del listado estático
+
+                String nombre = snapshot.data.docs[index]['id'].toString();
+                //BoxDecoration borderSelec;
+
+                return GestureDetector(
+                  onTap: () {
+                    /*Fluttertoast.showToast(
+                              msg: "Presione dos veces para seleccionar imagen",
+                              toastLength: Toast.LENGTH_LONG,
+                              webBgColor: "#e74c3c",
+                              timeInSecForIosWeb: 10,
+                            );*/
+
+                    //Hice la selección antes de la creación del container
+                    //ahora si la lista ya tiene un item se borra entera
+                    //y luego se agrega la nueva imagen seleccionada
+
+                    if (imagenesSeleccionadas.length >= 1) {
+                      if (imagenesSeleccionadas.contains(nombre)) {
+                        imagenesSeleccionadas.remove(nombre);
+                      } else {
+                        imagenesSeleccionadas.clear();
+                        imagenesSeleccionadas.add(nombre);
+                      }
+                    } else {
+                      imagenesSeleccionadas.add(nombre);
+                    }
+                    /*try {
+                              print(imagenesSeleccionadas[0]);
+                            } catch(ex){
+                              print("lista vacía: último item clicado $nombre");
+                            }*/
+
+                    /*cargaRRSS = imagenesSeleccionadas.isEmpty ||
+                                    imagenesSeleccionadas.length > 1*/
+
+                    //Cambié este condicional
+                    cargaRRSS = imagenesSeleccionadas.length == 1
+                        ? Container(
+                      width: MediaQuery.of(context).size.width,
+                      //height:MediaQuery.of(context).size.height / 4,
+                      //color: Colors.pink,
+                      child: Row(
+                        //crossAxisAlignment: CrossAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Column(
+                            children: [
+                              SizedBox(height: MediaQuery.of(context).size.height/25),
+                              Container(
+                                height: 40,
+                                width: 200,
+                                decoration: new BoxDecoration(
+                                    borderRadius:
+                                    BorderRadius.circular(20),
+                                    gradient: LinearGradient(
+                                        colors: [
+                                          HexColor("#0683ff"),
+                                          HexColor("#3edb9b")
+                                        ],
+                                        stops: [
+                                          0.1,
+                                          0.6
+                                        ],
+                                        begin: Alignment.topLeft,
+                                        end: FractionalOffset
+                                            .bottomRight)),
+                                child: FlatButton(
+                                  color: Colors.transparent,
+                                  onPressed: () async {
+                                    //String dir = (await getTemporaryDirectory()).path;
+                                    //File temporal = new File('$dir/img_temp_creada.png');
+                                    //Se desactiva la publicación en redes sociales
+                                    DatosEstaticos
+                                        .PublicarEnRedesSociales =
+                                    false;
+                                    Widget imagen = Image.network(snapshot.data.docs[index]['url']);
+                                    String nombre = snapshot.data.docs[index]['id'].toString();
+                                    RedireccionarCrearLayout(
+                                        imagen,
+                                        //"/var/www/html/ImagenesPostTv/$nombre",
+                                        nombre,
+                                        false);
+                                    return;
+                                  },
+                                  child: Text(
+                                    'CARGAR',
+                                    style: TextStyle(
+                                        color: Colors.white),
+                                  ),
+                                ),
+                              ),
+                              SizedBox(height: 15),
+                              Container(
+                                height: 40,
+                                width: 200,
+                                decoration: new BoxDecoration(
+                                    borderRadius:
+                                    BorderRadius.circular(20),
+                                    gradient: LinearGradient(
+                                        colors: [
+                                          HexColor("#3edb9b"),
+                                          HexColor("#0683ff")
+                                        ],
+                                        stops: [
+                                          0.5,
+                                          1
+                                        ],
+                                        begin: Alignment.topLeft,
+                                        end: FractionalOffset
+                                            .bottomRight)),
+                                child: FlatButton(
+                                  color: Colors.transparent,
+                                  onPressed: () async {
+                                    /*await FlutterSocialContentShare
+                                                  .share(
+                                                      type: ShareType
+                                                          .instagramWithImageUrl,
+                                                      imageUrl: 'http://'
+                                                          '${DatosEstaticos.ipSeleccionada}'
+                                                          '/ImagenesPostTv/'
+                                                          '${DatosEstaticos.listadoNombresImagenes[index]}');*/
+                                    //Valor que activa la publicación en redes sociales
+                                    //Este valor se desactiva luego de proyectar en tv
+                                    DatosEstaticos
+                                        .PublicarEnRedesSociales =
+                                    true;
+                                    Widget imagen = Image.network(snapshot.data.docs[index]['url']);
+                                    String nombre = snapshot.data.docs[index]['id'].toString();
+                                    RedireccionarCrearLayout(
+                                        imagen,
+                                        nombre,
+                                        false);
+                                  },
+                                  child: Padding(
+                                    padding:
+                                    const EdgeInsets.all(6.0),
+                                    child: Column(children: [
+                                      Text(
+                                        'CARGAR +',
+                                        style: TextStyle(
+                                            color: Colors.white),
+                                      ),
+                                      Text(
+                                        ' COMPARTIR RRSS',
+                                        style: TextStyle(
+                                            color: Colors.white),
+                                      ),
+                                    ]),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    )
+                        : Container(
+                      width: MediaQuery.of(context).size.width,
+                      height:
+                      MediaQuery.of(context).size.height / 4,
+                    );
+
+                    /*setState(() {
+                              if (imagenesSeleccionadas.contains(nombre) ==
+                                      false &&
+                                  imagenesSeleccionadas.length < 1) {
+                                imagenesSeleccionadas.add(nombre);
+                              } else {
+                                imagenesSeleccionadas.remove(nombre);
+                              }
+
+                              CambiosSeleccion.listadoSeleccionadas =
+                                  imagenesSeleccionadas;
+                            });*/
+
+                    setState(() {
+                      CambiosSeleccion.listadoSeleccionadas =
+                          imagenesSeleccionadas;
+
+                      /*if (imagenesSeleccionadas.contains(nombre) ==
+                                  false) {
+                                imagenesSeleccionadas.add(nombre);
+                              } else {
+                                imagenesSeleccionadas.remove(nombre);
+                              }*/
+                    });
+                  },
+                  //Container de cada imagen
+                  child: Opacity(
+                    opacity: resultado(nombre),
+                    /* imagenesSeleccionadas.contains(nombre)
+                                  ? 1.0
+                                  : 0.1,*/
+                    child: Stack(
+                      alignment: Alignment.center,
+                      children: [
+                        Container(
+                          //Si se encuentra en el listado de seleccionadas se cambia el borde
+                          /*decoration:
+                                        imagenesSeleccionadas.contains(nombre)
+                                            ? CambiosSeleccion.bordeSeleccionado
+                                            : null,*/
+                          child: Column(
+                            crossAxisAlignment:
+                            CrossAxisAlignment.stretch,
+                            children: [
+                              Expanded(
+                                flex: 5,
+                                child: Image.network(snapshot.data.docs[index]['url']),
+                              ),
+
+                              //NOMBRE DE IMAGENES DEJADO DE CADA UNA
+                              /*
+                                  Expanded(
+                                    flex: 1,
+                                    child: Padding(
+                                      padding: EdgeInsets.only(top: 3),
+                                      child: Text(
+                                        nombre.substring(
+                                            0, nombre.lastIndexOf('.')),
+                                        textAlign: TextAlign.center,
+                                        style: TextStyle(
+                                            fontFamily: 'textoMont',
+                                            fontSize: 12),
+                                      ),
+                                    ),
+                                  ),
+
+                                   */
+                            ],
+                          ),
+                        ),
+                        Positioned(
+                          bottom: 30,
+                          right: 10,
+                          //Se aplica el ícono verde al seleccionar
+                          child:
+                          imagenesSeleccionadas.contains(nombre)
+                              ? CambiosSeleccion.iconoSeleccionado
+                              : Container(),
+                        ),
+                      ],
+                    ),
+                  ),
+                );
+              });
+        },
+      );
+      rowBotones = cargaRRSS;
+/*
       widgetFutureGrilla = FutureBuilder(
         future: _listadoNombresImagenes,
         builder: (context, snapshot) {
@@ -320,7 +687,7 @@ class _SeleccionarImagenState extends State<SeleccionarImagen> {
 
                       postList.length == 0
                           ? Text("CARGUE IMAGENES PARA VISUALIZARLAS")
-                          : GridView.builder(
+                          : /*GridView.builder(
                               itemCount: postList.length,
                               gridDelegate:
                                   SliverGridDelegateWithFixedCrossAxisCount(
@@ -334,8 +701,9 @@ class _SeleccionarImagenState extends State<SeleccionarImagen> {
                         postList[index].time);*/
                               },
                             ),
+                            */
 
-                  /*GridView.builder(
+                  GridView.builder(
                       //Toma el total de imágenes desde la carpeta del
                       // webserver
                       itemCount: DatosEstaticos.listadoNombresImagenes.length,
@@ -614,7 +982,7 @@ class _SeleccionarImagenState extends State<SeleccionarImagen> {
                             ),
                           ),
                         );
-                      }),*/
+                      }),
                 ),
                 cargaRRSS
               ]);
@@ -635,6 +1003,9 @@ class _SeleccionarImagenState extends State<SeleccionarImagen> {
           }
         },
       );
+
+ */
+
     }
 
     return WillPopScope(
@@ -689,8 +1060,8 @@ class _SeleccionarImagenState extends State<SeleccionarImagen> {
                                 heroTag: null,
                                 backgroundColor: HexColor('#FC4C8B'),
                                 onPressed: () {
-                                  //abrirGaleria(context);
-                                  getImage();
+                                  abrirGaleria(context);
+                                  //getImage();
                                 }),
                           ),
                         )
@@ -700,9 +1071,13 @@ class _SeleccionarImagenState extends State<SeleccionarImagen> {
                 ),
               ),
               Expanded(
+                flex: 3,
                 //Acá hacer un future builder para nombres de imágenes
                 child: widgetFutureGrilla,
               ),
+              Expanded(
+                child: rowBotones,
+              )
             ],
           ),
         ),
@@ -722,12 +1097,17 @@ class _SeleccionarImagenState extends State<SeleccionarImagen> {
     }
   }
 
+  /*
   refresh() {
     setState(() {});
   }
 
+   */
+
   abrirGaleria(BuildContext context) async {
     GlobalKey<FormState> _keyValidador = GlobalKey<FormState>();
+    var listadoArchivos = new List<File>();
+    var listadoNombres = new List<String>();
     if (rutaDeDondeViene != null) {
       //Se toman multiples archivos desde FilePicker
       imagenSeleccionadaGaleria = await FilePicker.platform
@@ -737,13 +1117,77 @@ class _SeleccionarImagenState extends State<SeleccionarImagen> {
       imagenSeleccionadaGaleria =
           await FilePicker.platform.pickFiles(type: FileType.image);
     }
+
+    //Cantidad archivos seleccionados
     if (imagenSeleccionadaGaleria != null) {
       if (imagenSeleccionadaGaleria.files.length == 1) {
-        String nombreNuevaImagen = "";
+        //String nombreNuevaImagen = "";
         //Acá tomo la extensión para saber si es png o jpg
-        String extension = p.extension(imagenSeleccionadaGaleria.paths[0]);
+        //String extension = p.extension(imagenSeleccionadaGaleria.paths[0]);
         //Acá obtengo el archivo desde la  ruta
         File imagenFinal = File(imagenSeleccionadaGaleria.paths[0]);
+
+        //Navigator.pop(context);
+        //Se abre el popup de cargando
+        PopUps.popUpCargando(
+            context, 'Añadiendo imagen'.toUpperCase());
+        //Se añaden los archivos y nombres a sus listados
+        listadoArchivos.add(imagenFinal);
+        //listadoNombres.add(nombreNuevaImagen);
+        //Obtengo el resultado del envio
+        /*
+                              var resultado = await PopUps.enviarImagen(
+                                      nombreNuevaImagen, imagenFinal)
+                                  .then((value) => value);
+
+                               */
+        ///Comienzo de uso de firebase
+        var resultado =
+        await CloudStorage.SubirImagenFirebase(
+            listadoArchivos);
+
+        ///Termina subida firebase
+
+        if (resultado != null) {
+          //Replica la imagen para porción 10%
+          /*
+                                await ComunicacionRaspberry.ReplicarImagen(
+                                    nombreNuevaImagen);
+
+                                 */
+
+          if (rutaDeDondeViene != null) {
+            //Navigator.pop(context);
+            Navigator.pop(context);
+            Navigator.popAndPushNamed(
+                context, "/seleccionar_imagen",
+                arguments: {
+                  'division_layout': '0',
+                  'ruta_proveniente': rutaDeDondeViene,
+                });
+          } else {
+            //Si no es del menú redirige al layout
+            //Si el envío es correcto, se redirecciona
+            Image imagen = Image.file(
+              imagenFinal,
+            );
+            RedireccionarCrearLayout(
+                imagen,
+                //"/var/www/html/ImagenesPostTv/$nombreNuevaImagen",
+                resultado,
+                true
+            );
+          }
+        } else {
+          //Cierra popup cargando
+          Navigator.of(context, rootNavigator: true)
+              .pop();
+
+          PopUps.PopUpConWidget(
+              context, Text('Error al enviar imagen'));
+        }
+
+        /*
         await showDialog<String>(
           context: context,
           child: AnimacionPadding(
@@ -800,12 +1244,16 @@ class _SeleccionarImagenState extends State<SeleccionarImagen> {
                                         textoEscrito.trim().toString() +
                                             extension;
                                     //Chequear si el valor ya existe
+                                    return null;
+                                    /*
                                     if (DatosEstaticos.listadoNombresImagenes
                                         .contains(nombreNuevaImagen)) {
                                       return "Error: Nombre de imagen ya existe";
                                     } else {
                                       return null;
                                     }
+
+                                     */
                                   }
                                 },
                               ),
@@ -820,50 +1268,13 @@ class _SeleccionarImagenState extends State<SeleccionarImagen> {
                           ),
                           autofocus: true,
                           onPressed: () async {
+
+                            /*
                             if (_keyValidador.currentState.validate()) {
-                              //Se abre el popup de cargando
-                              Navigator.pop(context);
-                              PopUps.popUpCargando(
-                                  context, 'Añadiendo imagen'.toUpperCase());
-                              //Obtengo el resultado del envio
-                              var resultado = await PopUps.enviarImagen(
-                                      nombreNuevaImagen, imagenFinal)
-                                  .then((value) => value);
 
-                              if (resultado) {
-                                //Replica la imagen para porción 10%
-                                await ComunicacionRaspberry.ReplicarImagen(
-                                    nombreNuevaImagen);
-
-                                if (rutaDeDondeViene != null) {
-                                  Navigator.pop(context);
-                                  Navigator.pop(context);
-                                  Navigator.popAndPushNamed(
-                                      context, "/seleccionar_imagen",
-                                      arguments: {
-                                        'division_layout': '0',
-                                        'ruta_proveniente': rutaDeDondeViene,
-                                      });
-                                } else {
-                                  //Si no es del menú redirige al layout
-                                  //Si el envío es correcto, se redirecciona
-                                  Image imagen = Image.file(
-                                    imagenFinal,
-                                  );
-                                  RedireccionarCrearLayout(
-                                      imagen,
-                                      "/var/www/html/ImagenesPostTv/$nombreNuevaImagen",
-                                      true);
-                                }
-                              } else {
-                                //Cierra popup cargando
-                                Navigator.of(context, rootNavigator: true)
-                                    .pop();
-
-                                PopUps.PopUpConWidget(
-                                    context, Text('Error al enviar imagen'));
-                              }
                             }
+
+                             */
                           },
                         ),
                       ],
@@ -874,10 +1285,78 @@ class _SeleccionarImagenState extends State<SeleccionarImagen> {
             ),
           ),
         );
+
+         */
       } else {
         String nombreNuevaImagen = "";
         String extension;
         File imagenFinal;
+        PopUps.popUpCargando(
+            context, 'Agregando imagenes'.toUpperCase());
+
+        for (int i = 0;
+        i <= imagenSeleccionadaGaleria.files.length - 1;
+        i++) {
+          PlatformFile element =
+          imagenSeleccionadaGaleria.files[i];
+          extension = p.extension(element.path);
+          imagenFinal = File(element.path);
+
+          //Se añade imagen a listado a subir
+          listadoArchivos.add(imagenFinal);
+          //Se le da el nombre de la hora actual + su posición
+          // //en el listado
+          DateTime now = DateTime.now();
+          nombreNuevaImagen =
+          '${now.year}${now.month}${now.day}'
+              '${now.hour}${now.minute}${now.second}'
+              '_$i$extension';
+          listadoNombres.add(nombreNuevaImagen);
+
+          //Obtengo el resultado del envio
+
+          /*
+                          var resultado = await PopUps.enviarImagen(
+                                  nombreNuevaImagen, imagenFinal)
+                              .then((value) => value);
+                          if (resultado == false) {
+                            showDialog(
+                              context: null,
+                              child: Text('Error al agregar imágenes'),
+                            );
+                            break;
+                          }
+                          //Replica imagen para porción 10%
+
+                          await ComunicacionRaspberry.ReplicarImagen(
+                              nombreNuevaImagen);
+
+                           */
+        }
+
+        ///Comienzo de uso de firebase
+        await CloudStorage.SubirImagenFirebase(
+            listadoArchivos);
+
+        ///Termina subida firebase
+
+        if (rutaDeDondeViene != null) {
+          Navigator.pop(context);
+          Navigator.pop(context);
+          Navigator.popAndPushNamed(
+              context, "/seleccionar_imagen",
+              arguments: {
+                'division_layout': '0',
+                'ruta_proveniente': rutaDeDondeViene,
+              });
+        }
+        Fluttertoast.showToast(
+          msg: "${listadoArchivos.length} Imagenes agregadas",
+          toastLength: Toast.LENGTH_SHORT,
+          webBgColor: "#e74c3c",
+          timeInSecForIosWeb: 5,
+        );
+        /*
         Widget contenidoPopUp = Container(
           decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(40),
@@ -906,53 +1385,7 @@ class _SeleccionarImagenState extends State<SeleccionarImagen> {
                         size: 35,
                       ),
                       onPressed: () async {
-                        PopUps.popUpCargando(
-                            context, 'Agregando imagenes'.toUpperCase());
 
-                        for (int i = 0;
-                            i <= imagenSeleccionadaGaleria.files.length - 1;
-                            i++) {
-                          PlatformFile element =
-                              imagenSeleccionadaGaleria.files[i];
-                          extension = p.extension(element.path);
-                          imagenFinal = File(element.path);
-                          //Se le da el nombre de la hora actual + su posición
-                          // //en el listado
-                          DateTime now = DateTime.now();
-                          nombreNuevaImagen =
-                              '${now.year}${now.month}${now.day}'
-                              '${now.hour}${now.minute}${now.second}'
-                              '_$i$extension';
-
-                          //Obtengo el resultado del envio
-                          var resultado = await PopUps.enviarImagen(
-                                  nombreNuevaImagen, imagenFinal)
-                              .then((value) => value);
-                          if (resultado == false) {
-                            showDialog(
-                              context: null,
-                              child: Text('Error al agregar imágenes'),
-                            );
-                            break;
-                          }
-                          //Replica imagen para porción 10%
-                          await ComunicacionRaspberry.ReplicarImagen(
-                              nombreNuevaImagen);
-                        }
-                        Navigator.pop(context);
-                        Navigator.pop(context);
-                        Navigator.popAndPushNamed(
-                            context, "/seleccionar_imagen",
-                            arguments: {
-                              'division_layout': '0',
-                              'ruta_proveniente': rutaDeDondeViene,
-                            });
-                        Fluttertoast.showToast(
-                          msg: "Imagenes agregadas",
-                          toastLength: Toast.LENGTH_SHORT,
-                          webBgColor: "#e74c3c",
-                          timeInSecForIosWeb: 5,
-                        );
                       },
                     ),
                   ),
@@ -974,6 +1407,8 @@ class _SeleccionarImagenState extends State<SeleccionarImagen> {
           ),
         );
         PopUps.PopUpConWidget(context, contenidoPopUp);
+
+         */
       }
     }
   }
@@ -997,7 +1432,7 @@ class _SeleccionarImagenState extends State<SeleccionarImagen> {
       Widget imagen, String nombre, bool vieneDePopUp) {
     if (vieneDePopUp) {
       //Cierra popup cargando
-      Navigator.of(context, rootNavigator: true).pop();
+      //Navigator.of(context, rootNavigator: true).pop();
       //Cierra popup imagen
       Navigator.of(context, rootNavigator: true).pop();
     }
@@ -1075,15 +1510,19 @@ class _SeleccionarImagenState extends State<SeleccionarImagen> {
 
 //ACA SE COMENZARA A IMPLEMENTAR LAS FUNCIONES DE FIREBASE
 
+  /*
   Future getImage() async {
     var tempImage = await ImagePicker.pickImage(source: ImageSource.gallery);
     setState(() {
       sampleImage = tempImage;
     });
-    enableUpload(context);
+    enableUpload(context, tempImage);
   }
 
-  Future<void> enableUpload(BuildContext context) async {
+   */
+
+  /*
+  Future<void> enableUpload(BuildContext context, File imagenASubir) async {
     return showDialog(
         context: context,
         builder: (BuildContext context) {
@@ -1097,7 +1536,7 @@ class _SeleccionarImagenState extends State<SeleccionarImagen> {
                 child: Column(
                   children: <Widget>[
                     Image.file(
-                      sampleImage,
+                      imagenASubir,
                       /* height: 300.0,
                       width: 600.0,*/
                       //width: MediaQuery.of(context).size.width / 2,
@@ -1123,7 +1562,9 @@ class _SeleccionarImagenState extends State<SeleccionarImagen> {
                       child: Text("Agregar nueva imagen"),
                       textColor: Colors.white,
                       color: Colors.blueAccent,
-                      onPressed: uploadStatusImage,
+                      onPressed: () {
+                        //CloudStorage.SubirArchivoFirebase(imagenASubir);
+                      },
                     )
                   ],
                 ),
@@ -1133,28 +1574,70 @@ class _SeleccionarImagenState extends State<SeleccionarImagen> {
         });
   }
 
-  void uploadStatusImage() async {
-    if (validateAndSave()) {
-      // Subir imagen a firebase storage
-      final StorageReference postIamgeRef =
-          FirebaseStorage.instance.ref().child(rutdeEmpresa);
-      final StorageUploadTask uploadTask =
-          postIamgeRef.child(_myValue + ".jpg").putFile(sampleImage);
-      var imageUrl = await (await uploadTask.onComplete).ref.getDownloadURL();
+   */
+
+  /*
+  Future<bool> SubirArchivoFirebase(File archivo) async {
+
+    try
+    {
+      FirebaseStorage storage = FirebaseStorage.instance;
+      Reference reference = storage.ref().child(rutdeEmpresa);
+      UploadTask uploadTask = reference.putFile(archivo);
+
+      var imageUrl;
+      uploadTask.then((res) {imageUrl = res.ref.getDownloadURL();});
       url = imageUrl.toString();
-      print("Image url: " + url);
+      print("Url del archivo: " + url);
+
+      return true;
+    }
+    catch (ex){
+
+      return false;
+    }
+
+
+    /*
+    if (validateAndSave()) {
+
+      FirebaseStorage storage = FirebaseStorage.instance;
+      Reference reference = storage.ref().child(rutdeEmpresa);
+      UploadTask uploadTask = reference.putFile(archivo);
+
+      var imageUrl;
+      uploadTask.then((res) {imageUrl = res.ref.getDownloadURL();});
+      url = imageUrl.toString();
+      print("Url del archivo: " + url);
 
       // Guardar el post a firebase database: database realtime
-      saveToDatabase(url);
+      //saveToDatabase(url);
 
       // Regresar a Home
+      /*
       Navigator.pop(context);
       Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) {
         return Soporte();
       }));
+
+       */
+
+      /*final StorageReference postIamgeRef =
+          FirebaseStorage.instance.ref().child(rutdeEmpresa);
+
+        final StorageUploadTask uploadTask =
+          postIamgeRef.child(_myValue + ".jpg").putFile(sampleImage);
+      //var imageUrl = await (await uploadTask.onComplete).ref.getDownloadURL();
+
+       */
     }
+
+     */
   }
 
+   */
+
+  /*
   void saveToDatabase(String url) {
     // Guardar un post (image, descripcion)
 
@@ -1167,6 +1650,9 @@ class _SeleccionarImagenState extends State<SeleccionarImagen> {
     ref.child("Imagenes").push().set(data);
   }
 
+   */
+
+  /*
   bool validateAndSave() {
     final form = formKey.currentState;
     if (form.validate()) {
@@ -1177,44 +1663,17 @@ class _SeleccionarImagenState extends State<SeleccionarImagen> {
     }
   }
 
+   */
+
+  /*
   Widget postsUI(
     String image,
     String nombre,
-    //String empresa,
-    /* String date, String time*/
   ) {
-    return /*Card(
-      elevation: 10.0,
-      margin: EdgeInsets.all(14.0),
-      child: Container(
-        padding: EdgeInsets.all(14.0),
-        child: */
-        /* Column(
-      children: <Widget>[*/
-        /*Row(
-          children: <Widget>[
-            /*  Text(
-                  date,
-                  style: Theme.of(context).textTheme.subtitle2,
-                  textAlign: TextAlign.center,
-                ),
-                Text(
-                  time,
-                  style: Theme.of(context).textTheme.subtitle2,
-                  textAlign: TextAlign.center,
-                ),*/
-          ],
-        ),*/
-        /*  SizedBox(
-              height: 10.0,
-            ),*/
-        Stack(
+    return Stack(
       children: [
         Image.network(
           image,
-          /*fit: BoxFit.cover*/
-          // width: MediaQuery.of(context).size.width / 2,
-          //  height: MediaQuery.of(context).size.height / 4,
         ),
         Positioned(
             bottom: 0,
@@ -1228,21 +1687,12 @@ class _SeleccionarImagenState extends State<SeleccionarImagen> {
             ))
       ],
     );
-    /*SizedBox(
-              height: 10.0,
-            ),
-            Text(
-              nombre,
-              style: Theme.of(context).textTheme.subtitle1,
-              textAlign: TextAlign.center,
-            )*/
-    /*],
-    );*/
-    /*),
-    );*/
   }
+
+   */
 }
 
+///CAMBIO DE SELECCIÓN PARA BOTONES DE ADMINISTRADOR DE IMAGENES
 class CambiosSeleccion {
   static String rutaPadre;
   static BuildContext context;
@@ -1351,7 +1801,7 @@ class CambiosSeleccion {
     if (listadoSeleccionadas.length == 1) {
       nombre = listadoSeleccionadas[0];
       textoPopUp = Text(
-          '¿ELIMINAR ${nombre.substring(0, nombre.lastIndexOf('.')).toUpperCase()} IMAGEN?',
+          '¿ELIMINAR IMAGEN SELECCIONADA?',
           style: TextStyle(fontSize: 13));
     } else {
       textoPopUp = Text(
@@ -1389,11 +1839,17 @@ class CambiosSeleccion {
                       Navigator.pop(context);
                       PopUps.popUpCargando(
                           context, 'Eliminando imagenes'.toUpperCase());
+
+                      var resultadoEliminar = await CloudStorage.EliminarImagenFirebase(listadoSeleccionadas);
+                      /*
                       var resultadoEliminar =
                           await ComunicacionRaspberry.EliminarContenido(
                               tipoContenido: 'imagenes',
                               nombresAEliminar: listadoSeleccionadas);
-                      if (resultadoEliminar != null) {
+
+                       */
+
+                      if (resultadoEliminar) {
                         Navigator.pop(context);
                         Navigator.popAndPushNamed(
                             context, "/seleccionar_imagen",
@@ -1586,5 +2042,3 @@ class CambiosSeleccion {
     PopUps.PopUpConWidget(context, contenidoPopUp);
   }
 }
-
-class SubiendoFirebase {}
