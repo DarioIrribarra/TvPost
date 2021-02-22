@@ -1,12 +1,14 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:tvpost_flutter/tvlapiz_icons.dart';
+import 'package:tvpost_flutter/utilidades/CloudStorage.dart';
 //import 'package:flutter_social_content_share/flutter_social_content_share.dart';
 import 'package:tvpost_flutter/utilidades/comunicacion_raspberry.dart';
 import 'package:tvpost_flutter/utilidades/custom_widgets.dart';
@@ -26,9 +28,9 @@ class SeleccionarVideo extends StatefulWidget {
 }
 
 class _SeleccionarVideoState extends State<SeleccionarVideo> {
-  //funciones firebase
-//ACA SE COMENZARA A IMPLEMENTAR LAS FUNCIONES DE FIREBASE
 
+//ACA SE COMENZARA A IMPLEMENTAR LAS FUNCIONES DE FIREBASE
+/*
   Future getVideo() async {
     var tempImage = await ImagePicker.pickVideo(source: ImageSource.gallery);
 
@@ -148,7 +150,6 @@ class _SeleccionarVideoState extends State<SeleccionarVideo> {
   ) {
     return Stack(
       children: [
-        // VideoPlayer(vpc),
         Image.network(video),
         Positioned(
             bottom: 0,
@@ -163,6 +164,7 @@ class _SeleccionarVideoState extends State<SeleccionarVideo> {
       ],
     );
   }
+  */
 
   //aca datos de firebase
   //ACA VAN LOS DATOS DE FIREBASE PARA MOSTRAR FILES
@@ -238,12 +240,87 @@ class _SeleccionarVideoState extends State<SeleccionarVideo> {
       rutaDeDondeViene = datosDesdeVentanaAnterior['ruta_proveniente'];
     }
 
-    Widget WidgetFutureGrilla;
+    Widget widgetFutureGrilla;
+    Widget rowBotones;
 
     ///GRILLA MENU SELECCIONAR VIDEO
     if (divisionLayout == '0') {
       CambiosSeleccion.rutaPadre = rutaDeDondeViene;
-      WidgetFutureGrilla = FutureBuilder(
+      widgetFutureGrilla = StreamBuilder(
+        stream: FirebaseFirestore.instance.collection('empresas').doc(DatosEstaticos.rutEmpresa).collection('videos').snapshots(),
+        builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
+          return !snapshot.hasData
+              ? Center(child: CircularProgressIndicator(),)
+              : GridView.builder(
+            //Toma el total de imágenes desde la carpeta del
+            // webserver
+              itemCount: snapshot.data.docs.length,
+              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 3,
+                  crossAxisSpacing: 5,
+                  mainAxisSpacing: 5),
+              itemBuilder: (context, index) {
+                //Por cada imagen, busca su imagen.
+                // El nombre lo toma del listado estático
+                String idVideo = snapshot.data.docs[index]['idVideo'].toString();
+                String url = snapshot.data.docs[index]['url'].toString();
+                String idThumbnail = snapshot.data.docs[index]['idThumbnail'].toString();
+                String urlThumbnail = snapshot.data.docs[index]['thumbnail'].toString();
+
+                return GestureDetector(
+                  onTap: () {
+                    setState(() {
+                      if (!SeleccionaVideo.videosSelecionados.contains(idVideo)) {
+                        SeleccionaVideo.videosSelecionados.add(idVideo);
+                      } else {
+                        SeleccionaVideo.videosSelecionados.remove(idVideo);
+                      }
+                      /*
+                      CambiosSeleccion.SeleccionaVideo.videosSelecionados =
+                          SeleccionaVideo.videosSelecionados;
+
+                       */
+                      //print(imagenesSeleccionadas);
+                    });
+                  },
+                  //Container de cada imagen
+                  child: Opacity(
+                    opacity: resultado(idVideo),
+                    child: Stack(
+                      alignment: Alignment.center,
+                      children: [
+                        Container(
+
+                          child: Column(
+                            crossAxisAlignment:
+                            CrossAxisAlignment.stretch,
+                            children: [
+                              Expanded(
+                                flex: 5,
+                                child: Image.network(urlThumbnail),
+                              ),
+
+                            ],
+                          ),
+                        ),
+                        Positioned(
+                          bottom: 30,
+                          right: 10,
+                          //Se aplica el ícono verde al seleccionar
+                          child:
+                          SeleccionaVideo.videosSelecionados.contains(idVideo)
+                              ? CambiosSeleccion.iconoSeleccionado
+                              : Container(),
+                        ),
+                      ],
+                    ),
+                  ),
+                );
+              });
+        },
+      );
+      /*
+      widgetFutureGrilla = FutureBuilder(
         future: _listadoNombresVideos,
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.done) {
@@ -450,9 +527,34 @@ class _SeleccionarVideoState extends State<SeleccionarVideo> {
           }
         },
       );
+      */
+      rowBotones = Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          /*Botón Editar
+          Container(
+            margin: EdgeInsets.only(top: 10, bottom: 10),
+            //Si la lista tiene algún seleccionado se cambia el botón
+            child: SeleccionaVideo.videosSelecionados.length == 1
+                ? CambiosSeleccion.btnEditarHabilitado
+                : CambiosSeleccion.btnEditarDeshabilitado,
+          ),
+          SizedBox(
+            width: 10,
+          ),
+          */
+          Container(
+            margin: EdgeInsets.only(top: 10, bottom: 10),
+            //Si la lista tiene algún seleccionado se cambia el botón
+            child: SeleccionaVideo.videosSelecionados.length >= 1
+                ? CambiosSeleccion.btnEliminarHabilitado
+                : CambiosSeleccion.btnEliminarDeshabilitado,
+          ),
+        ],
+      );
     } else {
       ///GRILLA SELECCIONAR VIDEO
-      WidgetFutureGrilla = FutureBuilder(
+      widgetFutureGrilla = FutureBuilder(
         future: _listadoNombresVideos,
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.done) {
@@ -486,8 +588,11 @@ class _SeleccionarVideoState extends State<SeleccionarVideo> {
                         shrinkWrap: true,
                         crossAxisCount: 3,
                         children: List.generate(listaVideos.length, (index) {
+                          return Center();
+                          /*
                           return mostrarVideos(listaVideos[index].video,
                               listaVideos[index].nombre);
+                          */
                         })
 
                         /*   DatosEstaticos.listadoNombresVideos.length, (index) {
@@ -694,6 +799,7 @@ class _SeleccionarVideoState extends State<SeleccionarVideo> {
           }
         },
       );
+      rowBotones = cargaRRSS;
     }
 
     return WillPopScope(
@@ -745,7 +851,7 @@ class _SeleccionarVideoState extends State<SeleccionarVideo> {
                                 heroTag: null,
                                 backgroundColor: HexColor('#FC4C8B'),
                                 onPressed: () {
-                                  getVideo();
+                                  abrirGaleria(context);
                                 }),
                           ),
                         )
@@ -758,8 +864,13 @@ class _SeleccionarVideoState extends State<SeleccionarVideo> {
                 ),
               ),
               Expanded(
-                child: WidgetFutureGrilla,
+                flex: 3,
+                //Acá hacer un future builder para nombres de imágenes
+                child: widgetFutureGrilla,
               ),
+              Expanded(
+                child: rowBotones,
+              )
             ],
           ),
         ),
@@ -806,7 +917,66 @@ class _SeleccionarVideoState extends State<SeleccionarVideo> {
     }
   }
 
-  abrirGaleria() async {
+
+  ///ABRE GALERÍA PARA SELECCIONAR VIDEOS Y SUBIRLOS A FIREBASE
+  abrirGaleria(BuildContext context) async {
+
+    if (rutaDeDondeViene != null) {
+      //Se toman multiples archivos desde FilePicker
+      videoSeleccionadoGaleria = await FilePicker.platform
+          .pickFiles(allowMultiple: true, type: FileType.video);
+    } else {
+      //Se toma el archivo desde FilePicker
+      videoSeleccionadoGaleria =
+      await FilePicker.platform.pickFiles(type: FileType.video);
+    }
+
+    //Cantidad archivos seleccionados
+    if (videoSeleccionadoGaleria != null) {
+
+      //Se sube listado de imágenes a FireBase
+      List<dynamic> resultado = await SubidaVideos(videoSeleccionadoGaleria);
+
+      if (resultado != null){
+        if (rutaDeDondeViene != null) {
+          //Navigator.pop(context);
+          Navigator.pop(context);
+          Navigator.popAndPushNamed(
+              context, "/seleccionar_video",
+              arguments: {
+                'division_layout': '0',
+                'ruta_proveniente': rutaDeDondeViene,
+              });
+        }else {
+          //Si no es del menú redirige al layout
+          //Si el envío es correcto, se redirecciona
+          ReproductorVideos videoAEnviar = ReproductorVideos(
+            url: resultado[0],
+            divisionLayout: divisionLayout,
+            seleccionado: true,
+          );
+          RedireccionarCrearLayout(
+              videoAEnviar,
+              resultado[1],
+              true);
+        }
+        Fluttertoast.showToast(
+          msg: "Videos agregados correctamente",
+          toastLength: Toast.LENGTH_SHORT,
+          webBgColor: "#e74c3c",
+          timeInSecForIosWeb: 5,
+        );
+      }
+      else {
+        //Cierra popup cargando
+        Navigator.of(context, rootNavigator: true).pop();
+
+        PopUps.PopUpConWidget(context, Text('Error al enviar imagen'));
+      }
+    }
+  }
+
+  abrirGaleriaOld() async {
     GlobalKey<FormState> _keyValidadorvideo = GlobalKey<FormState>();
     String nombreNuevoVideo = "";
     if (rutaDeDondeViene != null) {
@@ -1118,6 +1288,29 @@ class _SeleccionarVideoState extends State<SeleccionarVideo> {
         break;
     }
   }
+
+  ///SUBE UN LISTADO DE VIDEOS SELECCIONADOS
+  Future<List<dynamic>> SubidaVideos(
+      FilePickerResult videoSeleccionadoGaleria) async{
+
+    List<dynamic> listadoResultado = List<dynamic>();
+    File videoFinal;
+    var listadoArchivos = new List<File>();
+    PopUps.popUpCargando(context, 'Agregando videos'.toUpperCase());
+
+    for (PlatformFile element in videoSeleccionadoGaleria.files){
+      videoFinal = File(element.path);
+
+      //Se añade video a listado a subir
+      listadoArchivos.add(videoFinal);
+    }
+
+    ///Comienzo de uso de firebase
+    var url = await CloudStorage.SubirVideosFirebase(listadoArchivos);
+    listadoResultado.add(videoFinal);
+    listadoResultado.add(url);
+    return listadoResultado;
+  }
 }
 
 class ReproductorVideos extends StatefulWidget {
@@ -1421,17 +1614,17 @@ class CambiosSeleccion {
   static eliminarVideosSeleccionados() {
     Text textoPopUp;
     Widget contenidoPopUp;
-    String nombre;
     if (SeleccionaVideo.videosSelecionados.length == 1) {
-      nombre = SeleccionaVideo.videosSelecionados[0];
       textoPopUp = Text(
-          '¿Eliminar ${nombre.substring(0, nombre.lastIndexOf('.'))} video?'
-              .toUpperCase());
+          '¿ELIMINAR VIDEO SELECCIONADO?',
+          style: TextStyle(fontSize: 13));
     } else {
       textoPopUp = Text(
-          '¿Eliminar ${SeleccionaVideo.videosSelecionados.length} videos?'
-              .toUpperCase());
+        '¿ELIMINAR ${SeleccionaVideo.videosSelecionados.length} VIDEOS?',
+        style: TextStyle(fontSize: 13),
+      );
     }
+
     contenidoPopUp = Container(
       decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(40), color: HexColor('#f4f4f4')),
@@ -1457,11 +1650,8 @@ class CambiosSeleccion {
                     Navigator.pop(context);
                     PopUps.popUpCargando(
                         context, 'Eliminando videos'.toUpperCase());
-                    var resultadoEliminar =
-                        await ComunicacionRaspberry.EliminarContenido(
-                            tipoContenido: 'videos',
-                            nombresAEliminar:
-                                SeleccionaVideo.videosSelecionados);
+                    var resultadoEliminar = await CloudStorage.EliminarVideoFirebase(SeleccionaVideo.videosSelecionados);
+
                     if (resultadoEliminar != null) {
                       //Se limpia la lista estática de videos seleccionados
                       SeleccionaVideo.videosSelecionados.clear();
