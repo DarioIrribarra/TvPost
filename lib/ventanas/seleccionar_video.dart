@@ -29,154 +29,6 @@ class SeleccionarVideo extends StatefulWidget {
 
 class _SeleccionarVideoState extends State<SeleccionarVideo> {
 
-//ACA SE COMENZARA A IMPLEMENTAR LAS FUNCIONES DE FIREBASE
-/*
-  Future getVideo() async {
-    var tempImage = await ImagePicker.pickVideo(source: ImageSource.gallery);
-
-    setState(() {
-      sampleVideo = tempImage;
-    });
-    subirVideo(context);
-  }
-
-  Future<void> subirVideo(BuildContext context) async {
-    return showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-              content: SingleChildScrollView(
-                  child: Container(
-            child: Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Form(
-                key: formKey,
-                child: Column(
-                  children: <Widget>[
-                    Image.file(
-                      sampleVideo,
-                      /* height: 300.0,
-                      width: 600.0,*/
-                      //width: MediaQuery.of(context).size.width / 2,
-                      // height: MediaQuery.of(context).size.height / 4,
-                    ),
-                    SizedBox(
-                      height: 15.0,
-                    ),
-                    TextFormField(
-                      decoration: InputDecoration(labelText: "Nombre video"),
-                      validator: (value) {
-                        return value.isEmpty ? "Nombre es requerido" : null;
-                      },
-                      onSaved: (value) {
-                        return _myValue = value;
-                      },
-                    ),
-                    SizedBox(
-                      height: 15.0,
-                    ),
-                    RaisedButton(
-                      elevation: 10.0,
-                      child: Text("Agregar nuevo video"),
-                      textColor: Colors.white,
-                      color: Colors.blueAccent,
-                      onPressed: modificarEstadoVideo,
-                    )
-                  ],
-                ),
-              ),
-            ),
-          )));
-        });
-  }
-
-  void modificarEstadoVideo() async {
-    if (validateAndSave()) {
-      var videoUrl;
-      // Subir imagen a firebase storage
-      FirebaseStorage storage = FirebaseStorage.instance;
-      Reference postVideoRef = storage.ref().child(rutdeEmpresa);
-      UploadTask uploadTask = postVideoRef.putFile(sampleVideo);
-      uploadTask.then((res) {videoUrl = res.ref.getDownloadURL();});
-      /*
-      final StorageReference postIamgeRef =
-          FirebaseStorage.instance.ref().child(rutdeEmpresa);
-      final StorageUploadTask uploadTask = postIamgeRef
-          .child(_myValue + '.mp4')
-          .putFile(sampleVideo, StorageMetadata(contentType: 'video/mp4'));
-      var imageUrl = await (await uploadTask.onComplete).ref.getDownloadURL();
-
-       */
-
-      url = videoUrl.toString();
-      print("Video url: " + url);
-
-      // Guardar el post a firebase database: database realtime
-      saveToDatabase(url);
-
-      // Regresar a Home
-      Navigator.pop(context);
-      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) {
-        return Soporte();
-      }));
-    }
-  }
-
-  void saveToDatabase(String url) {
-    // Guardar un post (image, descripcion)
-
-    DatabaseReference ref = FirebaseDatabase.instance.reference();
-    var data = {
-      "videos": url,
-      "nombre": _myValue,
-    };
-    //CATEGORIA DE SUBCARPETAS
-    ref.child("Videos").push().set(data);
-  }
-
-  bool validateAndSave() {
-    final form = formKey.currentState;
-    if (form.validate()) {
-      form.save();
-      return true;
-    } else {
-      return false;
-    }
-  }
-
-  Widget mostrarVideos(
-    String video,
-    String nombre,
-  ) {
-    return Stack(
-      children: [
-        Image.network(video),
-        Positioned(
-            bottom: 0,
-            child: Container(
-              color: Colors.lightGreenAccent,
-              child: Text(
-                nombre,
-                style: Theme.of(context).textTheme.subtitle1,
-                textAlign: TextAlign.center,
-              ),
-            ))
-      ],
-    );
-  }
-  */
-
-  //aca datos de firebase
-  //ACA VAN LOS DATOS DE FIREBASE PARA MOSTRAR FILES
-  List<Videos> listaVideos = List();
-  final fb = FirebaseDatabase.instance.reference().child("Videos");
-  //ACA VAN LOS DATOS DE FIREBASE PARA SUBIR IMAGENES
-  String rutdeEmpresa = DatosEstaticos.rutEmpresa;
-  File sampleVideo; // imagen
-  String _myValue; // descripcion
-  String url; // url de la imagen
-  final formKey = GlobalKey<FormState>();
-  VideoPlayerController vpc;
   //Datos que se envía completo desde la ventana de selección de media
   Map datosDesdeVentanaAnterior = {};
   String divisionLayout;
@@ -186,12 +38,9 @@ class _SeleccionarVideoState extends State<SeleccionarVideo> {
   int itemsVisiblesGrid = 0;
   FilePickerResult videoSeleccionadoGaleria;
   TextEditingController _controladorTexto = TextEditingController();
-  //List<String> videosSeleccionados = [];
+
   bool activarBoton = false;
-  //bool _visible = false;
-  Container cargaRRSS = Container(
-    height: 200,
-  );
+
   //VideoPlayerController widget.controller;
   //Future<void> _initializeVideoPlayerFuture;
   //ChewieController chewieController;
@@ -202,23 +51,6 @@ class _SeleccionarVideoState extends State<SeleccionarVideo> {
     _listadoNombresVideos = _getNombresVideos();
     activarBoton = true;
     super.initState();
-
-    fb.once().then((DataSnapshot snap) {
-      var data = snap.value;
-      // listaVideos.clear();
-      data.forEach((key, value) {
-        Videos v = Videos(video: value['video'], nombre: value['nombre']);
-        /*vpc = VideoPlayerController.network(
-          value,
-          // closedCaptionFile: _loadCaptions(),
-          videoPlayerOptions: VideoPlayerOptions(mixWithOthers: true),
-        );*/
-        if (v.video.contains(rutdeEmpresa)) {
-          listaVideos.add(v);
-        }
-      });
-      setState(() {});
-    });
   }
 
   @override
@@ -230,7 +62,6 @@ class _SeleccionarVideoState extends State<SeleccionarVideo> {
 
   @override
   Widget build(BuildContext context) {
-    print(SeleccionaVideo.videosSelecionados);
 
     //Se le da el context a la ventana para los popups
     CambiosSeleccion.context = context;
@@ -244,7 +75,7 @@ class _SeleccionarVideoState extends State<SeleccionarVideo> {
     Widget rowBotones;
 
     ///GRILLA MENU SELECCIONAR VIDEO
-    if (divisionLayout == '0') {
+    if (rutaDeDondeViene != null) {
       CambiosSeleccion.rutaPadre = rutaDeDondeViene;
       widgetFutureGrilla = StreamBuilder(
         stream: FirebaseFirestore.instance.collection('empresas').doc(DatosEstaticos.rutEmpresa).collection('videos').snapshots(),
@@ -263,7 +94,7 @@ class _SeleccionarVideoState extends State<SeleccionarVideo> {
                 //Por cada imagen, busca su imagen.
                 // El nombre lo toma del listado estático
                 String idVideo = snapshot.data.docs[index]['idVideo'].toString();
-                String url = snapshot.data.docs[index]['url'].toString();
+                String urlVideo = snapshot.data.docs[index]['url'].toString();
                 String idThumbnail = snapshot.data.docs[index]['idThumbnail'].toString();
                 String urlThumbnail = snapshot.data.docs[index]['thumbnail'].toString();
 
@@ -275,12 +106,6 @@ class _SeleccionarVideoState extends State<SeleccionarVideo> {
                       } else {
                         SeleccionaVideo.videosSelecionados.remove(idVideo);
                       }
-                      /*
-                      CambiosSeleccion.SeleccionaVideo.videosSelecionados =
-                          SeleccionaVideo.videosSelecionados;
-
-                       */
-                      //print(imagenesSeleccionadas);
                     });
                   },
                   //Container de cada imagen
@@ -297,7 +122,10 @@ class _SeleccionarVideoState extends State<SeleccionarVideo> {
                             children: [
                               Expanded(
                                 flex: 5,
-                                child: Image.network(urlThumbnail),
+                                child: VideoDeThumbnail(
+                                  urlThumbnail: urlThumbnail,
+                                  urlVideo: urlVideo,
+                                ),
                               ),
 
                             ],
@@ -319,230 +147,10 @@ class _SeleccionarVideoState extends State<SeleccionarVideo> {
               });
         },
       );
-      /*
-      widgetFutureGrilla = FutureBuilder(
-        future: _listadoNombresVideos,
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.done) {
-            if (snapshot.data == null) {
-              return Center(
-                child: Text(
-                  'Error de conexión',
-                  textScaleFactor: 1.3,
-                ),
-              );
-            } else {
-              if (snapshot.data[0] == "") {
-                return Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    Center(
-                      child: Text(
-                        "Presione el ícono para agregar videos",
-                        textScaleFactor: 1.3,
-                      ),
-                    ),
-                  ],
-                );
-              }
-              //Future Builder para el gridview de videos
-              return Column(
-                children: [
-                  Expanded(
-                    child:
-                        /*ListView.separated(
-                      shrinkWrap: true,
-                      cacheExtent: 1000,
-                      physics: NeverScrollableScrollPhysics(),
-                      scrollDirection: Axis.vertical,
-                      key: PageStorageKey(widget.key),
-                      addAutomaticKeepAlives: true,
-                      itemCount: listaVideos.isEmpty ? 0 : listaVideos.length,
-                      itemBuilder: (BuildContext context, int index) =>
-                          Container(
-                        width: double.infinity,
-                        height: 250,
-                        alignment: Alignment.center,
-                        child: Container(
-                          key: new PageStorageKey(
-                            "keydata$index",
-                          ),
-                          child: mostrarVideos(listaVideos[index].video,
-                              listaVideos[index].nombre),
-                          /*
-                            VideoWidget(
-                                play: true, url: listaVideos[index].video)*/
-                        ),
-                      ),
-                      separatorBuilder: (context, index) {
-                        return Divider();
-                      },
-                    ),*/
 
-                        listaVideos.length == 0
-                            ? Text("CARGUE VIDEOS PARA VISUALIZARLOS")
-                            : GridView.builder(
-                                itemCount: listaVideos.length,
-                                gridDelegate:
-                                    SliverGridDelegateWithFixedCrossAxisCount(
-                                        crossAxisCount: 3,
-                                        crossAxisSpacing: 5,
-                                        mainAxisSpacing: 5),
-                                itemBuilder: (_, index) {
-                                  return mostrarVideos(listaVideos[index].video,
-                                      listaVideos[index].nombre);
-                                  /* postList[index].date,
-                        postList[index].time);*/
-                                },
-                              ),
-//VERSION ANTERIOR
-                    /* GridView.count(
-                      crossAxisSpacing: 5,
-                      shrinkWrap: true,
-                      crossAxisCount: 3,
-                      children: List.generate(
-                          DatosEstaticos.listadoNombresVideos.length, (index) {
-                        String nombre = DatosEstaticos
-                            .listadoNombresVideos[index]
-                            .toString();
-                        return GestureDetector(
-                          /*
-                              child: ReproductorVideos(
-                                url:
-                                'http://${DatosEstaticos.ipSeleccionada}/VideosPostTv/${DatosEstaticos.listadoNombresVideos[index]}',
-                              ),
-                               */
-                          onTap: () {
-                            if (SeleccionaVideo.videosSelecionados
-                                    .contains(nombre) ==
-                                false) {
-                              SeleccionaVideo.videosSelecionados.add(nombre);
-                            } else {
-                              SeleccionaVideo.videosSelecionados.remove(nombre);
-                            }
-                            Navigator.popAndPushNamed(
-                                context, "/seleccionar_video",
-                                arguments: {
-                                  'division_layout': '0',
-                                  'ruta_proveniente': rutaDeDondeViene,
-                                });
-                          },
-                          child: Opacity(
-                            opacity: resultado(nombre),
-                            child: Stack(
-                              alignment: Alignment.center,
-                              children: [
-                                Column(
-                                  children: [
-                                    Expanded(
-                                      flex: 5,
-                                      child: ReproductorVideos(
-                                        url:
-                                            'http://${DatosEstaticos.ipSeleccionada}/VideosPostTv/${DatosEstaticos.listadoNombresVideos[index]}',
-                                      ),
-                                    ),
-                                    Expanded(
-                                      flex: 1,
-                                      child: Padding(
-                                        padding: EdgeInsets.only(top: 3),
-                                        child: Text(
-                                          nombre.substring(
-                                              0, nombre.lastIndexOf('.')),
-                                          textAlign: TextAlign.center,
-                                          style: TextStyle(
-                                              fontFamily: 'textoMont',
-                                              fontSize: 12),
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                                Positioned(
-                                  bottom: 30,
-                                  right: 10,
-                                  //Se aplica el ícono verde al seleccionar
-                                  child: SeleccionaVideo.videosSelecionados
-                                          .contains(nombre)
-                                      ? CambiosSeleccion.iconoSeleccionado
-                                      : Container(),
-                                ),
-                              ],
-                            ),
-                          ),
-
-                          /*onDoubleTap: () {
-                                Widget video = ReproductorVideos(
-                                  url:
-                                  'http://${DatosEstaticos.ipSeleccionada}/VideosPostTv/${DatosEstaticos.listadoNombresVideos[index]}',
-                                  divisionLayout: divisionLayout,
-                                  seleccionado: true,
-                                );
-                                String nombre =
-                                DatosEstaticos.listadoNombresVideos[index];
-                                RedireccionarCrearLayout(video,
-                                    "/var/www/html/VideosPostTv/$nombre", false);
-                              },*/
-                        );
-                      }),
-                    ),*/
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Container(
-                        margin: EdgeInsets.only(top: 10, bottom: 10),
-                        //Si la lista tiene algún seleccionado se cambia el botón
-                        child: SeleccionaVideo.videosSelecionados.length == 1
-                            ? CambiosSeleccion.btnEditarHabilitado
-                            : CambiosSeleccion.btnEditarDeshabilitado,
-                      ),
-                      SizedBox(
-                        width: 10,
-                      ),
-                      Container(
-                        margin: EdgeInsets.only(top: 10, bottom: 10),
-                        //Si la lista tiene algún seleccionado se cambia el botón
-                        child: SeleccionaVideo.videosSelecionados.length > 0
-                            ? CambiosSeleccion.btnEliminarHabilitado
-                            : CambiosSeleccion.btnEliminarDeshabilitado,
-                      ),
-                    ],
-                  ),
-                ],
-              );
-            }
-          }
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(
-              child: CircularProgressIndicator(
-                valueColor: AlwaysStoppedAnimation<Color>(HexColor("#FC4C8B")),
-              ),
-            );
-          } else {
-            return Center(
-              child: CircularProgressIndicator(
-                valueColor: AlwaysStoppedAnimation<Color>(HexColor("#FC4C8B")),
-              ),
-            );
-          }
-        },
-      );
-      */
       rowBotones = Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          /*Botón Editar
-          Container(
-            margin: EdgeInsets.only(top: 10, bottom: 10),
-            //Si la lista tiene algún seleccionado se cambia el botón
-            child: SeleccionaVideo.videosSelecionados.length == 1
-                ? CambiosSeleccion.btnEditarHabilitado
-                : CambiosSeleccion.btnEditarDeshabilitado,
-          ),
-          SizedBox(
-            width: 10,
-          ),
-          */
           Container(
             margin: EdgeInsets.only(top: 10, bottom: 10),
             //Si la lista tiene algún seleccionado se cambia el botón
@@ -554,252 +162,148 @@ class _SeleccionarVideoState extends State<SeleccionarVideo> {
       );
     } else {
       ///GRILLA SELECCIONAR VIDEO
-      widgetFutureGrilla = FutureBuilder(
-        future: _listadoNombresVideos,
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.done) {
-            if (snapshot.data == null) {
-              return Center(
-                child: Text(
-                  'Error de conexión',
-                  textScaleFactor: 1.3,
-                ),
-              );
-            } else {
-              if (snapshot.data[0] == "") {
-                return Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    Center(
-                      child: Text(
-                        "Presione el ícono para agregar videos",
-                        textScaleFactor: 1.3,
-                      ),
-                    ),
-                  ],
-                );
-              }
-              //Future Builder para el gridview de videos
-              return Column(
-                children: [
-                  Expanded(
-                    child: GridView.count(
-                        crossAxisSpacing: 5,
-                        shrinkWrap: true,
-                        crossAxisCount: 3,
-                        children: List.generate(listaVideos.length, (index) {
-                          return Center();
-                          /*
-                          return mostrarVideos(listaVideos[index].video,
-                              listaVideos[index].nombre);
-                          */
-                        })
+      ///ESTA GRID DEBE ENVIAR ADEMÁS EL VIDEO DIRECTO A LA RASPBERRY
+      widgetFutureGrilla = StreamBuilder(
+        stream: FirebaseFirestore.instance.collection('empresas').doc(DatosEstaticos.rutEmpresa).collection('videos').snapshots(),
+        builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
+          return !snapshot.hasData
+              ? Center(child: CircularProgressIndicator(),)
+              : GridView.builder(
+            //Toma el total de imágenes desde la carpeta del
+            // webserver
+              itemCount: snapshot.data.docs.length,
+              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 3,
+                  crossAxisSpacing: 5,
+                  mainAxisSpacing: 5),
+              itemBuilder: (context, index) {
+                //Por cada imagen, busca su imagen.
+                // El nombre lo toma del listado estático
+                String idVideo = snapshot.data.docs[index]['idVideo'].toString();
+                String urlVideo = snapshot.data.docs[index]['url'].toString();
+                String idThumbnail = snapshot.data.docs[index]['idThumbnail'].toString();
+                String urlThumbnail = snapshot.data.docs[index]['thumbnail'].toString();
 
-                        /*   DatosEstaticos.listadoNombresVideos.length, (index) {
-                        String nombre = DatosEstaticos
-                            .listadoNombresVideos[index]
-                            .toString();
-                        return GestureDetector(
-                          onTap: () {
-                            if (SeleccionaVideo.videosSelecionados.length >=
-                                1) {
-                              if (SeleccionaVideo.videosSelecionados
-                                  .contains(nombre)) {
-                                SeleccionaVideo.videosSelecionados
-                                    .remove(nombre);
-                              } else {
-                                SeleccionaVideo.videosSelecionados.clear();
-                                SeleccionaVideo.videosSelecionados.add(nombre);
-                              }
-                            } else {
-                              SeleccionaVideo.videosSelecionados.add(nombre);
-                            }
-                            //cargaRRSS = ;
-
-                            Navigator.popAndPushNamed(
-                                context, "/seleccionar_video",
-                                arguments: {
-                                  'division_layout':
-                                      DatosEstaticos.divisionLayout,
-                                  'ruta_proveniente': rutaDeDondeViene,
-                                });
-                          },
-                          child: Opacity(
-                            opacity: resultado(nombre),
-                            child: Stack(
-                              alignment: Alignment.center,
-                              children: [
-                                Column(
-                                  children: [
-                                    Expanded(
-                                      flex: 5,
-                                      child: ReproductorVideos(
-                                        url:
-                                            'http://${DatosEstaticos.ipSeleccionada}/VideosPostTv/${DatosEstaticos.listadoNombresVideos[index]}',
-                                      ),
-                                    ),
-                                    Expanded(
-                                      flex: 1,
-                                      child: Padding(
-                                        padding: EdgeInsets.only(top: 3),
-                                        child: Text(
-                                          nombre.substring(
-                                              0, nombre.lastIndexOf('.')),
-                                          textAlign: TextAlign.center,
-                                          style: TextStyle(
-                                              fontFamily: 'textoMont',
-                                              fontSize: 12),
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                                Positioned(
-                                  bottom: 30,
-                                  right: 10,
-                                  //Se aplica el ícono verde al seleccionar
-                                  child: SeleccionaVideo.videosSelecionados
-                                          .contains(nombre)
-                                      ? CambiosSeleccion.iconoSeleccionado
-                                      : Container(),
-                                ),
-                              ],
+                return GestureDetector(
+                  onTap: () {
+                    setState(() {
+                      if (SeleccionaVideo.videosSelecionados.length >= 1) {
+                        if (SeleccionaVideo.videosSelecionados
+                            .contains(idVideo)) {
+                          SeleccionaVideo.videosSelecionados
+                              .remove(idVideo);
+                        } else {
+                          SeleccionaVideo.videosSelecionados.clear();
+                          SeleccionaVideo.videosSelecionados.add(idVideo);
+                        }
+                      } else {
+                        SeleccionaVideo.videosSelecionados.add(idVideo);
+                      }
+                    });
+                  },
+                  child: Opacity(
+                    opacity: resultado(idVideo),
+                    child: Stack(
+                      alignment: Alignment.center,
+                      children: [
+                        Column(
+                          children: [
+                            Expanded(
+                              flex: 5,
+                              child: VideoDeThumbnail(
+                                urlThumbnail: urlThumbnail,
+                                urlVideo: urlVideo,
+                              ),
                             ),
-                          ),
-                          /*
-                              onDoubleTap: () {
-                                Widget video = ReproductorVideos(
-                                  url:
-                                  'http://${DatosEstaticos.ipSeleccionada}/VideosPostTv/${DatosEstaticos.listadoNombresVideos[index]}',
-                                  divisionLayout: divisionLayout,
-                                  seleccionado: true,
-                                );
-                                String nombre =
-                                DatosEstaticos.listadoNombresVideos[index];
-                                RedireccionarCrearLayout(video,
-                                    "/var/www/html/VideosPostTv/$nombre", false);
-                              },
-
-                               */
-                        );*/
-                        // }),
+                          ],
                         ),
+                        Positioned(
+                          bottom: 30,
+                          right: 10,
+                          //Se aplica el ícono verde al seleccionar
+                          child: SeleccionaVideo.videosSelecionados
+                              .contains(idVideo)
+                              ? CambiosSeleccion.iconoSeleccionado
+                              : Container(),
+                        ),
+                      ],
+                    ),
                   ),
-                  SeleccionaVideo.videosSelecionados.length == 1
-                      ? Container(
-                          width: MediaQuery.of(context).size.width,
-                          height: MediaQuery.of(context).size.height / 4,
-                          //color: Colors.pink,
-                          child: Column(
-                            children: [
-                              SizedBox(height: 38),
-                              Container(
-                                height: 40,
-                                width: 200,
-                                decoration: new BoxDecoration(
-                                    borderRadius: BorderRadius.circular(20),
-                                    gradient: LinearGradient(
-                                        colors: [
-                                          HexColor("#0683ff"),
-                                          HexColor("#3edb9b")
-                                        ],
-                                        stops: [
-                                          0.1,
-                                          0.6
-                                        ],
-                                        begin: Alignment.topLeft,
-                                        end: FractionalOffset.bottomRight)),
-                                child: FlatButton(
-                                  color: Colors.transparent,
-                                  onPressed: () async {
-                                    Widget video = ReproductorVideos(
-                                      url:
-                                          'http://${DatosEstaticos.ipSeleccionada}/VideosPostTv/${SeleccionaVideo.videosSelecionados[0]}',
-                                      divisionLayout: divisionLayout,
-                                      seleccionado: true,
-                                    );
-                                    String nombre =
-                                        SeleccionaVideo.videosSelecionados[0];
-                                    RedireccionarCrearLayout(
-                                        video,
-                                        "/var/www/html/VideosPostTv/$nombre",
-                                        false);
-                                  },
-                                  child: Text(
-                                    'CARGAR',
-                                    style: TextStyle(color: Colors.white),
-                                  ),
-                                ),
-                              ), /*
-                              SizedBox(height: 15),
-                              Container(
-                                height: 40,
-                                width: 200,
-                                decoration: new BoxDecoration(
-                                    borderRadius: BorderRadius.circular(20),
-                                    gradient: LinearGradient(
-                                        colors: [
-                                          HexColor("#3edb9b"),
-                                          HexColor("#0683ff")
-                                        ],
-                                        stops: [
-                                          0.5,
-                                          1
-                                        ],
-                                        begin: Alignment.topLeft,
-                                        end: FractionalOffset.bottomRight)),
-                                child: FlatButton(
-                                  color: Colors.transparent,
-                                  onPressed: () async {
-                                    //String dir = (await getTemporaryDirectory()).path;
-                                    //File temporal = new File('$dir/img_temp_creada.png');
-                                    await FlutterSocialContentShare.share(
-                                        type: ShareType.instagramWithImageUrl,
-                                        imageUrl:
-                                            'http://${DatosEstaticos.ipSeleccionada}/VideosPostTv/${DatosEstaticos.listadoNombresVideos[0]}');
-                                  },
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(6.0),
-                                    child: Column(children: [
-                                      Text(
-                                        'CARGAR +',
-                                        style: TextStyle(color: Colors.white),
-                                      ),
-                                      Text(
-                                        ' COMPARTIR RRSS',
-                                        style: TextStyle(color: Colors.white),
-                                      ),
-                                    ]),
-                                  ),
-                                ),
-                              ),*/
-                            ],
-                          ),
-                        )
-                      : Container(
-                          width: MediaQuery.of(context).size.width,
-                          height: MediaQuery.of(context).size.height / 4,
-                        ),
-                ],
-              );
-            }
-          }
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(
-              child: CircularProgressIndicator(
-                valueColor: AlwaysStoppedAnimation<Color>(HexColor("#FC4C8B")),
-              ),
-            );
-          } else {
-            return Center(
-              child: CircularProgressIndicator(
-                valueColor: AlwaysStoppedAnimation<Color>(HexColor("#FC4C8B")),
-              ),
-            );
-          }
+                );
+              });
         },
       );
-      rowBotones = cargaRRSS;
+
+      rowBotones = SeleccionaVideo.videosSelecionados.length == 1
+          ? Container(
+        width: MediaQuery.of(context).size.width,
+        height: MediaQuery.of(context).size.height / 4,
+        //color: Colors.pink,
+        child: Column(
+          children: [
+            SizedBox(height: 38),
+            Container(
+              height: 40,
+              width: 200,
+              decoration: new BoxDecoration(
+                  borderRadius: BorderRadius.circular(20),
+                  gradient: LinearGradient(
+                      colors: [
+                        HexColor("#0683ff"),
+                        HexColor("#3edb9b")
+                      ],
+                      stops: [
+                        0.1,
+                        0.6
+                      ],
+                      begin: Alignment.topLeft,
+                      end: FractionalOffset.bottomRight)),
+              child: FlatButton(
+                color: Colors.transparent,
+                onPressed: () async {
+                  ///Acá debo obtener la url desde el video id y pasárselo al controlador
+                  /*
+                  Widget video = ReproductorVideos(
+                    url:
+                    'http://${DatosEstaticos.ipSeleccionada}/VideosPostTv/${SeleccionaVideo.videosSelecionados[0]}',
+                    divisionLayout: divisionLayout,
+                    seleccionado: true,
+                  );
+
+                   */
+                  var listadoUrl = await CloudStorage.GetUrlVideYThumbnail(SeleccionaVideo.videosSelecionados[0]);
+                  if (listadoUrl != null){
+                    Widget video = VideoDeThumbnail(urlThumbnail: listadoUrl[1], urlVideo: listadoUrl[0],);
+                    String nombre =SeleccionaVideo.videosSelecionados[0];
+                    //Se le pasa el id para enviar el video
+                    RedireccionarCrearLayout(
+                        video,
+                        "/var/www/html/VideosPostTv/$nombre",
+                        false);
+                  }else{
+                    Fluttertoast.showToast(
+                      msg: "Error al cargar video",
+                      toastLength: Toast.LENGTH_SHORT,
+                      webBgColor: "#e74c3c",
+                      timeInSecForIosWeb: 5,
+                    );
+                  }
+
+
+                },
+                child: Text(
+                  'CARGAR',
+                  style: TextStyle(color: Colors.white),
+                ),
+              ),
+            ),
+          ],
+        ),
+      )
+          : Container(
+        width: MediaQuery.of(context).size.width,
+        height: MediaQuery.of(context).size.height / 4,
+      ) ;
     }
 
     return WillPopScope(

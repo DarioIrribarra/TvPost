@@ -191,4 +191,30 @@ class CloudStorage{
     }
   }
 
+  static Future<List<String>> GetUrlVideYThumbnail(String idVideo) async{
+
+    var listadoUrl = new List<String>();
+
+    try {
+      //Se instancia la colección en la base de datos
+      CollectionReference fileReferenceInDB = FirebaseFirestore.instance.collection('empresas').doc(DatosEstaticos.rutEmpresa).collection('videos');
+
+      //Se obtiene el conjunto de datos para extraer la url
+      var datos = await fileReferenceInDB.doc(idVideo).get();
+
+      //Se extrae la url
+      var urlVideo = datos.get("url");
+      var urlThumbnail = datos.get("thumbnail");
+
+      listadoUrl.add(urlVideo);
+      listadoUrl.add(urlThumbnail);
+    }
+    catch (ex){
+      return null;
+
+    }
+
+    return listadoUrl;
+
+  }
 }

@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 import 'dart:typed_data';
@@ -7,6 +8,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:tvpost_flutter/utilidades/datos_estaticos.dart';
 import 'package:tvpost_flutter/utilidades/obtiene_datos_webservice.dart';
+import 'package:video_player/video_player.dart';
 //import 'package:tvpost_flutter/ventanas/mi_perfil.dart';
 //import 'package:tvpost_flutter/ventanas/soporte.dart';
 //import 'package:tvpost_flutter/ventanas/crear_layout3.dart';
@@ -1023,7 +1025,7 @@ class _OpcionesSeleccionMediaState extends State<OpcionesSeleccionMedia> {
                         style: TextStyle(color: Colors.white),
                       ),
                     ),
-                    activarVideo(widget.divisionLayout)
+                    activarVideo(),
                   ],
                 ),
                 Row(
@@ -1096,8 +1098,8 @@ class _OpcionesSeleccionMediaState extends State<OpcionesSeleccionMedia> {
   }
 
   //aca se activa y desactiva el boton video, dependiendo de la porsion seleccionada
-  Widget activarVideo(String divisionDellayout) {
-    if (divisionDellayout == "3-2") {
+  Widget activarVideo() {
+    if (DatosEstaticos.divisionLayout == "3-2") {
       return FlatButton(
         color: Colors.transparent,
         shape: RoundedRectangleBorder(
@@ -1109,7 +1111,7 @@ class _OpcionesSeleccionMediaState extends State<OpcionesSeleccionMedia> {
           style: TextStyle(color: Colors.white.withOpacity(0.4)),
         ),
       );
-    } else if (divisionDellayout == "3-3") {
+    } else if (DatosEstaticos.divisionLayout == "3-3") {
       return FlatButton(
         color: Colors.transparent,
         shape: RoundedRectangleBorder(
@@ -1131,11 +1133,14 @@ class _OpcionesSeleccionMediaState extends State<OpcionesSeleccionMedia> {
           //Se limpia listado estático de selección de videos
           SeleccionaVideo.videosSelecionados.clear();
           //Va a la otra ventana esperando respuesta
-          //navegarYEsperarRespuesta('/seleccionar_video');
+          navegarYEsperarRespuesta('/seleccionar_video');
+          /*
           Navigator.popAndPushNamed(context, "/seleccionar_video", arguments: {
             'division_layout': DatosEstaticos.divisionLayout,
             'ruta_proveniente': ModalRoute.of(context).settings.name,
           });
+
+           */
         },
         child: Text(
           'VIDEO',
@@ -1849,12 +1854,136 @@ class EventosPropios {
   }
 }
 
-class Posts {
-  String image, nombre;
-  Posts({this.image, this.nombre});
+class VideoDeThumbnail extends StatefulWidget {
+  String urlThumbnail;
+  var urlVideo;
+  //BuildContext context;
+
+  //Constructor
+  VideoDeThumbnail({
+    @required
+    this.urlThumbnail,
+    this.urlVideo,
+    //this.context,
+  });
+
+  @override
+  _VideoDeThumbnailState createState() => _VideoDeThumbnailState();
 }
 
-class Videos {
-  String video, nombre;
-  Videos({this.video, this.nombre});
+class _VideoDeThumbnailState extends State<VideoDeThumbnail> {
+  IconData _iconoPlayStop = Icons.play_arrow;
+
+  @override
+  Widget build(BuildContext context) {
+    return Stack(
+      children: [
+        Image.network(widget.urlThumbnail),
+        _botonPlayPause(),
+      ],
+    );
+  }
+
+  //Manejo del widget del botón con clase de video de popup dentro
+  Widget _botonPlayPause (){
+    return Container(
+      width: MediaQuery.of(context).size.width / 7,
+      child: RaisedButton(
+        shape: CircleBorder(),
+        child: Icon(
+          _iconoPlayStop,
+          size: MediaQuery.of(context).size.width / 15,
+        ),
+        onPressed: () {
+          //Acá debe salir el popup del video
+          setState(() {
+            _iconoPlayStop = Icons.stop;
+          });
+          //PopUps.popUpCargando(context, "Cargando video");
+          _popUpConVideo();
+        },
+      ),
+    );
+  }
+
+
+  ///Popup con el video
+  void _popUpConVideo() async{
+    //Timer para cerrar el popup automáticamente a los 7 segundos
+    Timer timer = Timer(Duration(milliseconds: 7000), (){
+      Navigator.of(context, rootNavigator: true).pop();
+    });
+
+    AlertDialog alert = AlertDialog(
+      content: Container(
+        width: MediaQuery.of(context).size.width,
+        height: MediaQuery.of(context).size.height / 3,
+        child: VideoFirebase(urlVideo: widget.urlVideo,),
+      ),
+    );
+
+    //Dialog que espera a que se desaparezca el popup para cambiar flecha y
+    //Popup de cargando
+    await showDialog(
+      barrierDismissible: true,
+      context: context,
+      builder: (BuildContext context) {
+        return alert;
+      },
+    ).then((value) {
+      //Al terminar el popup, cambia el ícono a "play" y cierra el popup de
+      //cargando
+      setState(() {
+        //Navigator.pop(context);
+        _iconoPlayStop = Icons.play_arrow;
+      });
+      // En caso de que se cierre el popup antes del tiempo, el timer se cancela
+      timer?.cancel();
+      timer = null;
+    });
+    return;
+  }
+
 }
+///Clase que maneja el video desde firebase. Devuelve el popup
+class VideoFirebase extends StatefulWidget {
+  VideoPlayerController controladorVideo;
+  String urlVideo;
+
+  VideoFirebase({
+    @required
+    this.urlVideo,
+  });
+
+  @override
+  _VideoFirebaseState createState() => _VideoFirebaseState();
+}
+
+class _VideoFirebaseState extends State<VideoFirebase> {
+
+  @override
+  void initState() {
+    super.initState();
+    widget.controladorVideo = VideoPlayerController.network(widget.urlVideo)
+      ..initialize().then((_){
+      setState(() {});
+    });
+    //Comienza a reproducir el video
+    widget.controladorVideo.play();
+    widget.controladorVideo.setLooping(false);
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    widget.controladorVideo.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return VideoPlayer(widget.controladorVideo);
+  }
+
+}
+
+
