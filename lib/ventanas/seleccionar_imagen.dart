@@ -232,7 +232,7 @@ class _SeleccionarImagenState extends State<SeleccionarImagen> {
                                     RedireccionarCrearLayout(
                                         imagen,
                                         //"/var/www/html/ImagenesPostTv/$nombre",
-                                        nombre,
+                                        "/ImagenesPostTv/$nombre",
                                         false);
                                     return;
                                   },
@@ -275,7 +275,7 @@ class _SeleccionarImagenState extends State<SeleccionarImagen> {
                                     String nombre = snapshot.data.docs[index]['id'].toString();
                                     RedireccionarCrearLayout(
                                         imagen,
-                                        nombre,
+                                        "/ImagenesPostTv/$nombre",
                                         false);
                                   },
                                   child: Padding(
@@ -469,10 +469,15 @@ class _SeleccionarImagenState extends State<SeleccionarImagen> {
               });
         }else {
           //Si no es del menú redirige al layout
-          //Si el envío es correcto, se redirecciona
+          //Si el envío es correcto, se redirecciona y se utiliza la imagen
+          //local en equipo seleccionado
           Image imagen = Image.file(resultado[0],);
 
-          RedireccionarCrearLayout(imagen,resultado[1],true);
+          RedireccionarCrearLayout(
+              imagen,
+              "/var/www/html/ImagenesPostTv/${resultado[1]}",
+              true
+          );
         }
         Fluttertoast.showToast(
           msg: "Imagenes agregadas correctamente",
@@ -572,7 +577,11 @@ class _SeleccionarImagenState extends State<SeleccionarImagen> {
     }
   }
 
-  ///SUBE UN LISTADO DE IMÁGENES SELECCIONADAS
+  ///SUBE UN LISTADO DE IMÁGENES SELECCIONADAS DEVOLVIENDO EL ARCHIVO EN STORAGE
+  ///ID IMAGEN Y URL EN FIREBASE
+  ///{0} = ARCHIVOSTORAGE
+  ///{1} = ID IMAGEN
+  ///{2} = URL
   Future<List<dynamic>> SubidaImagenes(
       FilePickerResult imagenSeleccionadaGaleria) async{
 
@@ -589,9 +598,14 @@ class _SeleccionarImagenState extends State<SeleccionarImagen> {
     }
 
     ///Comienzo de uso de firebase
-    var url = await CloudStorage.SubirImagenFirebase(listadoArchivos);
+    List<String> resultadoFirebase = await CloudStorage.SubirImagenFirebase(listadoArchivos);
+
+    if (DatosEstaticos.ipSeleccionada!=null)
+      await ComunicacionRaspberry.EnviarImagenPorHTTP(resultadoFirebase[0], imagenFinal);
+
     listadoResultado.add(imagenFinal);
-    listadoResultado.add(url);
+    listadoResultado.add(resultadoFirebase[0]);
+    listadoResultado.add(resultadoFirebase[1]);
     return listadoResultado;
   }
 

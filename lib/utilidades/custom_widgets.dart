@@ -154,64 +154,6 @@ class PopUps {
     return resultado;
   }
 
-  static Future<bool> enviarImagen(String nombre, File imagen) async {
-    String imabenBytes = base64Encode(imagen.readAsBytesSync());
-    String rutaSubidaImagenes =
-        'http://' + DatosEstaticos.ipSeleccionada + '/upload_one_image.php';
-    bool resultado = await http.post(rutaSubidaImagenes, body: {
-      "image": imabenBytes,
-      "name": nombre,
-    }).then((result) {
-      //print("Resultado: " + result.statusCode.toString());
-      if (result.statusCode == 200) {
-        return true;
-      }
-    }).catchError((error) {
-      return false;
-    });
-    return resultado;
-  }
-
-  static Future<bool> enviarVideo(String nombre, File video) async {
-    String videoBytes = base64Encode(video.readAsBytesSync());
-    String rutaSubidaVideos =
-        'http://' + DatosEstaticos.ipSeleccionada + '/upload_one_video.php';
-    bool resultado = await http.post(rutaSubidaVideos, body: {
-      "video": videoBytes,
-      "name": nombre,
-    }).then((result) {
-      if (result.statusCode == 200) {
-        return true;
-      }
-    }).catchError((error) {
-      return false;
-    });
-    return resultado;
-  }
-
-  static Future<List> getNombresImagenes() async {
-    List<int> listadoValoresBytes = [];
-    List datos;
-    Socket socket;
-    try {
-      socket = await Socket.connect(DatosEstaticos.ipSeleccionada,
-              DatosEstaticos.puertoSocketRaspberry)
-          .timeout(Duration(seconds: 5));
-      socket.write('TVPOSTGETNOMBREIMAGENES');
-      socket.listen((event) {
-        listadoValoresBytes.addAll(event.toList());
-      }).onDone(() {
-        datos = utf8.decode(listadoValoresBytes).split(",");
-        DatosEstaticos.listadoNombresImagenes = datos;
-        socket.close();
-      });
-
-      await socket.done.whenComplete(() => datos);
-      return datos;
-    } catch (e) {
-      print("Error " + e.toString());
-    }
-  }
 }
 
 class MenuAppBar {
@@ -1400,8 +1342,8 @@ class BotonEnviarAEquipo extends StatelessWidget {
               if (DatosEstaticos.nombreArchivoWidget1 != "" ||
                   DatosEstaticos.nombreArchivoWidget2 != "" ||
                   DatosEstaticos.nombreArchivoWidget3 != "") {
-                //Envio instruccion a raspberry. Esto debería tener un await para la respuesta
-                PopUps.PopUpConWidget(context, EsperarRespuestaProyeccion());
+                //Envio instruccion a raspberry.
+                PopUps.PopUpConWidget(context, await EsperarRespuestaProyeccion());
               } else {
                 PopUps.PopUpConWidget(
                     context,
@@ -1425,112 +1367,12 @@ class BotonEnviarAEquipo extends StatelessWidget {
     );
   }
 
-  //Prepara datos para enviar a raspberry.
-  //Comprueba datos con base de datos para archivos de media
-  String PreparaDatosMediaEnvioEquipo() {
-    String _Instruccion;
-    String relojEnPantalla;
-    String tipoLayoutAEnviar = "";
-    String layoutEnEquipo = DatosEstaticos.layoutSeleccionado.toString();
 
-    //Nombres de widgets hasta el momento
-    String tipoWidget1AEnviar = DatosEstaticos.widget1.runtimeType.toString();
-    String tipoWidget2AEnviar = DatosEstaticos.widget2.runtimeType.toString();
-    String tipoWidget3AEnviar = DatosEstaticos.widget3.runtimeType.toString();
-    if (tipoWidget1AEnviar == 'Null') {
-      tipoWidget1AEnviar = "0";
-    }
-    if (tipoWidget2AEnviar == 'Null') {
-      tipoWidget2AEnviar = "0";
-    }
-    if (tipoWidget3AEnviar == 'Null') {
-      tipoWidget3AEnviar = "0";
-    }
 
-    //nombres de archivos a enviar
-    String link1AEnviar =
-        DatosEstaticos.nombreArchivoWidget1.replaceAll(RegExp(' +'), '<!-!>');
-    String link2AEnviar =
-        DatosEstaticos.nombreArchivoWidget2.replaceAll(RegExp(' +'), '<!-!>');
-    String link3AEnviar =
-        DatosEstaticos.nombreArchivoWidget3.replaceAll(RegExp(' +'), '<!-!>');
-    if (link1AEnviar.isEmpty) {
-      link1AEnviar = "0";
-    }
-    if (link2AEnviar.isEmpty) {
-      link2AEnviar = "0";
-    }
-    if (link3AEnviar.isEmpty) {
-      link3AEnviar = "0";
-    }
-    //valor de reloj en pantalla
-    if (DatosEstaticos.relojEnPantalla) {
-      relojEnPantalla = "on";
-    } else {
-      relojEnPantalla = "off";
-    }
-    //Se añaden los colores del reloj
-    relojEnPantalla = relojEnPantalla +
-        DatosEstaticos.color_fondo_reloj +
-        DatosEstaticos.color_texto_reloj;
-
-    if (layoutEnEquipo == "1") {
-      tipoLayoutAEnviar = "100";
-      if (link1AEnviar != "0" &&
-          !link1AEnviar.contains('/var/www/html') &&
-          !link1AEnviar.contains('http')) {
-        link1AEnviar = '/var/www/html$link1AEnviar';
-      }
-      _Instruccion =
-          "$tipoWidget1AEnviar 0 0 $link1AEnviar 0 0 $relojEnPantalla";
-    }
-    if (layoutEnEquipo == "2") {
-      tipoLayoutAEnviar = "5050";
-      if (link1AEnviar != "0" &&
-          !link1AEnviar.contains('/var/www/html') &&
-          !link1AEnviar.contains('http')) {
-        link1AEnviar = '/var/www/html$link1AEnviar';
-      }
-      if (link2AEnviar != "0" &&
-          !link2AEnviar.contains('/var/www/html') &&
-          !link2AEnviar.contains('http')) {
-        link2AEnviar = '/var/www/html$link2AEnviar';
-      }
-      _Instruccion = "$tipoWidget1AEnviar $tipoWidget2AEnviar "
-          "0 $link1AEnviar $link2AEnviar 0 $relojEnPantalla";
-    }
-    if (layoutEnEquipo == "3") {
-      tipoLayoutAEnviar = "802010";
-      if (link1AEnviar != "0" &&
-          !link1AEnviar.contains('/var/www/html') &&
-          !link1AEnviar.contains('http')) {
-        link1AEnviar = '/var/www/html$link1AEnviar';
-      }
-      if (link2AEnviar != "0" &&
-          !link2AEnviar.contains('/var/www/html') &&
-          !link2AEnviar.contains('http')) {
-        link2AEnviar = '/var/www/html$link2AEnviar';
-      }
-      if (link3AEnviar != "0" &&
-          !link3AEnviar.contains('/var/www/html') &&
-          !link3AEnviar.contains('http')) {
-        link3AEnviar = '/var/www/html$link3AEnviar';
-      }
-
-      //Envío de instrucción final
-      _Instruccion = "$tipoWidget1AEnviar $tipoWidget2AEnviar "
-          "$tipoWidget3AEnviar $link1AEnviar $link2AEnviar $link3AEnviar $relojEnPantalla";
-    }
-
-    String _porcionACambiar = _definirPorcionACambiar();
-
-    _Instruccion =
-        "TVPOSTMODLAYOUT $tipoLayoutAEnviar $_porcionACambiar $_Instruccion";
-    return _Instruccion;
-  }
-
-  Widget EsperarRespuestaProyeccion() {
-    String InstruccionEnviar = PreparaDatosMediaEnvioEquipo();
+  Future<Widget> EsperarRespuestaProyeccion() async {
+    //PREPARA TODA LA INFORMACIÓN Y DEVUELVE LA INSTRUCCIÓN A ENVIAR
+    // A LA RASPBERRY
+    String InstruccionEnviar = await ComunicacionRaspberry.PreparaDatosMediaEnvioEquipo();
 
     return FutureBuilder(
       future: ComunicacionRaspberry.ConfigurarLayout(InstruccionEnviar),
@@ -1676,57 +1518,15 @@ class BotonEnviarAEquipo extends StatelessWidget {
     );
   }
 
-  String _definirPorcionACambiar() {
-    int ls = DatosEstaticos.layoutSeleccionado;
-
-    switch (ls) {
-      case 1:
-        if (DatosEstaticos.reemplazarPorcion1) {
-          return "1-1";
-        }
-        break;
-      case 2:
-        if (DatosEstaticos.reemplazarPorcion1 &&
-            DatosEstaticos.reemplazarPorcion2) {
-          return "2-3";
-        }
-        if (DatosEstaticos.reemplazarPorcion1) {
-          return "2-1";
-        }
-        if (DatosEstaticos.reemplazarPorcion2) {
-          return "2-2";
-        }
-        break;
-      case 3:
-        if (DatosEstaticos.reemplazarPorcion1 &&
-            DatosEstaticos.reemplazarPorcion2 &&
-            DatosEstaticos.reemplazarPorcion3) {
-          return "3-4";
-        }
-        if (DatosEstaticos.reemplazarPorcion1 &&
-            DatosEstaticos.reemplazarPorcion2) {
-          return "3-5";
-        }
-        if (DatosEstaticos.reemplazarPorcion1 &&
-            DatosEstaticos.reemplazarPorcion3) {
-          return "3-7";
-        }
-        if (DatosEstaticos.reemplazarPorcion2 &&
-            DatosEstaticos.reemplazarPorcion3) {
-          return "3-6";
-        }
-        if (DatosEstaticos.reemplazarPorcion1) {
-          return "3-1";
-        }
-        if (DatosEstaticos.reemplazarPorcion2) {
-          return "3-2";
-        }
-        if (DatosEstaticos.reemplazarPorcion3) {
-          return "3-3";
-        }
-        break;
-    }
+  /*
+  String PreparaInstruccion(){
+    String instruccionPreparada = "";
+    ComunicacionRaspberry.PreparaDatosMediaEnvioEquipo()
+        .then((value) => {instruccionPreparada = value});
+    return instruccionPreparada;
   }
+
+   */
 
   Future<String> PublicarEnRedesSociales() async {
     String nombreNuevaImagen;
@@ -1854,13 +1654,13 @@ class EventosPropios {
   }
 }
 
-class VideoDeThumbnail extends StatefulWidget {
+class VideoYThumbnail extends StatefulWidget {
   String urlThumbnail;
   var urlVideo;
   //BuildContext context;
 
   //Constructor
-  VideoDeThumbnail({
+  VideoYThumbnail({
     @required
     this.urlThumbnail,
     this.urlVideo,
@@ -1868,17 +1668,17 @@ class VideoDeThumbnail extends StatefulWidget {
   });
 
   @override
-  _VideoDeThumbnailState createState() => _VideoDeThumbnailState();
+  _VideoYThumbnailState createState() => _VideoYThumbnailState();
 }
 
-class _VideoDeThumbnailState extends State<VideoDeThumbnail> {
+class _VideoYThumbnailState extends State<VideoYThumbnail> {
   IconData _iconoPlayStop = Icons.play_arrow;
 
   @override
   Widget build(BuildContext context) {
     return Stack(
       children: [
-        Image.network(widget.urlThumbnail),
+        Center(child: Image.network(widget.urlThumbnail),),
         _botonPlayPause(),
       ],
     );
@@ -1953,7 +1753,7 @@ class VideoFirebase extends StatefulWidget {
 }
 
 class _VideoFirebaseState extends State<VideoFirebase> {
-
+  Timer timer;
   //Futuro para saber si ya se incializó correctamente el video
   Future<void> _videoInicializado;
 
@@ -1970,6 +1770,8 @@ class _VideoFirebaseState extends State<VideoFirebase> {
   void dispose() {
     super.dispose();
     widget.controladorVideo.dispose();
+    timer?.cancel();
+    timer = null;
   }
 
   @override
@@ -1990,7 +1792,7 @@ class _VideoFirebaseState extends State<VideoFirebase> {
     widget.controladorVideo.setLooping(false);
     widget.controladorVideo.play();
     //Timer para cerrar el popup automáticamente a los 5 segundos
-    Timer(Duration(milliseconds: 5000), (){
+    timer = Timer(Duration(milliseconds: 5000), (){
       Navigator.of(context, rootNavigator: true).pop();
     });
     return VideoPlayer(widget.controladorVideo);

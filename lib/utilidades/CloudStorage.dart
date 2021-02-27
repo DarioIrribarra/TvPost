@@ -4,12 +4,17 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:uuid/uuid.dart';
 import 'datos_estaticos.dart';
 import 'package:video_thumbnail/video_thumbnail.dart';
+import 'package:path/path.dart' as p;
+
 
 class CloudStorage{
 
-  /// SUBE IMÁGENES A FIREBASE
-  static Future<String> SubirImagenFirebase(List<File> listadoVideos) async {
+  /// SUBE IMÁGENES A FIREBASE DEVOLVIENDO ID UNICO Y URL
+  /// {0} = ID IMAGEN
+  /// {1} = URL IMAGEN
+  static Future<List<String>> SubirImagenFirebase(List<File> listadoVideos) async {
 
+    List<String> listadoRespuesta = new List<String>();
     String _urlFile = "";
 
     //Se instancia la colección en la base de datos
@@ -17,7 +22,12 @@ class CloudStorage{
     try
     {
       for (int i = 0; i < listadoVideos.length; i++){
+        //Se limpia el listado por cada nueva imagen a subir
+        listadoRespuesta.clear();
+
+        String extension = p.extension(listadoVideos[i].path);
         var _idUnica = new Uuid().v4();
+        _idUnica = _idUnica + extension;
 
         //Se instancia el storage
         FirebaseStorage storage = FirebaseStorage.instance;
@@ -35,9 +45,11 @@ class CloudStorage{
         //Se añade archivo a la colección a la bd
         fileReferenceInDB.doc(_idUnica).set({"id":_idUnica,"url":_urlFile});
 
+        listadoRespuesta.add(_idUnica);
+        listadoRespuesta.add(_urlFile);
       }
 
-      return _urlFile;
+      return listadoRespuesta;
 
     }
     catch (ex){
@@ -87,10 +99,16 @@ class CloudStorage{
   }
 
   /// SUBE VIDEOS A FIREBASE
-  static Future<String> SubirVideosFirebase(List<File> listadoVideos) async {
+  /// RETORNA UN LISTADO CON LOS SIGUIENTES VALORES
+  /// [0] = idUnicaVIdeo
+  /// [1] = urlVideo
+  /// [2] = idThumbnail
+  /// [3] = urlThumbnail
+  static Future<List<String>> SubirVideosFirebase(List<File> listadoVideos) async {
 
     String _urlFileVideo = "";
     String _urlFileThumbnail = "";
+    List<String> listadoResultado = new List<String>();
 
     //Se instancia el storage
     FirebaseStorage storage = FirebaseStorage.instance;
@@ -100,7 +118,13 @@ class CloudStorage{
     try
     {
       for (int i = 0; i < listadoVideos.length; i++){
+        //Se limpia el listado por cada registrio para solo tomar el último
+        listadoResultado.clear();
+
+        String extension = p.extension(listadoVideos[i].path);
+
         var _idUnicaVideo = new Uuid().v4();
+        _idUnicaVideo = _idUnicaVideo + extension;
         var _idUnicaThumbnail = new Uuid().v4();
 
         //Se toma el thumbnail para subirlo
@@ -139,10 +163,15 @@ class CloudStorage{
           "idThumbnail":_idUnicaThumbnail
         });
 
+        listadoResultado.add(_idUnicaVideo);
+        listadoResultado.add(_urlFileVideo);
+        listadoResultado.add(_idUnicaThumbnail);
+        listadoResultado.add(_urlFileThumbnail);
+
       }
 
       //Se devuelve el thumbnail
-      return _urlFileThumbnail;
+      return listadoResultado;
 
     }
     catch (ex){

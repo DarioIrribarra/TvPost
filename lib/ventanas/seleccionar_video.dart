@@ -21,6 +21,7 @@ import 'package:tvpost_flutter/ventanas/video_widget.dart';
 import 'package:video_player/video_player.dart';
 //import 'package:chewie/chewie.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:video_thumbnail/video_thumbnail.dart';
 
 class SeleccionarVideo extends StatefulWidget {
   @override
@@ -48,7 +49,7 @@ class _SeleccionarVideoState extends State<SeleccionarVideo> {
   @override
   void initState() {
     //Acá se hace el llamado al listado de nombres de imágenes
-    _listadoNombresVideos = _getNombresVideos();
+    //_listadoNombresVideos = _getNombresVideos();
     activarBoton = true;
     super.initState();
   }
@@ -122,7 +123,7 @@ class _SeleccionarVideoState extends State<SeleccionarVideo> {
                             children: [
                               Expanded(
                                 flex: 5,
-                                child: VideoDeThumbnail(
+                                child: VideoYThumbnail(
                                   urlThumbnail: urlThumbnail,
                                   urlVideo: urlVideo,
                                 ),
@@ -210,7 +211,7 @@ class _SeleccionarVideoState extends State<SeleccionarVideo> {
                           children: [
                             Expanded(
                               flex: 5,
-                              child: VideoDeThumbnail(
+                              child: VideoYThumbnail(
                                 urlThumbnail: urlThumbnail,
                                 urlVideo: urlVideo,
                               ),
@@ -273,7 +274,7 @@ class _SeleccionarVideoState extends State<SeleccionarVideo> {
                    */
                   var listadoUrl = await CloudStorage.GetUrlVideYThumbnail(SeleccionaVideo.videosSelecionados[0]);
                   if (listadoUrl != null){
-                    Widget video = VideoDeThumbnail(urlThumbnail: listadoUrl[1], urlVideo: listadoUrl[0],);
+                    Widget video = VideoYThumbnail(urlThumbnail: listadoUrl[1], urlVideo: listadoUrl[0],);
                     String nombre =SeleccionaVideo.videosSelecionados[0];
                     //Se le pasa el id para enviar el video
                     RedireccionarCrearLayout(
@@ -454,14 +455,20 @@ class _SeleccionarVideoState extends State<SeleccionarVideo> {
         }else {
           //Si no es del menú redirige al layout
           //Si el envío es correcto, se redirecciona
+          VideoYThumbnail videoAEnviar = VideoYThumbnail(
+            urlThumbnail: resultado[2], urlVideo: resultado[1],
+          );
+          /*
           ReproductorVideos videoAEnviar = ReproductorVideos(
             url: resultado[0],
             divisionLayout: divisionLayout,
             seleccionado: true,
           );
+
+           */
           RedireccionarCrearLayout(
               videoAEnviar,
-              resultado[1],
+              "/var/www/html/VideosPostTv/${resultado[3]}",
               true);
         }
         Fluttertoast.showToast(
@@ -480,6 +487,7 @@ class _SeleccionarVideoState extends State<SeleccionarVideo> {
     }
   }
 
+  /*
   abrirGaleriaOld() async {
     GlobalKey<FormState> _keyValidadorvideo = GlobalKey<FormState>();
     String nombreNuevoVideo = "";
@@ -730,14 +738,16 @@ class _SeleccionarVideoState extends State<SeleccionarVideo> {
     }
   }
 
+   */
+
   // ignore: non_constant_identifier_names
   void RedireccionarCrearLayout(
       Widget video, String nombre, bool vieneDePopUp) {
     if (vieneDePopUp) {
       //Cierra popup cargando
-      Navigator.pop(context);
+      //Navigator.pop(context);
 
-      Navigator.pop(context);
+      Navigator.of(context, rootNavigator: true).pop();
     }
 
     //Se asigna además que porcion del layout se reemplazará
@@ -747,7 +757,7 @@ class _SeleccionarVideoState extends State<SeleccionarVideo> {
           DatosEstaticos.widget1 = video;
           DatosEstaticos.nombreArchivoWidget1 = nombre;
           DatosEstaticos.reemplazarPorcion1 = true;
-          Navigator.popAndPushNamed(context, "/crear_layout1");
+          Navigator.pop(context, true);
         }
         break;
       case '2-1':
@@ -755,7 +765,7 @@ class _SeleccionarVideoState extends State<SeleccionarVideo> {
           DatosEstaticos.widget1 = video;
           DatosEstaticos.nombreArchivoWidget1 = nombre;
           DatosEstaticos.reemplazarPorcion1 = true;
-          Navigator.popAndPushNamed(context, "/crear_layout2");
+          Navigator.pop(context, true);
         }
         break;
       case '2-2':
@@ -763,7 +773,7 @@ class _SeleccionarVideoState extends State<SeleccionarVideo> {
           DatosEstaticos.widget2 = video;
           DatosEstaticos.nombreArchivoWidget2 = nombre;
           DatosEstaticos.reemplazarPorcion2 = true;
-          Navigator.popAndPushNamed(context, "/crear_layout2");
+          Navigator.pop(context, true);
         }
         break;
       case '3-1':
@@ -771,7 +781,7 @@ class _SeleccionarVideoState extends State<SeleccionarVideo> {
           DatosEstaticos.widget1 = video;
           DatosEstaticos.nombreArchivoWidget1 = nombre;
           DatosEstaticos.reemplazarPorcion1 = true;
-          Navigator.popAndPushNamed(context, "/crear_layout3");
+          Navigator.pop(context, true);
         }
         break;
       case '3-2':
@@ -779,7 +789,7 @@ class _SeleccionarVideoState extends State<SeleccionarVideo> {
           DatosEstaticos.widget2 = video;
           DatosEstaticos.nombreArchivoWidget2 = nombre;
           DatosEstaticos.reemplazarPorcion2 = true;
-          Navigator.popAndPushNamed(context, "/crear_layout3");
+          Navigator.pop(context, true);
         }
         break;
       case '3-3':
@@ -787,21 +797,30 @@ class _SeleccionarVideoState extends State<SeleccionarVideo> {
           DatosEstaticos.widget3 = video;
           DatosEstaticos.nombreArchivoWidget3 = nombre;
           DatosEstaticos.reemplazarPorcion3 = true;
-          Navigator.popAndPushNamed(context, "/crear_layout3");
+          Navigator.pop(context, true);
         }
         break;
     }
   }
 
-  ///SUBE UN LISTADO DE VIDEOS SELECCIONADOS
+  ///SUBE UN LISTADO DE VIDEOS SELECCIONADOS Y DEVUELVE EL ARCHIVO LOCAL EN
+  ///STORAGE, URL RASPBERRY, URL THUMBNAIL EN FIREBASE E ID VIDEO
+  ///{0} = ARCHIVO LOCAL
+  ///{1} = URL EN RASPBERRY
+  ///{2} = URL THUMBNAIL FIREBASE
+  ///{3} = ID VIDEO
   Future<List<dynamic>> SubidaVideos(
       FilePickerResult videoSeleccionadoGaleria) async{
 
     List<dynamic> listadoResultado = List<dynamic>();
+
+    //Video desde archivo por filepicker
     File videoFinal;
+
     var listadoArchivos = new List<File>();
     PopUps.popUpCargando(context, 'Agregando videos'.toUpperCase());
 
+    //Por cada archivo se envia a firebase
     for (PlatformFile element in videoSeleccionadoGaleria.files){
       videoFinal = File(element.path);
 
@@ -810,9 +829,26 @@ class _SeleccionarVideoState extends State<SeleccionarVideo> {
     }
 
     ///Comienzo de uso de firebase
-    var url = await CloudStorage.SubirVideosFirebase(listadoArchivos);
+    var resultadoFirebase = await CloudStorage.SubirVideosFirebase(listadoArchivos);
+
+    //Se sube a la raspberry solo si hay ip asignada. SOLO SE PERMITE SUBIR DE
+    // A 1 SI HAY IP SELECCIONADA
+    if (DatosEstaticos.ipSeleccionada!=null)
+      await ComunicacionRaspberry.EnviarVideoPorHTTP(resultadoFirebase[0], videoFinal);
+
+    //Seteamos datos y devolvemos archivo local con link en raspberry
+    //esto solo se utiliza cuando ya hay una ip asignada
+    String _ip = DatosEstaticos.ipSeleccionada;
+
+    //Video
     listadoResultado.add(videoFinal);
-    listadoResultado.add(url);
+    //Url Raspberry
+    listadoResultado.add("http://$_ip/VideosPostTv/${resultadoFirebase[0]}");
+    //Url Thumbnail en firebase
+    listadoResultado.add(resultadoFirebase[3]);
+    //Id video (nombre video)
+    listadoResultado.add(resultadoFirebase[0]);
+
     return listadoResultado;
   }
 }
@@ -1155,8 +1191,12 @@ class CambiosSeleccion {
                     PopUps.popUpCargando(
                         context, 'Eliminando videos'.toUpperCase());
                     var resultadoEliminar = await CloudStorage.EliminarVideoFirebase(SeleccionaVideo.videosSelecionados);
+                    /*
+                    var resultadoEliminarRaspberry = await ComunicacionRaspberry.EliminarContenido(tipoContenido: "video", nombresAEliminar: SeleccionaVideo.videosSelecionados);
 
-                    if (resultadoEliminar != null) {
+                     */
+
+                    if (resultadoEliminar != null /*&& resultadoEliminarRaspberry !=null*/) {
                       //Se limpia la lista estática de videos seleccionados
                       SeleccionaVideo.videosSelecionados.clear();
                       Navigator.pop(context);
