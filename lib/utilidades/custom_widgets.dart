@@ -1909,10 +1909,6 @@ class _VideoDeThumbnailState extends State<VideoDeThumbnail> {
 
   ///Popup con el video
   void _popUpConVideo() async{
-    //Timer para cerrar el popup automáticamente a los 7 segundos
-    Timer timer = Timer(Duration(milliseconds: 7000), (){
-      Navigator.of(context, rootNavigator: true).pop();
-    });
 
     AlertDialog alert = AlertDialog(
       content: Container(
@@ -1934,15 +1930,12 @@ class _VideoDeThumbnailState extends State<VideoDeThumbnail> {
       //Al terminar el popup, cambia el ícono a "play" y cierra el popup de
       //cargando
       setState(() {
-        //Navigator.pop(context);
         _iconoPlayStop = Icons.play_arrow;
       });
-      // En caso de que se cierre el popup antes del tiempo, el timer se cancela
-      timer?.cancel();
-      timer = null;
     });
     return;
   }
+
 
 }
 ///Clase que maneja el video desde firebase. Devuelve el popup
@@ -1961,16 +1954,16 @@ class VideoFirebase extends StatefulWidget {
 
 class _VideoFirebaseState extends State<VideoFirebase> {
 
+  //Futuro para saber si ya se incializó correctamente el video
+  Future<void> _videoInicializado;
+
   @override
   void initState() {
     super.initState();
-    widget.controladorVideo = VideoPlayerController.network(widget.urlVideo)
-      ..initialize().then((_){
-      setState(() {});
-    });
-    //Comienza a reproducir el video
-    widget.controladorVideo.play();
-    widget.controladorVideo.setLooping(false);
+    //Controlador que se le pasa el VideoPlayer
+    widget.controladorVideo = VideoPlayerController.network(widget.urlVideo);
+    //Se inicializa el controlador
+    _videoInicializado = widget.controladorVideo.initialize();
   }
 
   @override
@@ -1981,8 +1974,29 @@ class _VideoFirebaseState extends State<VideoFirebase> {
 
   @override
   Widget build(BuildContext context) {
+    //Si el video está inicializado lo reproduce
+    return FutureBuilder(
+        future: _videoInicializado,
+        builder: (context, snapshot){
+          if (snapshot.connectionState == ConnectionState.done)
+            return _videoSiendoReproducido();
+          return Center(child: CircularProgressIndicator(),);
+        }
+    );
+  }
+
+  //Retorna el video si ya está inicializado on popup de carga sino
+  Widget _videoSiendoReproducido(){
+    widget.controladorVideo.setLooping(false);
+    widget.controladorVideo.play();
+    //Timer para cerrar el popup automáticamente a los 5 segundos
+    Timer(Duration(milliseconds: 5000), (){
+      Navigator.of(context, rootNavigator: true).pop();
+    });
     return VideoPlayer(widget.controladorVideo);
   }
+
+
 
 }
 
