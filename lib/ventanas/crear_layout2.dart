@@ -348,6 +348,45 @@ class _CrearLayout2State extends State<CrearLayout2> {
                 actualizaEstado: () {
                   setState(() {
                     videoPorcion2Reemplazado = true;
+                    if (DatosEstaticos.PublicarEnRedesSociales) {
+                      Widget contenido = Container(
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(40),
+                              color: HexColor('#f4f4f4')),
+                          height: MediaQuery.of(context).size.height/5,
+                          width: MediaQuery.of(context).size.width,
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            children: [
+                              Text(
+                                'Publicación Redes Sociales',
+                                textAlign: TextAlign.center,
+                                style: TextStyle(fontWeight: FontWeight.bold),
+                              ),
+                              SizedBox(
+                                height: 10,
+                              ),
+                              Text(
+                                'Proyecte en la TV para realizar publicacion',
+                                textAlign: TextAlign.center,
+                              ),
+                              SizedBox(
+                                height: 10,
+                              ),
+                        GestureDetector(
+                          child: Icon(
+                            Icons.check_circle,
+                            color: HexColor('#3EDB9B'),
+                            size: 35,
+                          ),
+                          onTap: () {
+                            Navigator.pop(context);
+                          },
+                        ),
+                            ],
+                          ));
+                      PopUps.PopUpConWidget(context, contenido);
+                    }
                   });
                 },
               ),

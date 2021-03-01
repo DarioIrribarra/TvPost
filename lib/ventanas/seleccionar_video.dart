@@ -2,26 +2,15 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_database/firebase_database.dart';
-import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:image_picker/image_picker.dart';
-import 'package:tvpost_flutter/tvlapiz_icons.dart';
 import 'package:tvpost_flutter/utilidades/CloudStorage.dart';
-//import 'package:flutter_social_content_share/flutter_social_content_share.dart';
 import 'package:tvpost_flutter/utilidades/comunicacion_raspberry.dart';
 import 'package:tvpost_flutter/utilidades/custom_widgets.dart';
 import 'package:tvpost_flutter/utilidades/datos_estaticos.dart';
-//import 'package:http/http.dart' as http;
-import 'package:path/path.dart' as p;
 import 'package:file_picker/file_picker.dart';
-import 'package:tvpost_flutter/ventanas/soporte.dart';
-import 'package:tvpost_flutter/ventanas/video_widget.dart';
 import 'package:video_player/video_player.dart';
-//import 'package:chewie/chewie.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:video_thumbnail/video_thumbnail.dart';
 
 class SeleccionarVideo extends StatefulWidget {
   @override
@@ -274,12 +263,25 @@ class _SeleccionarVideoState extends State<SeleccionarVideo> {
                    */
                   var listadoUrl = await CloudStorage.GetUrlVideYThumbnail(SeleccionaVideo.videosSelecionados[0]);
                   if (listadoUrl != null){
-                    Widget video = VideoYThumbnail(urlThumbnail: listadoUrl[1], urlVideo: listadoUrl[0],);
-                    String nombre =SeleccionaVideo.videosSelecionados[0];
+                    String nombre = SeleccionaVideo.videosSelecionados[0];
+
+                    //Arreglo que contiene el nombre correcto del video para analizar
+                    List<String> _verificarVideo = new List<String>();
+                    _verificarVideo.add("/var/www/html/VideosPostTv/${SeleccionaVideo.videosSelecionados[0]}");
+
+                    //Se Descarga video inmediatamente al cargar
+                    PopUps.popUpCargando(context, "DESCARGANDO ARCHIVOS");
+                    await ComunicacionRaspberry.CompruebaArchivosRaspberry(pLinksAEnviar: _verificarVideo);
+                    Navigator.of(context).pop();
+
+                    //Se conecta con video directo de la raspberry
+                    String urlVideoRaspberry = "http://${DatosEstaticos.ipSeleccionada}/VideosPostTv/$nombre";
+                    Widget video = VideoYThumbnail(urlThumbnail: listadoUrl[1], urlVideo: urlVideoRaspberry,);
+
                     //Se le pasa el id para enviar el video
                     RedireccionarCrearLayout(
                         video,
-                        "/var/www/html/VideosPostTv/$nombre",
+                        urlVideoRaspberry,
                         false);
                   }else{
                     Fluttertoast.showToast(

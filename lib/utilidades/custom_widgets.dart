@@ -19,8 +19,10 @@ import 'package:flutter_social_content_share/flutter_social_content_share.dart';
 
 class PopUps {
   //Se crea popup de cargando
-  static popUpCargando(BuildContext context, String texto) {
-    AlertDialog alert = AlertDialog(
+  static popUpCargando(BuildContext context, String texto) async{
+
+    await Future.delayed(Duration(microseconds: 1));
+    Widget alert = AlertDialog(
       contentPadding: EdgeInsets.only(bottom: 20, top: 20, left: 5, right: 5),
       backgroundColor: Colors.grey.withOpacity(0.0),
       content: Container(
@@ -30,7 +32,7 @@ class PopUps {
           height: 100,
           width: 250,
           child:
-              Row(mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: [
+          Row(mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: [
             Center(child: Text(texto, style: TextStyle(fontSize: 13))),
             CircularProgressIndicator(
               valueColor: AlwaysStoppedAnimation<Color>(HexColor("#FC4C8B")),
@@ -44,6 +46,7 @@ class PopUps {
         return alert;
       },
     );
+
   }
 /*
   static _reloj_estado(BuildContext context) {
@@ -76,7 +79,6 @@ class PopUps {
   }
 
  */
-
   //Crear un popup con cualquier widget de contenido
   static SeleccionarReloj(BuildContext context) {
     return showDialog(
@@ -1343,7 +1345,7 @@ class BotonEnviarAEquipo extends StatelessWidget {
                   DatosEstaticos.nombreArchivoWidget2 != "" ||
                   DatosEstaticos.nombreArchivoWidget3 != "") {
                 //Envio instruccion a raspberry.
-                PopUps.PopUpConWidget(context, await EsperarRespuestaProyeccion());
+                PopUps.PopUpConWidget(context, await EsperarRespuestaProyeccion(context));
               } else {
                 PopUps.PopUpConWidget(
                     context,
@@ -1369,153 +1371,168 @@ class BotonEnviarAEquipo extends StatelessWidget {
 
 
 
-  Future<Widget> EsperarRespuestaProyeccion() async {
+  Future<Widget> EsperarRespuestaProyeccion(BuildContext contexto) async {
     //PREPARA TODA LA INFORMACIÓN Y DEVUELVE LA INSTRUCCIÓN A ENVIAR
     // A LA RASPBERRY
-    String InstruccionEnviar = await ComunicacionRaspberry.PreparaDatosMediaEnvioEquipo();
+    //String InstruccionEnviar = await ComunicacionRaspberry.PreparaDatosMediaEnvioEquipo();
 
     return FutureBuilder(
-      future: ComunicacionRaspberry.ConfigurarLayout(InstruccionEnviar),
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.done) {
-          if (snapshot.data != null) {
-            //Actualiza datos en bd
-            ObtieneDatos obtencionDatos = ObtieneDatos();
-            obtencionDatos.updateDatosMediaEquipo(
-              serial: DatosEstaticos.listadoDatosEquipoSeleccionado[0]
-                  ['f_serial'],
-              f_layoutActual: DatosEstaticos.layoutSeleccionado.toString(),
-              F_TipoArchivoPorcion1:
-                  DatosEstaticos.widget1.runtimeType.toString(),
-              F_TipoArchivoPorcion2:
-                  DatosEstaticos.widget2.runtimeType.toString(),
-              F_TipoArchivoPorcion3:
-                  DatosEstaticos.widget3.runtimeType.toString(),
-              F_ArchivoPorcion1: DatosEstaticos.nombreArchivoWidget1,
-              F_ArchivoPorcion2: DatosEstaticos.nombreArchivoWidget2,
-              F_ArchivoPorcion3: DatosEstaticos.nombreArchivoWidget3,
-            );
+        future: ComunicacionRaspberry.PreparaDatosMediaEnvioEquipo(),
+        builder: (context, snapshot){
+          if (snapshot.connectionState == ConnectionState.done)
+            if (snapshot.data != null){
+              //Cierra popup de descarga
+              Navigator.of(context).pop();
+              return FutureBuilder(
+                future: ComunicacionRaspberry.ConfigurarLayout(snapshot.data.toString()),
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.done) {
+                    if (snapshot.data != null) {
+                      //Actualiza datos en bd
+                      ObtieneDatos obtencionDatos = ObtieneDatos();
+                      obtencionDatos.updateDatosMediaEquipo(
+                        serial: DatosEstaticos.listadoDatosEquipoSeleccionado[0]
+                        ['f_serial'],
+                        f_layoutActual: DatosEstaticos.layoutSeleccionado.toString(),
+                        F_TipoArchivoPorcion1:
+                        DatosEstaticos.widget1.runtimeType.toString(),
+                        F_TipoArchivoPorcion2:
+                        DatosEstaticos.widget2.runtimeType.toString(),
+                        F_TipoArchivoPorcion3:
+                        DatosEstaticos.widget3.runtimeType.toString(),
+                        F_ArchivoPorcion1: DatosEstaticos.nombreArchivoWidget1,
+                        F_ArchivoPorcion2: DatosEstaticos.nombreArchivoWidget2,
+                        F_ArchivoPorcion3: DatosEstaticos.nombreArchivoWidget3,
+                      );
 
-            return Container(
-              decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(40),
-                  color: HexColor('#f4f4f4')),
-              height: 150,
-              width: 250,
-              child: Padding(
-                padding: const EdgeInsets.only(top: 13),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text('PROYECCIÓN FINALIZADA',
-                        style: TextStyle(fontSize: 13)),
-                    Padding(
-                      padding: const EdgeInsets.only(top: 20.0),
-                      child: FlatButton(
-                        child: Icon(
-                          Icons.check_circle,
-                          color: HexColor('#3EDB9B'),
-                          size: 35,
+                      return Container(
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(40),
+                            color: HexColor('#f4f4f4')),
+                        height: 150,
+                        width: 250,
+                        child: Padding(
+                          padding: const EdgeInsets.only(top: 13),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text('PROYECCIÓN FINALIZADA',
+                                  style: TextStyle(fontSize: 13)),
+                              Padding(
+                                padding: const EdgeInsets.only(top: 20.0),
+                                child: FlatButton(
+                                  child: Icon(
+                                    Icons.check_circle,
+                                    color: HexColor('#3EDB9B'),
+                                    size: 35,
+                                  ),
+                                  onPressed: () async {
+                                    //Acá se publica
+                                    if (this.publicar_rrss) {
+                                      String resultado = await PublicarEnRedesSociales();
+                                      if (resultado != 'Success') {
+                                        Widget contenidoPopUp = Container(
+                                            decoration: BoxDecoration(
+                                                borderRadius: BorderRadius.circular(40),
+                                                color: HexColor('#f4f4f4')),
+                                            height: 100,
+                                            width: 250,
+                                            child: Column(
+                                              mainAxisAlignment:
+                                              MainAxisAlignment.spaceEvenly,
+                                              children: [
+                                                Text(
+                                                  'Error de publicación',
+                                                  textAlign: TextAlign.center,
+                                                  textScaleFactor: 1.3,
+                                                  style: TextStyle(
+                                                      fontWeight: FontWeight.bold),
+                                                ),
+                                                SizedBox(
+                                                  height: 10,
+                                                ),
+                                                Text(
+                                                  'Instale, otorgue permisos y configure '
+                                                      'Instagram para realizar una publicación',
+                                                  textAlign: TextAlign.center,
+                                                ),
+                                                SizedBox(
+                                                  height: 10,
+                                                ),
+                                                FlatButton(
+                                                  child: Icon(
+                                                    Icons.check_circle,
+                                                    color: HexColor('#3EDB9B'),
+                                                    size: 30,
+                                                  ),
+                                                  onPressed: () {
+                                                    Navigator.pop(context);
+                                                    VolverADetalleEquipo(context);
+                                                  },
+                                                ),
+                                              ],
+                                            ));
+                                        PopUps.PopUpConWidget(context, contenidoPopUp);
+                                      } else {
+                                        //El valor se cambia luego de publicar y proyectar
+                                        //en pantallas
+                                        DatosEstaticos.PublicarEnRedesSociales = false;
+                                        VolverADetalleEquipo(context);
+                                      }
+                                    } else {
+                                      VolverADetalleEquipo(context);
+                                    }
+                                  },
+                                ),
+                              ),
+                            ],
+                          ),
                         ),
-                        onPressed: () async {
-                          //Acá se publica
-                          if (this.publicar_rrss) {
-                            String resultado = await PublicarEnRedesSociales();
-                            if (resultado != 'Success') {
-                              Widget contenidoPopUp = Container(
-                                  decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(40),
-                                      color: HexColor('#f4f4f4')),
-                                  height: 100,
-                                  width: 250,
-                                  child: Column(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceEvenly,
-                                    children: [
-                                      Text(
-                                        'Error de publicación',
-                                        textAlign: TextAlign.center,
-                                        textScaleFactor: 1.3,
-                                        style: TextStyle(
-                                            fontWeight: FontWeight.bold),
-                                      ),
-                                      SizedBox(
-                                        height: 10,
-                                      ),
-                                      Text(
-                                        'Instale, otorgue permisos y configure '
-                                        'Instagram para realizar una publicación',
-                                        textAlign: TextAlign.center,
-                                      ),
-                                      SizedBox(
-                                        height: 10,
-                                      ),
-                                      FlatButton(
-                                        child: Icon(
-                                          Icons.check_circle,
-                                          color: HexColor('#3EDB9B'),
-                                          size: 30,
-                                        ),
-                                        onPressed: () {
-                                          Navigator.pop(context);
-                                          VolverADetalleEquipo(context);
-                                        },
-                                      ),
-                                    ],
-                                  ));
-                              PopUps.PopUpConWidget(context, contenidoPopUp);
-                            } else {
-                              //El valor se cambia luego de publicar y proyectar
-                              //en pantallas
-                              DatosEstaticos.PublicarEnRedesSociales = false;
-                              VolverADetalleEquipo(context);
-                            }
-                          } else {
-                            VolverADetalleEquipo(context);
-                          }
-                        },
+                      );
+                    }
+                    return Container(
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(40),
+                          color: HexColor('#f4f4f4')),
+                      height: 100,
+                      width: 250,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          Text('PREPARANDO PANTALLAS', style: TextStyle(fontSize: 13)),
+                          CircularProgressIndicator(
+                              valueColor:
+                              AlwaysStoppedAnimation<Color>(HexColor("#FC4C8B"))),
+                        ],
                       ),
+                    );
+                  }
+                  return Container(
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(40),
+                        color: HexColor('#f4f4f4')),
+                    height: 100,
+                    width: 250,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        Text('PREPARANDO PANTALLAS', style: TextStyle(fontSize: 13)),
+                        CircularProgressIndicator(
+                            valueColor:
+                            AlwaysStoppedAnimation<Color>(HexColor("#FC4C8B"))),
+                      ],
                     ),
-                  ],
-                ),
-              ),
-            );
-          }
-          return Container(
-            decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(40),
-                color: HexColor('#f4f4f4')),
-            height: 100,
-            width: 250,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                Text('PREPARANDO PANTALLAS', style: TextStyle(fontSize: 13)),
-                CircularProgressIndicator(
-                    valueColor:
-                        AlwaysStoppedAnimation<Color>(HexColor("#FC4C8B"))),
-              ],
-            ),
-          );
-        }
-        return Container(
-          decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(40),
-              color: HexColor('#f4f4f4')),
-          height: 100,
-          width: 250,
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              Text('PREPARANDO PANTALLAS', style: TextStyle(fontSize: 13)),
-              CircularProgressIndicator(
-                  valueColor:
-                      AlwaysStoppedAnimation<Color>(HexColor("#FC4C8B"))),
-            ],
-          ),
-        );
-      },
-    );
+                  );
+                },
+              );
+            }
+          //Muestra el popup y un center vacío
+          PopUps.popUpCargando(context, "DESCARGANDO ARCHIVOS");
+          return CircularProgressIndicator();
+
+        });
+
+
   }
 
   /*

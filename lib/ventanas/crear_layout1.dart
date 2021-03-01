@@ -174,8 +174,8 @@ class _CrearLayout1State extends State<CrearLayout1> {
                           decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(40),
                               color: HexColor('#f4f4f4')),
-                          height: 100,
-                          width: 250,
+                          height: MediaQuery.of(context).size.height/5,
+                          width: MediaQuery.of(context).size.width,
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                             children: [
@@ -194,9 +194,15 @@ class _CrearLayout1State extends State<CrearLayout1> {
                               SizedBox(
                                 height: 10,
                               ),
-                              FlatButton(
-                                onPressed: () => Navigator.pop(context),
-                                child: Text('Aceptar'),
+                              GestureDetector(
+                                child: Icon(
+                                  Icons.check_circle,
+                                  color: HexColor('#3EDB9B'),
+                                  size: 35,
+                                ),
+                                onTap: () {
+                                  Navigator.pop(context);
+                                },
                               ),
                             ],
                           ));

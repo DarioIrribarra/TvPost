@@ -434,7 +434,7 @@ class ComunicacionRaspberry{
         if (!DatosEstaticos.listadoNombresImagenes.contains(link)){
 
           //Si no existe en el listado se actualiza imagen
-          await ActualizaArchivosRaspberry(link);
+          await ActualizaArchivosRaspberry(link, 0);
         }
       } else if (link.contains('VideosPostTv')){
 
@@ -444,7 +444,7 @@ class ComunicacionRaspberry{
         if (!DatosEstaticos.listadoNombresVideos.contains(link)){
 
           //Si no existe en el listado se actualiza video
-          await ActualizaArchivosRaspberry(link);
+          await ActualizaArchivosRaspberry(link, 1);
         }
       }
     }
@@ -452,8 +452,39 @@ class ComunicacionRaspberry{
   }
 
   ///CONECTA A RASPBERRY Y UTILIZA PYREBASE PARA OBTENER EL ARCHIVO
-  static ActualizaArchivosRaspberry(String pArchivoAEnviar)async{
+  ///ENVIA EL RUT DE EMPRESA Y EL ID DEL ARCHIVO
+  ///PARAMETRO pTipoArchivo 0 = imagen
+  ///PARAMETRO pTipoArchivo 1 = video
+  static ActualizaArchivosRaspberry(String pIdArchivoAEnviar, int pTipoArchivo)async{
+    String resp;
+    Uint8List _respuesta;
+    List<int> listadoRespuestas = [];
+    String instruccion = "";
+    if (pTipoArchivo == 0)
+     instruccion = 'TVPOSTGETIMAGENFROMCLOUD ${DatosEstaticos.rutEmpresa} $pIdArchivoAEnviar';
+    else if (pTipoArchivo == 1)
+      instruccion = 'TVPOSTGETVIDEOFROMCLOUD ${DatosEstaticos.rutEmpresa} $pIdArchivoAEnviar';
 
+    Socket socket;
+    try{
+      socket = await Socket.connect(DatosEstaticos.ipSeleccionada,
+          DatosEstaticos.puertoSocketRaspberry).timeout(Duration(seconds: 5));
+      socket.write(instruccion);
+      socket.listen((event) {
+        listadoRespuestas.addAll(event.toList());
+      }).onDone(() {
+        _respuesta = Uint8List.fromList(listadoRespuestas);
+        socket.close();
+        return;
+      });
+
+      await socket.done.whenComplete(() => resp = utf8.decode(_respuesta));
+
+      return resp;
+    }catch(e){
+      print("Error al enviar nuevo layout ${e.toString()}");
+      return null;
+    }
   }
 
 }

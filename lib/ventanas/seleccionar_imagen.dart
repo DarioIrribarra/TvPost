@@ -5,12 +5,10 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
-import 'package:tvpost_flutter/tvlapiz_icons.dart';
 import 'package:tvpost_flutter/utilidades/CloudStorage.dart';
 import 'package:tvpost_flutter/utilidades/comunicacion_raspberry.dart';
 import 'package:tvpost_flutter/utilidades/custom_widgets.dart';
 import 'package:tvpost_flutter/utilidades/datos_estaticos.dart';
-import 'package:path/path.dart' as p;
 import 'package:file_picker/file_picker.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
@@ -227,14 +225,21 @@ class _SeleccionarImagenState extends State<SeleccionarImagen> {
                                     DatosEstaticos
                                         .PublicarEnRedesSociales =
                                     false;
-                                    Widget imagen = Image.network(snapshot.data.docs[index]['url']);
                                     String nombre = snapshot.data.docs[index]['id'].toString();
+
+                                    //Se Descarga video inmediatamente al cargar
+                                    List<String> _verificarImagen = new List<String>();
+                                    _verificarImagen.add("/var/www/html/ImagenesPostTv/$nombre");
+                                    PopUps.popUpCargando(context, "DESCARGANDO ARCHIVOS");
+                                    await ComunicacionRaspberry.CompruebaArchivosRaspberry(pLinksAEnviar: _verificarImagen);
+                                    Navigator.of(context).pop();
+
+                                    String img = "http://${DatosEstaticos.ipSeleccionada}/ImagenesPostTv/$nombre";
+                                    Widget imagen = Image.network(img);
                                     RedireccionarCrearLayout(
                                         imagen,
-                                        //"/var/www/html/ImagenesPostTv/$nombre",
                                         "/ImagenesPostTv/$nombre",
                                         false);
-                                    return;
                                   },
                                   child: Text(
                                     'CARGAR',
@@ -271,8 +276,17 @@ class _SeleccionarImagenState extends State<SeleccionarImagen> {
                                     DatosEstaticos
                                         .PublicarEnRedesSociales =
                                     true;
-                                    Widget imagen = Image.network(snapshot.data.docs[index]['url']);
                                     String nombre = snapshot.data.docs[index]['id'].toString();
+
+                                    //Se Descarga video inmediatamente al cargar
+                                    List<String> _verificarImagen = new List<String>();
+                                    _verificarImagen.add("/var/www/html/ImagenesPostTv/$nombre");
+                                    PopUps.popUpCargando(context, "DESCARGANDO ARCHIVOS");
+                                    await ComunicacionRaspberry.CompruebaArchivosRaspberry(pLinksAEnviar: _verificarImagen);
+                                    Navigator.of(context).pop();
+
+                                    String img = "http://${DatosEstaticos.ipSeleccionada}/ImagenesPostTv/$nombre";
+                                    Widget imagen = Image.network(img);
                                     RedireccionarCrearLayout(
                                         imagen,
                                         "/ImagenesPostTv/$nombre",
