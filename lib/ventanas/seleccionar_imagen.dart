@@ -227,7 +227,7 @@ class _SeleccionarImagenState extends State<SeleccionarImagen> {
                                     false;
                                     String nombre = snapshot.data.docs[index]['id'].toString();
 
-                                    //Se Descarga video inmediatamente al cargar
+                                    //Se Descarga imagen inmediatamente al cargar
                                     List<String> _verificarImagen = new List<String>();
                                     _verificarImagen.add("/var/www/html/ImagenesPostTv/$nombre");
                                     PopUps.popUpCargando(context, "DESCARGANDO ARCHIVOS");

@@ -1,11 +1,13 @@
 import 'dart:io';
 import 'dart:typed_data';
 import 'dart:ui';
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:flutter/rendering.dart';
+import 'package:tvpost_flutter/utilidades/CloudStorage.dart';
 import 'package:tvpost_flutter/utilidades/comunicacion_raspberry.dart';
 import 'package:tvpost_flutter/utilidades/custom_widgets.dart';
 import 'package:tvpost_flutter/utilidades/datos_estaticos.dart';
@@ -1264,20 +1266,50 @@ class _CrearContenidoState extends State<CrearContenido> {
   }*/
 
   Future _finalizarGuardado(Uint8List imagenEnBytes) async {
-    GlobalKey<FormState> _keyValidadorTxtImagen = GlobalKey<FormState>();
+    //GlobalKey<FormState> _keyValidadorTxtImagen = GlobalKey<FormState>();
     PopUps.popUpCargando(context, 'Cambiando tamaño'.toUpperCase());
+
     //Redimensiono imagen en memoria
     imagenEnBytes = await Utils.redimensionarImg(imagenEnBytes, divisionLayout);
 
     //Cierra popup cargando
     Navigator.of(context, rootNavigator: true).pop();
 
-    /*String dir = (await getTemporaryDirectory()).path;
-    File temporal = new File('$dir/screen_widgets.png');
-    await temporal.writeAsBytes(imagenEnBytes);*/
-    //print(temporal.path);
-    String nombreNuevaImagen = "";
+    PopUps.popUpCargando(context, 'Añadiendo imagen'.toUpperCase());
 
+    //Se crea el archivo final del tamaño modificado
+    File temporal =  await Utils.crearArchivoTemporalRedimensionado(
+        imagenEnBytes);
+
+    //Se sube listado de imágenes a FireBase
+    List<dynamic> resultado = await SubidaImagenes(temporal);
+
+    if (resultado != null) {
+      //Si el envío es correcto, se redirecciona
+      Image imagen = Image.network(
+        "http://${DatosEstaticos.ipSeleccionada}/ImagenesPostTv/${resultado[1]}",
+        fit: BoxFit.cover,
+      );
+      /*
+      //Replico imagen para tamaño en 10% con reloj
+      await ComunicacionRaspberry.ReplicarImagen(
+          nombreNuevaImagen);
+
+       */
+
+      RedireccionarCrearLayout(
+          imagen,
+          "/var/www/html/ImagenesPostTv/${resultado[1]}",
+          true);
+    } else {
+      //Cierra popup cargando
+      Navigator.of(context, rootNavigator: true).pop();
+
+      PopUps.PopUpConWidget(context,
+          Text('Error al enviar imagen'.toUpperCase()));
+    }
+
+    /*
     await showDialog<String>(
       context: context,
       child: AnimacionPadding(
@@ -1325,6 +1357,7 @@ class _CrearContenidoState extends State<CrearContenido> {
                       if (_keyValidadorTxtImagen.currentState.validate()) {
                         //Se abre el popup de cargando
                         Navigator.of(context).pop();
+
                         PopUps.popUpCargando(
                             context, 'Añadiendo imagen'.toUpperCase());
 
@@ -1369,6 +1402,8 @@ class _CrearContenidoState extends State<CrearContenido> {
         ),
       ),
     );
+
+     */
 
     /*Widget widget =
     SingleChildScrollView(
@@ -1509,5 +1544,31 @@ class _CrearContenidoState extends State<CrearContenido> {
     Directory dir = await getTemporaryDirectory();
     dir.deleteSync(recursive: true);
     Navigator.pop(context, true);
+  }
+
+  ///SUBE UN LISTADO DE IMÁGENES SELECCIONADAS DEVOLVIENDO EL ARCHIVO EN STORAGE
+  ///ID IMAGEN Y URL EN FIREBASE
+  ///{0} = ARCHIVOSTORAGE
+  ///{1} = ID IMAGEN
+  ///{2} = URL
+  Future<List<dynamic>> SubidaImagenes(File imagenSeleccionadaGaleria) async{
+
+    //Listado de resultado e imagen
+    List<dynamic> listadoResultado = List<dynamic>();
+    List<File> listadoArchivos = new List<File>();
+
+    listadoArchivos.add(imagenSeleccionadaGaleria);
+    PopUps.popUpCargando(context, 'Agregando imagenes'.toUpperCase());
+
+    ///Comienzo de uso de firebase
+    List<String> resultadoFirebase = await CloudStorage.SubirImagenFirebase(listadoArchivos);
+
+    if (DatosEstaticos.ipSeleccionada!=null)
+      await ComunicacionRaspberry.EnviarImagenPorHTTP(resultadoFirebase[0], imagenSeleccionadaGaleria);
+
+    listadoResultado.add(imagenSeleccionadaGaleria);
+    listadoResultado.add(resultadoFirebase[0]);
+    listadoResultado.add(resultadoFirebase[1]);
+    return listadoResultado;
   }
 }
