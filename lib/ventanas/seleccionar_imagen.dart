@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:tvpost_flutter/utilidades/CloudStorage.dart';
 import 'package:tvpost_flutter/utilidades/comunicacion_raspberry.dart';
@@ -273,10 +274,13 @@ class _SeleccionarImagenState extends State<SeleccionarImagen> {
 
                                     //Valor que activa la publicación en redes sociales
                                     //Este valor se desactiva luego de proyectar en tv
-                                    DatosEstaticos
-                                        .PublicarEnRedesSociales =
-                                    true;
+                                    //DatosEstaticos.PublicarEnRedesSociales =true;
+
                                     String nombre = snapshot.data.docs[index]['id'].toString();
+
+                                    //SI HAY UN LINK YA LISTO PARA PUBLICAR
+                                    //PREGUNTAR SI DESEA REEMPLAZARLO
+                                    await Publicar(nombre);
 
                                     //Se Descarga video inmediatamente al cargar
                                     List<String> _verificarImagen = new List<String>();
@@ -614,13 +618,90 @@ class _SeleccionarImagenState extends State<SeleccionarImagen> {
     ///Comienzo de uso de firebase
     List<String> resultadoFirebase = await CloudStorage.SubirImagenFirebase(listadoArchivos);
 
-    if (DatosEstaticos.ipSeleccionada!=null)
+    if (DatosEstaticos.ipSeleccionada!=null){
       await ComunicacionRaspberry.EnviarImagenPorHTTP(resultadoFirebase[0], imagenFinal);
-
+      await ComunicacionRaspberry.ReplicarImagen(resultadoFirebase[0]);
+    }
     listadoResultado.add(imagenFinal);
     listadoResultado.add(resultadoFirebase[0]);
     listadoResultado.add(resultadoFirebase[1]);
     return listadoResultado;
+  }
+
+  ///MUESTRA POPUP PARA CONFIRMAR REEMPLAZO DE LINK A PUBLICAR SI ES QUE YA
+  ///EXISTE ALGUNO SELECCIONADO
+  Publicar(String pNombre) async {
+    String _linkFinal = "http://${DatosEstaticos.ipSeleccionada}/ImagenesPostTv/$pNombre";
+
+    if (DatosEstaticos.idImagenPUblicarRRSS != ""){
+      await _popUpReemplazoLinkRRSS(_linkFinal);
+
+    }
+    else{
+      //Link para publicar en RRSS
+      DatosEstaticos.idImagenPUblicarRRSS = _linkFinal;
+    }
+  }
+
+  ///Popup que pregunta si desea reemplazar publicación o no
+  Future _popUpReemplazoLinkRRSS(String pLinkFinal) async{
+    Widget contenidoPopUp = Container(
+        decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(40),
+            color: HexColor('#f4f4f4')),
+        height: 150,
+        width: 250,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            Padding(
+              padding: const EdgeInsets.only(top: 5.0),
+              child: Text('YA EXISTE UNA IMAGEN PARA PUBLICAR\n'
+                  '¿DESEA REEMPLAZARLA POR ESTA?',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(fontSize: 13)),
+            ),
+            Padding(
+              padding: const EdgeInsets.only(bottom: 5.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  Expanded(flex: 3, child: SizedBox()),
+                  Expanded(
+                    flex: 4,
+                    child: GestureDetector(
+                      child: Icon(
+                        Icons.check_circle,
+                        color: HexColor('#3EDB9B'),
+                        size: 35,
+                      ),
+                      onTap: () {
+                        //Link para publicar en RRSS
+                        DatosEstaticos.idImagenPUblicarRRSS = pLinkFinal;
+                        Navigator.pop(context);
+                      },
+                    ),
+                  ),
+                  Expanded(
+                    flex: 4,
+                    child: GestureDetector(
+                      child: Icon(
+                        Icons.cancel,
+                        color: HexColor('#FC4C8B'),
+                        size: 35,
+                      ),
+                      onTap: () {
+                        Navigator.pop(context);
+                      },
+                    ),
+                  ),
+                  Expanded(flex: 3, child: SizedBox()),
+                ],
+              ),
+            ),
+          ],
+        ));
+    await PopUps.PopUpConWidgetAsync(context, contenidoPopUp);
   }
 
 }
@@ -975,4 +1056,5 @@ class CambiosSeleccion {
 
     PopUps.PopUpConWidget(context, contenidoPopUp);
   }
+
 }

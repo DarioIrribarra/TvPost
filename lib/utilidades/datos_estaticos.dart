@@ -37,6 +37,7 @@ class DatosEstaticos {
   static double ancho_pantalla_seleccionada = 0;
   static double alto_pantalla_seleccionada = 0;
   static bool PublicarEnRedesSociales = false;
+  static String idImagenPUblicarRRSS = "";
 }
 
 class SeleccionaVideo{

@@ -109,14 +109,31 @@ class PopUps {
     );
   }
 
-  //Crear un popup con cualquier widget de contenido
-  static PopUpConWidget(BuildContext context, Widget contenidoPopUp) {
+  ///Crear un popup con cualquier widget de contenido
+  static PopUpConWidget(BuildContext context, Widget contenidoPopUp){
     AlertDialog alert = AlertDialog(
       contentPadding: EdgeInsets.only(bottom: 20, top: 20, left: 5, right: 5),
       backgroundColor: Colors.grey.withOpacity(0.0),
       content: contenidoPopUp,
     );
     showDialog(
+      barrierDismissible: true,
+      context: context,
+      builder: (BuildContext context) {
+        return alert;
+      },
+    );
+  }
+
+  ///Crear un popup con cualquier widget de contenido ASINCRONO PARA ESPERA DE
+  ///RESPUESTA
+  static PopUpConWidgetAsync(BuildContext context, Widget contenidoPopUp)async{
+    AlertDialog alert = AlertDialog(
+      contentPadding: EdgeInsets.only(bottom: 20, top: 20, left: 5, right: 5),
+      backgroundColor: Colors.grey.withOpacity(0.0),
+      content: contenidoPopUp,
+    );
+    await showDialog(
       barrierDismissible: true,
       context: context,
       builder: (BuildContext context) {
@@ -1275,6 +1292,7 @@ class _OpcionesSeleccionMediaState extends State<OpcionesSeleccionMedia> {
     return _webview;
   }
 
+  /*
   _abrirBuscador() async {
     const url = 'https://www.google.cl';
     if (await canLaunch(url)) {
@@ -1283,6 +1301,8 @@ class _OpcionesSeleccionMediaState extends State<OpcionesSeleccionMedia> {
       throw 'No se puede abrir el enlace: $url';
     }
   }
+
+   */
 
   navegarYEsperarRespuesta(String rutaVentana) async {
     //String rutaProvenienteAEsperar = ModalRoute.of(context).settings.name;
@@ -1428,8 +1448,10 @@ class BotonEnviarAEquipo extends StatelessWidget {
                                   ),
                                   onPressed: () async {
                                     //Acá se publica
-                                    if (this.publicar_rrss) {
+                                    if (DatosEstaticos.idImagenPUblicarRRSS != "") {
                                       String resultado = await PublicarEnRedesSociales();
+                                      VolverADetalleEquipo(context);
+                                      DatosEstaticos.idImagenPUblicarRRSS = "";
                                       if (resultado != 'Success') {
                                         Widget contenidoPopUp = Container(
                                             decoration: BoxDecoration(
@@ -1473,11 +1495,6 @@ class BotonEnviarAEquipo extends StatelessWidget {
                                               ],
                                             ));
                                         PopUps.PopUpConWidget(context, contenidoPopUp);
-                                      } else {
-                                        //El valor se cambia luego de publicar y proyectar
-                                        //en pantallas
-                                        DatosEstaticos.PublicarEnRedesSociales = false;
-                                        VolverADetalleEquipo(context);
                                       }
                                     } else {
                                       VolverADetalleEquipo(context);
@@ -1546,8 +1563,13 @@ class BotonEnviarAEquipo extends StatelessWidget {
    */
 
   Future<String> PublicarEnRedesSociales() async {
-    String nombreNuevaImagen;
-    String resultado = "";
+    //String nombreNuevaImagen;
+    String resultado  = "";
+
+    resultado = await FlutterSocialContentShare.share(
+        type: ShareType.instagramWithImageUrl,
+        imageUrl:DatosEstaticos.idImagenPUblicarRRSS);
+    /*
     switch (this.publicar_porcion) {
       case 1:
         RegExp expresion = new RegExp('ImagenesPostTv\/(.+)');
@@ -1576,6 +1598,8 @@ class BotonEnviarAEquipo extends StatelessWidget {
                 "http://${DatosEstaticos.ipSeleccionada}/ImagenesPostTv/$nombreNuevaImagen");
         break;
     }
+
+     */
     return resultado;
   }
 

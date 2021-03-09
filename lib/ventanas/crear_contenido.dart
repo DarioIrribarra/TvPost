@@ -49,7 +49,7 @@ class _CrearContenidoState extends State<CrearContenido> {
   void initState() {
     super.initState();
     //Acá se hace el llamado al listado de nombres de imágenes
-    ComunicacionRaspberry.getNombresImagenes();
+    //ComunicacionRaspberry.getNombresImagenes();
     _requestPermission();
     controladorOferta = TextEditingController();
     nodoTexto = FocusNode();
@@ -1563,8 +1563,11 @@ class _CrearContenidoState extends State<CrearContenido> {
     ///Comienzo de uso de firebase
     List<String> resultadoFirebase = await CloudStorage.SubirImagenFirebase(listadoArchivos);
 
-    if (DatosEstaticos.ipSeleccionada!=null)
+    if (DatosEstaticos.ipSeleccionada!=null){
       await ComunicacionRaspberry.EnviarImagenPorHTTP(resultadoFirebase[0], imagenSeleccionadaGaleria);
+      await ComunicacionRaspberry.ReplicarImagen(resultadoFirebase[0]);
+    }
+
 
     listadoResultado.add(imagenSeleccionadaGaleria);
     listadoResultado.add(resultadoFirebase[0]);
