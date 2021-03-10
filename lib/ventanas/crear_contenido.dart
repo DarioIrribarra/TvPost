@@ -85,16 +85,16 @@ class _CrearContenidoState extends State<CrearContenido> {
       divisionLayout = datosDesdeVentanaAnterior['division_layout'];
       if (divisionLayout.contains('-1')) {
         anchoCanvas = MediaQuery.of(context).size.width;
-        altoCanvas = MediaQuery.of(context).size.height / 2;
+        altoCanvas = MediaQuery.of(context).size.height / 2.6;
       }
       if (divisionLayout.contains('2-')) {
         anchoCanvas = MediaQuery.of(context).size.width / 1.8;
-        altoCanvas = MediaQuery.of(context).size.height / 2;
+        altoCanvas = MediaQuery.of(context).size.height / 2.6;
         //anchoCanvas = altoCanvas;
       }
       if (divisionLayout.contains('3-2')) {
         anchoCanvas = MediaQuery.of(context).size.width / 3;
-        altoCanvas = MediaQuery.of(context).size.height / 2;
+        altoCanvas = MediaQuery.of(context).size.height / 2.6;
       }
       if (divisionLayout.contains('-3')) {
         anchoCanvas = MediaQuery.of(context).size.width;
@@ -121,42 +121,45 @@ class _CrearContenidoState extends State<CrearContenido> {
               child: Center(
                 child: WidgetToImage(builder: (key) {
                   this.key1 = key;
-                  return Container(
-                    height: altoCanvas,
-                    width: anchoCanvas,
-                    color: colorFondo,
-                    child: GestureDetector(
-                      onScaleStart: (details) {
-                        if (_activeItem == null) return;
+                  return Padding(
+                    child: Container(
+                      height: altoCanvas,
+                      width: anchoCanvas,
+                      color: colorFondo,
+                      child: GestureDetector(
+                        onScaleStart: (details) {
+                          if (_activeItem == null) return;
 
-                        _initPos = details.focalPoint;
-                        _currentPos = _activeItem.position;
-                        _currentScale = _activeItem.scale;
-                        _currentRotation = _activeItem.rotation;
-                      },
-                      onScaleUpdate: (details) {
-                        if (_activeItem == null) return;
-                        final delta = details.focalPoint - _initPos;
-                        final left = (delta.dx / screen.width) + _currentPos.dx;
-                        final top = (delta.dy / screen.height) + _currentPos.dy;
+                          _initPos = details.focalPoint;
+                          _currentPos = _activeItem.position;
+                          _currentScale = _activeItem.scale;
+                          _currentRotation = _activeItem.rotation;
+                        },
+                        onScaleUpdate: (details) {
+                          if (_activeItem == null) return;
+                          final delta = details.focalPoint - _initPos;
+                          final left = (delta.dx / screen.width) + _currentPos.dx;
+                          final top = (delta.dy / screen.height) + _currentPos.dy;
 
-                        setState(() {
-                          _activeItem.position = Offset(left, top);
-                          _activeItem.rotation =
-                              details.rotation + _currentRotation;
-                          _activeItem.scale = details.scale * _currentScale;
-                        });
-                      },
-                      child: Stack(
-                        children: [
-                          Container(
-                            color: Colors.black12,
-                          ),
-                          imagenDeFondo(),
-                          ...mockData.map(_buildItemWidget).toList(),
-                        ],
+                          setState(() {
+                            _activeItem.position = Offset(left, top);
+                            _activeItem.rotation =
+                                details.rotation + _currentRotation;
+                            _activeItem.scale = details.scale * _currentScale;
+                          });
+                        },
+                        child: Stack(
+                          children: [
+                            Container(
+                              color: Colors.black12,
+                            ),
+                            imagenDeFondo(),
+                            ...mockData.map(_buildItemWidget).toList(),
+                          ],
+                        ),
                       ),
                     ),
+                    padding: _PaddingPorcion3(),
                   );
                 }),
               ),
@@ -187,9 +190,79 @@ class _CrearContenidoState extends State<CrearContenido> {
                         )
                       ],
                     ),
-                    SizedBox(
-                      height: 50,
+                    //SizedBox(height: 20,),
+                    Container(
+                      width: MediaQuery.of(context).size.width,
+                      //height:MediaQuery.of(context).size.height / 4,
+                      //color: Colors.pink,
+                      child: Row(
+                        //crossAxisAlignment: CrossAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Column(
+                            children: [
+                              SizedBox(height: MediaQuery.of(context).size.height/30),
+                              Container(
+                                //margin: EdgeInsets.symmetric(horizontal: 90),
+                                width: 200.0,
+                                height: 40.0,
+                                decoration: new BoxDecoration(
+                                    borderRadius: BorderRadius.circular(20),
+                                    gradient: LinearGradient(
+                                        colors: [
+                                          HexColor("#0683ff"),
+                                          HexColor("#3edb9b")
+                                        ],
+                                        stops: [
+                                          0.1,
+                                          0.6
+                                        ],
+                                        begin: Alignment.topLeft,
+                                        end: FractionalOffset.bottomRight)),
+                                child: FlatButton(
+                                  color: Colors.transparent,
+                                  shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(20),
+                                      side:
+                                      BorderSide(color: Color.fromARGB(30, 0, 0, 0))),
+                                  child: Text(
+                                    'CARGAR',
+                                    style: TextStyle(color: Colors.white),
+                                  ),
+                                  onPressed: () async {
+                                    //FUNCIÓN QUE PROCESA EL GUARDADO
+                                    List<dynamic> resultado = await _ProcesarImagen();
+
+                                    if (resultado != null) {
+                                      //Si el envío es correcto, se redirecciona
+                                      Image imagen = Image.network(
+                                        "http://${DatosEstaticos.ipSeleccionada}/ImagenesPostTv/${resultado[1]}",
+                                        fit: BoxFit.cover,
+                                      );
+
+                                      RedireccionarCrearLayout(
+                                          imagen,
+                                          "/var/www/html/ImagenesPostTv/${resultado[1]}",
+                                          true);
+                                    } else {
+                                      //Cierra popup cargando
+                                      Navigator.of(context, rootNavigator: true).pop();
+
+                                      PopUps.PopUpConWidget(context,
+                                          Text('Error al enviar imagen'.toUpperCase()));
+                                    }
+                                  },
+                                ),
+                              ),
+                              SizedBox(height: 15),
+                              //BTN ESPECÍFICO PARA RRSS EN PORCIONES
+                              btnCompartirRRSS(),
+                            ],
+                          ),
+                        ],
+                      ),
                     ),
+                    /*
                     Container(
                       //margin: EdgeInsets.symmetric(horizontal: 90),
                       width: 200.0,
@@ -224,15 +297,12 @@ class _CrearContenidoState extends State<CrearContenido> {
                           //Cierra popup cargando
                           Navigator.of(context, rootNavigator: true).pop();
 
-                          /*setState(() {
-                              this.bytes1 = bytes1;
-                            });*/
-                          //Acá tiene que aparecer el popup para guardar imagen con nombre,
-                          //al igual que en el seleccionar imagen
                           await _finalizarGuardado(bytes1);
                         },
                       ),
                     ),
+
+                     */
                   ],
                 ),
               ),
@@ -757,6 +827,200 @@ class _CrearContenidoState extends State<CrearContenido> {
     );
   }
 
+  ///RETORNA EL ESPACIO TOP PARA HACER QUE EL CREAR EN PORCIÓN 3 QUEDE EN LA
+  ///MITAD DEL DISPOSITIVO
+  EdgeInsets _PaddingPorcion3(){
+    if (DatosEstaticos.divisionLayout == "3-3"){
+      return EdgeInsets.only(top: MediaQuery.of(context).size.height/8);
+    }
+    return EdgeInsets.zero;
+  }
+
+  ///REALIZA EL PROCESO DE GUARDADO DE IMAGEN
+  Future<List<dynamic>> _ProcesarImagen() async {
+    PopUps.popUpCargando(
+        context, 'Guardando Imagen'.toUpperCase());
+    final bytes1 = await Utils.capture(key1);
+    //Cierra popup cargando
+    Navigator.of(context, rootNavigator: true).pop();
+
+    List<dynamic> resultado = await _finalizarGuardado(bytes1);
+
+    return resultado;
+  }
+
+  ///MUESTRA POPUP PARA CONFIRMAR REEMPLAZO DE LINK A PUBLICAR SI ES QUE YA
+  ///EXISTE ALGUNO SELECCIONADO
+  Future<String> Publicar() async {
+    List<dynamic> resultado = new List<dynamic>();
+
+    if (DatosEstaticos.idImagenPUblicarRRSS != ""){
+      bool reemplazo = await _popUpReemplazoLinkRRSS();
+      if (reemplazo){
+        resultado = await _ProcesarImagen();
+      } else {
+        return null;
+      }
+    }
+    else{
+      resultado = await _ProcesarImagen();
+    }
+
+    //SE AÑADE EL ID DE LA IMAGEN A COMPARTIR
+    DatosEstaticos.idImagenPUblicarRRSS = "http://${DatosEstaticos.ipSeleccionada}/ImagenesPostTv/${resultado[1]}";
+
+    return resultado[1];
+  }
+
+  ///Popup que pregunta si desea reemplazar publicación o no
+   Future<bool> _popUpReemplazoLinkRRSS() async{
+    bool valorARetornar;
+    Widget contenidoPopUp = Container(
+        decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(40),
+            color: HexColor('#f4f4f4')),
+        height: 150,
+        width: 250,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            Padding(
+              padding: const EdgeInsets.only(top: 5.0),
+              child: Text('YA EXISTE UNA IMAGEN PARA PUBLICAR\n'
+                  '¿DESEA REEMPLAZARLA POR ESTA?',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(fontSize: 13)),
+            ),
+            Padding(
+              padding: const EdgeInsets.only(bottom: 5.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  Expanded(flex: 3, child: SizedBox()),
+                  Expanded(
+                    flex: 4,
+                    child: GestureDetector(
+                      child: Icon(
+                        Icons.check_circle,
+                        color: HexColor('#3EDB9B'),
+                        size: 35,
+                      ),
+                      onTap: (){
+                        //Link para publicar en RRSS
+                        valorARetornar = true;
+                        Navigator.of(context).pop(true);
+                      },
+                    ),
+                  ),
+                  Expanded(
+                    flex: 4,
+                    child: GestureDetector(
+                      child: Icon(
+                        Icons.cancel,
+                        color: HexColor('#FC4C8B'),
+                        size: 35,
+                      ),
+                      onTap: () {
+                        valorARetornar = false;
+                        Navigator.of(context).pop(false);
+                      },
+                    ),
+                  ),
+                  Expanded(flex: 3, child: SizedBox()),
+                ],
+              ),
+            ),
+          ],
+        ));
+    var valor = await PopUps.PopUpConWidgetAsync(context, contenidoPopUp);
+    valor = valorARetornar;
+    return valor;
+  }
+
+  ///WIDGET QUE CONTROLA EL BOTÓN COMPARTIR RRSS
+  Widget btnCompartirRRSS(){
+    Widget btn = Container();
+
+    String _porcion = DatosEstaticos.divisionLayout;
+    if (_porcion == "3-2" || _porcion == "3-3"){
+      btn = Container(
+        child: Text(
+          "PUBLICACIÓN REDES SOCIALES\n NO HABILITADA EN ESTA PORCIÓN",
+          textAlign: TextAlign.center,
+        ),
+      );
+    } else {
+      btn = Container(
+        height: 40,
+        width: 200,
+        decoration: new BoxDecoration(
+            borderRadius:
+            BorderRadius.circular(20),
+            gradient: LinearGradient(
+                colors: [
+                  HexColor("#3edb9b"),
+                  HexColor("#0683ff")
+                ],
+                stops: [
+                  0.5,
+                  1
+                ],
+                begin: Alignment.topLeft,
+                end: FractionalOffset
+                    .bottomRight)),
+        child: FlatButton(
+          color: Colors.transparent,
+          onPressed: () async {
+
+            //SI HAY UN LINK YA LISTO PARA PUBLICAR
+            //PREGUNTAR SI DESEA REEMPLAZARLO
+            String pNombre = await Publicar();
+
+            if (pNombre != null){
+              //Se Descarga video inmediatamente al cargar
+              List<String> _verificarImagen = new List<String>();
+              _verificarImagen.add("/var/www/html/ImagenesPostTv/$pNombre");
+              PopUps.popUpCargando(context, "DESCARGANDO ARCHIVOS");
+
+              await ComunicacionRaspberry.CompruebaArchivosRaspberry(
+                  pLinksAEnviar: _verificarImagen
+              );
+
+              Navigator.of(context).pop();
+
+              String img = "http://${DatosEstaticos.ipSeleccionada}/ImagenesPostTv/"
+                  "$pNombre";
+
+              Widget imagen = Image.network(img);
+
+              RedireccionarCrearLayout(
+                  imagen,
+                  "/ImagenesPostTv/$pNombre",
+                  true);
+            }
+          },
+          child: Padding(
+            padding:
+            const EdgeInsets.all(6.0),
+            child: Column(children: [
+              Text(
+                'CARGAR +',
+                style: TextStyle(
+                    color: Colors.white),
+              ),
+              Text(
+                ' COMPARTIR RRSS',
+                style: TextStyle(
+                    color: Colors.white),
+              ),
+            ]),
+          ),
+        ),
+      );
+    }
+    return btn;
+  }
+
   Widget botonPNG() {
     return SizedBox(
       width: 50,
@@ -1265,7 +1529,7 @@ class _CrearContenidoState extends State<CrearContenido> {
     Fluttertoast.showToast(msg: info, toastLength: Toast.LENGTH_LONG);
   }*/
 
-  Future _finalizarGuardado(Uint8List imagenEnBytes) async {
+  Future<List<dynamic>> _finalizarGuardado(Uint8List imagenEnBytes) async {
     //GlobalKey<FormState> _keyValidadorTxtImagen = GlobalKey<FormState>();
     PopUps.popUpCargando(context, 'Cambiando tamaño'.toUpperCase());
 
@@ -1284,201 +1548,10 @@ class _CrearContenidoState extends State<CrearContenido> {
     //Se sube listado de imágenes a FireBase
     List<dynamic> resultado = await SubidaImagenes(temporal);
 
-    if (resultado != null) {
-      //Si el envío es correcto, se redirecciona
-      Image imagen = Image.network(
-        "http://${DatosEstaticos.ipSeleccionada}/ImagenesPostTv/${resultado[1]}",
-        fit: BoxFit.cover,
-      );
-      /*
-      //Replico imagen para tamaño en 10% con reloj
-      await ComunicacionRaspberry.ReplicarImagen(
-          nombreNuevaImagen);
+    //Cierra popup añadiendo
+    Navigator.of(context, rootNavigator: true).pop();
 
-       */
-
-      RedireccionarCrearLayout(
-          imagen,
-          "/var/www/html/ImagenesPostTv/${resultado[1]}",
-          true);
-    } else {
-      //Cierra popup cargando
-      Navigator.of(context, rootNavigator: true).pop();
-
-      PopUps.PopUpConWidget(context,
-          Text('Error al enviar imagen'.toUpperCase()));
-    }
-
-    /*
-    await showDialog<String>(
-      context: context,
-      child: AnimacionPadding(
-        child: new AlertDialog(
-          content: SingleChildScrollView(
-            child: Form(
-              key: _keyValidadorTxtImagen,
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Container(
-                    width: MediaQuery.of(context).size.width - 10,
-                    height: MediaQuery.of(context).size.height / 4,
-                    child: Image.memory(
-                      imagenEnBytes,
-                    ),
-                  ),
-                  Center(
-                    child: TextFormField(
-                      textAlign: TextAlign.center,
-                      validator: (textoEscrito) {
-                        if (textoEscrito.isEmpty) {
-                          return "Error: Nombre de imagen vacío";
-                        }
-                        if (textoEscrito.trim().length <= 0) {
-                          return "Error: Nombre de imagen vacío";
-                        } else {
-                          nombreNuevaImagen =
-                              textoEscrito.trim().toString() + '.png';
-                          //Chequear si el valor ya existe
-                          if (DatosEstaticos.listadoNombresImagenes
-                              .contains(nombreNuevaImagen)) {
-                            return "Error: Nombre de imagen ya existe";
-                          } else {
-                            return null;
-                          }
-                        }
-                      },
-                    ),
-                  ),
-                  RaisedButton(
-                    child: Text('Añadir'),
-                    autofocus: true,
-                    onPressed: () async {
-                      if (_keyValidadorTxtImagen.currentState.validate()) {
-                        //Se abre el popup de cargando
-                        Navigator.of(context).pop();
-
-                        PopUps.popUpCargando(
-                            context, 'Añadiendo imagen'.toUpperCase());
-
-                        //Se crea el archivo final del tamaño modificado
-                        File temporal =
-                            await Utils.crearArchivoTemporalRedimensionado(
-                                imagenEnBytes);
-
-                        //Obtengo el resultado del envio
-                        var resultado = await ComunicacionRaspberry.EnviarImagenPorHTTP(
-                                nombreNuevaImagen, temporal)
-                            .then((value) => value);
-
-                        if (resultado) {
-                          //Si el envío es correcto, se redirecciona
-                          Image imagen = Image.network(
-                            "http://${DatosEstaticos.ipSeleccionada}/ImagenesPostTv/$nombreNuevaImagen",
-                            fit: BoxFit.cover,
-                          );
-                          //Replico imagen para tamaño en 10% con reloj
-                          await ComunicacionRaspberry.ReplicarImagen(
-                              nombreNuevaImagen);
-
-                          RedireccionarCrearLayout(
-                              imagen,
-                              "/var/www/html/ImagenesPostTv/$nombreNuevaImagen",
-                              true);
-                        } else {
-                          //Cierra popup cargando
-                          Navigator.of(context, rootNavigator: true).pop();
-
-                          PopUps.PopUpConWidget(context,
-                              Text('Error al enviar imagen'.toUpperCase()));
-                        }
-                      }
-                    },
-                  ),
-                ],
-              ),
-            ),
-          ),
-        ),
-      ),
-    );
-
-     */
-
-    /*Widget widget =
-    SingleChildScrollView(
-      child: Card(
-        child: Form(
-          key: _keyValidadorTxtImagen,
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Container(
-                child: Image.memory(
-                  imagenEnBytes,
-                  width: MediaQuery.of(context).size.width-10,
-                  height:MediaQuery.of(context).size.height/3,
-                ),
-              ),
-              Center(
-                child: TextFormField(
-                  textAlign: TextAlign.center,
-                  validator: (textoEscrito){
-                    if(textoEscrito.isEmpty){
-                      return "Error: Nombre de imagen vacío";
-                    }
-                    if(textoEscrito.trim().length<= 0){
-                      return "Error: Nombre de imagen vacío";
-                    }
-                    else {
-                      nombreNuevaImagen = textoEscrito.trim()
-                          .toString() + '.png';
-                      //Chequear si el valor ya existe
-                      if (DatosEstaticos.listadoNombresImagenes.contains(
-                          nombreNuevaImagen)){
-                        return "Error: Nombre de imagen ya existe";
-                      } else {
-                        return null;
-                      }
-                    }
-                  },
-                ),
-              ),
-              RaisedButton(
-                child: Text('Añadir'),
-                autofocus: true,
-                onPressed: () async {
-                  if(_keyValidadorTxtImagen.currentState.validate()){
-                    //Se abre el popup de cargando
-                    PopUps.popUpCargando(context, 'Añadiendo imagen...');
-
-                    //Se crea el archivo final del tamaño modificado
-                    File temporal = await Utils.crearArchivoTemporalRedimensionado(imagenEnBytes);
-
-                    //Obtengo el resultado del envio
-                    var resultado = await PopUps.enviarImagen(nombreNuevaImagen,
-                        temporal).then((value) => value);
-
-                    if(resultado){
-                      //Si el envío es correcto, se redirecciona
-                      Image imagen = Image.network("http://${DatosEstaticos.ipSeleccionada}/ImagenesPostTv/$nombreNuevaImagen");
-                      RedireccionarCrearLayout(imagen, "/var/www/html/ImagenesPostTv/$nombreNuevaImagen",true);
-                    }else{
-                      //Cierra popup cargando
-                      Navigator.of(context, rootNavigator: true).pop();
-
-                      PopUps.PopUpConWidget(context, Text('Error al enviar imagen'));
-                    }
-
-                  }
-                },
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-    PopUps.PopUpConWidget(context, widget);*/
+    return resultado;
   }
 
   // ignore: non_constant_identifier_names
@@ -1486,7 +1559,7 @@ class _CrearContenidoState extends State<CrearContenido> {
       Widget imagen, String nombre, bool vieneDePopUp) async {
     if (vieneDePopUp) {
       //Cierra popup cargando
-      Navigator.of(context, rootNavigator: true).pop();
+      //Navigator.of(context, rootNavigator: true).pop();
       //Cierra popup imagen
       Navigator.of(context, rootNavigator: true).pop();
     }

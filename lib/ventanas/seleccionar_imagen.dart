@@ -250,70 +250,8 @@ class _SeleccionarImagenState extends State<SeleccionarImagen> {
                                 ),
                               ),
                               SizedBox(height: 15),
-                              Container(
-                                height: 40,
-                                width: 200,
-                                decoration: new BoxDecoration(
-                                    borderRadius:
-                                    BorderRadius.circular(20),
-                                    gradient: LinearGradient(
-                                        colors: [
-                                          HexColor("#3edb9b"),
-                                          HexColor("#0683ff")
-                                        ],
-                                        stops: [
-                                          0.5,
-                                          1
-                                        ],
-                                        begin: Alignment.topLeft,
-                                        end: FractionalOffset
-                                            .bottomRight)),
-                                child: FlatButton(
-                                  color: Colors.transparent,
-                                  onPressed: () async {
-
-                                    //Valor que activa la publicación en redes sociales
-                                    //Este valor se desactiva luego de proyectar en tv
-                                    //DatosEstaticos.PublicarEnRedesSociales =true;
-
-                                    String nombre = snapshot.data.docs[index]['id'].toString();
-
-                                    //SI HAY UN LINK YA LISTO PARA PUBLICAR
-                                    //PREGUNTAR SI DESEA REEMPLAZARLO
-                                    await Publicar(nombre);
-
-                                    //Se Descarga video inmediatamente al cargar
-                                    List<String> _verificarImagen = new List<String>();
-                                    _verificarImagen.add("/var/www/html/ImagenesPostTv/$nombre");
-                                    PopUps.popUpCargando(context, "DESCARGANDO ARCHIVOS");
-                                    await ComunicacionRaspberry.CompruebaArchivosRaspberry(pLinksAEnviar: _verificarImagen);
-                                    Navigator.of(context).pop();
-
-                                    String img = "http://${DatosEstaticos.ipSeleccionada}/ImagenesPostTv/$nombre";
-                                    Widget imagen = Image.network(img);
-                                    RedireccionarCrearLayout(
-                                        imagen,
-                                        "/ImagenesPostTv/$nombre",
-                                        false);
-                                  },
-                                  child: Padding(
-                                    padding:
-                                    const EdgeInsets.all(6.0),
-                                    child: Column(children: [
-                                      Text(
-                                        'CARGAR +',
-                                        style: TextStyle(
-                                            color: Colors.white),
-                                      ),
-                                      Text(
-                                        ' COMPARTIR RRSS',
-                                        style: TextStyle(
-                                            color: Colors.white),
-                                      ),
-                                    ]),
-                                  ),
-                                ),
-                              ),
+                              //BTN ESPECÍFICO PARA RRSS EN PORCIONES
+                              btnCompartirRRSS(snapshot.data.docs[index]['id'].toString()),
                             ],
                           ),
                         ],
@@ -702,6 +640,87 @@ class _SeleccionarImagenState extends State<SeleccionarImagen> {
           ],
         ));
     await PopUps.PopUpConWidgetAsync(context, contenidoPopUp);
+  }
+
+  Widget btnCompartirRRSS(String pNombre){
+    Widget btn = Container();
+
+    String _porcion = DatosEstaticos.divisionLayout;
+    if (_porcion == "3-2" || _porcion == "3-3"){
+      btn = Container(
+        child: Text(
+          "PUBLICACIÓN REDES SOCIALES\n NO HABILITADA EN ESTA PORCIÓN",
+          textAlign: TextAlign.center,
+        ),
+      );
+    } else {
+      btn = Container(
+        height: 40,
+        width: 200,
+        decoration: new BoxDecoration(
+            borderRadius:
+            BorderRadius.circular(20),
+            gradient: LinearGradient(
+                colors: [
+                  HexColor("#3edb9b"),
+                  HexColor("#0683ff")
+                ],
+                stops: [
+                  0.5,
+                  1
+                ],
+                begin: Alignment.topLeft,
+                end: FractionalOffset
+                    .bottomRight)),
+        child: FlatButton(
+          color: Colors.transparent,
+          onPressed: () async {
+
+            //SI HAY UN LINK YA LISTO PARA PUBLICAR
+            //PREGUNTAR SI DESEA REEMPLAZARLO
+            await Publicar(pNombre);
+
+            //Se Descarga video inmediatamente al cargar
+            List<String> _verificarImagen = new List<String>();
+            _verificarImagen.add("/var/www/html/ImagenesPostTv/$pNombre");
+            PopUps.popUpCargando(context, "DESCARGANDO ARCHIVOS");
+
+            await ComunicacionRaspberry.CompruebaArchivosRaspberry(
+                pLinksAEnviar: _verificarImagen
+            );
+
+            Navigator.of(context).pop();
+
+            String img = "http://${DatosEstaticos.ipSeleccionada}/ImagenesPostTv/"
+                "$pNombre";
+
+            Widget imagen = Image.network(img);
+
+            RedireccionarCrearLayout(
+                imagen,
+                "/ImagenesPostTv/$pNombre",
+                false);
+          },
+          child: Padding(
+            padding:
+            const EdgeInsets.all(6.0),
+            child: Column(children: [
+              Text(
+                'CARGAR +',
+                style: TextStyle(
+                    color: Colors.white),
+              ),
+              Text(
+                ' COMPARTIR RRSS',
+                style: TextStyle(
+                    color: Colors.white),
+              ),
+            ]),
+          ),
+        ),
+      );
+    }
+    return btn;
   }
 
 }
