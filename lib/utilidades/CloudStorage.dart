@@ -1,6 +1,8 @@
 import 'dart:io';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:tvpost_flutter/utilidades/CloudAuthentication.dart';
 import 'package:uuid/uuid.dart';
 import 'datos_estaticos.dart';
 import 'package:video_thumbnail/video_thumbnail.dart';
@@ -13,6 +15,10 @@ class CloudStorage{
   /// {0} = ID IMAGEN
   /// {1} = URL IMAGEN
   static Future<List<String>> SubirImagenFirebase(List<File> listadoVideos) async {
+
+    //SI NO ESTÁ LOGEADO, SE IDENTIFICA EL USUARIO
+    if (FirebaseAuth.instance.currentUser == null)
+      await AutenticacionFirebase.entrar();
 
     List<String> listadoRespuesta = new List<String>();
     String _urlFile = "";
@@ -62,6 +68,10 @@ class CloudStorage{
   ///EL CONJUNTO DE IDs
   static Future<bool> EliminarImagenFirebase(List<String> archivosAEliminar) async {
 
+    //SI NO ESTÁ LOGEADO, SE IDENTIFICA EL USUARIO
+    if (FirebaseAuth.instance.currentUser == null)
+      await AutenticacionFirebase.entrar();
+
     String id = "";
     //Se instancia la colección en la base de datos
     CollectionReference fileReferenceInDB = FirebaseFirestore.instance.collection('empresas').doc(DatosEstaticos.rutEmpresa).collection('imagenes');
@@ -105,6 +115,10 @@ class CloudStorage{
   /// [2] = idThumbnail
   /// [3] = urlThumbnail
   static Future<List<String>> SubirVideosFirebase(List<File> listadoVideos) async {
+
+    //SI NO ESTÁ LOGEADO, SE IDENTIFICA EL USUARIO
+    if (FirebaseAuth.instance.currentUser == null)
+      await AutenticacionFirebase.entrar();
 
     String _urlFileVideo = "";
     String _urlFileThumbnail = "";
@@ -184,6 +198,10 @@ class CloudStorage{
   ///EL CONJUNTO DE IDs
   static Future<bool> EliminarVideoFirebase(List<String> archivosAEliminar) async {
 
+    //SI NO ESTÁ LOGEADO, SE IDENTIFICA EL USUARIO
+    if (FirebaseAuth.instance.currentUser == null)
+      await AutenticacionFirebase.entrar();
+
     String id = "";
     //Se instancia la colección en la base de datos
     CollectionReference fileReferenceInDB = FirebaseFirestore.instance.collection('empresas').doc(DatosEstaticos.rutEmpresa).collection('videos');
@@ -221,6 +239,10 @@ class CloudStorage{
   }
 
   static Future<List<String>> GetUrlVideYThumbnail(String idVideo) async{
+
+    //SI NO ESTÁ LOGEADO, SE IDENTIFICA EL USUARIO
+    if (FirebaseAuth.instance.currentUser == null)
+      await AutenticacionFirebase.entrar();
 
     var listadoUrl = new List<String>();
 

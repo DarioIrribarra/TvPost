@@ -1,8 +1,10 @@
 import 'dart:io';
 import 'dart:ui';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:tvpost_flutter/utilidades/CloudAuthentication.dart';
 import 'package:tvpost_flutter/utilidades/obtiene_datos_webservice.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tvpost_flutter/utilidades/shared_preferences.dart';
@@ -19,6 +21,7 @@ class _LoginState extends State<Login> {
   String rutEmpresa = "";
   String nombreUsuario = "";
   String password = "";
+  String uidFirebase = "";
   String validaRutEmpresa = "";
   String validaNombreUsuario = "";
   String validaPasword = "";
@@ -34,6 +37,7 @@ class _LoginState extends State<Login> {
     rutEmpresa = shared_preferences_tvPost.rutEmpresa;
     nombreUsuario = shared_preferences_tvPost.nombreUsuario;
     password = shared_preferences_tvPost.password;
+    //uidFirebase = shared_preferences_tvPost.uidFirebase;
     super.initState();
   }
 
@@ -318,7 +322,12 @@ class _LoginState extends State<Login> {
                                 if (visibleErrorUsuario == false &&
                                     visibleErrorPassword == false &&
                                     visibleErrorRutEmpresa == false) {
-                                  GuardarSharedPreferences();
+                                  await GuardarSharedPreferences();
+
+                                  //SI NO ESTÁ LOGEADO, SE IDENTIFICA EL USUARIO
+                                  if (FirebaseAuth.instance.currentUser == null)
+                                    await AutenticacionFirebase.entrar();
+
                                   Navigator.pop(context);
                                   //Al guardar to do se va a la otra ventana
                                   Navigator.popAndPushNamed(
@@ -356,6 +365,26 @@ class _LoginState extends State<Login> {
     sharedPreferences.setString('rutEmpresa', rutEmpresa.trim());
     sharedPreferences.setString('nombreUsuario', nombreUsuario.trim());
     sharedPreferences.setString('password', password.trim());
+
+
+    /*
+    //OBTIENE EL UID DE FIREBASE
+    if (uidFirebase == null){
+      uidFirebase = await AutenticacionFirebase.entrar(
+          email: "producnova@gmail.com",
+          password: ".-Prod123.-"
+      );
+      //SI NO EXISTE USUARIO, LO CREA
+      if (uidFirebase == null){
+        uidFirebase = await AutenticacionFirebase.registrar(
+            email: "producnova@gmail.com",
+            password: ".-Prod123.-"
+        );
+      }
+    }
+    sharedPreferences.setString('uidFirebase', uidFirebase.trim());
+
+     */
   }
 }
 
