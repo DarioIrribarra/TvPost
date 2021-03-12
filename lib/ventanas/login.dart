@@ -325,8 +325,14 @@ class _LoginState extends State<Login> {
                                   await GuardarSharedPreferences();
 
                                   //SI NO ESTÁ LOGEADO, SE IDENTIFICA EL USUARIO
-                                  if (FirebaseAuth.instance.currentUser == null)
+                                  //SI NO EXISTE, SE CREA
+                                  UserCredential usuario = await AutenticacionFirebase.entrar();
+                                  if (usuario == null){
+                                    await AutenticacionFirebase.registrar();
                                     await AutenticacionFirebase.entrar();
+                                  }
+
+
 
                                   Navigator.pop(context);
                                   //Al guardar to do se va a la otra ventana
