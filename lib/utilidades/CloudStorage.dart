@@ -238,6 +238,7 @@ class CloudStorage{
     }
   }
 
+  ///OBTIENE LA URL DE LA IMAGEN QUE REPRESENTA EL VIDEO EN CLOUD
   static Future<List<String>> GetUrlVideYThumbnail(String idVideo) async{
 
     //SI NO ESTÁ LOGEADO, SE IDENTIFICA EL USUARIO
@@ -267,5 +268,64 @@ class CloudStorage{
 
     return listadoUrl;
 
+  }
+
+  ///OBTIENE EL TAMAÑO TOTAL DE LOS ARCHIVOS POR EMPRESA EN EL BUCKET
+  ///Y DEVUELVE EL TAMAÑO REDONDEADO + 1 EN MEGABYTES
+  static Future<int> GetUsedSpace()async {
+    //Se instancia el storage
+    FirebaseStorage storage = FirebaseStorage.instance;
+
+    //Nombre de carpeta en bucket
+    String _carpetaDeEmpresa;
+
+    //Listados que manejan los nombres de carpetas por empresa
+    ListResult _Imagenes;
+    ListResult _Thumbnails;
+    ListResult _Videos;
+
+    //Valor que retorna tamaño sumado de mbs
+    double sizeTotal = 0;
+
+    try {
+      //Se obtiene el nombre de la carpeta de la empresa
+      _carpetaDeEmpresa = storage.ref(DatosEstaticos.rutEmpresa).name;
+
+      //SE OBTIENEN TODOS LOS LISTADOS CON SUS REFERENCIAS DE ARCHIVOS
+      _Imagenes = await storage.ref(_carpetaDeEmpresa).child("imagenes")
+          .listAll();
+      _Thumbnails = await storage.ref(_carpetaDeEmpresa).child("thumbnails")
+          .listAll();
+      _Videos = await storage.ref(_carpetaDeEmpresa).child("videos")
+          .listAll();
+
+      //SE AÑADEN TODOS LOS PESOS POR CARPETA DE ARCHIVOS
+      sizeTotal += await AddSpacePorCategoria(_Imagenes);
+      sizeTotal += await AddSpacePorCategoria(_Thumbnails);
+      sizeTotal += await AddSpacePorCategoria(_Videos);
+
+    } catch(e){
+      return null;
+    }
+
+    return sizeTotal.round();
+
+  }
+
+  ///SUMA LOS VALORES DE TAMAÑO DE ARCHIVOS PARA CADA ARCHIVO EN FIREBASE
+  ///Y DEVUELVE SU TAMAÑO EM MBS
+  static Future<double> AddSpacePorCategoria(ListResult pListadoFiles) async{
+    double sizeTotal = 0;
+    for (Reference element in pListadoFiles.items) {
+      FullMetadata _propiedadesItem = await element.getMetadata();
+
+      //TRANSFORMO BYTES
+      int sizeBytes = _propiedadesItem.size;
+      double kilos = double.parse(( sizeBytes/ 1000).toStringAsFixed(5));
+      double megas = double.parse((kilos / 1000).toStringAsFixed(5));
+      sizeTotal += megas;
+    }
+
+    return sizeTotal;
   }
 }

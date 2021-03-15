@@ -332,8 +332,6 @@ class _LoginState extends State<Login> {
                                     await AutenticacionFirebase.entrar();
                                   }
 
-
-
                                   Navigator.pop(context);
                                   //Al guardar to do se va a la otra ventana
                                   Navigator.popAndPushNamed(
