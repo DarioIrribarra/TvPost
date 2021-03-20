@@ -11,6 +11,7 @@ import 'package:tvpost_flutter/utilidades/custom_widgets.dart';
 import 'package:tvpost_flutter/utilidades/datos_estaticos.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:tvpost_flutter/utilidades/obtiene_datos_webservice.dart';
 
 class SeleccionarImagen extends StatefulWidget {
   @override
@@ -341,24 +342,7 @@ class _SeleccionarImagenState extends State<SeleccionarImagen> {
                         ),
                         Align(
                           alignment: Alignment.centerRight,
-                          child: Container(
-                            height: 30,
-                            width: 30,
-                            transform:
-                                Matrix4.translationValues(-22.0, -2.0, 22.0),
-                            child: FloatingActionButton(
-                                mini: true,
-                                child: Icon(
-                                  Icons.add,
-                                  size: 30,
-                                ),
-                                heroTag: null,
-                                backgroundColor: HexColor('#FC4C8B'),
-                                onPressed: () {
-                                  abrirGaleria(context);
-                                  //getImage();
-                                }),
-                          ),
+                          child: _btnAddContenido(),
                         )
                       ],
                     ),
@@ -379,6 +363,142 @@ class _SeleccionarImagenState extends State<SeleccionarImagen> {
       ),
     );
   }
+
+  ///BOTON QUE CARGA UN ÍCONO ANTES DE PERMITIR O DENEGAR EL SUBRI ARCHIVOS
+  ///A LA NUBE
+  FutureBuilder _btnAddContenido(){
+    int _gbPermitidosCloud = int.parse(
+        ObtieneDatos.listadoEmpresa[0]["f_GigasEnFirebase"]
+    );
+
+    _gbPermitidosCloud = _gbPermitidosCloud * 1024;
+
+    FutureBuilder containerBtn = FutureBuilder(
+      future: CloudStorage.GetUsedSpace(),
+      builder: (context, snapshot){
+        if (snapshot.connectionState == ConnectionState.done){
+          if (snapshot.data as int >= _gbPermitidosCloud)
+            return Container(
+              height: 30,
+              width: 30,
+              transform:
+              Matrix4.translationValues(-22.0, -2.0, 22.0),
+              child: FloatingActionButton(
+                  mini: true,
+                  child: Icon(
+                    Icons.add,
+                    size: 30,
+                  ),
+                  heroTag: null,
+                  backgroundColor: Colors.grey,
+                  onPressed: () {
+                    Widget contenidoPopUp = Container(
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(40),
+                            color: HexColor('#f4f4f4')),
+                        height: 110,
+                        width: 250,
+                        child: Padding(
+                          padding: const EdgeInsets.only(top: 25, bottom: 25),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            children: [
+                              //Título
+                              Column(
+                                children: [
+                                  Text(
+                                    'MÁXIMO ESPACIO UTILIZADO',
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(
+                                      fontSize: 13,
+                                    ),
+                                  ),
+                                ],
+                              ),
+
+                              Text('Contacte con ProducNova',
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(fontSize: 13, fontFamily: 'textoMont')),
+                            ],
+                          ),
+                        ));
+                    PopUps.PopUpConWidget(context,contenidoPopUp);
+                  }),
+            );
+          else
+            return Container(
+              height: 30,
+              width: 30,
+              transform:
+              Matrix4.translationValues(-22.0, -2.0, 22.0),
+              child: FloatingActionButton(
+                  mini: true,
+                  child: Icon(
+                    Icons.add,
+                    size: 30,
+                  ),
+                  heroTag: null,
+                  backgroundColor: HexColor('#FC4C8B'),
+                  onPressed: () {
+                    abrirGaleria(context);
+                    //getImage();
+                  }),
+            );
+        }
+        return Container(
+          height: 30,
+          width: 30,
+          transform:
+          Matrix4.translationValues(-22.0, -2.0, 22.0),
+          child: FloatingActionButton(
+            tooltip: "CALCULANDO ESPACIO...",
+            mini: true,
+            child: Icon(
+              Icons.radio_button_checked_outlined,
+              size: 30,
+            ),
+            heroTag: null,
+            backgroundColor: Colors.grey,
+              onPressed: () {
+                Widget contenidoPopUp = Container(
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(40),
+                        color: HexColor('#f4f4f4')),
+                    height: 110,
+                    width: 250,
+                    child: Padding(
+                      padding: const EdgeInsets.only(top: 25, bottom: 25),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          //Título
+                          Column(
+                            children: [
+                              Text(
+                                'CALCULANDO ESPACIO DISPONIBLE',
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                  fontSize: 13,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ));
+                PopUps.PopUpConWidget(context,contenidoPopUp);
+                //abrirGaleria(context);
+                //getImage();
+              }),
+        );
+      }
+
+    );
+
+    return containerBtn;
+
+  }
+
 
   ///CONTROLA LA OPACIDAD AL SELECCIONAR IMAGEN
   double resultado(String nombre) {

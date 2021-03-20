@@ -369,26 +369,6 @@ class _LoginState extends State<Login> {
     sharedPreferences.setString('rutEmpresa', rutEmpresa.trim());
     sharedPreferences.setString('nombreUsuario', nombreUsuario.trim());
     sharedPreferences.setString('password', password.trim());
-
-
-    /*
-    //OBTIENE EL UID DE FIREBASE
-    if (uidFirebase == null){
-      uidFirebase = await AutenticacionFirebase.entrar(
-          email: "producnova@gmail.com",
-          password: ".-Prod123.-"
-      );
-      //SI NO EXISTE USUARIO, LO CREA
-      if (uidFirebase == null){
-        uidFirebase = await AutenticacionFirebase.registrar(
-            email: "producnova@gmail.com",
-            password: ".-Prod123.-"
-        );
-      }
-    }
-    sharedPreferences.setString('uidFirebase', uidFirebase.trim());
-
-     */
   }
 }
 

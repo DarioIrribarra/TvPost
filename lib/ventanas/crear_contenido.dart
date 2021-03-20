@@ -11,6 +11,7 @@ import 'package:tvpost_flutter/utilidades/CloudStorage.dart';
 import 'package:tvpost_flutter/utilidades/comunicacion_raspberry.dart';
 import 'package:tvpost_flutter/utilidades/custom_widgets.dart';
 import 'package:tvpost_flutter/utilidades/datos_estaticos.dart';
+import 'package:tvpost_flutter/utilidades/obtiene_datos_webservice.dart';
 import 'package:tvpost_flutter/utilidades_crear_contenido/editableitem.dart';
 import 'package:tvpost_flutter/utilidades_crear_contenido/emoticones.dart';
 import 'package:tvpost_flutter/utilidades_crear_contenido/utilidad_widgetimagen.dart';
@@ -219,40 +220,7 @@ class _CrearContenidoState extends State<CrearContenido> {
                                         ],
                                         begin: Alignment.topLeft,
                                         end: FractionalOffset.bottomRight)),
-                                child: FlatButton(
-                                  color: Colors.transparent,
-                                  shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(20),
-                                      side:
-                                      BorderSide(color: Color.fromARGB(30, 0, 0, 0))),
-                                  child: Text(
-                                    'CARGAR',
-                                    style: TextStyle(color: Colors.white),
-                                  ),
-                                  onPressed: () async {
-                                    //FUNCIÓN QUE PROCESA EL GUARDADO
-                                    List<dynamic> resultado = await _ProcesarImagen();
-
-                                    if (resultado != null) {
-                                      //Si el envío es correcto, se redirecciona
-                                      Image imagen = Image.network(
-                                        "http://${DatosEstaticos.ipSeleccionada}/ImagenesPostTv/${resultado[1]}",
-                                        fit: BoxFit.cover,
-                                      );
-
-                                      RedireccionarCrearLayout(
-                                          imagen,
-                                          "/var/www/html/ImagenesPostTv/${resultado[1]}",
-                                          true);
-                                    } else {
-                                      //Cierra popup cargando
-                                      Navigator.of(context, rootNavigator: true).pop();
-
-                                      PopUps.PopUpConWidget(context,
-                                          Text('Error al enviar imagen'.toUpperCase()));
-                                    }
-                                  },
-                                ),
+                                child: _btnAddContenido(),
                               ),
                               SizedBox(height: 15),
                               //BTN ESPECÍFICO PARA RRSS EN PORCIONES
@@ -308,169 +276,374 @@ class _CrearContenidoState extends State<CrearContenido> {
               ),
             ),
           ),
-          /*
-                SizedBox(
-                  height: 30,
-                ),
-
-
-              Expanded(
-                flex: 2,
-                child: WidgetToImage(builder: (key) {
-                  this.key1 = key;
-                  return Container(
-                    height: altoCanvas,
-                    width: anchoCanvas,
-                    color: Colors.red,
-                    child: GestureDetector(
-                      onScaleStart: (details) {
-                        if (_activeItem == null) return;
-
-                        _initPos = details.focalPoint;
-                        _currentPos = _activeItem.position;
-                        _currentScale = _activeItem.scale;
-                        _currentRotation = _activeItem.rotation;
-                      },
-                      onScaleUpdate: (details) {
-                        if (_activeItem == null) return;
-                        final delta = details.focalPoint - _initPos;
-                        final left =
-                            (delta.dx / screen.width) + _currentPos.dx;
-                        final top =
-                            (delta.dy / screen.height) + _currentPos.dy;
-
-                        setState(() {
-                          _activeItem.position = Offset(left, top);
-                          _activeItem.rotation =
-                              details.rotation + _currentRotation;
-                          _activeItem.scale = details.scale * _currentScale;
-                        });
-                      },
-                      child: Stack(
-                        children: [
-                          Container(
-                            color: Colors.black12,
-                          ),
-                          imagenDeFondo(),
-                          ...mockData.map(_buildItemWidget).toList(),
-                        ],
-                      ),
-                    ),
-                  );
-                }),
-              ),
-              Expanded(
-                flex:1,
-                child: SingleChildScrollView(
-                  scrollDirection: Axis.horizontal,
-                  child: Container(
-                      margin: EdgeInsets.only(top: 10, bottom: 10),
-                      height: MediaQuery.of(context).size.height / 4,
-                      child: Column(
-                        children: [
-                          Row(
-                            children: [
-                              botonColorFondo(),
-                              botonJPG(),
-                              botonPNG(),
-                              botonTexto(),
-                              botonEmoji(),
-                              botonOferta(),
-                            ],
-                          ),
-                          SizedBox(
-                            height: 50,
-                          ),
-                          Container(
-                            margin: EdgeInsets.symmetric(horizontal: 100),
-                            width: 150.0,
-                            height: 30.0,
-                            decoration: new BoxDecoration(
-                                borderRadius: BorderRadius.circular(20),
-                                gradient: LinearGradient(
-                                    colors: [
-                                      HexColor("#0683ff"),
-                                      HexColor("#3edb9b")
-                                    ],
-                                    stops: [
-                                      0.1,
-                                      0.6
-                                    ],
-                                    begin: Alignment.topLeft,
-                                    end: FractionalOffset.bottomRight)),
-                            child: FlatButton(
-                              color: Colors.transparent,
-                              shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(20),
-                                  side: BorderSide(
-                                      color: Color.fromARGB(30, 0, 0, 0))),
-                              child: Text(
-                                'CARGAR',
-                                style: TextStyle(color: Colors.white),
-                              ),
-                              onPressed: () async {
-                                PopUps.popUpCargando(context, 'Guardando Imagen');
-                                final bytes1 = await Utils.capture(key1);
-                                //Cierra popup cargando
-                                Navigator.of(context, rootNavigator: true).pop();
-                                /*setState(() {
-                              this.bytes1 = bytes1;
-                            });*/
-                                //Acá tiene que aparecer el popup para guardar imagen con nombre,
-                                //al igual que en el seleccionar imagen
-                                await _finalizarGuardado(bytes1);
-                              },
-                            ),
-                          ),
-                        ],
-                      )),
-                ),
-              ),
-              Expanded(
-                flex: 1,
-                child: Visibility(
-                  visible: false,
-                  maintainSize: true,
-                  maintainAnimation: true,
-                  maintainState: true,
-                  child: Container(
-                    //height: 40,
-                    width: 200,
-                    decoration: new BoxDecoration(
-                        borderRadius: BorderRadius.circular(20),
-                        gradient: LinearGradient(
-                            colors: [HexColor("#0683ff"), HexColor("#3edb9b")],
-                            stops: [0.1, 0.6],
-                            begin: Alignment.topLeft,
-                            end: FractionalOffset.bottomRight)),
-                    child: FlatButton(
-                      color: Colors.transparent,
-                      onPressed: () async {
-                        //String dir = (await getTemporaryDirectory()).path;
-                        //File temporal = new File('$dir/img_temp_creada.png');
-                        Navigator.pushNamed(context, '/seleccionar_layout');
-                      },
-                      child: Text(
-                        'EDITAR CONTENIDO',
-                        style: TextStyle(color: Colors.white),
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-
-               */
         ],
       ),
     );
   }
 
-  /*Future<bool> onBackPress() {
-    if (archivoImagen == null) {
-      Navigator.pop(context);
-    }
-    return Future.value(false);
-  }*/
+  ///BOTON QUE CARGA UN BOTON GRIS ANTES DE PERMITIR O DENEGAR EL SUBRI ARCHIVOS
+  ///A LA NUBE
+  FutureBuilder _btnAddContenido(){
+    int _gbPermitidosCloud = int.parse(
+        ObtieneDatos.listadoEmpresa[0]["f_GigasEnFirebase"]
+    );
+
+    _gbPermitidosCloud = _gbPermitidosCloud * 1024;
+
+    FutureBuilder containerBtn = FutureBuilder(
+        future: CloudStorage.GetUsedSpace(),
+        builder: (context, snapshot){
+          if (snapshot.connectionState == ConnectionState.done){
+            if (snapshot.data as int >= _gbPermitidosCloud)
+              //NO PERMITIDO
+              return FlatButton(
+                color: Colors.grey,
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(20),
+                    side:
+                    BorderSide(color: Color.fromARGB(30, 0, 0, 0))),
+                child: Text(
+                  'CARGAR',
+                  style: TextStyle(color: Colors.white),
+                ),
+                onPressed: () async {
+                  Widget contenidoPopUp = Container(
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(40),
+                          color: HexColor('#f4f4f4')),
+                      height: 110,
+                      width: 250,
+                      child: Padding(
+                        padding: const EdgeInsets.only(top: 25, bottom: 25),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [
+                            //Título
+                            Column(
+                              children: [
+                                Text(
+                                  'MÁXIMO ESPACIO UTILIZADO',
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                    fontSize: 13,
+                                  ),
+                                ),
+                              ],
+                            ),
+
+                            Text('Contacte con ProducNova',
+                                textAlign: TextAlign.center,
+                                style: TextStyle(fontSize: 13, fontFamily: 'textoMont')),
+                          ],
+                        ),
+                      ));
+                  PopUps.PopUpConWidget(context,contenidoPopUp);
+                },
+              );
+            else
+              //PERMITIDO
+              return FlatButton(
+                color: Colors.transparent,
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(20),
+                    side:
+                    BorderSide(color: Color.fromARGB(30, 0, 0, 0))),
+                child: Text(
+                  'CARGAR',
+                  style: TextStyle(color: Colors.white),
+                ),
+                onPressed: () async {
+                  //FUNCIÓN QUE PROCESA EL GUARDADO
+                  List<dynamic> resultado = await _ProcesarImagen();
+
+                  if (resultado != null) {
+                    //Si el envío es correcto, se redirecciona
+                    Image imagen = Image.network(
+                      "http://${DatosEstaticos.ipSeleccionada}/ImagenesPostTv/${resultado[1]}",
+                      fit: BoxFit.cover,
+                    );
+
+                    RedireccionarCrearLayout(
+                        imagen,
+                        "/var/www/html/ImagenesPostTv/${resultado[1]}",
+                        true);
+                  } else {
+                    //Cierra popup cargando
+                    Navigator.of(context, rootNavigator: true).pop();
+
+                    PopUps.PopUpConWidget(context,
+                        Text('Error al enviar imagen'.toUpperCase()));
+                  }
+                },
+              );
+          }
+          return FlatButton(
+            color: Colors.grey,
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(20),
+                side:
+                BorderSide(color: Color.fromARGB(30, 0, 0, 0))),
+            child: Text(
+              'CARGAR',
+              style: TextStyle(color: Colors.white),
+            ),
+            onPressed: () {
+              Widget contenidoPopUp = Container(
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(40),
+                      color: HexColor('#f4f4f4')),
+                  height: 110,
+                  width: 250,
+                  child: Padding(
+                    padding: const EdgeInsets.only(top: 25, bottom: 25),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        //Título
+                        Column(
+                          children: [
+                            Text(
+                              'CALCULANDO ESPACIO DISPONIBLE',
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                fontSize: 13,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ));
+              PopUps.PopUpConWidget(context,contenidoPopUp);
+            },
+          );
+        }
+
+    );
+
+    return containerBtn;
+
+  }
+
+  ///WIDGET QUE CONTROLA EL BOTÓN COMPARTIR RRSS
+  Widget btnCompartirRRSS(){
+    int _gbPermitidosCloud = int.parse(
+        ObtieneDatos.listadoEmpresa[0]["f_GigasEnFirebase"]
+    );
+
+    _gbPermitidosCloud = _gbPermitidosCloud * 1024;
+    String _porcion = DatosEstaticos.divisionLayout;
+    Widget btn;
+
+    //CONTROLA EL PERMISO A SUBIR IMAGEN
+    FutureBuilder containerBtn = FutureBuilder(
+        future: CloudStorage.GetUsedSpace(),
+        builder: (context, snapshot){
+          if (snapshot.connectionState == ConnectionState.done){
+            if (snapshot.data as int >= _gbPermitidosCloud)
+              //NO PERMITIDO
+              return Container(
+                height: 40,
+                width: 200,
+                child: FlatButton(
+                  color: Colors.grey,
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(20),
+                      side:
+                      BorderSide(color: Color.fromARGB(30, 0, 0, 0))),
+                  onPressed: () async {
+                    Widget contenidoPopUp = Container(
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(40),
+                            color: HexColor('#f4f4f4')),
+                        height: 110,
+                        width: 250,
+                        child: Padding(
+                          padding: const EdgeInsets.only(top: 25, bottom: 25),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            children: [
+                              //Título
+                              Column(
+                                children: [
+                                  Text(
+                                    'MÁXIMO ESPACIO UTILIZADO',
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(
+                                      fontSize: 13,
+                                    ),
+                                  ),
+                                ],
+                              ),
+
+                              Text('Contacte con ProducNova',
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(fontSize: 13, fontFamily: 'textoMont')),
+                            ],
+                          ),
+                        ));
+                    PopUps.PopUpConWidget(context,contenidoPopUp);
+                  },
+                  child: Padding(
+                    padding:
+                    const EdgeInsets.all(6.0),
+                    child: Column(children: [
+                      Text(
+                        'CARGAR +',
+                        style: TextStyle(
+                            color: Colors.white),
+                      ),
+                      Text(
+                        ' COMPARTIR RRSS',
+                        style: TextStyle(
+                            color: Colors.white),
+                      ),
+                    ]),
+                  ),
+                ),
+              );
+            else
+              //PERMITIDO
+            if (_porcion == "3-2" || _porcion == "3-3"){
+              btn = Container(
+                child: Text(
+                  "PUBLICACIÓN REDES SOCIALES\n NO HABILITADA EN ESTA PORCIÓN",
+                  textAlign: TextAlign.center,
+                ),
+              );
+            } else {
+              btn = Container(
+                height: 40,
+                width: 200,
+                decoration: new BoxDecoration(
+                    borderRadius:
+                    BorderRadius.circular(20),
+                    gradient: LinearGradient(
+                        colors: [
+                          HexColor("#3edb9b"),
+                          HexColor("#0683ff")
+                        ],
+                        stops: [
+                          0.5,
+                          1
+                        ],
+                        begin: Alignment.topLeft,
+                        end: FractionalOffset
+                            .bottomRight)),
+                child: FlatButton(
+                  color: Colors.transparent,
+                  onPressed: () async {
+
+                    //SI HAY UN LINK YA LISTO PARA PUBLICAR
+                    //PREGUNTAR SI DESEA REEMPLAZARLO
+                    String pNombre = await Publicar();
+
+                    if (pNombre != null){
+                      //Se Descarga video inmediatamente al cargar
+                      List<String> _verificarImagen = new List<String>();
+                      _verificarImagen.add("/var/www/html/ImagenesPostTv/$pNombre");
+                      PopUps.popUpCargando(context, "DESCARGANDO ARCHIVOS");
+
+                      await ComunicacionRaspberry.CompruebaArchivosRaspberry(
+                          pLinksAEnviar: _verificarImagen
+                      );
+
+                      Navigator.of(context).pop();
+
+                      String img = "http://${DatosEstaticos.ipSeleccionada}/ImagenesPostTv/"
+                          "$pNombre";
+
+                      Widget imagen = Image.network(img);
+
+                      RedireccionarCrearLayout(
+                          imagen,
+                          "/ImagenesPostTv/$pNombre",
+                          true);
+                    }
+                  },
+                  child: Padding(
+                    padding:
+                    const EdgeInsets.all(6.0),
+                    child: Column(children: [
+                      Text(
+                        'CARGAR +',
+                        style: TextStyle(
+                            color: Colors.white),
+                      ),
+                      Text(
+                        ' COMPARTIR RRSS',
+                        style: TextStyle(
+                            color: Colors.white),
+                      ),
+                    ]),
+                  ),
+                ),
+              );
+            }
+            return btn;
+          }
+          return Container(
+            height: 40,
+            width: 200,
+            child: FlatButton(
+              color: Colors.grey,
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(20),
+                  side:
+                  BorderSide(color: Color.fromARGB(30, 0, 0, 0))),
+              onPressed: () async {
+                Widget contenidoPopUp = Container(
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(40),
+                        color: HexColor('#f4f4f4')),
+                    height: 110,
+                    width: 250,
+                    child: Padding(
+                      padding: const EdgeInsets.only(top: 25, bottom: 25),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          //Título
+                          Column(
+                            children: [
+                              Text(
+                                'CALCULANDO ESPACIO DISPONIBLE',
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                  fontSize: 13,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ));
+                PopUps.PopUpConWidget(context,contenidoPopUp);
+              },
+              child: Padding(
+                padding:
+                const EdgeInsets.all(6.0),
+                child: Column(children: [
+                  Text(
+                    'CARGAR +',
+                    style: TextStyle(
+                        color: Colors.white),
+                  ),
+                  Text(
+                    ' COMPARTIR RRSS',
+                    style: TextStyle(
+                        color: Colors.white),
+                  ),
+                ]),
+              ),
+            ),
+          );
+        }
+
+    );
+
+    return containerBtn;
+  }
 
   Widget _buildItemWidget(EditableItem e) {
     final screen = MediaQuery.of(context).size;
@@ -937,89 +1110,7 @@ class _CrearContenidoState extends State<CrearContenido> {
     return valor;
   }
 
-  ///WIDGET QUE CONTROLA EL BOTÓN COMPARTIR RRSS
-  Widget btnCompartirRRSS(){
-    Widget btn = Container();
 
-    String _porcion = DatosEstaticos.divisionLayout;
-    if (_porcion == "3-2" || _porcion == "3-3"){
-      btn = Container(
-        child: Text(
-          "PUBLICACIÓN REDES SOCIALES\n NO HABILITADA EN ESTA PORCIÓN",
-          textAlign: TextAlign.center,
-        ),
-      );
-    } else {
-      btn = Container(
-        height: 40,
-        width: 200,
-        decoration: new BoxDecoration(
-            borderRadius:
-            BorderRadius.circular(20),
-            gradient: LinearGradient(
-                colors: [
-                  HexColor("#3edb9b"),
-                  HexColor("#0683ff")
-                ],
-                stops: [
-                  0.5,
-                  1
-                ],
-                begin: Alignment.topLeft,
-                end: FractionalOffset
-                    .bottomRight)),
-        child: FlatButton(
-          color: Colors.transparent,
-          onPressed: () async {
-
-            //SI HAY UN LINK YA LISTO PARA PUBLICAR
-            //PREGUNTAR SI DESEA REEMPLAZARLO
-            String pNombre = await Publicar();
-
-            if (pNombre != null){
-              //Se Descarga video inmediatamente al cargar
-              List<String> _verificarImagen = new List<String>();
-              _verificarImagen.add("/var/www/html/ImagenesPostTv/$pNombre");
-              PopUps.popUpCargando(context, "DESCARGANDO ARCHIVOS");
-
-              await ComunicacionRaspberry.CompruebaArchivosRaspberry(
-                  pLinksAEnviar: _verificarImagen
-              );
-
-              Navigator.of(context).pop();
-
-              String img = "http://${DatosEstaticos.ipSeleccionada}/ImagenesPostTv/"
-                  "$pNombre";
-
-              Widget imagen = Image.network(img);
-
-              RedireccionarCrearLayout(
-                  imagen,
-                  "/ImagenesPostTv/$pNombre",
-                  true);
-            }
-          },
-          child: Padding(
-            padding:
-            const EdgeInsets.all(6.0),
-            child: Column(children: [
-              Text(
-                'CARGAR +',
-                style: TextStyle(
-                    color: Colors.white),
-              ),
-              Text(
-                ' COMPARTIR RRSS',
-                style: TextStyle(
-                    color: Colors.white),
-              ),
-            ]),
-          ),
-        ),
-      );
-    }
-    return btn;
-  }
 
   Widget botonPNG() {
     return SizedBox(

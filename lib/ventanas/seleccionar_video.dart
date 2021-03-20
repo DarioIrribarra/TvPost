@@ -9,6 +9,7 @@ import 'package:tvpost_flutter/utilidades/comunicacion_raspberry.dart';
 import 'package:tvpost_flutter/utilidades/custom_widgets.dart';
 import 'package:tvpost_flutter/utilidades/datos_estaticos.dart';
 import 'package:file_picker/file_picker.dart';
+import 'package:tvpost_flutter/utilidades/obtiene_datos_webservice.dart';
 import 'package:video_player/video_player.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
@@ -345,22 +346,7 @@ class _SeleccionarVideoState extends State<SeleccionarVideo> {
                         ),
                         Align(
                           alignment: Alignment.centerRight,
-                          child: Container(
-                            height: 30,
-                            width: 30,
-                            transform:
-                                Matrix4.translationValues(-22.0, -2.0, 22.0),
-                            child: FloatingActionButton(
-                                child: Icon(
-                                  Icons.add,
-                                  size: 30,
-                                ),
-                                heroTag: null,
-                                backgroundColor: HexColor('#FC4C8B'),
-                                onPressed: () {
-                                  abrirGaleria(context);
-                                }),
-                          ),
+                          child: _btnAddContenido(),
                         )
                       ],
                     ),
@@ -424,6 +410,140 @@ class _SeleccionarVideoState extends State<SeleccionarVideo> {
     }
   }
 
+  ///BOTON QUE CARGA UN ÍCONO ANTES DE PERMITIR O DENEGAR EL SUBRI ARCHIVOS
+  ///A LA NUBE
+  FutureBuilder _btnAddContenido(){
+    int _gbPermitidosCloud = int.parse(
+        ObtieneDatos.listadoEmpresa[0]["f_GigasEnFirebase"]
+    );
+
+    _gbPermitidosCloud = _gbPermitidosCloud * 1024;
+
+    FutureBuilder containerBtn = FutureBuilder(
+        future: CloudStorage.GetUsedSpace(),
+        builder: (context, snapshot){
+          if (snapshot.connectionState == ConnectionState.done){
+            if (snapshot.data as int >= _gbPermitidosCloud)
+              return Container(
+                height: 30,
+                width: 30,
+                transform:
+                Matrix4.translationValues(-22.0, -2.0, 22.0),
+                child: FloatingActionButton(
+                    mini: true,
+                    child: Icon(
+                      Icons.add,
+                      size: 30,
+                    ),
+                    heroTag: null,
+                    backgroundColor: Colors.grey,
+                    onPressed: () {
+                      Widget contenidoPopUp = Container(
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(40),
+                              color: HexColor('#f4f4f4')),
+                          height: 110,
+                          width: 250,
+                          child: Padding(
+                            padding: const EdgeInsets.only(top: 25, bottom: 25),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              children: [
+                                //Título
+                                Column(
+                                  children: [
+                                    Text(
+                                      'MÁXIMO ESPACIO UTILIZADO',
+                                      textAlign: TextAlign.center,
+                                      style: TextStyle(
+                                        fontSize: 13,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+
+                                Text('Contacte con ProducNova',
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(fontSize: 13, fontFamily: 'textoMont')),
+                              ],
+                            ),
+                          ));
+                      PopUps.PopUpConWidget(context,contenidoPopUp);
+                    }),
+              );
+            else
+              return Container(
+                height: 30,
+                width: 30,
+                transform:
+                Matrix4.translationValues(-22.0, -2.0, 22.0),
+                child: FloatingActionButton(
+                    mini: true,
+                    child: Icon(
+                      Icons.add,
+                      size: 30,
+                    ),
+                    heroTag: null,
+                    backgroundColor: HexColor('#FC4C8B'),
+                    onPressed: () {
+                      abrirGaleria(context);
+                      //getImage();
+                    }),
+              );
+          }
+          return Container(
+            height: 30,
+            width: 30,
+            transform:
+            Matrix4.translationValues(-22.0, -2.0, 22.0),
+            child: FloatingActionButton(
+                tooltip: "CALCULANDO ESPACIO...",
+                mini: true,
+                child: Icon(
+                  Icons.radio_button_checked_outlined,
+                  size: 30,
+                ),
+                heroTag: null,
+                backgroundColor: Colors.grey,
+                onPressed: () {
+                  Widget contenidoPopUp = Container(
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(40),
+                          color: HexColor('#f4f4f4')),
+                      height: 110,
+                      width: 250,
+                      child: Padding(
+                        padding: const EdgeInsets.only(top: 25, bottom: 25),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [
+                            //Título
+                            Column(
+                              children: [
+                                Text(
+                                  'CALCULANDO ESPACIO DISPONIBLE',
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                    fontSize: 13,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                      ));
+                  PopUps.PopUpConWidget(context,contenidoPopUp);
+                  //abrirGaleria(context);
+                  //getImage();
+                }),
+          );
+        }
+
+    );
+
+    return containerBtn;
+
+  }
 
   ///ABRE GALERÍA PARA SELECCIONAR VIDEOS Y SUBIRLOS A FIREBASE
   abrirGaleria(BuildContext context) async {
@@ -488,259 +608,6 @@ class _SeleccionarVideoState extends State<SeleccionarVideo> {
       }
     }
   }
-
-  /*
-  abrirGaleriaOld() async {
-    GlobalKey<FormState> _keyValidadorvideo = GlobalKey<FormState>();
-    String nombreNuevoVideo = "";
-    if (rutaDeDondeViene != null) {
-      videoSeleccionadoGaleria = await FilePicker.platform
-          .pickFiles(allowMultiple: true, type: FileType.video);
-    } else {
-      videoSeleccionadoGaleria =
-          await FilePicker.platform.pickFiles(type: FileType.video);
-    }
-    Widget videoAEnviar;
-    if (videoSeleccionadoGaleria != null) {
-      if (videoSeleccionadoGaleria.files.length == 1) {
-        String extension = p.extension(videoSeleccionadoGaleria.paths[0]);
-        //print(extension);
-        File videoFinal = File(videoSeleccionadoGaleria.paths[0]);
-        await showDialog<String>(
-          context: context,
-          child: StatefulBuilder(builder: (context, setState) {
-            return AnimacionPadding(
-              child: new AlertDialog(
-                content: SingleChildScrollView(
-                  child: Card(
-                    child: Form(
-                      key: _keyValidadorvideo,
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Container(
-                            width: MediaQuery.of(context).size.width / 2,
-                            height: MediaQuery.of(context).size.height / 4,
-                            child: videoAEnviar = ReproductorVideos(
-                              url: videoFinal,
-                              seleccionado: true,
-                            ),
-                          ),
-                          Row(
-                            children: [
-                              Padding(
-                                padding: const EdgeInsets.only(top: 15),
-                                child: CircleAvatar(
-                                  backgroundColor: Colors.blueAccent,
-                                  radius: 10,
-                                  child: FlatButton(
-                                    onPressed: () async {},
-                                    child: Container(
-                                      transform: Matrix4.translationValues(
-                                          -16.0, 0.0, 0.0),
-                                      child: Icon(
-                                        Tvlapiz.lapiz,
-                                        size: 20,
-                                        color: Colors.white,
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ),
-                              SizedBox(
-                                width: 180,
-                                child: TextFormField(
-                                  textAlign: TextAlign.center,
-                                  decoration: InputDecoration(
-                                      labelText: 'INGRESE NOMBRE DEL VIDEO',
-                                      labelStyle: TextStyle(fontSize: 12)),
-                                  controller: _controladorTexto,
-                                  validator: (textoEscrito) {
-                                    if (textoEscrito.isEmpty) {
-                                      return "Error: Nombre de video vacío";
-                                    }
-                                    if (textoEscrito.trim().length <= 0) {
-                                      return "Error: Nombre de video vacío";
-                                    } else {
-                                      nombreNuevoVideo =
-                                          textoEscrito.trim().toString() +
-                                              extension;
-                                      //Chequear si el valor ya existe
-                                      if (DatosEstaticos.listadoNombresVideos
-                                          .contains(nombreNuevoVideo)) {
-                                        return "Error: Nombre de video ya existe";
-                                      } else {
-                                        return null;
-                                      }
-                                    }
-                                  },
-                                ),
-                              ),
-                            ],
-                          ),
-                          FlatButton(
-                            child: Icon(
-                              Icons.check_circle,
-                              color: HexColor('#3EDB9B'),
-                              size: 35,
-                            ),
-                            autofocus: true,
-                            onPressed: () async {
-                              if (_keyValidadorvideo.currentState.validate()) {
-                                //Se abre el popup de cargando
-                                Navigator.pop(context);
-                                PopUps.popUpCargando(
-                                    context, 'Añadiendo video'.toUpperCase());
-                                //Obtengo el resultado del envio
-                                var resultado = await PopUps.enviarVideo(
-                                        nombreNuevoVideo, videoFinal)
-                                    .then((value) => value);
-
-                                if (resultado) {
-                                  if (rutaDeDondeViene != null) {
-                                    Navigator.pop(context);
-                                    Navigator.pop(context);
-                                    Navigator.popAndPushNamed(
-                                        context, "/seleccionar_video",
-                                        arguments: {
-                                          'division_layout':
-                                              DatosEstaticos.divisionLayout,
-                                          'ruta_proveniente': rutaDeDondeViene,
-                                        });
-                                  } else {
-                                    //Si no es del menú redirige al layout
-                                    //Si el envío es correcto, se redirecciona
-                                    videoAEnviar = ReproductorVideos(
-                                      url:
-                                          'http://${DatosEstaticos.ipSeleccionada}/VideosPostTv/$nombreNuevoVideo',
-                                      divisionLayout: divisionLayout,
-                                      seleccionado: true,
-                                    );
-                                    RedireccionarCrearLayout(
-                                        videoAEnviar,
-                                        "/var/www/html/VideosPostTv/$nombreNuevoVideo",
-                                        true);
-                                  }
-                                } else {
-                                  //Cierra popup cargando
-                                  Navigator.of(context, rootNavigator: true)
-                                      .pop();
-
-                                  PopUps.PopUpConWidget(
-                                      context, Text('Error al enviar video'));
-                                }
-                              }
-                            },
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-            );
-          }),
-        );
-      } else {
-        String extension;
-        File videoFinal;
-        Widget contenidoPopUp = Container(
-            decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(40),
-                color: HexColor('#f4f4f4')),
-            height: 150,
-            width: 250,
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                Text(
-                  '¿Agregar ${videoSeleccionadoGaleria.files.length} videos?'
-                      .toUpperCase(),
-                  textAlign: TextAlign.center,
-                  style: TextStyle(fontSize: 13),
-                ),
-                Row(
-                  children: [
-                    Expanded(flex: 3, child: SizedBox()),
-                    Expanded(
-                      flex: 4,
-                      child: FlatButton(
-                        child: Icon(
-                          Icons.check_circle,
-                          color: HexColor('#3EDB9B'),
-                          size: 35,
-                        ),
-                        onPressed: () async {
-                          PopUps.popUpCargando(
-                              context, 'Agregando videos'.toUpperCase());
-
-                          for (int i = 0;
-                              i <= videoSeleccionadoGaleria.files.length - 1;
-                              i++) {
-                            PlatformFile element =
-                                videoSeleccionadoGaleria.files[i];
-                            extension = p.extension(element.path);
-                            videoFinal = File(element.path);
-                            //Se le da el nombre de la hora actual + su posición
-                            // //en el listado
-                            DateTime now = DateTime.now();
-                            nombreNuevoVideo =
-                                '${now.year}${now.month}${now.day}'
-                                '${now.hour}${now.minute}${now.second}'
-                                '_$i$extension';
-
-                            //Obtengo el resultado del envio
-                            var resultado = await PopUps.enviarVideo(
-                                    nombreNuevoVideo, videoFinal)
-                                .then((value) => value);
-                            if (resultado == false) {
-                              showDialog(
-                                context: null,
-                                child: Text('Error al agregar videos'),
-                              );
-                              break;
-                            }
-                          }
-                          Navigator.pop(context);
-                          Navigator.pop(context);
-                          Navigator.popAndPushNamed(
-                              context, "/seleccionar_video",
-                              arguments: {
-                                'division_layout': '0',
-                                'ruta_proveniente': rutaDeDondeViene,
-                              });
-                          Fluttertoast.showToast(
-                            msg: "Videos agregados",
-                            toastLength: Toast.LENGTH_SHORT,
-                            webBgColor: "#e74c3c",
-                            timeInSecForIosWeb: 5,
-                          );
-                        },
-                      ),
-                    ),
-                    Expanded(
-                      flex: 4,
-                      child: FlatButton(
-                        child: Icon(
-                          Icons.cancel,
-                          color: HexColor('#FC4C8B'),
-                          size: 35,
-                        ),
-                        onPressed: () => Navigator.pop(context),
-                      ),
-                    ),
-                    Expanded(flex: 3, child: SizedBox()),
-                  ],
-                ),
-              ],
-            ));
-        PopUps.PopUpConWidget(context, contenidoPopUp);
-      }
-    }
-  }
-
-   */
 
   // ignore: non_constant_identifier_names
   void RedireccionarCrearLayout(
@@ -854,6 +721,7 @@ class _SeleccionarVideoState extends State<SeleccionarVideo> {
     return listadoResultado;
   }
 }
+
 
 class ReproductorVideos extends StatefulWidget {
   String divisionLayout;
