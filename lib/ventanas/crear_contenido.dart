@@ -44,6 +44,7 @@ class _CrearContenidoState extends State<CrearContenido> {
   Uint8List bytes2;
   Map datosDesdeVentanaAnterior = {};
   double altoCanvas = 350, anchoCanvas = 250;
+  int espacioEnNube = -1;
   FocusNode nodoTexto;
 
   @override
@@ -54,6 +55,7 @@ class _CrearContenidoState extends State<CrearContenido> {
     _requestPermission();
     controladorOferta = TextEditingController();
     nodoTexto = FocusNode();
+    _COnsultaEspacioEnNube();
     /*KeyboardVisibility.onChange.listen((bool isKeyboardVisible) {
       setState(() {
         this.isKeyboardVisible = isKeyboardVisible;
@@ -105,132 +107,203 @@ class _CrearContenidoState extends State<CrearContenido> {
 
     final screen = MediaQuery.of(context).size;
 
-    return Scaffold(
-      appBar: divisionLayout == '0' ? CustomAppBar() : CustomAppBarSinMenu(),
-      body: Column(
-        children: [
-          Container(
-            margin: EdgeInsets.only(top: 30, bottom: 30),
-            child: Text(
-              "DISEÑAR LAYOUT",
-              style: TextStyle(fontSize: 16.5),
-            ),
+    int _gbPermitidosCloud = int.parse(
+        ObtieneDatos.listadoEmpresa[0]["f_GigasEnFirebase"]
+    );
+
+    _gbPermitidosCloud = _gbPermitidosCloud * 1024;
+
+    //RETORNA EL WIDGET SOLO CUANDO YA SE CALCULÓ EL ESPACIO
+    if (espacioEnNube >= 0){
+      if (espacioEnNube >= _gbPermitidosCloud){
+        //NO PERMITIDO
+        return Scaffold(
+          body: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text('INSUFICIENTE ESPACIO EN LA NUBE\nCONTACTE CON PRODUCNOVA'),
+              SizedBox(height: 10,),
+              Center(
+                child: FlatButton(
+                  color: Colors.red,
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(20),
+                      side:
+                      BorderSide(color: Color.fromARGB(30, 0, 0, 0))),
+                  child: Text(
+                    'REGRESAR',
+                    style: TextStyle(color: Colors.white),
+                  ),
+                  onPressed: () async {
+                    Navigator.pop(context);
+                  },
+                ),
+              ),
+            ],
           ),
-          Expanded(
-            flex: 1,
-            child: SingleChildScrollView(
-              child: Center(
-                child: WidgetToImage(builder: (key) {
-                  this.key1 = key;
-                  return Padding(
-                    child: Container(
-                      height: altoCanvas,
-                      width: anchoCanvas,
-                      color: colorFondo,
-                      child: GestureDetector(
-                        onScaleStart: (details) {
-                          if (_activeItem == null) return;
+        );
+      }
+      else {
+        //PERMITIDO
+        return Scaffold(
+          appBar: divisionLayout == '0' ? CustomAppBar() : CustomAppBarSinMenu(),
+          body: Column(
+            children: [
+              Container(
+                margin: EdgeInsets.only(top: 30, bottom: 30),
+                child: Text(
+                  "DISEÑAR LAYOUT",
+                  style: TextStyle(fontSize: 16.5),
+                ),
+              ),
+              Expanded(
+                flex: 1,
+                child: SingleChildScrollView(
+                  child: Center(
+                    child: WidgetToImage(builder: (key) {
+                      this.key1 = key;
+                      return Padding(
+                        child: Container(
+                          height: altoCanvas,
+                          width: anchoCanvas,
+                          color: colorFondo,
+                          child: GestureDetector(
+                            onScaleStart: (details) {
+                              if (_activeItem == null) return;
 
-                          _initPos = details.focalPoint;
-                          _currentPos = _activeItem.position;
-                          _currentScale = _activeItem.scale;
-                          _currentRotation = _activeItem.rotation;
-                        },
-                        onScaleUpdate: (details) {
-                          if (_activeItem == null) return;
-                          final delta = details.focalPoint - _initPos;
-                          final left = (delta.dx / screen.width) + _currentPos.dx;
-                          final top = (delta.dy / screen.height) + _currentPos.dy;
+                              _initPos = details.focalPoint;
+                              _currentPos = _activeItem.position;
+                              _currentScale = _activeItem.scale;
+                              _currentRotation = _activeItem.rotation;
+                            },
+                            onScaleUpdate: (details) {
+                              if (_activeItem == null) return;
+                              final delta = details.focalPoint - _initPos;
+                              final left = (delta.dx / screen.width) + _currentPos.dx;
+                              final top = (delta.dy / screen.height) + _currentPos.dy;
 
-                          setState(() {
-                            _activeItem.position = Offset(left, top);
-                            _activeItem.rotation =
-                                details.rotation + _currentRotation;
-                            _activeItem.scale = details.scale * _currentScale;
-                          });
-                        },
-                        child: Stack(
-                          children: [
-                            Container(
-                              color: Colors.black12,
+                              setState(() {
+                                _activeItem.position = Offset(left, top);
+                                _activeItem.rotation =
+                                    details.rotation + _currentRotation;
+                                _activeItem.scale = details.scale * _currentScale;
+                              });
+                            },
+                            child: Stack(
+                              children: [
+                                Container(
+                                  color: Colors.black12,
+                                ),
+                                imagenDeFondo(),
+                                ...mockData.map(_buildItemWidget).toList(),
+                              ],
                             ),
-                            imagenDeFondo(),
-                            ...mockData.map(_buildItemWidget).toList(),
+                          ),
+                        ),
+                        padding: _PaddingPorcion3(),
+                      );
+                    }),
+                  ),
+                ),
+              ),
+              Expanded(
+                flex: 1,
+                child: SingleChildScrollView(
+                  child: Container(
+                    margin: EdgeInsets.only(top: 30, bottom: 10),
+                    height: MediaQuery.of(context).size.height / 4,
+                    child: Column(
+                      children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [
+                            SizedBox(
+                              width: 1,
+                            ),
+                            botonColorFondo(),
+                            botonJPG(),
+                            botonPNG(),
+                            botonTexto(),
+                            botonEmoji(),
+                            botonOferta(),
+                            SizedBox(
+                              width: 20,
+                            )
                           ],
                         ),
-                      ),
-                    ),
-                    padding: _PaddingPorcion3(),
-                  );
-                }),
-              ),
-            ),
-          ),
-          Expanded(
-            flex: 1,
-            child: SingleChildScrollView(
-              child: Container(
-                margin: EdgeInsets.only(top: 30, bottom: 10),
-                height: MediaQuery.of(context).size.height / 4,
-                child: Column(
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        SizedBox(
-                          width: 1,
-                        ),
-                        botonColorFondo(),
-                        botonJPG(),
-                        botonPNG(),
-                        botonTexto(),
-                        botonEmoji(),
-                        botonOferta(),
-                        SizedBox(
-                          width: 20,
-                        )
-                      ],
-                    ),
-                    //SizedBox(height: 20,),
-                    Container(
-                      width: MediaQuery.of(context).size.width,
-                      //height:MediaQuery.of(context).size.height / 4,
-                      //color: Colors.pink,
-                      child: Row(
-                        //crossAxisAlignment: CrossAxisAlignment.center,
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Column(
+                        //SizedBox(height: 20,),
+                        Container(
+                          width: MediaQuery.of(context).size.width,
+                          //height:MediaQuery.of(context).size.height / 4,
+                          //color: Colors.pink,
+                          child: Row(
+                            //crossAxisAlignment: CrossAxisAlignment.center,
+                            mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              SizedBox(height: MediaQuery.of(context).size.height/30),
-                              Container(
-                                //margin: EdgeInsets.symmetric(horizontal: 90),
-                                width: 200.0,
-                                height: 40.0,
-                                decoration: new BoxDecoration(
-                                    borderRadius: BorderRadius.circular(20),
-                                    gradient: LinearGradient(
-                                        colors: [
-                                          HexColor("#0683ff"),
-                                          HexColor("#3edb9b")
-                                        ],
-                                        stops: [
-                                          0.1,
-                                          0.6
-                                        ],
-                                        begin: Alignment.topLeft,
-                                        end: FractionalOffset.bottomRight)),
-                                child: _btnAddContenido(),
+                              Column(
+                                children: [
+                                  SizedBox(height: MediaQuery.of(context).size.height/30),
+                                  Container(
+                                    //margin: EdgeInsets.symmetric(horizontal: 90),
+                                    width: 200.0,
+                                    height: 40.0,
+                                    decoration: new BoxDecoration(
+                                        borderRadius: BorderRadius.circular(20),
+                                        gradient: LinearGradient(
+                                            colors: [
+                                              HexColor("#0683ff"),
+                                              HexColor("#3edb9b")
+                                            ],
+                                            stops: [
+                                              0.1,
+                                              0.6
+                                            ],
+                                            begin: Alignment.topLeft,
+                                            end: FractionalOffset.bottomRight)),
+                                    child: FlatButton(
+                                      color: Colors.transparent,
+                                      shape: RoundedRectangleBorder(
+                                          borderRadius: BorderRadius.circular(20),
+                                          side:
+                                          BorderSide(color: Color.fromARGB(30, 0, 0, 0))),
+                                      child: Text(
+                                        'CARGAR',
+                                        style: TextStyle(color: Colors.white),
+                                      ),
+                                      onPressed: () async {
+                                        //FUNCIÓN QUE PROCESA EL GUARDADO
+                                        List<dynamic> resultado = await _ProcesarImagen();
+
+                                        if (resultado != null) {
+                                          //Si el envío es correcto, se redirecciona
+                                          Image imagen = Image.network(
+                                            "http://${DatosEstaticos.ipSeleccionada}/ImagenesPostTv/${resultado[1]}",
+                                            fit: BoxFit.cover,
+                                          );
+
+                                          RedireccionarCrearLayout(
+                                              imagen,
+                                              "/var/www/html/ImagenesPostTv/${resultado[1]}",
+                                              true);
+                                        } else {
+                                          //Cierra popup cargando
+                                          Navigator.of(context, rootNavigator: true).pop();
+
+                                          PopUps.PopUpConWidget(context,
+                                              Text('Error al enviar imagen'.toUpperCase()));
+                                        }
+                                      },
+                                    ),
+                                  ),
+                                  SizedBox(height: 15),
+                                  //BTN ESPECÍFICO PARA RRSS EN PORCIONES
+                                  btnCompartirRRSS(),
+                                ],
                               ),
-                              SizedBox(height: 15),
-                              //BTN ESPECÍFICO PARA RRSS EN PORCIONES
-                              btnCompartirRRSS(),
                             ],
                           ),
-                        ],
-                      ),
-                    ),
-                    /*
+                        ),
+                        /*
                     Container(
                       //margin: EdgeInsets.symmetric(horizontal: 90),
                       width: 200.0,
@@ -271,25 +344,134 @@ class _CrearContenidoState extends State<CrearContenido> {
                     ),
 
                      */
-                  ],
+                      ],
+                    ),
+                  ),
                 ),
               ),
-            ),
+            ],
           ),
-        ],
-      ),
-    );
+        );
+      }
+    } else{
+      return Scaffold(
+        body: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text('COMPROBANDO ESPACIO EN LA NUBE'),
+            SizedBox(height: 10,),
+            Center(
+              child: CircularProgressIndicator(),
+            ),
+          ],
+        ),
+      );
+    }
+  }
+
+  Future _COnsultaEspacioEnNube()async{
+    int espacio = await CloudStorage.GetUsedSpace();
+    setState(() {
+      espacioEnNube = espacio;
+    });
+
   }
 
   ///BOTON QUE CARGA UN BOTON GRIS ANTES DE PERMITIR O DENEGAR EL SUBRI ARCHIVOS
   ///A LA NUBE
-  FutureBuilder _btnAddContenido(){
+  ///
+  /*
+  Widget _btnAddContenido(){
     int _gbPermitidosCloud = int.parse(
         ObtieneDatos.listadoEmpresa[0]["f_GigasEnFirebase"]
     );
 
     _gbPermitidosCloud = _gbPermitidosCloud * 1024;
 
+    if (espacioEnNube <= _gbPermitidosCloud){
+      //NO PERMITIDO
+      return FlatButton(
+        color: Colors.grey,
+        shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(20),
+            side:
+            BorderSide(color: Color.fromARGB(30, 0, 0, 0))),
+        child: Text(
+          'CARGAR',
+          style: TextStyle(color: Colors.white),
+        ),
+        onPressed: () async {
+          Widget contenidoPopUp = Container(
+              decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(40),
+                  color: HexColor('#f4f4f4')),
+              height: 110,
+              width: 250,
+              child: Padding(
+                padding: const EdgeInsets.only(top: 25, bottom: 25),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    //Título
+                    Column(
+                      children: [
+                        Text(
+                          'MÁXIMO ESPACIO UTILIZADO',
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            fontSize: 13,
+                          ),
+                        ),
+                      ],
+                    ),
+
+                    Text('Contacte con ProducNova',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(fontSize: 13, fontFamily: 'textoMont')),
+                  ],
+                ),
+              ));
+          PopUps.PopUpConWidget(context,contenidoPopUp);
+        },
+      );
+    }
+
+    //PERMITIDO
+    return FlatButton(
+      color: Colors.transparent,
+      shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(20),
+          side:
+          BorderSide(color: Color.fromARGB(30, 0, 0, 0))),
+      child: Text(
+        'CARGAR',
+        style: TextStyle(color: Colors.white),
+      ),
+      onPressed: () async {
+        //FUNCIÓN QUE PROCESA EL GUARDADO
+        List<dynamic> resultado = await _ProcesarImagen();
+
+        if (resultado != null) {
+          //Si el envío es correcto, se redirecciona
+          Image imagen = Image.network(
+            "http://${DatosEstaticos.ipSeleccionada}/ImagenesPostTv/${resultado[1]}",
+            fit: BoxFit.cover,
+          );
+
+          RedireccionarCrearLayout(
+              imagen,
+              "/var/www/html/ImagenesPostTv/${resultado[1]}",
+              true);
+        } else {
+          //Cierra popup cargando
+          Navigator.of(context, rootNavigator: true).pop();
+
+          PopUps.PopUpConWidget(context,
+              Text('Error al enviar imagen'.toUpperCase()));
+        }
+      },
+    );
+    /*
     FutureBuilder containerBtn = FutureBuilder(
         future: CloudStorage.GetUsedSpace(),
         builder: (context, snapshot){
@@ -421,20 +603,108 @@ class _CrearContenidoState extends State<CrearContenido> {
 
     );
 
+
     return containerBtn;
+
+     */
 
   }
 
+   */
+
+
   ///WIDGET QUE CONTROLA EL BOTÓN COMPARTIR RRSS
   Widget btnCompartirRRSS(){
+    /*
     int _gbPermitidosCloud = int.parse(
         ObtieneDatos.listadoEmpresa[0]["f_GigasEnFirebase"]
     );
 
     _gbPermitidosCloud = _gbPermitidosCloud * 1024;
+
+     */
     String _porcion = DatosEstaticos.divisionLayout;
     Widget btn;
 
+    if (_porcion == "3-2" || _porcion == "3-3"){
+      btn = Container(
+        child: Text(
+          "PUBLICACIÓN REDES SOCIALES\n NO HABILITADA EN ESTA PORCIÓN",
+          textAlign: TextAlign.center,
+        ),
+      );
+    } else {
+      btn = Container(
+        height: 40,
+        width: 200,
+        decoration: new BoxDecoration(
+            borderRadius:
+            BorderRadius.circular(20),
+            gradient: LinearGradient(
+                colors: [
+                  HexColor("#3edb9b"),
+                  HexColor("#0683ff")
+                ],
+                stops: [
+                  0.5,
+                  1
+                ],
+                begin: Alignment.topLeft,
+                end: FractionalOffset
+                    .bottomRight)),
+        child: FlatButton(
+          color: Colors.transparent,
+          onPressed: () async {
+
+            //SI HAY UN LINK YA LISTO PARA PUBLICAR
+            //PREGUNTAR SI DESEA REEMPLAZARLO
+            String pNombre = await Publicar();
+
+            if (pNombre != null){
+              //Se Descarga video inmediatamente al cargar
+              List<String> _verificarImagen = new List<String>();
+              _verificarImagen.add("/var/www/html/ImagenesPostTv/$pNombre");
+              PopUps.popUpCargando(context, "DESCARGANDO ARCHIVOS");
+
+              await ComunicacionRaspberry.CompruebaArchivosRaspberry(
+                  pLinksAEnviar: _verificarImagen
+              );
+
+              Navigator.of(context).pop();
+
+              String img = "http://${DatosEstaticos.ipSeleccionada}/ImagenesPostTv/"
+                  "$pNombre";
+
+              Widget imagen = Image.network(img);
+
+              RedireccionarCrearLayout(
+                  imagen,
+                  "/ImagenesPostTv/$pNombre",
+                  true);
+            }
+          },
+          child: Padding(
+            padding:
+            const EdgeInsets.all(6.0),
+            child: Column(children: [
+              Text(
+                'CARGAR +',
+                style: TextStyle(
+                    color: Colors.white),
+              ),
+              Text(
+                ' COMPARTIR RRSS',
+                style: TextStyle(
+                    color: Colors.white),
+              ),
+            ]),
+          ),
+        ),
+      );
+    }
+    return btn;
+
+    /*
     //CONTROLA EL PERMISO A SUBIR IMAGEN
     FutureBuilder containerBtn = FutureBuilder(
         future: CloudStorage.GetUsedSpace(),
@@ -643,6 +913,8 @@ class _CrearContenidoState extends State<CrearContenido> {
     );
 
     return containerBtn;
+
+     */
   }
 
   Widget _buildItemWidget(EditableItem e) {
