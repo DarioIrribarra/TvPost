@@ -1017,7 +1017,7 @@ class _OpcionesSeleccionMediaState extends State<OpcionesSeleccionMedia> {
 
   //aca se activa y desactiva el boton url, dependiendo de la porsion seleccionada
   Widget activarURL(String divisionDellayout) {
-    if (divisionDellayout == "3-2") {
+    if (divisionDellayout == "3-2" || divisionDellayout == "3-3") {
       return FlatButton(
         color: Colors.transparent,
         shape: RoundedRectangleBorder(
@@ -1029,7 +1029,9 @@ class _OpcionesSeleccionMediaState extends State<OpcionesSeleccionMedia> {
           style: TextStyle(color: Colors.white.withOpacity(0.4)),
         ),
       );
-    } else if (divisionDellayout == "3-3") {
+    }
+    /*
+    else if (divisionDellayout == "3-3") {
       return FlatButton(
         color: Colors.transparent,
         shape: RoundedRectangleBorder(
@@ -1041,7 +1043,9 @@ class _OpcionesSeleccionMediaState extends State<OpcionesSeleccionMedia> {
           style: TextStyle(color: Colors.white.withOpacity(0.4)),
         ),
       );
-    } else {
+
+     */
+    else {
       return FlatButton(
         color: Colors.transparent,
         shape: RoundedRectangleBorder(
@@ -1127,7 +1131,7 @@ class _OpcionesSeleccionMediaState extends State<OpcionesSeleccionMedia> {
                 decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(40),
                     color: HexColor('#f4f4f4')),
-                height: 140,
+                height: MediaQuery.of(context).size.height/4.5,
                 width: 250,
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -1135,34 +1139,24 @@ class _OpcionesSeleccionMediaState extends State<OpcionesSeleccionMedia> {
                     Column(
                       children: [
                         Padding(
-                          padding: const EdgeInsets.only(top: 38.0),
+                          padding: const EdgeInsets.only(top: 25.0),
                           child: Text("INGRESAR URL",
                               style: TextStyle(fontSize: 13)),
                         ),
                         Row(
                           children: [
                             Padding(
-                              padding: const EdgeInsets.only(top: 20),
+                              padding: const EdgeInsets.only(top: 10),
                               child: CircleAvatar(
                                 backgroundColor: Colors.blueAccent,
-                                radius: 10,
+                                radius: 15,
                                 child: FlatButton(
                                   onPressed: () async {
-                                    if (_keyValidador.currentState.validate()) {
-                                      //Crea webvbiew
-                                      crearWebView(controladorTextoUrl.text
-                                          .toString()
-                                          .trim());
-                                      //Cierra popup cargando
-                                      Navigator.of(context, rootNavigator: true)
-                                          .pop();
-
-                                      widget.actualizaEstado();
-                                    }
+                                    _abrirBuscador();
                                   },
                                   child: Container(
                                     transform: Matrix4.translationValues(
-                                        -16.0, 0.0, 0.0),
+                                        -11.0, 0.0, 0.0),
                                     child: Icon(
                                       Icons.search,
                                       size: 20,
@@ -1172,21 +1166,14 @@ class _OpcionesSeleccionMediaState extends State<OpcionesSeleccionMedia> {
                                 ),
                               ),
                             ),
+
                             SizedBox(
+                              height: 70,
                               width: 180,
                               child: Padding(
                                 padding: const EdgeInsets.only(left: 10),
                                 child: TextFormField(
                                   controller: controladorTextoUrl,
-                                  /*decoration: InputDecoration(
-                                    suffixIcon: IconButton(
-                                      alignment: Alignment.centerLeft,
-                                      icon: Icon(Icons.search),
-                                      onPressed: () {
-                                        _abrirBuscador();
-                                      },
-                                    ),
-                                  ),*/
                                   validator: (urlEscrita) {
                                     if (urlEscrita.isEmpty) {
                                       return 'Ingrese un enlace web';
@@ -1199,22 +1186,27 @@ class _OpcionesSeleccionMediaState extends State<OpcionesSeleccionMedia> {
                                 ),
                               ),
                             ),
+
                           ],
                         ),
-                        /*   RaisedButton(
-                        child: Text('Ingresar enlace'),
-                        onPressed: () {
-                          if (_keyValidador.currentState.validate()) {
-                            //Crea webvbiew
-                            crearWebView(
-                                controladorTextoUrl.text.toString().trim());
-                            //Cierra popup cargando
-                            Navigator.of(context, rootNavigator: true).pop();
+                        GestureDetector(
+                          child: Icon(
+                            Icons.check_circle,
+                            color: HexColor('#3EDB9B'),
+                            size: 35,
+                          ),
+                          onTap: () {
+                            if (_keyValidador.currentState.validate()) {
+                              //Crea webvbiew
+                              crearWebView(
+                                  controladorTextoUrl.text.toString().trim());
+                              //Cierra popup cargando
+                              Navigator.of(context, rootNavigator: true).pop();
 
-                            widget.actualizaEstado();
-                          }
-                        },
-                      ),*/
+                              widget.actualizaEstado();
+                            }
+                          },
+                        ),
                       ],
                     ),
                   ],
@@ -1292,7 +1284,7 @@ class _OpcionesSeleccionMediaState extends State<OpcionesSeleccionMedia> {
     return _webview;
   }
 
-  /*
+
   _abrirBuscador() async {
     const url = 'https://www.google.cl';
     if (await canLaunch(url)) {
@@ -1302,7 +1294,7 @@ class _OpcionesSeleccionMediaState extends State<OpcionesSeleccionMedia> {
     }
   }
 
-   */
+
 
   navegarYEsperarRespuesta(String rutaVentana) async {
     //String rutaProvenienteAEsperar = ModalRoute.of(context).settings.name;

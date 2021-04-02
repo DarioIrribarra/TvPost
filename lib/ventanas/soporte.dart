@@ -18,6 +18,8 @@ class _SoporteState extends State<Soporte> {
   Map datosDesdeVentanaAnterior = {};
   String rutaDeDondeViene;
   String divisionLayout;
+  //Tamaño del eje x en matriz de íconos
+  double ejex = 0.0;
 
   @override
   Widget build(BuildContext context) {
@@ -27,6 +29,9 @@ class _SoporteState extends State<Soporte> {
       divisionLayout = datosDesdeVentanaAnterior['division_layout'];
       rutaDeDondeViene = datosDesdeVentanaAnterior['ruta_proveniente'];
     }
+
+    ejex = MediaQuery.of(context).size.width/80 - 6;
+
     return WillPopScope(
       onWillPop: () {
         //Acá si la ruta no viene nula, se toma esa como el destino
@@ -80,15 +85,16 @@ class _SoporteState extends State<Soporte> {
                 Expanded(
                   flex: 2,
                   child: CircleAvatar(
-                      radius: 28,
+                      radius: MediaQuery.of(context).size.width/15,
+                      //radius: 28,
                       backgroundColor: HexColor('#4fce5d'),
                       child: FlatButton(
                           onPressed: () {
-                            wsp(phone: "+56933710386", message: 'Hola Tv Post');
+                            wsp(phone: "+56976402129", message: 'Hola Tv Post');
                           },
                           child: Container(
                             transform:
-                                Matrix4.translationValues(-2.0, 0.0, 0.0),
+                                Matrix4.translationValues(ejex, 0.0, 0.0),
                             child: Icon(
                               IconRRSS.whatsapp,
                               color: Colors.white,
@@ -100,14 +106,14 @@ class _SoporteState extends State<Soporte> {
                 Expanded(
                   flex: 2,
                   child: CircleAvatar(
-                    radius: 28,
+                    radius: MediaQuery.of(context).size.width/15,
                     backgroundColor: HexColor('#2e74ff'),
                     child: FlatButton(
                         onPressed: () {
-                          llamada("tel:+56933710386");
+                          llamada("tel:+56976402129");
                         },
                         child: Container(
-                          transform: Matrix4.translationValues(-1.0, 1.0, 0.0),
+                          transform: Matrix4.translationValues(ejex+1, 1.0, 0.0),
                           child: Icon(
                             IconRRSS.phone,
                             color: Colors.white,
@@ -120,14 +126,14 @@ class _SoporteState extends State<Soporte> {
                 Expanded(
                   flex: 2,
                   child: CircleAvatar(
-                    radius: 28,
+                    radius: MediaQuery.of(context).size.width/15,
                     backgroundColor: HexColor('#ff534a'),
                     child: FlatButton(
                         onPressed: () {
-                          correo("mailto:d.saezzcc@gmail.com");
+                          correo("mailto:producnova@gmail.com");
                         },
                         child: Container(
-                          transform: Matrix4.translationValues(-4.0, -1.0, 0.0),
+                          transform: Matrix4.translationValues(ejex-2, -1.0, 0.0),
                           child: Icon(
                             IconRRSS.mail_1,
                             color: Colors.white,
@@ -192,7 +198,7 @@ class _SoporteState extends State<Soporte> {
                       ),
                     ),
                     Text(
-                      "(+569) 87654321",
+                      "(+569) 76402129",
                       style: TextStyle(
                         fontFamily: 'textoMont',
                         fontSize: 12,
@@ -213,7 +219,6 @@ class _SoporteState extends State<Soporte> {
                         backgroundColor: HexColor('#3edb9b'),
                         child: FlatButton(
                             onPressed: () {
-                              //  wsp(phone: "+56933710386", message: 'Hola Tv Post');
                             },
                             child: Container(
                               transform:
@@ -232,7 +237,6 @@ class _SoporteState extends State<Soporte> {
                       backgroundColor: HexColor('#0077b5'),
                       child: FlatButton(
                           onPressed: () {
-                            // llamada("tel:+56933710386");
                           },
                           child: Container(
                             transform: Matrix4.translationValues(0.5, 0.0, 0.0),
@@ -251,7 +255,6 @@ class _SoporteState extends State<Soporte> {
                       backgroundColor: HexColor('#dd2a7b'),
                       child: FlatButton(
                           onPressed: () {
-                            // correo("mailto:d.saezzcc@gmail.com");
                           },
                           child: Container(
                             transform:
@@ -271,7 +274,6 @@ class _SoporteState extends State<Soporte> {
                       backgroundColor: HexColor('#1778f2'),
                       child: FlatButton(
                           onPressed: () {
-                            //  correo("mailto:d.saezzcc@gmail.com");
                           },
                           child: Container(
                             transform:

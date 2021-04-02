@@ -161,472 +161,26 @@ class _RaspberriesConectadasState extends State<RaspberriesConectadas> {
                                       if (snapshot.data[2] == true &&
                                           snapshot.data[3] == true) {
                                         //Se añade el index a los equipos conectados
-                                        if (DatosEstaticos
-                                                .listadoIndexEquiposConectados
-                                                .contains(index) ==
-                                            false) {
-                                          DatosEstaticos
-                                              .listadoIndexEquiposConectados
-                                              .add(index);
-                                        }
-                                        //print(DatosEstaticos.listadoIndexEquiposConectados.length);
-                                        return Column(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.spaceEvenly,
-                                            children: [
-                                              GestureDetector(
-                                                onTap: () async {
-                                                  //Libera los widgets y datos creados
-                                                  LimpiarDatosEstaticos();
-                                                  DatosEstaticos
-                                                          .indexSeleccionado =
-                                                      index;
-                                                  DatosEstaticos
-                                                          .ipSeleccionada =
-                                                      ObtieneDatos
-                                                          .listadoEquipos[index]
-                                                              ['f_ip']
-                                                          .toString();
-                                                  /*return Navigator.push(
-                                                      context,
-                                                      PageRouteBuilder(
-                                                        barrierDismissible: false,
-                                                        opaque: true,
-
-                                                        pageBuilder: (_, __, ___) => DetalleEquipo(),
-                                                      ),
-                                                  );*/
-                                                  EventosPropios
-                                                      eventosPropios =
-                                                      EventosPropios();
-                                                  await eventosPropios
-                                                      .ObtenerSizePixelesPantalla();
-
-                                                  return Navigator
-                                                      .popAndPushNamed(context,
-                                                          '/detalle_equipo',
-                                                          arguments: {
-                                                        "indexEquipoGrid":
-                                                            index,
-                                                      });
-                                                },
-                                                child: Column(
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment.center,
-                                                  children: [
-                                                    Image.asset(
-                                                      snapshot.data[1]
-                                                          .toString(),
-                                                      width:
-                                                          MediaQuery.of(context)
-                                                                  .size
-                                                                  .width /
-                                                              2.3,
-                                                    ),
-                                                  ],
-                                                ),
-                                              ),
-                                              Container(
-                                                width: MediaQuery.of(context)
-                                                        .size
-                                                        .width /
-                                                    2.3,
-                                                //color:Colors.red,
-                                                child: Row(
-                                                  children: [
-                                                    SizedBox(
-                                                      width:
-                                                          MediaQuery.of(context)
-                                                                  .size
-                                                                  .width /
-                                                              6.5,
-                                                      child: Row(
-                                                        children: [
-                                                          Expanded(
-                                                            flex: 1,
-                                                            child:
-                                                                GestureDetector(
-                                                              onTap: () {
-                                                                VistaPreviaReproduccion(
-                                                                    index);
-                                                              },
-                                                              child:
-                                                                  CircleAvatar(
-                                                                backgroundColor:
-                                                                    Colors
-                                                                        .blueAccent,
-                                                                radius: 10,
-                                                                child: Icon(
-                                                                  Icons
-                                                                      .remove_red_eye,
-                                                                  size: 17,
-                                                                  color: Colors
-                                                                      .white,
-                                                                ),
-                                                              ),
-                                                            ),
-                                                          ),
-                                                          Expanded(
-                                                            flex: 1,
-                                                            child:
-                                                                GestureDetector(
-                                                                    onTap: () {
-                                                                      //AlertaDesactivar(index: index);
-                                                                      //Libera los widgets y datos creados
-                                                                      LimpiarDatosEstaticos();
-                                                                      DatosEstaticos
-                                                                              .indexSeleccionado =
-                                                                          index;
-                                                                      DatosEstaticos.ipSeleccionada = ObtieneDatos
-                                                                          .listadoEquipos[
-                                                                              index]
-                                                                              [
-                                                                              'f_ip']
-                                                                          .toString();
-                                                                      return Navigator.popAndPushNamed(
-                                                                          context,
-                                                                          '/detalle_equipo',
-                                                                          arguments: {
-                                                                            "indexEquipoGrid":
-                                                                                index,
-                                                                          });
-                                                                    },
-                                                                    child:
-                                                                        Center(
-                                                                      child:
-                                                                          CircleAvatar(
-                                                                        backgroundColor:
-                                                                            Colors.blueAccent,
-                                                                        radius:
-                                                                            10,
-                                                                        child:
-                                                                            Icon(
-                                                                          Icons
-                                                                              .edit,
-                                                                          size:
-                                                                              17,
-                                                                          color:
-                                                                              Colors.white,
-                                                                        ),
-                                                                      ),
-                                                                    )),
-                                                          ),
-                                                        ],
-                                                      ),
-                                                    ),
-                                                    SizedBox(
-                                                      width:
-                                                          MediaQuery.of(context)
-                                                                  .size
-                                                                  .width /
-                                                              4,
-                                                      child: Text(
-                                                        '${snapshot.data[0].toString().toUpperCase()}',
-                                                        textAlign:
-                                                            TextAlign.right,
-                                                        style: TextStyle(
-                                                          fontFamily:
-                                                              'textoMont',
-                                                          fontSize: 12,
-                                                        ),
-                                                      ),
-                                                    ),
-                                                  ],
-                                                ),
-                                              ),
-                                            ]);
+                                        return _PantallaActivada(
+                                            index, snapshot);
                                       }
+
                                       //Equipo conectado pero desactivado por el usuario
                                       else if (snapshot.data[2] == true &&
                                           snapshot.data[3] == false) {
                                         //Se añade el index a los equipos conectados
-                                        if (DatosEstaticos
-                                                .listadoIndexEquiposConectados
-                                                .contains(index) ==
-                                            false) {
-                                          DatosEstaticos
-                                              .listadoIndexEquiposConectados
-                                              .add(index);
-                                        }
-                                        return Column(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.spaceEvenly,
-                                            children: [
-                                              GestureDetector(
-                                                onTap: () async {
-                                                  //MensajeActivarEquipo(index);
-                                                  LimpiarDatosEstaticos();
-                                                  DatosEstaticos
-                                                          .indexSeleccionado =
-                                                      index;
-                                                  DatosEstaticos
-                                                          .ipSeleccionada =
-                                                      ObtieneDatos
-                                                          .listadoEquipos[index]
-                                                              ['f_ip']
-                                                          .toString();
-                                                  EventosPropios
-                                                      eventosPropios =
-                                                      EventosPropios();
-                                                  await eventosPropios
-                                                      .ObtenerSizePixelesPantalla();
-                                                  return Navigator
-                                                      .popAndPushNamed(context,
-                                                          '/detalle_equipo',
-                                                          arguments: {
-                                                        "indexEquipoGrid":
-                                                            index,
-                                                      });
-                                                },
-                                                child: Column(
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment.center,
-                                                  children: [
-                                                    Image.asset(
-                                                      snapshot.data[1]
-                                                          .toString(),
-                                                      width:
-                                                          MediaQuery.of(context)
-                                                                  .size
-                                                                  .width /
-                                                              2.3,
-                                                    ),
-                                                  ],
-                                                ),
-                                              ),
-                                              Container(
-                                                width: MediaQuery.of(context)
-                                                        .size
-                                                        .width /
-                                                    2.3,
-                                                child: Row(
-                                                  children: [
-                                                    SizedBox(
-                                                      width:
-                                                          MediaQuery.of(context)
-                                                                  .size
-                                                                  .width /
-                                                              6.5,
-                                                      child: Row(
-                                                        children: [
-                                                          Expanded(
-                                                            flex: 1,
-                                                            child:
-                                                                GestureDetector(
-                                                                    onTap: () {
-                                                                      //AlertaActivar(index: index);
-                                                                      /*MensajeActivarEquipo(
-                                                                      index);*/
-                                                                      //Libera los widgets y datos creados
-                                                                      LimpiarDatosEstaticos();
-                                                                      DatosEstaticos
-                                                                              .indexSeleccionado =
-                                                                          index;
-                                                                      DatosEstaticos.ipSeleccionada = ObtieneDatos
-                                                                          .listadoEquipos[
-                                                                              index]
-                                                                              [
-                                                                              'f_ip']
-                                                                          .toString();
-                                                                      return Navigator.popAndPushNamed(
-                                                                          context,
-                                                                          '/detalle_equipo',
-                                                                          arguments: {
-                                                                            "indexEquipoGrid":
-                                                                                index,
-                                                                          });
-                                                                    },
-                                                                    child:
-                                                                        Center(
-                                                                      child:
-                                                                          CircleAvatar(
-                                                                        backgroundColor:
-                                                                            HexColor('#FC4C8B'),
-                                                                        radius:
-                                                                            10,
-                                                                        child:
-                                                                            Icon(
-                                                                          Icons
-                                                                              .edit,
-                                                                          size:
-                                                                              17,
-                                                                          color:
-                                                                              Colors.white,
-                                                                        ),
-                                                                      ),
-                                                                    )),
-                                                          ),
-                                                          Expanded(
-                                                            flex: 1,
-                                                            child:
-                                                                GestureDetector(
-                                                                    onTap: null,
-                                                                    child:
-                                                                        Center(
-                                                                      child:
-                                                                          Icon(
-                                                                        Icons
-                                                                            .remove_red_eye_sharp,
-                                                                        color: Colors
-                                                                            .transparent,
-                                                                        size:
-                                                                            30,
-                                                                      ),
-                                                                    )),
-                                                          )
-                                                        ],
-                                                      ),
-                                                    ),
-                                                    SizedBox(
-                                                      width:
-                                                          MediaQuery.of(context)
-                                                                  .size
-                                                                  .width /
-                                                              4,
-                                                      child: Text(
-                                                        '${snapshot.data[0].toString().toUpperCase()}',
-                                                        textAlign:
-                                                            TextAlign.right,
-                                                        style: TextStyle(
-                                                          fontFamily:
-                                                              'textoMont',
-                                                          fontSize: 12,
-                                                        ),
-                                                      ),
-                                                    ),
-                                                  ],
-                                                ),
-                                              ),
-                                            ]);
+                                        return _PantallaDeshabilitada(
+                                            index, snapshot);
                                       } else {
-                                        //Se remueve el index a los equipos conectados
-                                        if (DatosEstaticos
-                                                .listadoIndexEquiposConectados
-                                                .contains(index) ==
-                                            false) {
-                                          DatosEstaticos
-                                              .listadoIndexEquiposConectados
-                                              .remove(index);
-                                        }
-                                        return Column(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceEvenly,
-                                          children: [
-                                            GestureDetector(
-                                              onTap: () {
-                                                EquipoSinConexion(index);
-                                              },
-                                              child: Column(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment.center,
-                                                children: [
-                                                  Image.asset(
-                                                    snapshot.data[1].toString(),
-                                                    width:
-                                                        MediaQuery.of(context)
-                                                                .size
-                                                                .width /
-                                                            2.3,
-                                                  ),
-                                                ],
-                                              ),
-                                            ),
-                                            Container(
-                                              width: MediaQuery.of(context)
-                                                      .size
-                                                      .width /
-                                                  2.3,
-                                              child: Row(
-                                                children: [
-                                                  SizedBox(
-                                                    width:
-                                                        MediaQuery.of(context)
-                                                                .size
-                                                                .width /
-                                                            6.5,
-                                                    child: Row(
-                                                      children: [
-                                                        Expanded(
-                                                          flex: 1,
-                                                          child:
-                                                              GestureDetector(
-                                                                  onTap: () {
-                                                                    EquipoSinConexion(
-                                                                        index);
-                                                                  },
-                                                                  child: Center(
-                                                                    child: Icon(
-                                                                      Icons
-                                                                          .do_disturb_on_rounded,
-                                                                      color: HexColor(
-                                                                          '#FC4C8B'),
-                                                                    ),
-                                                                  )),
-                                                        ),
-                                                        Expanded(
-                                                          flex: 1,
-                                                          child:
-                                                              GestureDetector(
-                                                                  onTap: null,
-                                                                  child: Center(
-                                                                    child: Icon(
-                                                                      Icons
-                                                                          .do_disturb_on_rounded,
-                                                                      color: Colors
-                                                                          .transparent,
-                                                                    ),
-                                                                  )),
-                                                        ),
-                                                      ],
-                                                    ),
-                                                  ),
-                                                  SizedBox(
-                                                    width:
-                                                        MediaQuery.of(context)
-                                                                .size
-                                                                .width /
-                                                            4,
-                                                    child: Text(
-                                                      '${snapshot.data[0].toString().toUpperCase()}',
-                                                      textAlign:
-                                                          TextAlign.right,
-                                                      style: TextStyle(
-                                                        fontFamily: 'textoMont',
-                                                        fontSize: 12,
-                                                      ),
-                                                    ),
-                                                  ),
-                                                ],
-                                              ),
-                                            ),
-                                          ],
-                                        );
-                                        /*return Card(
-                                      child: Column(
-                                        mainAxisAlignment: MainAxisAlignment.center,
-                                        children: [
-                                          Image.asset(snapshot.data[1].toString()),
-                                          Text('${snapshot.data[0]}'),
-                                        ],
-                                      ),
-                                    );*/
+                                        //Equipo sin conexion
+                                        return _PantallaDesconectada(
+                                            index, snapshot);
                                       }
                                     }
                                   } else if (snapshot.hasError) {
                                     //Se remueve el index a los equipos conectados
-                                    if (DatosEstaticos
-                                            .listadoIndexEquiposConectados
-                                            .contains(index) ==
-                                        false) {
-                                      DatosEstaticos
-                                          .listadoIndexEquiposConectados
-                                          .remove(index);
-                                    }
-                                    return Center(
-                                      child: Text(
-                                        'ERROR: ${snapshot.error.toString()}',
-                                      ),
-                                    );
+                                    return _Error(index, snapshot);
+
                                   } else {
                                     return Padding(
                                       padding: const EdgeInsets.all(40.0),
@@ -760,11 +314,12 @@ class _RaspberriesConectadasState extends State<RaspberriesConectadas> {
   }
 
   ///Retorna una lista futura con los detalles para el widget
+  ///Listado de datos que maneja el snapshot del FutureBuilder
+  ///El dato [0] es alias
+  ///El dato [1] es dirección de imagen
+  ///El dato [2] es activo o con conexión
   Future<List> _estadoEquipo(int _index) async {
-    //Listado de datos que maneja el snapshot del FutureBuilder
-    //El dato [0] es alias
-    //El dato [1] es dirección de imagen
-    //El dato [2] es activo o con conexión
+
     //Actualiza datos de equipos
     ObtieneDatos actualizaDatos = ObtieneDatos();
     await actualizaDatos.getDatosEquipos();
@@ -1839,13 +1394,6 @@ class _RaspberriesConectadasState extends State<RaspberriesConectadas> {
               textScaleFactor: 1.2,
               style: TextStyle(fontWeight: FontWeight.bold),
             ),
-            /*SizedBox(height:10,),
-        Text('Alias: ${alias}', textAlign: TextAlign.center,),
-        Text('Serial: ${serial}', textAlign: TextAlign.center,),
-        Text('Ip: ${ip}', textAlign: TextAlign.center,),
-        SizedBox(
-          height: 10,
-        ),*/
             SizedBox(
               height: 10,
             ),
@@ -1869,43 +1417,304 @@ class _RaspberriesConectadasState extends State<RaspberriesConectadas> {
     PopUps.PopUpConWidget(context, contenidoPopUp);
   }
 
-  /*Future<int> obtieneDatosLayout(String ip) async {
-    int _layoutSeleccionado;
-    String resp;
-    //String tipoNuevoLayout;
-    Uint8List _respuesta;
-    List<int> listadoRespuestas;
-    try{
-      Socket socket;
-      socket = await Socket.connect(ip,
-          DatosEstaticos.puertoSocketRaspberry).timeout(Duration(seconds: 5));
-      socket.write('TVPOSTGETDATOSREPRODUCCIONACTUAL');
-      socket.listen((event) {
-        listadoRespuestas.addAll(event.toList());
-      }).onDone(() {
-        _respuesta = Uint8List.fromList(listadoRespuestas);
-        socket.close();
-        return;
-      });
+  Widget _PantallaActivada(int index, dynamic snapshot) {
+    if (DatosEstaticos.listadoIndexEquiposConectados.contains(index) == false)
+      DatosEstaticos.listadoIndexEquiposConectados.add(index);
 
-      await socket.done.whenComplete(() => resp = utf8.decode(_respuesta));
-      //Al ya tener los datos, se convierten en diccionario y se pueden utilizar
-      Map<String,dynamic> mapaDatos = json.decode(resp);
+    //print(DatosEstaticos.listadoIndexEquiposConectados.length);
+    return Column(mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: [
+      GestureDetector(
+        onTap: () async {
+          //Libera los widgets y datos creados
+          LimpiarDatosEstaticos();
+          DatosEstaticos.indexSeleccionado = index;
+          DatosEstaticos.ipSeleccionada =
+              ObtieneDatos.listadoEquipos[index]['f_ip'].toString();
+          /*return Navigator.push(
+                          context,
+                          PageRouteBuilder(
+                            barrierDismissible: false,
+                            opaque: true,
 
-      if (mapaDatos.isNotEmpty){
-        _layoutSeleccionado = int.parse(DatosEstaticos
-            .mapaDatosReproduccionEquipoSeleccionado['layout']);
-      } else {
-        _layoutSeleccionado = 1;
-      }
+                            pageBuilder: (_, __, ___) => DetalleEquipo(),
+                          ),
+                      );*/
+          EventosPropios eventosPropios = EventosPropios();
+          await eventosPropios.ObtenerSizePixelesPantalla();
 
-    } catch(e){
-      print("Error al obtener layout equipos listados: " + e.toString());
-      _layoutSeleccionado = 1;
-    }
-    return _layoutSeleccionado;
+          return Navigator.popAndPushNamed(context, '/detalle_equipo',
+              arguments: {
+                "indexEquipoGrid": index,
+              });
+        },
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Image.asset(
+              snapshot.data[1].toString(),
+              width: MediaQuery.of(context).size.width / 2.3,
+            ),
+          ],
+        ),
+      ),
+      Container(
+        width: MediaQuery.of(context).size.width / 2.3,
+        //color:Colors.red,
+        child: Row(
+          children: [
+            SizedBox(
+              width: MediaQuery.of(context).size.width / 6.5,
+              child: Row(
+                children: [
+                  Expanded(
+                    flex: 1,
+                    child: GestureDetector(
+                      onTap: () {
+                        VistaPreviaReproduccion(index);
+                      },
+                      child: CircleAvatar(
+                        backgroundColor: Colors.blueAccent,
+                        radius: 10,
+                        child: Icon(
+                          Icons.remove_red_eye,
+                          size: 17,
+                          color: Colors.white,
+                        ),
+                      ),
+                    ),
+                  ),
+                  Expanded(
+                    flex: 1,
+                    child: GestureDetector(
+                        onTap: () {
+                          //AlertaDesactivar(index: index);
+                          //Libera los widgets y datos creados
+                          LimpiarDatosEstaticos();
+                          DatosEstaticos.indexSeleccionado = index;
+                          DatosEstaticos.ipSeleccionada = ObtieneDatos
+                              .listadoEquipos[index]['f_ip']
+                              .toString();
+                          return Navigator.popAndPushNamed(
+                              context, '/detalle_equipo',
+                              arguments: {
+                                "indexEquipoGrid": index,
+                              });
+                        },
+                        child: Center(
+                          child: CircleAvatar(
+                            backgroundColor: Colors.blueAccent,
+                            radius: 10,
+                            child: Icon(
+                              Icons.edit,
+                              size: 17,
+                              color: Colors.white,
+                            ),
+                          ),
+                        )),
+                  ),
+                ],
+              ),
+            ),
+            SizedBox(
+              width: MediaQuery.of(context).size.width / 4,
+              child: Text(
+                '${snapshot.data[0].toString().toUpperCase()}',
+                textAlign: TextAlign.right,
+                style: TextStyle(
+                  fontFamily: 'textoMont',
+                  fontSize: 12,
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    ]);
   }
-*/
+
+  Widget _PantallaDeshabilitada(int index, dynamic snapshot) {
+    if (DatosEstaticos.listadoIndexEquiposConectados.contains(index) == false) {
+      DatosEstaticos.listadoIndexEquiposConectados.add(index);
+    }
+    return Column(mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: [
+      GestureDetector(
+        onTap: () async {
+          //MensajeActivarEquipo(index);
+          LimpiarDatosEstaticos();
+          DatosEstaticos.indexSeleccionado = index;
+          DatosEstaticos.ipSeleccionada =
+              ObtieneDatos.listadoEquipos[index]['f_ip'].toString();
+          EventosPropios eventosPropios = EventosPropios();
+          await eventosPropios.ObtenerSizePixelesPantalla();
+          return Navigator.popAndPushNamed(context, '/detalle_equipo',
+              arguments: {
+                "indexEquipoGrid": index,
+              });
+        },
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Image.asset(
+              snapshot.data[1].toString(),
+              width: MediaQuery.of(context).size.width / 2.3,
+            ),
+          ],
+        ),
+      ),
+      Container(
+        width: MediaQuery.of(context).size.width / 2.3,
+        child: Row(
+          children: [
+            SizedBox(
+              width: MediaQuery.of(context).size.width / 6.5,
+              child: Row(
+                children: [
+                  Expanded(
+                    flex: 1,
+                    child: GestureDetector(
+                        onTap: () {
+                          //AlertaActivar(index: index);
+                          /*MensajeActivarEquipo(index);*/
+                          //Libera los widgets y datos creados
+                          LimpiarDatosEstaticos();
+                          DatosEstaticos.indexSeleccionado = index;
+                          DatosEstaticos.ipSeleccionada = ObtieneDatos
+                              .listadoEquipos[index]['f_ip']
+                              .toString();
+                          return Navigator.popAndPushNamed(
+                              context, '/detalle_equipo',
+                              arguments: {
+                                "indexEquipoGrid": index,
+                              });
+                        },
+                        child: Center(
+                          child: CircleAvatar(
+                            backgroundColor: HexColor('#FC4C8B'),
+                            radius: 10,
+                            child: Icon(
+                              Icons.edit,
+                              size: 17,
+                              color: Colors.white,
+                            ),
+                          ),
+                        )),
+                  ),
+                  Expanded(
+                    flex: 1,
+                    child: GestureDetector(
+                        onTap: null,
+                        child: Center(
+                          child: Icon(
+                            Icons.remove_red_eye_sharp,
+                            color: Colors.transparent,
+                            size: 30,
+                          ),
+                        )),
+                  )
+                ],
+              ),
+            ),
+            SizedBox(
+              width: MediaQuery.of(context).size.width / 4,
+              child: Text(
+                '${snapshot.data[0].toString().toUpperCase()}',
+                textAlign: TextAlign.right,
+                style: TextStyle(
+                  fontFamily: 'textoMont',
+                  fontSize: 12,
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    ]);
+  }
+
+  Widget _PantallaDesconectada(int index, dynamic snapshot) {
+    if (DatosEstaticos.listadoIndexEquiposConectados.contains(index) == false) {
+      DatosEstaticos.listadoIndexEquiposConectados.remove(index);
+    }
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      children: [
+        GestureDetector(
+          onTap: () {
+            EquipoSinConexion(index);
+          },
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Image.asset(
+                snapshot.data[1].toString(),
+                width: MediaQuery.of(context).size.width / 2.3,
+              ),
+            ],
+          ),
+        ),
+        Container(
+          width: MediaQuery.of(context).size.width / 2.3,
+          child: Row(
+            children: [
+              SizedBox(
+                width: MediaQuery.of(context).size.width / 6.5,
+                child: Row(
+                  children: [
+                    Expanded(
+                      flex: 1,
+                      child: GestureDetector(
+                          onTap: () {
+                            EquipoSinConexion(index);
+                          },
+                          child: Center(
+                            child: Icon(
+                              Icons.do_disturb_on_rounded,
+                              color: HexColor('#FC4C8B'),
+                            ),
+                          )),
+                    ),
+                    Expanded(
+                      flex: 1,
+                      child: GestureDetector(
+                          onTap: null,
+                          child: Center(
+                            child: Icon(
+                              Icons.do_disturb_on_rounded,
+                              color: Colors.transparent,
+                            ),
+                          )),
+                    ),
+                  ],
+                ),
+              ),
+              SizedBox(
+                width: MediaQuery.of(context).size.width / 4,
+                child: Text(
+                  '${snapshot.data[0].toString().toUpperCase()}',
+                  textAlign: TextAlign.right,
+                  style: TextStyle(
+                    fontFamily: 'textoMont',
+                    fontSize: 12,
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _Error(int index, dynamic snapshot) {
+    if (DatosEstaticos.listadoIndexEquiposConectados.contains(index) == false) {
+      DatosEstaticos.listadoIndexEquiposConectados.remove(index);
+    }
+    return Center(
+      child: Text(
+        'ERROR: ${snapshot.error.toString()}',
+      ),
+    );
+  }
 }
 
 bool TodosEquiposDesactivados() {
