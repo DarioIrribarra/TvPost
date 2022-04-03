@@ -2,6 +2,7 @@ import 'package:webview_flutter/webview_flutter.dart';
 import 'package:flutter/cupertino.dart';
 
 class DatosEstaticos {
+  static String hosting = "http://drioxmaster.cl";
   static String rutEmpresa;
   static int puertoSocketRaspberry = 5560;
   static String ipSeleccionada;

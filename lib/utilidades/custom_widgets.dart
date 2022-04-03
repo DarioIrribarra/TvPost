@@ -157,7 +157,7 @@ class PopUps {
   static Future<bool> guardarPerfil(String nombre, File imagen) async {
     String imabenBytes = base64Encode(imagen.readAsBytesSync());
     String rutaSubidaImagenes =
-        'http://drioxmaster.cl/imgPerfil/subirPerfil.php';
+        '${DatosEstaticos.hosting}/imgPerfil/subirPerfil.php';
     //'http://' + DatosEstaticos.ipSeleccionada + '/upload_one_image2.php';
     bool resultado = await http.post(rutaSubidaImagenes, body: {
       "image": imabenBytes,

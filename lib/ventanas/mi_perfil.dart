@@ -66,7 +66,7 @@ class _PerfilState extends State<Perfil> {
                   color: HexColor("#3EDB9B"),
                 ),
                 child: Image.network(
-                  "http://drioxmaster.cl/imgPerfil/$nombrePerfil.png",
+                  "${DatosEstaticos.hosting}/imgPerfil/$nombrePerfil.png",
                   scale: 3,
                 ),
               ),

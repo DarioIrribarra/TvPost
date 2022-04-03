@@ -25,7 +25,7 @@ class ObtieneDatos {
       return;
     }
     responseEmpresa = await get(
-        'http://drioxmaster.cl/resttvpost/listarEmpresa.php?f_rut=$rutEmpresa');
+        '${DatosEstaticos.hosting}/resttvpost/listarEmpresa.php?f_rut=$rutEmpresa');
   }
 
   /// Obtiene los datos completos del usuario
@@ -37,7 +37,7 @@ class ObtieneDatos {
       return;
     }
     responseUsuario = await get(
-        'http://drioxmaster.cl/resttvpost/listarUsuarios.php?id_usuario=$nombreUsuario');
+        '${DatosEstaticos.hosting}/resttvpost/listarUsuarios.php?id_usuario=$nombreUsuario');
   }
 
   Future<void> getDatosEquipos() async {
@@ -45,7 +45,7 @@ class ObtieneDatos {
       return;
     }
     String rut = DatosEstaticos.rutEmpresa;
-    Response responseEquipos = await get('http://drioxmaster.cl/resttvpost/'
+    Response responseEquipos = await get('${DatosEstaticos.hosting}/resttvpost/'
         'filtrarEquipoEmpresa.php?f_rut_empresa=$rut');
 
     try {
@@ -63,7 +63,7 @@ class ObtieneDatos {
 
     try {
       await post(
-          'http://drioxmaster.cl/'
+          '${DatosEstaticos.hosting}/'
           'resttvpost/updateAlias.php',
           body: {'f_serial': '$serial', 'f_alias': '$alias'});
       //print(responseUpdateEquipo.body);
@@ -90,7 +90,7 @@ class ObtieneDatos {
 
     try {
       await post(
-          'http://drioxmaster.cl/'
+          '${DatosEstaticos.hosting}/'
           'resttvpost/updateArchivosMediaEquipo.php',
           body: {
             'f_serial': '$serial',
@@ -120,7 +120,7 @@ class ObtieneDatos {
     try {
       if (serial != "-1") {
         resultado = await post(
-            'http://drioxmaster.cl/'
+            '${DatosEstaticos.hosting}/'
                 'resttvpost/updateEstadoEquipo.php',
             body: {
               'f_serial': '$serial',
@@ -282,7 +282,7 @@ Future<int> AdministrarActivacionEquipos({List<dynamic> listadoEquipos, String e
     for (int contador = 0; contador<= listadoEquipos.length -1; contador++){
       String serialUtilizar = listadoEquipos[contador]['f_serial'].toString();
       await post(
-          'http://drioxmaster.cl/'
+          '${DatosEstaticos.hosting}/'
               'resttvpost/updateEstadoEquipo.php',
           body: {
             'f_serial': '$serialUtilizar',
@@ -297,7 +297,7 @@ Future<int> AdministrarActivacionEquipos({List<dynamic> listadoEquipos, String e
   /*listadoEquipos.forEach((element) {
     String serialListado = element['f_serial'].toString();
     await post(
-        'http://drioxmaster.cl/'
+        '${DatosEstaticos.hosting}/'
             'resttvpost/updateEstadoEquipo.php',
         body: {
           'f_serial': '$serialListado',
